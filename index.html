@@ -3,505 +3,92 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
-<title>Ronda • Prédio Berrini</title>
+<title>Ronda • Prédio Eco Berrini</title>
 <style>
   :root{
     --vivo:#6A1B9A; --vivo-dark:#4A0072;
     --valid:#2ECC71; --lock:#9E9E9E; --occ:#FF9800; --prob:#E53935;
-    --bg:#F6F3F9; --card:#FFFFFF; --line:#E9E2EE; --ink:#2B2B2B; --muted:#777;
+    --bg:#F6F3F9; --card:#FFFFFF; --line:#E9E2EE; --ink:#2B2B2B;
   }
   *{box-sizing:border-box}
-  
-  /* CORREÇÃO: Estabilizar a tela e evitar zoom */
-  html,body{
-    margin:0;
-    padding:0;
-    background:var(--bg);
-    color:var(--ink);
-    font:500 15px/1.35 "Segoe UI",system-ui;
-    min-height:100vh;
-    min-height:100dvh;
-    position:relative;
-    overflow-x:hidden;
-  }
-  
-  /* CORREÇÃO: Impedir zoom ao digitar */
-  input, select, textarea, button {
-    font-size: 16px !important; /* Tamanho mínimo para evitar zoom no iOS */
-  }
-  
-  .app{
-    max-width:1200px;
-    margin:0 auto;
-    padding:16px;
-    padding-bottom:20px;
-    min-height:100dvh;
-    display:flex;
-    flex-direction:column;
-  }
-  
-  header{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:10px;
-    flex-shrink:0;
-  }
-  
-  .brand{
-    font-weight:900;
-    font-size:28px;
-    color:#fff;
-    padding:6px 12px;
-    border-radius:999px;
-    background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
-  }
-  
-  .title{
-    font-size:18px;
-    font-weight:700;
-    color:var(--vivo-dark);
-  }
-  
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:14px;
-    box-shadow:0 8px 20px rgba(38,12,77,.06);
-    padding:14px;
-    margin:12px 0;
-    flex-shrink:0;
-  }
-  
-  label{
-    font-size:12px;
-    color:var(--muted);
-    display:block;
-    margin-bottom:4px;
-  }
-  
-  input,select,textarea,button{
-    width:100%;
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:11px 12px;
-    font-weight:500;
-    background:#fff;
-    color:var(--ink);
-  }
-  
-  textarea{
-    min-height:70px;
-    resize:vertical;
-  }
-  
-  button{
-    background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
-    color:white;
-    border:none;
-    font-weight:700;
-    cursor:pointer;
-    transition:transform 0.1s ease, opacity 0.2s;
-  }
-  
-  button:active{
-    transform:scale(0.98);
-  }
-  
-  button:disabled{
-    opacity:0.6;
-    transform:none;
-  }
-  
-  button.ghost{
-    background:white;
-    color:var(--vivo);
-    border:1px solid var(--vivo);
-  }
-  
-  .grid{
-    display:grid;
-    gap:10px;
-  }
-  
-  @media(min-width:800px){ 
-    .cols-2{grid-template-columns:1fr 1fr} 
-  }
-  
-  .legend{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:6px;
-  }
-  
-  .pill{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    padding:6px 8px;
-    border-radius:12px;
-    background:white;
-    border:1px solid var(--line);
-  }
-  
-  .dot{
-    width:14px;
-    height:14px;
-    border-radius:4px;
-  }
-  .dot.v{background:var(--valid)} 
-  .dot.l{background:var(--lock)} 
-  .dot.o{background:var(--occ)} 
-  .dot.p{background:var(--prob)}
-  
-  .kbar{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:10px;
-  }
-  
-  .kbtn{
-    flex:1;
-    background:white;
-    color:var(--vivo);
-    border:1px solid var(--vivo);
-    border-radius:12px;
-    padding:10px;
-    font-weight:700;
-    min-width:100px;
-  }
-
-  /* CORREÇÃO: Canvas estabilizado e sem rolagem desnecessária */
-  .canvas-wrap{
-    position:relative;
-    margin:0 auto;
-    width:100%;
-    max-width:720px;
-    border-radius:16px;
-    overflow:hidden;
-    border:1px solid var(--line);
-    background:white;
-    flex-shrink:0;
-  }
-  
-  .canvas-inner {
-    position: relative;
-    width:100%;
-    background:white;
-  }
-
-  .topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px 16px;
-    background:linear-gradient(135deg, var(--vivo), var(--vivo-dark));
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  .topbar .vivo{
-    background:rgba(255,255,255,0.2);
-    padding:6px 12px;
-    border-radius:999px;
-    color:white;
-    font-weight:900;
-    font-size: 14px;
-    backdrop-filter:blur(4px);
-  }
-  
-  /* DESTAQUE DO PRÉDIO */
-  .predio-destaque {
-    font-weight:900;
-    font-size:16px;
-    color:white;
-    text-shadow:0 1px 2px rgba(0,0,0,0.3);
-    background:rgba(255,255,255,0.15);
-    padding:4px 12px;
-    border-radius:20px;
-    display:inline-block;
-  }
-  
-  .bg-layer{
-    position:relative;
-    width:100%;
-    background:#fafafa;
-    min-height:500px;
-  }
-  
-  .bg-layer svg{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    pointer-events: none;
-    z-index: 0;
-  }
-  
-  .bg-custom{
-    position:absolute;
-    inset:0;
-    background-size:cover;
-    background-position:center;
-    opacity:.28;
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  .overlay{
-    position:relative;
-    min-height:500px;
-    z-index: 2;
-    padding:20px 10px;
-  }
-  
-  /* CORREÇÃO: Layout melhorado para salas - grid ao invés de posicionamento absoluto */
-  .floors-container {
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-    padding:10px;
-  }
-  
-  .floor-group {
-    background:rgba(255,255,255,0.9);
-    border-radius:12px;
-    padding:10px;
-    border:1px solid #E9E2EE;
-  }
-  
-  .floor-title {
-    font-weight:900;
-    font-size:14px;
-    color:var(--vivo-dark);
-    margin-bottom:8px;
-    padding-bottom:4px;
-    border-bottom:2px solid var(--vivo);
-    display:inline-block;
-  }
-  
-  .salas-grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(70px, 85px));
-    gap:8px;
-    margin-top:8px;
-  }
-  
-  .slot {
-    background:var(--valid);
-    border-radius:8px;
-    font-size:14px;
-    font-weight:900;
-    color:white;
-    text-shadow:0px 1px 2px rgba(0,0,0,0.3);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:8px 4px;
-    border:2px solid #FFFFFF;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    transition:transform 0.1s;
-  }
-  
-  .slot.valid{background:var(--valid)}
-  .slot.lock{background:var(--lock)}
-  .slot.occ{background:var(--occ)}
-  .slot.prob{background:var(--prob)}
-
-  .obs-container {
-    background: rgba(255,255,255,0.95);
-    border-top: 1px solid var(--line);
-    z-index: 10;
-  }
-  
-  #obsBox{
-    padding:12px 16px;
-    min-height: 60px;
-    max-height: 120px;
-    overflow:auto;
-    background:rgba(255,255,255,.98);
-    color:#333;
-    font-size:13px;
-    white-space:pre-wrap;
-    word-break:break-word;
-  }
-
-  /* CORREÇÃO: Status mais claro na parte inferior */
-  .summary-bottom{
-    padding:12px 16px;
-    background:linear-gradient(135deg, #f8f9fa, #ffffff);
-    font-size:13px;
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    align-items:center;
-    flex-wrap: wrap;
-    border-top: 2px solid var(--vivo);
-    font-weight:bold;
-  }
-  
-  .status-badge {
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-  }
-  
-  .status-item {
-    display:flex;
-    align-items:center;
-    gap:4px;
-  }
-  
-  .status-dot {
-    width:10px;
-    height:10px;
-    border-radius:2px;
-  }
-
-  @media (max-width: 480px) {
-    .app {
-      padding: 12px;
-    }
-    .topbar {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .slot {
-      font-size: 12px;
-      padding: 6px 4px;
-    }
-    .salas-grid {
-      grid-template-columns:repeat(auto-fill, minmax(65px, 75px));
-      gap: 6px;
-    }
-    .kbtn {
-      font-size: 13px;
-      padding: 8px;
-    }
-  }
-
-  /* Toast message */
-  .toast-msg {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.85);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 30px;
-    font-size: 14px;
-    z-index: 9999;
-    animation: fadeInOut 2s ease;
-    pointer-events: none;
-    font-weight:500;
-    white-space:nowrap;
-  }
-  
-  @keyframes fadeInOut {
-    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-  }
-  
-  /* Loading spinner para exportação */
-  .loading-overlay {
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background:rgba(0,0,0,0.7);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:10000;
-    flex-direction:column;
-    gap:15px;
-  }
-  
-  .spinner {
-    width:50px;
-    height:50px;
-    border:4px solid rgba(255,255,255,0.3);
-    border-top-color:white;
-    border-radius:50%;
-    animation:spin 0.8s linear infinite;
-  }
-  
-  @keyframes spin {
-    to{transform:rotate(360deg);}
-  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.35 system-ui;min-height:100dvh}
+  input,select,textarea,button{font-size:16px!important}
+  .app{max-width:1200px;margin:0 auto;padding:16px;min-height:100dvh;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .brand{font-weight:900;font-size:28px;color:#fff;padding:6px 12px;border-radius:999px;background:linear-gradient(135deg,var(--vivo),var(--vivo-dark))}
+  .title{font-size:18px;font-weight:700;color:var(--vivo-dark)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+  label{font-size:12px;color:#777;display:block;margin-bottom:4px}
+  input,select,textarea,button{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff}
+  button{background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));color:white;border:none;font-weight:700;cursor:pointer}
+  button:active{transform:scale(0.98)}
+  button.ghost{background:white;color:var(--vivo);border:1px solid var(--vivo)}
+  .grid{display:grid;gap:10px}
+  @media(min-width:800px){.cols-2{grid-template-columns:1fr 1fr}}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .pill{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:12px;background:white;border:1px solid var(--line)}
+  .dot{width:14px;height:14px;border-radius:4px}
+  .dot.v{background:var(--valid)}.dot.l{background:var(--lock)}.dot.o{background:var(--occ)}.dot.p{background:var(--prob)}
+  .kbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .kbtn{flex:1;background:white;color:var(--vivo);border:1px solid var(--vivo);border-radius:12px;padding:10px;font-weight:700}
+  .canvas-wrap{margin:0 auto;width:100%;max-width:720px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:white}
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));flex-wrap:wrap;gap:8px}
+  .topbar .vivo{background:rgba(255,255,255,0.2);padding:6px 12px;border-radius:999px;color:white;font-weight:900}
+  .predio-destaque{font-weight:900;color:white;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px}
+  .bg-layer{position:relative;background:#fafafa;min-height:400px}
+  .bg-custom{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.28;z-index:1}
+  .overlay{position:relative;z-index:2;padding:15px}
+  .floors-container{display:flex;flex-direction:column;gap:15px}
+  .floor-group{background:rgba(255,255,255,0.95);border-radius:12px;padding:12px;border:1px solid #E9E2EE}
+  .floor-title{font-weight:900;font-size:14px;color:var(--vivo-dark);margin-bottom:8px;border-bottom:2px solid var(--vivo);display:inline-block}
+  .salas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,85px));gap:8px;margin-top:8px}
+  .slot{border-radius:8px;font-size:14px;font-weight:900;color:white;display:flex;justify-content:center;align-items:center;padding:8px 4px;border:2px solid #FFF;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
+  .slot.valid{background:var(--valid)}.slot.lock{background:var(--lock)}.slot.occ{background:var(--occ)}.slot.prob{background:var(--prob)}
+  .obs-container{background:rgba(255,255,255,0.95);border-top:1px solid var(--line)}
+  #obsBox{padding:12px 16px;min-height:60px;max-height:120px;overflow:auto;font-size:13px;white-space:pre-wrap}
+  .summary-bottom{padding:12px 16px;background:linear-gradient(135deg,#f8f9fa,#fff);font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:2px solid var(--vivo);font-weight:bold}
+  .status-badge{display:flex;gap:12px;flex-wrap:wrap}
+  .status-item{display:flex;align-items:center;gap:4px}
+  .status-dot{width:10px;height:10px;border-radius:2px}
+  @media(max-width:480px){.salas-grid{grid-template-columns:repeat(auto-fill,minmax(65px,75px));gap:6px}.slot{font-size:12px;padding:6px 4px}}
+  .toast-msg{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;z-index:9999;animation:fadeInOut 2s ease;pointer-events:none;white-space:nowrap}
+  @keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(20px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
+  .loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000;flex-direction:column;gap:15px}
+  .spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .share-panel{position:fixed;bottom:0;left:0;right:0;background:white;border-radius:20px 20px 0 0;padding:20px;z-index:10001;box-shadow:0 -5px 20px rgba(0,0,0,0.2);animation:slideUp 0.3s ease}
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .share-btn{background:var(--vivo);color:white;border:none;padding:15px;border-radius:12px;font-size:16px;font-weight:bold;margin-top:10px;width:100%}
+  .share-cancel{background:#f0f0f0;color:#666}
 </style>
 </head>
 <body>
-
 <div class="app">
-  <header>
-    <span class="brand">vivo</span>
-    <div>
-      <div class="title">Ronda • Prédio Eco Berrini</div>
-    </div>
-  </header>
+  <header><span class="brand">vivo</span><div><div class="title">Ronda • Prédio Eco Berrini</div></div></header>
+  
+  <div class="card"><div class="grid cols-2">
+    <div><label>🏢 Prédio</label><input id="predio" value="Prédio Eco Berrini"></div>
+    <div><label>👥 Responsáveis</label><input id="tecnicos" placeholder="Ex: João, Maria"></div>
+  </div></div>
 
-  <div class="card">
-    <div class="grid cols-2">
-      <div>
-        <label>🏢 Prédio</label>
-        <input id="predio" value="Prédio Eco Berrini">
-      </div>
-      <div>
-        <label>👥 Responsáveis</label>
-        <input id="tecnicos" placeholder="Ex: João, Maria">
-      </div>
-    </div>
+  <div class="card"><div class="grid cols-2">
+    <div><label>➕ Adicionar sala</label><input id="onePair" placeholder="29-02"></div>
+    <div><label>📌 Status</label><select id="oneStatus"><option value="VALIDADA">✅ Validada</option><option value="TRANCADA">🔒 Trancada</option><option value="OCUPADA">🟠 Ocupada</option><option value="PROBLEMA">🔴 Problema</option></select></div>
   </div>
+  <div class="grid cols-2" style="margin-top:8px"><button id="btnAdd">➕ Adicionar</button><button class="ghost" id="btnClear">🗑️ Limpar</button></div></div>
 
   <div class="card">
-    <div class="grid cols-2">
-      <div>
-        <label>➕ Adicionar sala (andar-sala)</label>
-        <input id="onePair" placeholder="Ex: 29-02" inputmode="numeric">
-      </div>
-      <div>
-        <label>📌 Status</label>
-        <select id="oneStatus">
-          <option value="VALIDADA">✅ Validada</option>
-          <option value="TRANCADA">🔒 Trancada</option>
-          <option value="OCUPADA">🟠 Ocupada</option>
-          <option value="PROBLEMA">🔴 Problema</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="grid cols-2" style="margin-top:8px">
-      <button id="btnAdd">➕ Adicionar</button>
-      <button class="ghost" id="btnClear">🗑️ Limpar tudo</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <label>📋 Lista rápida (andar-sala + opcional: trancada/ocupada/problema)</label>
-    <textarea id="bulk" placeholder="Exemplo:
-29-02
-29-05 ocupada
-28-03 problema
-19-02 trancada"></textarea>
-
+    <label>📋 Lista rápida</label>
+    <textarea id="bulk" placeholder="29-02&#10;29-05 ocupada&#10;28-03 problema"></textarea>
     <label style="margin-top:10px">📝 Observações</label>
-    <textarea id="observacoes" placeholder="Ex.: Sala 28-03 com projetor quebrado"></textarea>
-
+    <textarea id="observacoes"></textarea>
     <div class="kbar">
-      <button class="kbtn" id="btnApply">📋 Aplicar lista</button>
+      <button class="kbtn" id="btnApply">📋 Aplicar</button>
       <button class="kbtn" id="btnLoadBg">🖼️ Fundo</button>
-      <button class="kbtn ghost" id="btnClearBg">🗑️ Remover fundo</button>
-      <button class="kbtn" id="btnPNG">📸 Exportar PNG</button>
+      <button class="kbtn ghost" id="btnClearBg">🗑️ Fundo</button>
+      <button class="kbtn" id="btnPNG">📸 Salvar</button>
       <input type="file" id="bgFile" accept="image/*" style="display:none">
     </div>
-
     <div class="legend">
       <span class="pill"><span class="dot v"></span> Validada</span>
       <span class="pill"><span class="dot l"></span> Trancada</span>
@@ -511,324 +98,158 @@
   </div>
 
   <div class="canvas-wrap" id="exportCanvas">
-    <div class="canvas-inner">
-      <div class="topbar">
-        <span class="vivo">vivo</span>
-        <div>
-          <div id="sumPredio" class="predio-destaque">Prédio</div>
-          <div id="sumResp" style="font-size:11px; color:rgba(255,255,255,0.8); margin-top:4px;"></div>
-        </div>
-        <div id="sumRight" style="background:rgba(0,0,0,0.3); padding:4px 10px; border-radius:20px; font-size:12px;">0 salas • 0 problemas</div>
-      </div>
-
-      <div class="bg-layer" id="bgLayer">
-        <div class="bg-custom" id="bgCustom"></div>
-        <!-- CORREÇÃO: Novo layout com grid organizado -->
-        <div class="overlay" id="overlay">
-          <div class="floors-container" id="floorsContainer"></div>
-        </div>
-      </div>
-
-      <div class="obs-container">
-        <div id="obsBox"></div>
-        <!-- CORREÇÃO: Status mais claro e destacado -->
-        <div class="summary-bottom">
-          <div class="status-badge" id="statusBadges"></div>
-          <span id="sumDate"></span>
-        </div>
-      </div>
+    <div class="topbar">
+      <span class="vivo">vivo</span>
+      <div><div id="sumPredio" class="predio-destaque">Prédio</div><div id="sumResp" style="font-size:11px;color:rgba(255,255,255,0.8)"></div></div>
+      <div id="sumRight" style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px">0 salas</div>
     </div>
+    <div class="bg-layer"><div class="bg-custom" id="bgCustom"></div><div class="overlay"><div class="floors-container" id="floorsContainer"></div></div></div>
+    <div class="obs-container"><div id="obsBox"></div><div class="summary-bottom"><div class="status-badge" id="statusBadges"></div><span id="sumDate"></span></div></div>
   </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 <script>
-(() => {
-  const $ = s => document.querySelector(s);
-  const $$ = s => document.querySelectorAll(s);
-  
-  function showToast(message, isError = false) {
-    const toast = document.createElement('div');
-    toast.className = 'toast-msg';
-    toast.textContent = message;
-    toast.style.background = isError ? 'rgba(229, 57, 53, 0.95)' : 'rgba(0,0,0,0.85)';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
-  }
-  
-  function showLoading() {
-    const overlay = document.createElement('div');
-    overlay.className = 'loading-overlay';
-    overlay.id = 'loadingOverlay';
-    overlay.innerHTML = '<div class="spinner"></div><div style="color:white">Gerando imagem...</div>';
-    document.body.appendChild(overlay);
-  }
-  
-  function hideLoading() {
-    const el = document.getElementById('loadingOverlay');
-    if(el) el.remove();
-  }
+(()=>{
+const $=s=>document.querySelector(s);
+const showToast=(m,e)=>{let t=document.createElement('div');t.className='toast-msg';t.textContent=m;t.style.background=e?'rgba(229,57,53,0.95)':'rgba(0,0,0,0.85)';document.body.appendChild(t);setTimeout(()=>t.remove(),2000)};
+const showLoading=()=>{let o=document.createElement('div');o.className='loading-overlay';o.id='loadingOverlay';o.innerHTML='<div class="spinner"></div><div style="color:white">Gerando imagem...</div>';document.body.appendChild(o)};
+const hideLoading=()=>{let e=document.getElementById('loadingOverlay');if(e)e.remove()};
+const state={items:[],bg:null};
+const cls={VALIDADA:"valid",TRANCADA:"lock",OCUPADA:"occ",PROBLEMA:"prob"};
+const pad2=n=>String(n).padStart(2,"0");
+const parsePair=t=>{let m=String(t).trim().match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);return m?{floor:parseInt(m[1],10),room:pad2(parseInt(m[2],10))}:null};
+const parseStatus=r=>{let s=String(r||"").toLowerCase();return /problema|problem|falha|erro/.test(s)?"PROBLEMA":/tranc/.test(s)?"TRANCADA":/ocup/.test(s)?"OCUPADA":"VALIDADA"};
 
-  const state = { items:[], bg:null };
-  const clsByStatus = {
-    VALIDADA:"valid", TRANCADA:"lock", OCUPADA:"occ", PROBLEMA:"prob"
-  };
-  
-  const statusIcon = {
-    VALIDADA:"✅", TRANCADA:"🔒", OCUPADA:"🟠", PROBLEMA:"🔴"
-  };
-
-  const pad2 = n => String(n).padStart(2,"0");
-  const parsePair = (t) => {
-    const m = String(t).trim().match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
-    if(!m) return null;
-    return { floor:parseInt(m[1],10), room:pad2(parseInt(m[2],10)) };
-  };
-  
-  const parseStatusHint = (rest) => {
-    const s = String(rest||"").toLowerCase();
-    if(/problema|problem|falha|erro|issue/.test(s)) return "PROBLEMA";
-    if(/tranc/.test(s)) return "TRANCADA";
-    if(/ocup/.test(s))  return "OCUPADA";
-    return "VALIDADA";
-  };
-
-  // CORREÇÃO: Novo render com grid organizado (sem posicionamento absoluto)
-  function render(){
-    const predioNome = $("#predio").value || "Prédio";
-    $("#sumPredio").textContent = predioNome;
-    $("#sumResp").textContent = $("#tecnicos").value || "";
-    $("#obsBox").textContent = $("#observacoes").value.trim() || "Nenhuma observação registrada.";
-
-    const floorsContainer = $("#floorsContainer");
-    floorsContainer.innerHTML = "";
-
-    // Agrupar salas por andar
-    const floors = {};
-    state.items.forEach(i => {
-      if(!floors[i.floor]) floors[i.floor] = [];
-      floors[i.floor].push(i);
-    });
-    
-    const ordered = Object.keys(floors).sort((a,b)=>parseInt(b)-parseInt(a));
-    
-    if(ordered.length === 0) {
-      floorsContainer.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Nenhuma sala cadastrada</div>';
-    } else {
-      ordered.forEach(f => {
-        const floorGroup = document.createElement('div');
-        floorGroup.className = 'floor-group';
-        
-        const floorTitle = document.createElement('div');
-        floorTitle.className = 'floor-title';
-        floorTitle.innerHTML = `🏢 Andar ${pad2(parseInt(f))}`;
-        floorGroup.appendChild(floorTitle);
-        
-        const salasGrid = document.createElement('div');
-        salasGrid.className = 'salas-grid';
-        
-        const salas = floors[f].sort((a,b) => parseInt(a.room) - parseInt(b.room));
-        salas.forEach(sala => {
-          const slot = document.createElement('div');
-          slot.className = `slot ${clsByStatus[sala.status]}`;
-          slot.textContent = sala.room;
-          salasGrid.appendChild(slot);
-        });
-        
-        floorGroup.appendChild(salasGrid);
-        floorsContainer.appendChild(floorGroup);
-      });
-    }
-
-    // Estatísticas
-    const dist = {VALIDADA:0, TRANCADA:0, OCUPADA:0, PROBLEMA:0};
-    state.items.forEach(x => dist[x.status]++);
-    const problemas = dist.TRANCADA + dist.OCUPADA + dist.PROBLEMA;
-    $("#sumRight").textContent = `${state.items.length} salas • ${problemas} problemas`;
-    
-    // Status mais claro na parte inferior
-    const statusBadges = $("#statusBadges");
-    statusBadges.innerHTML = `
-      <div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div>
-      <div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div>
-      <div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div>
-      <div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>
-    `;
-    
-    $("#sumDate").textContent = new Date().toLocaleString("pt-BR");
-
-    // Fundo
-    const bgDiv = $("#bgCustom");
-    if(state.bg){
-      bgDiv.style.backgroundImage = `url(${state.bg})`;
-      bgDiv.style.display = "block";
-    } else {
-      bgDiv.style.display = "none";
-    }
-  }
-
-  // CORREÇÃO: Exportação otimizada para mobile com salvamento na galeria
-  async function exportToPNG() {
-    const node = $("#exportCanvas");
-    const btn = $("#btnPNG");
-    const originalText = btn.textContent;
-    
+// Função para salvar imagem diretamente na galeria do celular
+async function saveToGallery(dataUrl, filename) {
+  return new Promise((resolve, reject) => {
     try {
-      showLoading();
-      btn.textContent = "⏳ Gerando...";
-      btn.disabled = true;
+      // Criar um link temporário
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = dataUrl;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
       
-      // Aguardar um pouco para garantir que tudo está renderizado
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      const canvas = await html2canvas(node, {
-        scale: 2.8,
-        backgroundColor: "#ffffff",
-        logging: false,
-        useCORS: true,
-        allowTaint: false,
-        windowWidth: node.scrollWidth,
-        windowHeight: node.scrollHeight
-      });
-      
-      hideLoading();
-      
-      const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, '-');
-      const predioNome = ($("#predio").value || "Predio").replace(/\s+/g, "_");
-      const filename = `Ronda_${predioNome}_${timestamp}.png`;
-      
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const dataUrl = canvas.toDataURL("image/png");
-      
-      if (isMobile) {
-        // CORREÇÃO: Para mobile, criar link com download ou abrir para salvar
-        const link = document.createElement('a');
-        link.download = filename;
-        link.href = dataUrl;
-        document.body.appendChild(link);
-        link.click();
+      // Remover após o download
+      setTimeout(() => {
         document.body.removeChild(link);
-        
-        showToast("✅ Imagem salva! Verifique seus downloads");
-        
-        // Fallback: se o download não funcionar, abrir em nova aba
-        setTimeout(() => {
-          if(!document.querySelector('a[download]')) {
-            window.open(dataUrl, '_blank');
-            showToast("📱 Toque e segure na imagem para salvar");
-          }
-        }, 500);
-      } else {
-        const link = document.createElement('a');
-        link.download = filename;
-        link.href = dataUrl;
-        link.click();
-        showToast("✅ Imagem exportada com sucesso!");
+        resolve(true);
+      }, 100);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+// Função principal de exportação corrigida
+async function exportPNG(){
+  const btn=$("#btnPNG"),orig=btn.textContent;
+  try{
+    showLoading();
+    btn.textContent="⏳...";
+    btn.disabled=true;
+    
+    // Aguardar renderização
+    await new Promise(r=>setTimeout(r,200));
+    
+    const element=$("#exportCanvas");
+    const canvas=await html2canvas(element,{
+      scale:2.5,
+      backgroundColor:"#ffffff",
+      logging:false,
+      useCORS:true,
+      allowTaint:false
+    });
+    
+    hideLoading();
+    
+    // Gerar nome do arquivo
+    const now=new Date();
+    const timestamp=`${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}-${pad2(now.getMinutes())}-${pad2(now.getSeconds())}`;
+    const predioNome=($("#predio").value||"Predio").replace(/\s+/g,"_");
+    const filename=`Ronda_${predioNome}_${timestamp}.png`;
+    const dataUrl=canvas.toDataURL("image/png");
+    
+    // Tentar salvar diretamente
+    try{
+      await saveToGallery(dataUrl, filename);
+      showToast("✅ Imagem salva! Verifique sua galeria");
+    }catch(err){
+      // Fallback: compartilhar
+      if(navigator.share){
+        const blob=await fetch(dataUrl).then(r=>r.blob());
+        const file=new File([blob], filename, {type:'image/png'});
+        await navigator.share({
+          title:'Ronda - Mapa de Salas',
+          text:`Mapa do ${$("#predio").value}`,
+          files:[file]
+        });
+        showToast("✅ Imagem compartilhada!");
+      }else{
+        showToast("📱 Pressione e segure na imagem para salvar", false);
+        // Abrir em nova aba como último recurso
+        window.open(dataUrl, '_blank');
       }
-      
-    } catch (error) {
-      console.error("Erro na exportação:", error);
-      hideLoading();
-      showToast("❌ Erro ao gerar imagem. Tente novamente.", true);
-    } finally {
-      btn.textContent = originalText;
-      btn.disabled = false;
-    }
-  }
-
-  // ===== EVENTOS =====
-  $("#btnAdd").onclick = () => {
-    const pair = parsePair($("#onePair").value);
-    if(!pair) {
-      showToast("❌ Use formato: 29-02 ou 29/02", true);
-      return;
-    }
-    state.items = state.items.filter(x => !(x.floor === pair.floor && x.room === pair.room));
-    state.items.push({ floor: pair.floor, room: pair.room, status: $("#oneStatus").value });
-    $("#onePair").value = "";
-    render();
-    showToast(`✅ Sala ${pair.floor}-${pair.room} adicionada!`);
-  };
-
-  $("#btnApply").onclick = () => {
-    const lines = $("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);
-    if(lines.length === 0) {
-      showToast("❌ Cole uma lista no campo acima", true);
-      return;
     }
     
-    let added = 0;
-    lines.forEach(l => {
-      const m = l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);
-      if(!m) return;
-      const floor = parseInt(m[1], 10);
-      const room = pad2(parseInt(m[2], 10));
-      const status = parseStatusHint(m[3]);
-      state.items = state.items.filter(x => !(x.floor === floor && x.room === room));
-      state.items.push({ floor, room, status });
-      added++;
-    });
-    $("#bulk").value = "";
-    render();
-    showToast(`✅ ${added} sala(s) adicionadas!`);
-  };
+  }catch(e){
+    console.error(e);
+    hideLoading();
+    showToast("❌ Erro ao gerar imagem",true);
+  }finally{
+    btn.textContent=orig;
+    btn.disabled=false;
+  }
+}
 
-  $("#btnClear").onclick = () => { 
-    if(confirm("Tem certeza que deseja remover todas as salas?")){ 
-      state.items = []; 
-      render();
-      showToast("🗑️ Todas as salas foram removidas");
-    } 
-  };
+function render(){
+  $("#sumPredio").textContent=$("#predio").value||"Prédio";
+  $("#sumResp").textContent=$("#tecnicos").value||"";
+  $("#obsBox").textContent=$("#observacoes").value.trim()||"Nenhuma observação";
+  let fc=$("#floorsContainer"),floors={};
+  state.items.forEach(i=>{if(!floors[i.floor])floors[i.floor]=[];floors[i.floor].push(i)});
+  let ordered=Object.keys(floors).sort((a,b)=>parseInt(b)-parseInt(a));
+  fc.innerHTML=ordered.length?ordered.map(f=>`<div class="floor-group"><div class="floor-title">🏢 Andar ${pad2(parseInt(f))}</div><div class="salas-grid">${floors[f].sort((a,b)=>parseInt(a.room)-parseInt(b.room)).map(s=>`<div class="slot ${cls[s.status]}">${s.room}</div>`).join('')}</div></div>`).join(''):'<div style="text-align:center;padding:40px;color:#999">Nenhuma sala</div>';
+  let dist={VALIDADA:0,TRANCADA:0,OCUPADA:0,PROBLEMA:0};
+  state.items.forEach(x=>dist[x.status]++);
+  let probs=dist.TRANCADA+dist.OCUPADA+dist.PROBLEMA;
+  $("#sumRight").textContent=`${state.items.length} salas • ${probs} problemas`;
+  $("#statusBadges").innerHTML=`<div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div><div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div><div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div><div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>`;
+  $("#sumDate").textContent=new Date().toLocaleString("pt-BR");
+  let bg=$("#bgCustom");if(state.bg){bg.style.backgroundImage=`url(${state.bg})`;bg.style.display="block"}else bg.style.display="none";
+}
 
-  $("#btnLoadBg").onclick = () => $("#bgFile").click();
-  $("#btnClearBg").onclick = () => { 
-    state.bg = null; 
-    render();
-    showToast("🖼️ Fundo removido");
-  };
-  
-  $("#bgFile").onchange = ev => {
-    const f = ev.target.files?.[0]; 
-    if(!f) return;
-    const r = new FileReader();
-    r.onload = e => { 
-      state.bg = e.target.result; 
-      render();
-      showToast("🖼️ Fundo carregado!");
-    };
-    r.readAsDataURL(f);
-  };
+$("#btnAdd").onclick=()=>{let p=parsePair($("#onePair").value);if(!p){showToast("❌ Formato: 29-02",true);return}state.items=state.items.filter(x=>!(x.floor===p.floor&&x.room===p.room));state.items.push({floor:p.floor,room:p.room,status:$("#oneStatus").value});$("#onePair").value="";render();showToast(`✅ ${p.floor}-${p.room}`)};
+$("#btnApply").onclick=()=>{let lines=$("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);if(!lines.length){showToast("❌ Cole uma lista",true);return}lines.forEach(l=>{let m=l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);if(m){let f=parseInt(m[1],10),r=pad2(parseInt(m[2],10)),s=parseStatus(m[3]);state.items=state.items.filter(x=>!(x.floor===f&&x.room===r));state.items.push({floor:f,room:r,status:s})}});$("#bulk").value="";render();showToast(`✅ ${lines.length} sala(s)`)};
+$("#btnClear").onclick=()=>{if(confirm("Remover todas?")){state.items=[];render();showToast("🗑️ Limpo")}};
+$("#btnLoadBg").onclick=()=>$("#bgFile").click();
+$("#btnClearBg").onclick=()=>{state.bg=null;render();showToast("🖼️ Fundo removido")};
+$("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();showToast("🖼️ Fundo OK")};r.readAsDataURL(f)}};
+$("#predio").oninput=render;$("#tecnicos").oninput=render;$("#observacoes").oninput=render;$("#btnPNG").onclick=exportPNG;
 
-  $("#predio").oninput = render;
-  $("#tecnicos").oninput = render;
-  $("#observacoes").oninput = render;
-  $("#btnPNG").onclick = exportToPNG;
-
-  // Dados iniciais conforme suas imagens
-  state.items = [
-    {floor:30, room:"03", status:"VALIDADA"},
-    {floor:29, room:"02", status:"VALIDADA"},
-    {floor:29, room:"05", status:"PROBLEMA"},
-    {floor:29, room:"25", status:"PROBLEMA"},
-    {floor:28, room:"03", status:"PROBLEMA"},
-    {floor:27, room:"17", status:"OCUPADA"},
-    {floor:26, room:"13", status:"OCUPADA"},
-    {floor:25, room:"09", status:"OCUPADA"},
-    {floor:24, room:"05", status:"TRANCADA"},
-    {floor:23, room:"01", status:"TRANCADA"},
-    {floor:22, room:"17", status:"TRANCADA"},
-    {floor:21, room:"13", status:"TRANCADA"},
-    {floor:20, room:"09", status:"TRANCADA"},
-    {floor:19, room:"01", status:"VALIDADA"},
-    {floor:19, room:"02", status:"VALIDADA"},
-    {floor:19, room:"05", status:"VALIDADA"}
-  ];
-  
-  $("#observacoes").value = "Problema com o projetor na 29-05\nSala 28-03 com projetor quebrado\nSala 19-02 trancada, chave com segurança";
-  
-  render();
+// Dados iniciais conforme suas imagens
+state.items=[
+  {floor:30,room:"03",status:"VALIDADA"},
+  {floor:29,room:"02",status:"VALIDADA"},
+  {floor:29,room:"05",status:"PROBLEMA"},
+  {floor:29,room:"25",status:"PROBLEMA"},
+  {floor:28,room:"03",status:"PROBLEMA"},
+  {floor:27,room:"17",status:"OCUPADA"},
+  {floor:26,room:"13",status:"OCUPADA"},
+  {floor:25,room:"09",status:"OCUPADA"},
+  {floor:24,room:"05",status:"TRANCADA"},
+  {floor:23,room:"01",status:"TRANCADA"},
+  {floor:22,room:"17",status:"TRANCADA"},
+  {floor:21,room:"13",status:"TRANCADA"},
+  {floor:20,room:"09",status:"TRANCADA"},
+  {floor:19,room:"01",status:"VALIDADA"},
+  {floor:19,room:"02",status:"VALIDADA"},
+  {floor:19,room:"05",status:"VALIDADA"}
+];
+$("#observacoes").value="Problema com projetor na 29-05\nSala 28-03 com projetor quebrado\nSala 19-02 trancada, chave com segurança";
+render();
 })();
 </script>
 </body>
