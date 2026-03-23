@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Ronda • Prédio</title>
+<title>Ronda Mobile PRO</title>
 
 <style>
 :root{
@@ -19,69 +19,30 @@ body{
   background:var(--bg);
 }
 
-.app{
-  max-width:900px;
-  margin:auto;
-  padding:12px;
-}
-
-/* HEADER */
-.header{
-  font-weight:900;
-  font-size:18px;
-  margin-bottom:10px;
-}
-
-/* CARD */
-.card{
-  background:white;
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:12px;
-  box-shadow:0 6px 16px rgba(0,0,0,.08);
-}
-
-/* INPUTS */
-input,select,textarea,button{
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  border-radius:10px;
-  border:1px solid #ddd;
-  font-size:14px;
-}
-
-button{
-  background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
-  color:white;
-  font-weight:700;
-  border:none;
-}
-
-/* CANVAS */
-.canvas{
-  position:relative;
-  width:100%;
-  border-radius:14px;
-  overflow:hidden;
-  background:white;
-  border:1px solid #eee;
-}
-
-/* TOPO */
+/* HEADER FIXO */
 .topbar{
+  position:sticky;
+  top:0;
+  z-index:10;
   display:flex;
   justify-content:space-between;
+  align-items:center;
   padding:10px;
   background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
   color:white;
   font-weight:700;
 }
 
-/* ÁREA */
-.area{
+/* CANVAS FULL */
+.canvas{
+  height:calc(100vh - 60px);
   position:relative;
-  height:700px;
+  overflow:hidden;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
 }
 
 /* LINHAS */
@@ -93,6 +54,7 @@ button{
   gap:8px;
 }
 
+/* ANDAR */
 .label{
   position:absolute;
   left:10px;
@@ -100,18 +62,19 @@ button{
   font-weight:800;
 }
 
-/* SALAS */
+/* SALAS (TOQUE) */
 .slot{
-  min-width:44px;
-  height:28px;
-  border-radius:6px;
+  min-width:52px;
+  height:34px;
+  border-radius:8px;
   display:flex;
   align-items:center;
   justify-content:center;
   color:white;
   font-weight:900;
-  font-size:13px;
+  font-size:16px;
   border:2px solid white;
+  box-shadow:0 2px 6px rgba(0,0,0,.3);
 }
 
 .valid{background:var(--valid)}
@@ -119,53 +82,62 @@ button{
 .occ{background:var(--occ)}
 .prob{background:var(--prob)}
 
-/* FOOTER */
-.footer{
+/* BOTÃO FLUTUANTE */
+#fab{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  font-size:30px;
+  border:none;
+  color:white;
+  background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
+  box-shadow:0 6px 20px rgba(0,0,0,.3);
+}
+
+/* OBS */
+#obs{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  right:10px;
+  background:white;
   padding:8px;
+  border-radius:10px;
   font-size:12px;
-  display:flex;
-  justify-content:space-between;
+  border:1px solid #ddd;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
-
-  <div class="header">Ronda • Prédio</div>
-
-  <div class="card">
-    <input id="predio" placeholder="Nome do prédio">
-    <textarea id="obs" placeholder="Observações"></textarea>
-    <button onclick="add()">Adicionar sala (ex: 29-02)</button>
-  </div>
-
-  <div class="canvas" id="canvas">
-    <div class="topbar">
-      <span id="nome">Prédio</span>
-      <span id="total">0 salas</span>
-    </div>
-
-    <div class="area" id="area"></div>
-
-    <div class="footer">
-      <button onclick="exportPNG()">Exportar PNG</button>
-    </div>
-  </div>
-
+<div class="topbar">
+  <span>Ronda</span>
+  <span id="count"></span>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<div class="canvas">
+  <div class="overlay" id="overlay"></div>
+  <div id="obs">Toque para adicionar observação</div>
+</div>
+
+<button id="fab">＋</button>
 
 <script>
-let items = [
-  {floor:29,room:"02",status:"VALIDADA"},
-  {floor:28,room:"03",status:"PROBLEMA"},
-  {floor:27,room:"05",status:"OCUPADA"}
-];
+const overlay = document.getElementById("overlay");
+const count = document.getElementById("count");
+const obs = document.getElementById("obs");
 
 const order = ["VALIDADA","OCUPADA","TRANCADA","PROBLEMA"];
+
+let state = JSON.parse(localStorage.getItem("ronda") || '{"items":[]}');
+
+function save(){
+  localStorage.setItem("ronda", JSON.stringify(state));
+}
 
 function cls(s){
   return {
@@ -177,11 +149,10 @@ function cls(s){
 }
 
 function render(){
-  const area = document.getElementById("area");
-  area.innerHTML = "";
+  overlay.replaceChildren();
 
   const floors = {};
-  items.forEach(i => (floors[i.floor] ||= []).push(i));
+  state.items.forEach(i => (floors[i.floor] ||= []).push(i));
 
   const keys = Object.keys(floors).sort((a,b)=>b-a);
 
@@ -189,64 +160,59 @@ function render(){
     const y = 60 + i*50;
 
     const label = document.createElement("div");
-    label.className="label";
-    label.style.top=y+"px";
-    label.textContent=f;
+    label.className = "label";
+    label.style.top = y+"px";
+    label.textContent = "Andar " + f;
+    overlay.appendChild(label);
 
     const row = document.createElement("div");
-    row.className="row";
-    row.style.top=y+"px";
+    row.className = "row";
+    row.style.top = y+"px";
 
     floors[f].forEach(r=>{
-      const el=document.createElement("div");
-      el.className="slot "+cls(r.status);
-      el.textContent=r.room;
+      const el = document.createElement("div");
+      el.className = "slot " + cls(r.status);
+      el.textContent = r.room;
 
       el.onclick = () => {
         const next = order[(order.indexOf(r.status)+1)%4];
         r.status = next;
+        save();
         render();
       };
 
       row.appendChild(el);
     });
 
-    area.appendChild(label);
-    area.appendChild(row);
+    overlay.appendChild(row);
   });
 
-  document.getElementById("nome").textContent =
-    document.getElementById("predio").value || "Prédio";
-
-  document.getElementById("total").textContent =
-    items.length + " salas";
+  count.textContent = state.items.length + " salas";
 }
 
-function add(){
+document.getElementById("fab").onclick = () => {
   const val = prompt("Sala (ex: 29-02)");
   if(!val) return;
 
   const m = val.match(/(\d+)[-\/](\d+)/);
   if(!m) return alert("Formato inválido");
 
-  items.push({
+  state.items.push({
     floor:parseInt(m[1]),
     room:m[2].padStart(2,"0"),
     status:"VALIDADA"
   });
 
+  save();
   render();
-}
+};
 
-async function exportPNG(){
-  const canvas = await html2canvas(document.getElementById("canvas"),{scale:2});
-  const a=document.createElement("a");
-  a.href=canvas.toDataURL();
-  a.download="ronda.png";
-  a.click();
-}
-
-document.getElementById("predio").oninput = render;
+obs.onclick = () => {
+  const txt = prompt("Observações", obs.textContent);
+  if(txt !== null){
+    obs.textContent = txt;
+  }
+};
 
 render();
 </script>
