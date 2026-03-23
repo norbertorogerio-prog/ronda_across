@@ -26,7 +26,7 @@
   .grid{display:grid;gap:10px}
   @media(min-width:800px){.cols-2{grid-template-columns:1fr 1fr}}
   .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-  .pill{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:12px;background:white;border:1px solid var(--line)}
+  .pill{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:12px;background:white;border:1px solid var(--line);font-size:13px}
   .dot{width:14px;height:14px;border-radius:4px}
   .dot.v{background:var(--valid)}.dot.l{background:var(--lock)}.dot.o{background:var(--occ)}.dot.p{background:var(--prob)}
   .kbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
@@ -53,11 +53,8 @@
     padding:8px 4px;
     border:2px solid #FFF;
     box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    position:relative;
   }
-  .slot.valid {
-    background: linear-gradient(135deg, var(--valid), #27ae60);
-  }
+  .slot.valid{background:linear-gradient(135deg, var(--valid), #27ae60)}
   .slot.lock{background:linear-gradient(135deg, var(--lock), #757575)}
   .slot.occ{background:linear-gradient(135deg, var(--occ), #f39c12)}
   .slot.prob{background:linear-gradient(135deg, var(--prob), #c0392b)}
@@ -73,9 +70,6 @@
   .loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000;flex-direction:column;gap:15px}
   .spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .permission-panel{position:fixed;bottom:0;left:0;right:0;background:white;border-radius:20px 20px 0 0;padding:20px;z-index:10001;box-shadow:0 -5px 30px rgba(0,0,0,0.3);animation:slideUp 0.3s ease;text-align:center}
-  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-  .permission-btn{background:var(--vivo);color:white;border:none;padding:15px;border-radius:12px;font-size:16px;font-weight:bold;margin-top:10px;width:100%}
 </style>
 </head>
 <body>
@@ -95,7 +89,7 @@
 
   <div class="card">
     <label>📋 Lista rápida</label>
-    <textarea id="bulk" placeholder="29-02&#10;29-05 ocupada&#10;28-03 problema"></textarea>
+    <textarea id="bulk" placeholder="Ex:&#10;29-02&#10;29-05 ocupada&#10;28-03 problema"></textarea>
     <label style="margin-top:10px">📝 Observações</label>
     <textarea id="observacoes"></textarea>
     <div class="kbar">
@@ -136,117 +130,53 @@ const pad2=n=>String(n).padStart(2,"0");
 const parsePair=t=>{let m=String(t).trim().match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);return m?{floor:parseInt(m[1],10),room:pad2(parseInt(m[2],10))}:null};
 const parseStatus=r=>{let s=String(r||"").toLowerCase();return /problema|problem|falha|erro/.test(s)?"PROBLEMA":/tranc/.test(s)?"TRANCADA":/ocup/.test(s)?"OCUPADA":"VALIDADA"};
 
-// Função para salvar imagem no celular
 async function saveImageToDevice(dataUrl, filename) {
   return new Promise(async (resolve, reject) => {
     try {
-      // Método 1: Tentar usar a API de compartilhamento (mais confiável)
       if (navigator.share && navigator.canShare) {
         const blob = await fetch(dataUrl).then(r => r.blob());
         const file = new File([blob], filename, { type: 'image/png' });
-        
         if (navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            title: 'Ronda - Mapa de Salas',
-            text: `Mapa do ${$("#predio").value}`,
-            files: [file]
-          });
+          await navigator.share({ title: 'Ronda', files: [file] });
           resolve(true);
           return;
         }
       }
-      
-      // Método 2: Criar link de download
       const link = document.createElement('a');
       link.download = filename;
       link.href = dataUrl;
       link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
-      
-      setTimeout(() => {
-        document.body.removeChild(link);
-        resolve(true);
-      }, 500);
-      
-    } catch (err) {
-      reject(err);
-    }
+      setTimeout(() => { document.body.removeChild(link); resolve(true); }, 500);
+    } catch (err) { reject(err); }
   });
 }
 
-// Função principal de exportação
 async function exportPNG(){
   const btn=$("#btnPNG"),orig=btn.textContent;
   try{
-    showLoading();
-    btn.textContent="⏳ Gerando...";
-    btn.disabled=true;
-    
+    showLoading(); btn.textContent="⏳..."; btn.disabled=true;
     await new Promise(r=>setTimeout(r,200));
-    
-    const element=$("#exportCanvas");
-    const canvas=await html2canvas(element,{
-      scale:2.5,
-      backgroundColor:"#ffffff",
-      logging:false,
-      useCORS:true,
-      allowTaint:false
-    });
-    
+    const canvas=await html2canvas($("#exportCanvas"),{scale:2.5,backgroundColor:"#fff",logging:false,useCORS:true});
     hideLoading();
-    
     const now=new Date();
-    const timestamp=`${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}-${pad2(now.getMinutes())}-${pad2(now.getSeconds())}`;
-    const predioNome=($("#predio").value||"Predio").replace(/\s+/g,"_");
-    const filename=`Ronda_${predioNome}_${timestamp}.png`;
+    const ts=`${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}-${pad2(now.getMinutes())}`;
+    const nome=($("#predio").value||"Predio").replace(/\s+/g,"_");
+    const filename=`Ronda_${nome}_${ts}.png`;
     const dataUrl=canvas.toDataURL("image/png");
-    
     try {
       await saveImageToDevice(dataUrl, filename);
-      showToast("✅ Imagem gerada! Verifique seus downloads");
+      showToast("✅ Imagem gerada!");
     } catch (err) {
-      // Se falhar, abrir em nova aba com instruções
       const newWin = window.open();
-      if (newWin) {
-        newWin.document.write(`
-          <html>
-            <head>
-              <title>Salvar Imagem</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1">
-              <style>
-                body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column;font-family:sans-serif}
-                img{max-width:100%;height:auto;box-shadow:0 4px 20px rgba(0,0,0,0.5);border-radius:8px}
-                .instructions{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.9);color:white;padding:20px;text-align:center;font-size:14px}
-                .btn{background:#6A1B9A;color:white;border:none;padding:12px 24px;border-radius:12px;margin-top:10px;font-size:16px}
-              </style>
-            </head>
-            <body>
-              <img src="${dataUrl}" alt="Mapa" />
-              <div class="instructions">
-                📱 Para salvar a imagem:<br>
-                1️⃣ Toque e segure na imagem<br>
-                2️⃣ Selecione "Salvar Imagem"<br>
-                3️⃣ A imagem será salva na sua galeria
-                <button class="btn" onclick="window.close()">Fechar</button>
-              </div>
-            </body>
-          </html>
-        `);
-        showToast("📱 Toque e segure na imagem para salvar", false);
-      } else {
-        showToast("❌ Não foi possível salvar. Verifique as permissões.", true);
-      }
+      if(newWin){
+        newWin.document.write(`<html><head><title>Salvar</title><meta name="viewport" content="width=device-width"></head><body style="margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column"><img src="${dataUrl}" style="max-width:100%"><div style="position:fixed;bottom:0;background:rgba(0,0,0,0.9);color:#fff;padding:15px;text-align:center;width:100%">📱 Toque e segure na imagem > Salvar Imagem</div></body></html>`);
+        showToast("📱 Toque e segure na imagem para salvar");
+      } else { showToast("❌ Erro ao salvar",true); }
     }
-    
-  }catch(e){
-    console.error(e);
-    hideLoading();
-    showToast("❌ Erro ao gerar imagem",true);
-  }finally{
-    btn.textContent=orig;
-    btn.disabled=false;
-  }
+  }catch(e){ hideLoading(); showToast("❌ Erro",true);
+  }finally{ btn.textContent=orig; btn.disabled=false; }
 }
 
 function render(){
@@ -261,28 +191,12 @@ function render(){
   state.items.forEach(x=>dist[x.status]++);
   let probs=dist.TRANCADA+dist.OCUPADA+dist.PROBLEMA;
   $("#sumRight").textContent=`${state.items.length} salas • ${probs} problemas`;
-  $("#statusBadges").innerHTML=`
-    <div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div>
-    <div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div>
-    <div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div>
-    <div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>
-  `;
+  $("#statusBadges").innerHTML=`<div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div><div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div><div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div><div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>`;
   $("#sumDate").textContent=new Date().toLocaleString("pt-BR");
   let bg=$("#bgCustom");if(state.bg){bg.style.backgroundImage=`url(${state.bg})`;bg.style.display="block"}else bg.style.display="none";
 }
 
-// Botão Limpar - limpa lista, observações e bulk
-$("#btnClear").onclick=()=>{
-  if(confirm("Limpar todas as salas, lista rápida e observações?")){
-    state.items=[];
-    $("#bulk").value="";
-    $("#observacoes").value="";
-    $("#onePair").value="";
-    render();
-    showToast("🗑️ Tudo limpo!");
-  }
-};
-
+$("#btnClear").onclick=()=>{if(confirm("Limpar todas as salas, lista e observações?")){state.items=[];$("#bulk").value="";$("#observacoes").value="";$("#onePair").value="";render();showToast("🗑️ Tudo limpo!")}};
 $("#btnAdd").onclick=()=>{let p=parsePair($("#onePair").value);if(!p){showToast("❌ Formato: 29-02",true);return}state.items=state.items.filter(x=>!(x.floor===p.floor&&x.room===p.room));state.items.push({floor:p.floor,room:p.room,status:$("#oneStatus").value});$("#onePair").value="";render();showToast(`✅ ${p.floor}-${p.room}`)};
 $("#btnApply").onclick=()=>{let lines=$("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);if(!lines.length){showToast("❌ Cole uma lista",true);return}lines.forEach(l=>{let m=l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);if(m){let f=parseInt(m[1],10),r=pad2(parseInt(m[2],10)),s=parseStatus(m[3]);state.items=state.items.filter(x=>!(x.floor===f&&x.room===r));state.items.push({floor:f,room:r,status:s})}});$("#bulk").value="";render();showToast(`✅ ${lines.length} sala(s)`)};
 $("#btnLoadBg").onclick=()=>$("#bgFile").click();
@@ -290,26 +204,15 @@ $("#btnClearBg").onclick=()=>{state.bg=null;render();showToast("🖼️ Fundo re
 $("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();showToast("🖼️ Fundo OK")};r.readAsDataURL(f)}};
 $("#predio").oninput=render;$("#tecnicos").oninput=render;$("#observacoes").oninput=render;$("#btnPNG").onclick=exportPNG;
 
-// Dados iniciais
 state.items=[
-  {floor:30,room:"03",status:"VALIDADA"},
+  {floor:32,room:"03",status:"PROBLEMA"},
   {floor:29,room:"02",status:"VALIDADA"},
-  {floor:29,room:"05",status:"PROBLEMA"},
-  {floor:29,room:"25",status:"PROBLEMA"},
+  {floor:29,room:"05",status:"OCUPADA"},
   {floor:28,room:"03",status:"PROBLEMA"},
-  {floor:27,room:"17",status:"OCUPADA"},
-  {floor:26,room:"13",status:"OCUPADA"},
-  {floor:25,room:"09",status:"OCUPADA"},
-  {floor:24,room:"05",status:"TRANCADA"},
-  {floor:23,room:"01",status:"TRANCADA"},
-  {floor:22,room:"17",status:"TRANCADA"},
-  {floor:21,room:"13",status:"TRANCADA"},
-  {floor:20,room:"09",status:"TRANCADA"},
-  {floor:19,room:"01",status:"VALIDADA"},
   {floor:19,room:"02",status:"VALIDADA"},
-  {floor:19,room:"05",status:"VALIDADA"}
+  {floor:19,room:"03",status:"VALIDADA"}
 ];
-$("#observacoes").value="Problema com projetor na 29-05\nSala 28-03 com projetor quebrado\nSala 19-02 trancada, chave com segurança";
+$("#observacoes").value="29-05 ocupada\n28-03 problema";
 render();
 })();
 </script>
