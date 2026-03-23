@@ -25,10 +25,33 @@
   button.ghost{background:white;color:var(--vivo);border:1px solid var(--vivo)}
   .grid{display:grid;gap:10px}
   @media(min-width:800px){.cols-2{grid-template-columns:1fr 1fr}}
-  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-  .pill{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:12px;background:white;border:1px solid var(--line);font-size:13px}
-  .dot{width:14px;height:14px;border-radius:4px}
-  .dot.v{background:var(--valid)}.dot.l{background:var(--lock)}.dot.o{background:var(--occ)}.dot.p{background:var(--prob)}
+  .legend{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:8px;
+    padding:8px 0;
+  }
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#f0f0f0;
+    font-size:13px;
+    font-weight:500;
+  }
+  .dot{
+    width:12px;
+    height:12px;
+    border-radius:3px;
+    display:inline-block;
+  }
+  .dot.v{background:var(--valid)}
+  .dot.l{background:var(--lock)}
+  .dot.o{background:var(--occ)}
+  .dot.p{background:var(--prob)}
   .kbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
   .kbtn{flex:1;background:white;color:var(--vivo);border:1px solid var(--vivo);border-radius:12px;padding:10px;font-weight:700}
   .canvas-wrap{margin:0 auto;width:100%;max-width:720px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:white}
@@ -99,6 +122,7 @@
       <button class="kbtn" id="btnPNG">📸 Salvar</button>
       <input type="file" id="bgFile" accept="image/*" style="display:none">
     </div>
+    <!-- LEGEND CORRIGIDA - SEM MARKDOWN, APENAS HTML -->
     <div class="legend">
       <span class="pill"><span class="dot v"></span> Validado</span>
       <span class="pill"><span class="dot l"></span> Trancada</span>
@@ -186,17 +210,33 @@ function render(){
   let fc=$("#floorsContainer"),floors={};
   state.items.forEach(i=>{if(!floors[i.floor])floors[i.floor]=[];floors[i.floor].push(i)});
   let ordered=Object.keys(floors).sort((a,b)=>parseInt(b)-parseInt(a));
-  fc.innerHTML=ordered.length?ordered.map(f=>`<div class="floor-group"><div class="floor-title">🏢 Andar ${pad2(parseInt(f))}</div><div class="salas-grid">${floors[f].sort((a,b)=>parseInt(a.room)-parseInt(b.room)).map(s=>`<div class="slot ${cls[s.status]}">${s.room}</div>`).join('')}</div></div>`).join(''):'<div style="text-align:center;padding:40px;color:#999">Nenhuma sala</div>';
+  fc.innerHTML=ordered.length?ordered.map(f=>`<div class="floor-group"><div class="floor-title">🏢 Andar ${pad2(parseInt(f))}</div><div class="salas-grid">${floors[f].sort((a,b)=>parseInt(a.room)-parseInt(b.room)).map(s=>`<div class="slot ${cls[s.status]}">${s.room}</div>`).join('')}</div></div>`).join(''):'<div style="text-align:center;padding:40px;color:#999">Nenhuma sala cadastrada</div>';
   let dist={VALIDADA:0,TRANCADA:0,OCUPADA:0,PROBLEMA:0};
   state.items.forEach(x=>dist[x.status]++);
   let probs=dist.TRANCADA+dist.OCUPADA+dist.PROBLEMA;
   $("#sumRight").textContent=`${state.items.length} salas • ${probs} problemas`;
-  $("#statusBadges").innerHTML=`<div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div><div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div><div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div><div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>`;
+  $("#statusBadges").innerHTML=`
+    <div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div>
+    <div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div>
+    <div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div>
+    <div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>
+  `;
   $("#sumDate").textContent=new Date().toLocaleString("pt-BR");
   let bg=$("#bgCustom");if(state.bg){bg.style.backgroundImage=`url(${state.bg})`;bg.style.display="block"}else bg.style.display="none";
 }
 
-$("#btnClear").onclick=()=>{if(confirm("Limpar todas as salas, lista e observações?")){state.items=[];$("#bulk").value="";$("#observacoes").value="";$("#onePair").value="";render();showToast("🗑️ Tudo limpo!")}};
+// Botão Limpar - limpa TUDO (salas, lista, observações)
+$("#btnClear").onclick=()=>{
+  if(confirm("Limpar todas as salas, lista rápida e observações?")){
+    state.items=[];
+    $("#bulk").value="";
+    $("#observacoes").value="";
+    $("#onePair").value="";
+    render();
+    showToast("🗑️ Tudo limpo!");
+  }
+};
+
 $("#btnAdd").onclick=()=>{let p=parsePair($("#onePair").value);if(!p){showToast("❌ Formato: 29-02",true);return}state.items=state.items.filter(x=>!(x.floor===p.floor&&x.room===p.room));state.items.push({floor:p.floor,room:p.room,status:$("#oneStatus").value});$("#onePair").value="";render();showToast(`✅ ${p.floor}-${p.room}`)};
 $("#btnApply").onclick=()=>{let lines=$("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);if(!lines.length){showToast("❌ Cole uma lista",true);return}lines.forEach(l=>{let m=l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);if(m){let f=parseInt(m[1],10),r=pad2(parseInt(m[2],10)),s=parseStatus(m[3]);state.items=state.items.filter(x=>!(x.floor===f&&x.room===r));state.items.push({floor:f,room:r,status:s})}});$("#bulk").value="";render();showToast(`✅ ${lines.length} sala(s)`)};
 $("#btnLoadBg").onclick=()=>$("#bgFile").click();
@@ -204,16 +244,12 @@ $("#btnClearBg").onclick=()=>{state.bg=null;render();showToast("🖼️ Fundo re
 $("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();showToast("🖼️ Fundo OK")};r.readAsDataURL(f)}};
 $("#predio").oninput=render;$("#tecnicos").oninput=render;$("#observacoes").oninput=render;$("#btnPNG").onclick=exportPNG;
 
-state.items=[
-  {floor:32,room:"03",status:"PROBLEMA"},
-  {floor:29,room:"02",status:"VALIDADA"},
-  {floor:29,room:"05",status:"OCUPADA"},
-  {floor:28,room:"03",status:"PROBLEMA"},
-  {floor:19,room:"02",status:"VALIDADA"},
-  {floor:19,room:"03",status:"VALIDADA"}
-];
-$("#observacoes").value="29-05 ocupada\n28-03 problema";
+// TELA INICIAL LIMPA - NENHUMA SALA PRÉ-CARREGADA
+state.items = [];
+$("#observacoes").value = "";
+$("#bulk").value = "";
 render();
+showToast("👋 Tela limpa! Adicione suas salas");
 })();
 </script>
 </body>
