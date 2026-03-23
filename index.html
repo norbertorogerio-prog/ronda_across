@@ -42,24 +42,51 @@
   .floor-group{background:rgba(255,255,255,0.95);border-radius:12px;padding:12px;border:1px solid #E9E2EE}
   .floor-title{font-weight:900;font-size:14px;color:var(--vivo-dark);margin-bottom:8px;border-bottom:2px solid var(--vivo);display:inline-block}
   .salas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,85px));gap:8px;margin-top:8px}
-  .slot{border-radius:8px;font-size:14px;font-weight:900;color:white;display:flex;justify-content:center;align-items:center;padding:8px 4px;border:2px solid #FFF;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
-  .slot.valid{background:var(--valid)}.slot.lock{background:var(--lock)}.slot.occ{background:var(--occ)}.slot.prob{background:var(--prob)}
+  .slot{
+    border-radius:8px;
+    font-size:14px;
+    font-weight:900;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:8px 4px;
+    border:2px solid #FFF;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+    position:relative;
+  }
+  /* Estilo para sala de vídeo conferência (salas validadas) */
+  .slot.valid {
+    background: linear-gradient(135deg, var(--valid), #27ae60);
+    position: relative;
+  }
+  .slot.valid::before {
+    content: "🎥";
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    text-shadow: none;
+  }
+  .slot.valid {
+    padding-left: 24px;
+  }
+  .slot.lock{background:linear-gradient(135deg, var(--lock), #757575)}
+  .slot.occ{background:linear-gradient(135deg, var(--occ), #f39c12)}
+  .slot.prob{background:linear-gradient(135deg, var(--prob), #c0392b)}
   .obs-container{background:rgba(255,255,255,0.95);border-top:1px solid var(--line)}
   #obsBox{padding:12px 16px;min-height:60px;max-height:120px;overflow:auto;font-size:13px;white-space:pre-wrap}
   .summary-bottom{padding:12px 16px;background:linear-gradient(135deg,#f8f9fa,#fff);font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:2px solid var(--vivo);font-weight:bold}
   .status-badge{display:flex;gap:12px;flex-wrap:wrap}
   .status-item{display:flex;align-items:center;gap:4px}
   .status-dot{width:10px;height:10px;border-radius:2px}
-  @media(max-width:480px){.salas-grid{grid-template-columns:repeat(auto-fill,minmax(65px,75px));gap:6px}.slot{font-size:12px;padding:6px 4px}}
+  @media(max-width:480px){.salas-grid{grid-template-columns:repeat(auto-fill,minmax(65px,75px));gap:6px}.slot{font-size:12px;padding:6px 4px}.slot.valid{padding-left:22px}.slot.valid::before{font-size:10px}}
   .toast-msg{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;z-index:9999;animation:fadeInOut 2s ease;pointer-events:none;white-space:nowrap}
   @keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(20px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
   .loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000;flex-direction:column;gap:15px}
   .spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .share-panel{position:fixed;bottom:0;left:0;right:0;background:white;border-radius:20px 20px 0 0;padding:20px;z-index:10001;box-shadow:0 -5px 20px rgba(0,0,0,0.2);animation:slideUp 0.3s ease}
-  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-  .share-btn{background:var(--vivo);color:white;border:none;padding:15px;border-radius:12px;font-size:16px;font-weight:bold;margin-top:10px;width:100%}
-  .share-cancel{background:#f0f0f0;color:#666}
 </style>
 </head>
 <body>
@@ -73,7 +100,7 @@
 
   <div class="card"><div class="grid cols-2">
     <div><label>➕ Adicionar sala</label><input id="onePair" placeholder="29-02"></div>
-    <div><label>📌 Status</label><select id="oneStatus"><option value="VALIDADA">✅ Validada</option><option value="TRANCADA">🔒 Trancada</option><option value="OCUPADA">🟠 Ocupada</option><option value="PROBLEMA">🔴 Problema</option></select></div>
+    <div><label>📌 Status</label><select id="oneStatus"><option value="VALIDADA">✅ Validada (Vídeo)</option><option value="TRANCADA">🔒 Trancada</option><option value="OCUPADA">🟠 Ocupada</option><option value="PROBLEMA">🔴 Problema</option></select></div>
   </div>
   <div class="grid cols-2" style="margin-top:8px"><button id="btnAdd">➕ Adicionar</button><button class="ghost" id="btnClear">🗑️ Limpar</button></div></div>
 
@@ -86,11 +113,11 @@
       <button class="kbtn" id="btnApply">📋 Aplicar</button>
       <button class="kbtn" id="btnLoadBg">🖼️ Fundo</button>
       <button class="kbtn ghost" id="btnClearBg">🗑️ Fundo</button>
-      <button class="kbtn" id="btnPNG">📸 Salvar</button>
+      <button class="kbtn" id="btnPNG">📸 Salvar na Galeria</button>
       <input type="file" id="bgFile" accept="image/*" style="display:none">
     </div>
     <div class="legend">
-      <span class="pill"><span class="dot v"></span> Validada</span>
+      <span class="pill"><span class="dot v"></span> 🎥 Vídeo Conf.</span>
       <span class="pill"><span class="dot l"></span> Trancada</span>
       <span class="pill"><span class="dot o"></span> Ocupada</span>
       <span class="pill"><span class="dot p"></span> Problema</span>
@@ -120,43 +147,57 @@ const pad2=n=>String(n).padStart(2,"0");
 const parsePair=t=>{let m=String(t).trim().match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);return m?{floor:parseInt(m[1],10),room:pad2(parseInt(m[2],10))}:null};
 const parseStatus=r=>{let s=String(r||"").toLowerCase();return /problema|problem|falha|erro/.test(s)?"PROBLEMA":/tranc/.test(s)?"TRANCADA":/ocup/.test(s)?"OCUPADA":"VALIDADA"};
 
-// Função para salvar imagem diretamente na galeria do celular
+// Função para salvar imagem diretamente na galeria (funciona em iOS e Android)
 async function saveToGallery(dataUrl, filename) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      // Criar um link temporário
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = dataUrl;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
+      // Verificar se é iOS
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       
-      // Remover após o download
-      setTimeout(() => {
-        document.body.removeChild(link);
-        resolve(true);
-      }, 100);
+      if (isIOS) {
+        // Para iOS: criar um link e simular clique
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = dataUrl;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          resolve(true);
+        }, 500);
+      } else {
+        // Para Android: usar o método de download
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = dataUrl;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          resolve(true);
+        }, 500);
+      }
     } catch (err) {
       reject(err);
     }
   });
 }
 
-// Função principal de exportação corrigida
+// Função principal de exportação
 async function exportPNG(){
   const btn=$("#btnPNG"),orig=btn.textContent;
   try{
     showLoading();
-    btn.textContent="⏳...";
+    btn.textContent="⏳ Gerando...";
     btn.disabled=true;
     
-    // Aguardar renderização
     await new Promise(r=>setTimeout(r,200));
     
     const element=$("#exportCanvas");
     const canvas=await html2canvas(element,{
-      scale:2.5,
+      scale:2.8,
       backgroundColor:"#ffffff",
       logging:false,
       useCORS:true,
@@ -165,32 +206,46 @@ async function exportPNG(){
     
     hideLoading();
     
-    // Gerar nome do arquivo
     const now=new Date();
     const timestamp=`${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}-${pad2(now.getMinutes())}-${pad2(now.getSeconds())}`;
     const predioNome=($("#predio").value||"Predio").replace(/\s+/g,"_");
     const filename=`Ronda_${predioNome}_${timestamp}.png`;
     const dataUrl=canvas.toDataURL("image/png");
     
-    // Tentar salvar diretamente
+    // Tentar salvar usando o método aprimorado
     try{
       await saveToGallery(dataUrl, filename);
-      showToast("✅ Imagem salva! Verifique sua galeria");
+      showToast("✅ Imagem salva na galeria!");
     }catch(err){
-      // Fallback: compartilhar
-      if(navigator.share){
+      // Fallback: tentar compartilhar
+      if(navigator.share && navigator.canShare){
         const blob=await fetch(dataUrl).then(r=>r.blob());
         const file=new File([blob], filename, {type:'image/png'});
         await navigator.share({
           title:'Ronda - Mapa de Salas',
-          text:`Mapa do ${$("#predio").value}`,
+          text:`Mapa do ${$("#predio").value} - ${new Date().toLocaleString()}`,
           files:[file]
         });
-        showToast("✅ Imagem compartilhada!");
+        showToast("✅ Imagem compartilhada! Salve na galeria");
       }else{
-        showToast("📱 Pressione e segure na imagem para salvar", false);
-        // Abrir em nova aba como último recurso
-        window.open(dataUrl, '_blank');
+        // Último recurso: abrir em nova aba com instruções
+        const newWin=window.open();
+        if(newWin){
+          newWin.document.write(`
+            <html>
+              <head><title>Salvar Imagem</title><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+              <body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#000;flex-direction:column">
+                <img src="${dataUrl}" style="max-width:100%;height:auto;box-shadow:0 4px 20px rgba(0,0,0,0.3);border-radius:8px;" />
+                <p style="position:fixed;bottom:20px;left:0;right:0;text-align:center;color:#fff;background:rgba(0,0,0,0.8);padding:15px;margin:0;font-size:14px">
+                  📱 Toque e segure na imagem<br>e selecione "Salvar Imagem"
+                </p>
+              </body>
+            </html>
+          `);
+          showToast("📱 Toque e segure na imagem para salvar");
+        }else{
+          showToast("❌ Não foi possível salvar",true);
+        }
       }
     }
     
@@ -216,7 +271,12 @@ function render(){
   state.items.forEach(x=>dist[x.status]++);
   let probs=dist.TRANCADA+dist.OCUPADA+dist.PROBLEMA;
   $("#sumRight").textContent=`${state.items.length} salas • ${probs} problemas`;
-  $("#statusBadges").innerHTML=`<div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div><div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div><div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div><div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>`;
+  $("#statusBadges").innerHTML=`
+    <div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>🎥 ${dist.VALIDADA}</div>
+    <div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div>
+    <div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div>
+    <div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>
+  `;
   $("#sumDate").textContent=new Date().toLocaleString("pt-BR");
   let bg=$("#bgCustom");if(state.bg){bg.style.backgroundImage=`url(${state.bg})`;bg.style.display="block"}else bg.style.display="none";
 }
@@ -229,7 +289,7 @@ $("#btnClearBg").onclick=()=>{state.bg=null;render();showToast("🖼️ Fundo re
 $("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();showToast("🖼️ Fundo OK")};r.readAsDataURL(f)}};
 $("#predio").oninput=render;$("#tecnicos").oninput=render;$("#observacoes").oninput=render;$("#btnPNG").onclick=exportPNG;
 
-// Dados iniciais conforme suas imagens
+// Dados iniciais
 state.items=[
   {floor:30,room:"03",status:"VALIDADA"},
   {floor:29,room:"02",status:"VALIDADA"},
