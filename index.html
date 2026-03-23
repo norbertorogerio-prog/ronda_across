@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Painel Executivo de Ronda</title>
+<title>Painel de Ronda</title>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
@@ -20,88 +20,77 @@
 body{
   margin:0;
   font-family:system-ui;
-  background:#f5f5f7;
+  background:#f4f4f6;
 }
 
 /* GRID */
 .grid{
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
   gap:16px;
   padding:16px;
 }
 
-/* CARD PRÉDIO */
+/* PRÉDIO */
 .building{
-  position:relative;
-  border-radius:16px;
-  overflow:hidden;
   background:white;
-  aspect-ratio:4/5;
-  box-shadow:0 10px 25px rgba(0,0,0,.1);
+  border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
 }
 
 /* HEADER */
 .header{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  padding:8px;
-  font-weight:900;
-  color:white;
-  text-align:center;
   background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
-  z-index:2;
+  color:white;
+  font-weight:900;
+  text-align:center;
+  padding:10px;
 }
 
-/* BG IMAGEM */
-.bg{
-  position:absolute;
-  inset:0;
-  background-size:cover;
-  background-position:center;
-  opacity:.25; /* 👈 controle visual */
-}
-
-/* OVERLAY */
-.overlay{
-  position:absolute;
-  top:50px;
-  bottom:40px;
-  left:10px;
-  right:10px;
-}
-
-/* LINHA */
-.row{
-  position:absolute;
-  left:50px;
-  right:0;
+/* CORPO */
+.body{
+  padding:10px;
   display:flex;
-  gap:6px;
+  flex-direction:column;
+  gap:8px;
 }
 
-/* LABEL */
-.label{
-  position:absolute;
-  left:0;
-  font-size:11px;
+/* ANDAR */
+.floor{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* LABEL ANDAR */
+.floor-label{
+  width:30px;
+  font-size:12px;
   font-weight:800;
+  color:#666;
 }
 
 /* SALAS */
+.rooms{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
 .slot{
-  min-width:36px;
+  min-width:34px;
   height:26px;
   border-radius:6px;
   display:flex;
   align-items:center;
   justify-content:center;
-  color:white;
   font-size:12px;
   font-weight:900;
-  border:2px solid white;
+  color:white;
+  cursor:pointer;
 }
 
 .valid{background:var(--valid)}
@@ -111,26 +100,23 @@ body{
 
 /* FOOTER */
 .footer{
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  padding:6px;
-  font-size:11px;
-  background:white;
+  margin-top:auto;
+  padding:8px;
+  border-top:1px solid #eee;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  font-size:12px;
 }
 
-/* BOTÃO EXPORT */
-.export{
-  border:none;
-  padding:4px 8px;
-  font-size:11px;
-  border-radius:6px;
+/* BOTÃO */
+.btn{
   background:var(--vivo);
   color:white;
+  border:none;
+  border-radius:6px;
+  padding:4px 8px;
+  font-size:11px;
 }
 </style>
 </head>
@@ -145,7 +131,6 @@ const order = ["VALIDADA","OCUPADA","TRANCADA","PROBLEMA"];
 const buildings = [
   {
     name:"Berrini",
-    bg:"https://images.unsplash.com/photo-1604328698692-f76ea9498e76",
     items:[
       {floor:29,room:"02",status:"VALIDADA"},
       {floor:28,room:"03",status:"PROBLEMA"},
@@ -154,7 +139,6 @@ const buildings = [
   },
   {
     name:"Paulista",
-    bg:"https://images.unsplash.com/photo-1556761175-b413da4baf72",
     items:[
       {floor:10,room:"01",status:"TRANCADA"},
       {floor:9,room:"02",status:"VALIDADA"}
@@ -176,61 +160,54 @@ function render(){
   grid.innerHTML = "";
 
   buildings.forEach((b,idx)=>{
+
     const card = document.createElement("div");
     card.className = "building";
     card.id = "b"+idx;
-
-    card.innerHTML = `
-      <div class="header">${b.name}</div>
-      <div class="bg" style="background-image:url(${b.bg})"></div>
-      <div class="overlay"></div>
-      <div class="footer">
-        <span>${b.items.length} salas</span>
-        <button class="export" onclick="exportPNG(${idx})">PNG</button>
-      </div>
-    `;
-
-    const overlay = card.querySelector(".overlay");
 
     const floors = {};
     b.items.forEach(i => (floors[i.floor] ||= []).push(i));
     const keys = Object.keys(floors).sort((a,b)=>b-a);
 
-    keys.forEach((f,i)=>{
-      const y = i*40;
+    let floorsHTML = "";
 
-      const label = document.createElement("div");
-      label.className = "label";
-      label.style.top = y+"px";
-      label.textContent = f;
-
-      const row = document.createElement("div");
-      row.className = "row";
-      row.style.top = y+"px";
-
-      floors[f].forEach(r=>{
-        const el = document.createElement("div");
-        el.className = "slot "+cls(r.status);
-        el.textContent = r.room;
-
-        el.onclick = () => {
-          const next = order[(order.indexOf(r.status)+1)%4];
-          r.status = next;
-          render();
-        };
-
-        row.appendChild(el);
-      });
-
-      overlay.appendChild(label);
-      overlay.appendChild(row);
+    keys.forEach(f=>{
+      floorsHTML += `
+        <div class="floor">
+          <div class="floor-label">${f}</div>
+          <div class="rooms">
+            ${floors[f].map(r=>`
+              <div class="slot ${cls(r.status)}" onclick="changeStatus(${idx},${f},'${r.room}')">
+                ${r.room}
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
     });
+
+    card.innerHTML = `
+      <div class="header">${b.name}</div>
+      <div class="body">${floorsHTML}</div>
+      <div class="footer">
+        <span>${b.items.length} salas</span>
+        <button class="btn" onclick="exportPNG(${idx})">PNG</button>
+      </div>
+    `;
 
     grid.appendChild(card);
   });
 }
 
-/* EXPORT PNG INDIVIDUAL */
+/* TROCA STATUS */
+function changeStatus(i,floor,room){
+  const item = buildings[i].items.find(x=>x.floor==floor && x.room==room);
+  const next = order[(order.indexOf(item.status)+1)%4];
+  item.status = next;
+  render();
+}
+
+/* EXPORT PNG */
 async function exportPNG(i){
   const node = document.getElementById("b"+i);
   const canvas = await html2canvas(node,{scale:2});
