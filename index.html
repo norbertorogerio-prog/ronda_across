@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agenda & Eventos – Workplace</title>
+<style>
+  :root{
+    /* Paleta */
+    --bg:#0f1116;
+    --panel:#151823;
+    --panel-2:#0f1420;
+    --text:#e6e8ef;
+    --muted:#9aa3b2;
+    --border:#232839;
+
+    /* Cores dos cards */
+    --agendamento:#22c55e; /* verde */
+    --evento:#8b5cf6;      /* roxo */
+
+    /* Acentos / foco */
+    --focus:#3b82f6;
+
+    /* Tipografia */
+    --radius:12px;
+    --radius-sm:10px;
+    --shadow:0 6px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  }
+
+  .app{
+    display:grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap:24px; padding:24px; max-width:1400px; margin:0 auto;
+  }
+  @media (max-width: 1100px){
+    .app{grid-template-columns: 1fr}
+  }
+
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:20px;
+  }
+  .panel h2{
+    margin:0 0 14px; font-weight:700; letter-spacing:.2px; font-size:20px
+  }
+  .grid{
+    display:grid; gap:16px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .grid-1{grid-template-columns: 1fr;}
+  .row{display:flex; gap:16px}
+  label{
+    display:block; margin:0 0 8px; color:var(--muted); font-size:12px; letter-spacing:.3px
+  }
+  input[type="text"], input[type="datetime-local"], textarea{
+    width:100%; background:#0c101a; color:var(--text);
+    border:1px solid var(--border); border-radius:10px;
+    padding:12px 14px; outline:none; transition:.15s border, .15s box-shadow
+  }
+  input[type="text"]:focus, input[type="datetime-local"]:focus, textarea:focus{
+    border-color:var(--focus);
+    box-shadow:0 0 0 3px color-mix(in oklab, var(--focus) 25%, transparent);
+  }
+  textarea{min-height:110px; resize:vertical}
+
+  .hint{color:var(--muted); font-size:12px; margin-top:2px}
+
+  .actions{display:flex; gap:12px; justify-content:flex-end; margin-top:6px}
+  .btn{
+    appearance:none; border:1px solid var(--border); background:#0c101a; color:var(--text);
+    padding:10px 14px; border-radius:10px; cursor:pointer; transition:.15s transform, .15s background, .15s border-color
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{
+    background:linear-gradient(180deg, #2a6cf6, #1857e6);
+    border-color: #1f49c7;
+  }
+  .btn-ghost{background:transparent}
+  .btn:hover{border-color:#2a6cf6}
+
+  /* Coluna direita */
+  .side{display:flex; flex-direction:column; gap:16px}
+  .legend{
+    display:flex; gap:10px; align-items:center; color:var(--muted); font-size:12px
+  }
+  .dot{
+    width:10px; height:10px; border-radius:50%
+  }
+  .dot.ag{background:var(--agendamento)}
+  .dot.ev{background:var(--evento)}
+
+  .list{
+    display:grid; gap:12px; max-height:calc(100vh - 240px); overflow:auto; padding-right:4px
+  }
+  .card{
+    background:#0c101a; border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:14px; box-shadow:var(--shadow);
+    display:grid; gap:6px; position:relative
+  }
+  .card .badge{
+    position:absolute; top:12px; right:12px;
+    font-size:11px; padding:2px 8px; border-radius:14px; color:#0c101a; font-weight:700;
+  }
+  .badge.ag{background:var(--agendamento)}
+  .badge.ev{background:var(--evento)}
+
+  .title{font-weight:700}
+  .meta{color:var(--muted); font-size:12px}
+  .obs{color:#cad1df; font-size:13px; white-space:pre-wrap}
+
+  .empty{
+    color:var(--muted); border:1px dashed var(--border); border-radius:10px; padding:18px; text-align:center
+  }
+
+  /* Toasters */
+  .toast{
+    position:fixed; right:20px; bottom:20px; z-index:9999;
+    display:flex; flex-direction:column; gap:10px
+  }
+  .toast .t{
+    background:#111827; border:1px solid var(--border); color:var(--text);
+    border-left:4px solid var(--focus);
+    padding:12px 14px; border-radius:10px; min-width:260px; box-shadow:var(--shadow)
+  }
+  .t.ok{border-left-color:#22c55e}
+  .t.err{border-left-color:#ef4444}
+</style>
+</head>
+<body>
+  <div class="app">
+    <!-- ESQUERDA – Formulário -->
+    <section class="panel">
+      <h2>Cadastrar Evento</h2>
+
+      <form id="formEvento" autocomplete="off">
+        <div class="grid">
+          <div>
+            <label for="nomeEvento">Nome do Evento</label>
+            <input id="nomeEvento" name="nomeEvento" type="text" placeholder="Ex.: Janela de mudança – Core SP" required />
+          </div>
+          <div>
+            <label for="chg">Número da CHG</label>
+            <input id="chg" name="chg" type="text" placeholder="Ex.: CHG0156426" />
+            <div class="hint">Opcional. Use o padrão CHGnnnnnn.</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label for="dataHora">Data e hora</label>
+            <input id="dataHora" name="dataHora" type="datetime-local" required />
+            <div class="hint">Escolha data e hora do evento.</div>
+          </div>
+          <div>
+            <label for="responsavel">Responsável</label>
+            <input id="responsavel" name="responsavel" type="text" placeholder="Opcional (Ex.: Time Workplace)" />
+          </div>
+        </div>
+
+        <div class="grid-1">
+          <div>
+            <label for="obs">Observação</label>
+            <textarea id="obs" name="obs" placeholder="Resumo, escopo, riscos, janelas, etc."></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="btnLimpar">Limpar</button>
+          <button type="submit" class="btn btn-primary">Criar Evento</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- DIREITA – Painel de Cards -->
+    <aside class="panel side">
+      <h2>Agenda (Direita)</h2>
+      <div class="legend">
+        <span class="dot ag"></span> Agendamento
+        <span style="width:14px"></span>
+        <span class="dot ev"></span> Evento
+      </div>
+      <div id="listaCards" class="list">
+        <div class="empty">Nenhum item ainda. Crie um evento à esquerda.</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+/* ===========================
+   CONFIGURAÇÃO
+   =========================== */
+
+/**
+ * Se a página estiver hospedada no SharePoint Online (mesmo domínio da lista),
+ * o script tenta salvar usando REST (_api/web/lists/...). Caso falhe, cai no localStorage.
+ *
+ * → Crie as listas abaixo OU ajuste os nomes:
+ * LISTA_EVENTOS:
+ *   - Title (Texto)                 → nome do evento (usamos 'Title' por compatibilidade)
+ *   - CHG (Texto)                   → número da mudança (opcional)
+ *   - DataHora (Data e Hora)        → data/hora do evento
+ *   - Responsavel (Texto)           → responsável (opcional)
+ *   - Observacao (Múltiplas linhas) → observação
+ *
+ * LISTA_AGENDAMENTOS (se já existir e quiser mostrar junto, manter. Se não, ignorar)
+ *   - Estrutura equivalente, mas com Category/Tipo = "Agendamento" (opcional)
+ */
+const CONFIG = {
+  LIST_EVENTOS: 'LISTA_EVENTOS',
+  LIST_AGENDAMENTOS: 'LISTA_AGENDAMENTOS', // usado só para leitura se existir
+  // Mostra agendamentos? (se não usar, deixe false)
+  SHOW_AGENDAMENTOS: false
+};
+
+/* ===========================
+   UTILITÁRIOS
+   =========================== */
+const el = id => document.getElementById(id);
+
+function toast(msg, type='ok'){
+  const box = el('toast');
+  const t = document.createElement('div');
+  t.className = 't ' + (type === 'err' ? 'err' : 'ok');
+  t.textContent = msg;
+  box.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(6px)'; }, 2500);
+  setTimeout(()=>{ box.removeChild(t); }, 3200);
+}
+
+function isSharePoint(){
+  // Heurística simples: SharePoint/Office URLs costumam conter "/sites/" ou ".sharepoint.com"
+  return location.hostname.includes('.sharepoint.com') || location.pathname.includes('/sites/');
+}
+
+function fmtDateTimeISO(dtLocal){
+  // Converte valor de input datetime-local (ex.: 2026-03-20T22:30) para ISO completo (UTC) mantendo timezone local
+  try{
+    const d = new Date(dtLocal);
+    return d.toISOString();
+  }catch(e){
+    return null;
+  }
+}
+
+function fmtHuman(dtIso){
+  try{
+    const d = new Date(dtIso);
+    // Formatação brasileira curta
+    const data = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const hora = d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    return `${data} ${hora}`;
+  }catch(e){
+    return dtIso;
+  }
+}
+
+function uid(){ return 'id_' + Math.random().toString(36).slice(2,9); }
+
+/* ===========================
+   PERSISTÊNCIA
+   =========================== */
+const STORAGE_KEYS = {
+  eventos: 'wp_eventos_v1',
+  ags:     'wp_agendamentos_v1'
+};
+
+function loadLocal(key){
+  try{ return JSON.parse(localStorage.getItem(key) || '[]'); }catch(_){ return []; }
+}
+function saveLocal(key, arr){
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+
+/* ----- SharePoint REST Helpers ----- */
+async function spRequest(url, options={}){
+  // Assumindo contexto SharePoint com cookies FedAuth. Sem headers X-RequestDigest no modo GET/POST moderno (Fetch + SameSite).
+  const defaultHeaders = {
+    'Accept': 'application/json;odata=nometadata'
+  };
+  options.headers = Object.assign(defaultHeaders, options.headers||{});
+  const res = await fetch(url, options);
+  if(!res.ok){
+    const txt = await res.text().catch(()=> '');
+    throw new Error(`SharePoint ${res.status}: ${txt || res.statusText}`);
+  }
+  return res.json().catch(()=> ({}));
+}
+
+function spBase(){
+  // Ex.: https://tenant.sharepoint.com/sites/MeuSite/_api/...
+  const base = location.origin + location.pathname.split('/_layouts')[0].replace(/\/$/, '');
+  return base + '/_api';
+}
+
+async function spAddEvento(item){
+  const url = `${spBase()}/web/lists/getbytitle('${encodeURIComponent(CONFIG.LIST_EVENTOS)}')/items`;
+  return spRequest(url, {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json;odata=verbose'
+    },
+    body: JSON.stringify({
+      Title: item.nome,          // usa Title para compat
+      CHG: item.chg || '',
+      DataHora: item.dataHoraISO,
+      Responsavel: item.responsavel || '',
+      Observacao: item.obs || ''
+    })
+  });
+}
+
+async function spLoadList(listTitle, select='Id,Title,CHG,DataHora,Responsavel,Observacao', top=50){
+  const url = `${spBase()}/web/lists/getbytitle('${encodeURIComponent(listTitle)}')/items?$select=${select}&$top=${top}&$orderby=DataHora desc`;
+  return spRequest(url, { method:'GET' });
+}
+
+/* ===========================
+   RENDER
+   =========================== */
+function render(items){
+  const box = el('listaCards');
+  box.innerHTML = '';
+
+  if(!items.length){
+    const emp = document.createElement('div');
+    emp.className = 'empty';
+    emp.textContent = 'Nenhum item ainda. Crie um evento à esquerda.';
+    box.appendChild(emp);
+    return;
+  }
+
+  for(const it of items){
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const badge = document.createElement('div');
+    badge.className = 'badge ' + (it.tipo === 'agendamento' ? 'ag' : 'ev');
+    badge.textContent = it.tipo === 'agendamento' ? 'Agendamento' : 'Evento';
+    card.appendChild(badge);
+
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = it.nome || '(Sem título)';
+    card.appendChild(title);
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    const pedacos = [];
+    if(it.dataHoraISO) pedacos.push('📅 ' + fmtHuman(it.dataHoraISO));
+    if(it.chg) pedacos.push('🔁 ' + it.chg);
+    if(it.responsavel) pedacos.push('👤 ' + it.responsavel);
+    meta.textContent = pedacos.join('   •   ');
+    card.appendChild(meta);
+
+    if(it.obs){
+      const obs = document.createElement('div');
+      obs.className = 'obs';
+      obs.textContent = it.obs;
+      card.appendChild(obs);
+    }
+
+    box.appendChild(card);
+  }
+}
+
+/* ===========================
+   LOAD INICIAL (SharePoint → fallback local)
+   =========================== */
+async function loadAll(){
+  let eventos = [];
+  let ags = [];
+
+  if(isSharePoint()){
+    try{
+      const dataEv = await spLoadList(CONFIG.LIST_EVENTOS);
+      eventos = (dataEv.value || []).map(x => ({
+        id: x.Id, tipo:'evento',
+        nome: x.Title, chg: x.CHG, dataHoraISO: x.DataHora, responsavel: x.Responsavel, obs: x.Observacao
+      }));
+    }catch(e){
+      console.warn('Falha ao ler eventos no SharePoint:', e.message);
+      eventos = loadLocal(STORAGE_KEYS.eventos);
+    }
+
+    if(CONFIG.SHOW_AGENDAMENTOS){
+      try{
+        const dataAg = await spLoadList(CONFIG.LIST_AGENDAMENTOS);
+        ags = (dataAg.value || []).map(x => ({
+          id: x.Id, tipo:'agendamento',
+          nome: x.Title, chg: x.CHG, dataHoraISO: x.DataHora, responsavel: x.Responsavel, obs: x.Observacao
+        }));
+      }catch(e){
+        console.warn('Falha ao ler agendamentos no SharePoint:', e.message);
+        ags = loadLocal(STORAGE_KEYS.ags);
+      }
+    }
+  }else{
+    eventos = loadLocal(STORAGE_KEYS.eventos);
+    if(CONFIG.SHOW_AGENDAMENTOS) ags = loadLocal(STORAGE_KEYS.ags);
+  }
+
+  // Combina e ordena por data (desc)
+  const all = [...eventos, ...ags].sort((a,b)=>{
+    return (b.dataHoraISO||'').localeCompare(a.dataHoraISO||'');
+  });
+
+  render(all);
+}
+
+/* ===========================
+   SUBMISSÃO DO FORMULÁRIO
+   =========================== */
+function collectForm(){
+  const nome = el('nomeEvento').value.trim();
+  const chg = el('chg').value.trim();
+  const dataLocal = el('dataHora').value;
+  const responsavel = el('responsavel').value.trim();
+  const obs = el('obs').value.trim();
+
+  if(!nome){ throw new Error('Informe o Nome do Evento.'); }
+  if(!dataLocal){ throw new Error('Informe Data e hora.'); }
+
+  // Regras simples para CHG
+  let chgNorm = chg;
+  if(chg && !/^CHG/i.test(chg)) chgNorm = 'CHG' + chg;
+
+  const dataHoraISO = fmtDateTimeISO(dataLocal);
+  if(!dataHoraISO){ throw new Error('Data/hora inválida.'); }
+
+  return {
+    id: uid(),
+    tipo:'evento',
+    nome, chg: chgNorm,
+    dataHoraISO,
+    responsavel,
+    obs
+  };
+}
+
+async function handleSubmit(ev){
+  ev.preventDefault();
+  try{
+    const item = collectForm();
+
+    if(isSharePoint()){
+      // tenta gravar no SharePoint
+      try{
+        await spAddEvento(item);
+        toast('Evento criado no SharePoint com sucesso.', 'ok');
+      }catch(e){
+        console.warn('Erro ao salvar no SharePoint, usando localStorage. Detalhe:', e.message);
+        // fallback local
+        const arr = loadLocal(STORAGE_KEYS.eventos);
+        arr.unshift(item);
+        saveLocal(STORAGE_KEYS.eventos, arr);
+        toast('SharePoint indisponível. Evento salvo localmente.', 'err');
+      }
+    }else{
+      // ambiente local
+      const arr = loadLocal(STORAGE_KEYS.eventos);
+      arr.unshift(item);
+      saveLocal(STORAGE_KEYS.eventos, arr);
+      toast('Evento criado (armazenado localmente).', 'ok');
+    }
+
+    // limpe e recarregue
+    el('formEvento').reset();
+    await loadAll();
+
+  }catch(e){
+    toast(e.message || 'Erro ao criar evento.', 'err');
+  }
+}
+
+/* ===========================
+   WIRES
+   =========================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Pre-popula data-hora com agora+30min
+  const d = new Date(Date.now() + 30*60*1000);
+  const pad = n => String(n).padStart(2,'0');
+  const localValue = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  el('dataHora').value = localValue;
+
+  el('formEvento').addEventListener('submit', handleSubmit);
+  el('btnLimpar').addEventListener('click', ()=> el('formEvento').reset());
+  loadAll();
+});
+</script>
+</body>
+</html>
