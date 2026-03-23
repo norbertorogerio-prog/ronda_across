@@ -2,95 +2,116 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Painel de Ronda</title>
-
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Ronda • Prédio</title>
 
 <style>
 :root{
-  --vivo:#6A1B9A;
-  --vivo-dark:#4A0072;
-  --valid:#2ECC71;
-  --lock:#9E9E9E;
-  --occ:#FF9800;
-  --prob:#E53935;
+  --vivo:#6A1B9A; --vivo-dark:#4A0072;
+  --valid:#2ECC71; --lock:#9E9E9E; --occ:#FF9800; --prob:#E53935;
+  --bg:#F6F3F9; --card:#FFFFFF; --line:#E9E2EE; --ink:#2B2B2B;
 }
 
+*{box-sizing:border-box}
 body{
   margin:0;
   font-family:system-ui;
-  background:#f4f4f6;
+  background:var(--bg);
 }
 
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap:16px;
-  padding:16px;
-}
-
-/* PRÉDIO */
-.building{
-  background:white;
-  border-radius:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,.08);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
+.app{
+  max-width:900px;
+  margin:auto;
+  padding:12px;
 }
 
 /* HEADER */
 .header{
+  font-weight:900;
+  font-size:18px;
+  margin-bottom:10px;
+}
+
+/* CARD */
+.card{
+  background:white;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
+  box-shadow:0 6px 16px rgba(0,0,0,.08);
+}
+
+/* INPUTS */
+input,select,textarea,button{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:14px;
+}
+
+button{
   background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
   color:white;
-  font-weight:900;
-  text-align:center;
-  padding:10px;
+  font-weight:700;
+  border:none;
 }
 
-/* CORPO */
-.body{
-  padding:10px;
+/* CANVAS */
+.canvas{
+  position:relative;
+  width:100%;
+  border-radius:14px;
+  overflow:hidden;
+  background:white;
+  border:1px solid #eee;
+}
+
+/* TOPO */
+.topbar{
   display:flex;
-  flex-direction:column;
+  justify-content:space-between;
+  padding:10px;
+  background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
+  color:white;
+  font-weight:700;
+}
+
+/* ÁREA */
+.area{
+  position:relative;
+  height:700px;
+}
+
+/* LINHAS */
+.row{
+  position:absolute;
+  left:60px;
+  right:10px;
+  display:flex;
   gap:8px;
 }
 
-/* ANDAR */
-.floor{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-/* LABEL ANDAR */
-.floor-label{
-  width:30px;
+.label{
+  position:absolute;
+  left:10px;
   font-size:12px;
   font-weight:800;
-  color:#666;
 }
 
 /* SALAS */
-.rooms{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
-
 .slot{
-  min-width:34px;
-  height:26px;
+  min-width:44px;
+  height:28px;
   border-radius:6px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:12px;
-  font-weight:900;
   color:white;
-  cursor:pointer;
+  font-weight:900;
+  font-size:13px;
+  border:2px solid white;
 }
 
 .valid{background:var(--valid)}
@@ -100,51 +121,51 @@ body{
 
 /* FOOTER */
 .footer{
-  margin-top:auto;
   padding:8px;
-  border-top:1px solid #eee;
+  font-size:12px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  font-size:12px;
-}
-
-/* BOTÃO */
-.btn{
-  background:var(--vivo);
-  color:white;
-  border:none;
-  border-radius:6px;
-  padding:4px 8px;
-  font-size:11px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="grid" id="grid"></div>
+<div class="app">
+
+  <div class="header">Ronda • Prédio</div>
+
+  <div class="card">
+    <input id="predio" placeholder="Nome do prédio">
+    <textarea id="obs" placeholder="Observações"></textarea>
+    <button onclick="add()">Adicionar sala (ex: 29-02)</button>
+  </div>
+
+  <div class="canvas" id="canvas">
+    <div class="topbar">
+      <span id="nome">Prédio</span>
+      <span id="total">0 salas</span>
+    </div>
+
+    <div class="area" id="area"></div>
+
+    <div class="footer">
+      <button onclick="exportPNG()">Exportar PNG</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-const order = ["VALIDADA","OCUPADA","TRANCADA","PROBLEMA"];
-
-const buildings = [
-  {
-    name:"Berrini",
-    items:[
-      {floor:29,room:"02",status:"VALIDADA"},
-      {floor:28,room:"03",status:"PROBLEMA"},
-      {floor:27,room:"05",status:"OCUPADA"}
-    ]
-  },
-  {
-    name:"Paulista",
-    items:[
-      {floor:10,room:"01",status:"TRANCADA"},
-      {floor:9,room:"02",status:"VALIDADA"}
-    ]
-  }
+let items = [
+  {floor:29,room:"02",status:"VALIDADA"},
+  {floor:28,room:"03",status:"PROBLEMA"},
+  {floor:27,room:"05",status:"OCUPADA"}
 ];
+
+const order = ["VALIDADA","OCUPADA","TRANCADA","PROBLEMA"];
 
 function cls(s){
   return {
@@ -156,68 +177,76 @@ function cls(s){
 }
 
 function render(){
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
+  const area = document.getElementById("area");
+  area.innerHTML = "";
 
-  buildings.forEach((b,idx)=>{
+  const floors = {};
+  items.forEach(i => (floors[i.floor] ||= []).push(i));
 
-    const card = document.createElement("div");
-    card.className = "building";
-    card.id = "b"+idx;
+  const keys = Object.keys(floors).sort((a,b)=>b-a);
 
-    const floors = {};
-    b.items.forEach(i => (floors[i.floor] ||= []).push(i));
-    const keys = Object.keys(floors).sort((a,b)=>b-a);
+  keys.forEach((f,i)=>{
+    const y = 60 + i*50;
 
-    let floorsHTML = "";
+    const label = document.createElement("div");
+    label.className="label";
+    label.style.top=y+"px";
+    label.textContent=f;
 
-    keys.forEach(f=>{
-      floorsHTML += `
-        <div class="floor">
-          <div class="floor-label">${f}</div>
-          <div class="rooms">
-            ${floors[f].map(r=>`
-              <div class="slot ${cls(r.status)}" onclick="changeStatus(${idx},${f},'${r.room}')">
-                ${r.room}
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
+    const row = document.createElement("div");
+    row.className="row";
+    row.style.top=y+"px";
+
+    floors[f].forEach(r=>{
+      const el=document.createElement("div");
+      el.className="slot "+cls(r.status);
+      el.textContent=r.room;
+
+      el.onclick = () => {
+        const next = order[(order.indexOf(r.status)+1)%4];
+        r.status = next;
+        render();
+      };
+
+      row.appendChild(el);
     });
 
-    card.innerHTML = `
-      <div class="header">${b.name}</div>
-      <div class="body">${floorsHTML}</div>
-      <div class="footer">
-        <span>${b.items.length} salas</span>
-        <button class="btn" onclick="exportPNG(${idx})">PNG</button>
-      </div>
-    `;
-
-    grid.appendChild(card);
+    area.appendChild(label);
+    area.appendChild(row);
   });
+
+  document.getElementById("nome").textContent =
+    document.getElementById("predio").value || "Prédio";
+
+  document.getElementById("total").textContent =
+    items.length + " salas";
 }
 
-/* TROCA STATUS */
-function changeStatus(i,floor,room){
-  const item = buildings[i].items.find(x=>x.floor==floor && x.room==room);
-  const next = order[(order.indexOf(item.status)+1)%4];
-  item.status = next;
+function add(){
+  const val = prompt("Sala (ex: 29-02)");
+  if(!val) return;
+
+  const m = val.match(/(\d+)[-\/](\d+)/);
+  if(!m) return alert("Formato inválido");
+
+  items.push({
+    floor:parseInt(m[1]),
+    room:m[2].padStart(2,"0"),
+    status:"VALIDADA"
+  });
+
   render();
 }
 
-/* EXPORT PNG */
-async function exportPNG(i){
-  const node = document.getElementById("b"+i);
-  const canvas = await html2canvas(node,{scale:2});
-  const url = canvas.toDataURL();
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "predio_"+i+".png";
+async function exportPNG(){
+  const canvas = await html2canvas(document.getElementById("canvas"),{scale:2});
+  const a=document.createElement("a");
+  a.href=canvas.toDataURL();
+  a.download="ronda.png";
   a.click();
 }
+
+document.getElementById("predio").oninput = render;
 
 render();
 </script>
