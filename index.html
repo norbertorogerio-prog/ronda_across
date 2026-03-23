@@ -2,501 +2,615 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Agenda & Eventos – Workplace</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Ronda • Prédio Eco Berrini</title>
 <style>
   :root{
-    /* Paleta */
-    --bg:#0f1116;
-    --panel:#151823;
-    --panel-2:#0f1420;
-    --text:#e6e8ef;
-    --muted:#9aa3b2;
-    --border:#232839;
-
-    /* Cores dos cards */
-    --agendamento:#22c55e; /* verde */
-    --evento:#8b5cf6;      /* roxo */
-
-    /* Acentos / foco */
-    --focus:#3b82f6;
-
-    /* Tipografia */
-    --radius:12px;
-    --radius-sm:10px;
-    --shadow:0 6px 24px rgba(0,0,0,.35);
+    --vivo:#6A1B9A; --vivo-dark:#4A0072;
+    --valid:#2ECC71; --lock:#9E9E9E; --occ:#FF9800; --prob:#E53935;
+    --bg:#F6F3F9; --card:#FFFFFF; --line:#E9E2EE; --ink:#2B2B2B; --muted:#777;
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--text);
-    font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.35 "Segoe UI",system-ui}
+  .app{max-width:1200px;margin:0 auto;padding:16px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .brand{font-weight:900;font-size:28px;color:#fff;padding:6px 12px;border-radius:999px;background:linear-gradient(135deg,var(--vivo),var(--vivo-dark))}
+  .title{font-size:18px;font-weight:700;color:var(--vivo-dark)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 20px rgba(38,12,77,.06);padding:14px;margin:12px 0}
+  label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+  input,select,textarea,button{
+    width:100%;border:1px solid var(--line);border-radius:12px;
+    padding:11px 12px;font:500 15px/1.2 inherit;background:#fff;color:var(--ink);
+  }
+  textarea{min-height:70px;resize:vertical}
+  button{background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));color:white;border:none;font-weight:700;cursor:pointer;transition:transform 0.1s ease;}
+  button:active{transform:scale(0.98);}
+  button.ghost{background:white;color:var(--vivo);border:1px solid var(--vivo)}
+  .grid{display:grid;gap:10px}
+  @media(min-width:800px){ .cols-2{grid-template-columns:1fr 1fr} }
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .pill{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:12px;background:white;border:1px solid var(--line)}
+  .dot{width:14px;height:14px;border-radius:4px}
+  .dot.v{background:var(--valid)} .dot.l{background:var(--lock)} .dot.o{background:var(--occ)} .dot.p{background:var(--prob)}
+  .kbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .kbtn{flex:1;background:white;color:var(--vivo);border:1px solid var(--vivo);border-radius:12px;padding:10px;font-weight:700}
+
+  /* ====== Canvas do prédio ====== */
+  .canvas-wrap{
+    position:relative;
+    margin:0 auto;
+    width:100%;
+    max-width:720px;
+    border-radius:16px;
+    overflow-x:auto;
+    overflow-y:visible;
+    border:1px solid var(--line);
+    background:white;
+  }
+  
+  .canvas-inner {
+    min-width: 720px;
+    position: relative;
   }
 
-  .app{
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+    background:linear-gradient(135deg,rgba(106,27,154,.08),rgba(74,0,114,.06));
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar .vivo{
+    background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
+    padding:6px 12px;
+    border-radius:999px;
+    color:white;
+    font-weight:900;
+    font-size: 14px;
+  }
+  .bg-layer{
+    position:relative;
+    width:720px;
+    height:auto;
+    min-height:1080px;
+    background:#fafafa;
+  }
+  .bg-layer svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-custom{
+    position:absolute;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+    opacity:.28;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .overlay{
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    pointer-events:none;
+    z-index: 2;
+  }
+  .row{
+    position:absolute;
+    left:70px;
+    right:70px;
+    height:30px;
     display:grid;
-    grid-template-columns: 1.15fr .85fr;
-    gap:24px; padding:24px; max-width:1400px; margin:0 auto;
-  }
-  @media (max-width: 1100px){
-    .app{grid-template-columns: 1fr}
+    grid-auto-flow:column;
+    gap:8px;
+    align-items:center;
   }
 
-  .panel{
-    background:linear-gradient(180deg,var(--panel),var(--panel-2));
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:20px;
+  .slot{
+    min-width:44px;
+    height:26px;
+    border-radius:6px;
+    font-size:14px;
+    font-weight:900;
+    color:white;
+    text-shadow: 0px 1px 2px rgba(0,0,0,0.55), 0px 0px 2px rgba(0,0,0,0.55);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border:2px solid #FFFFFF;
+    box-shadow:0 0 6px rgba(0,0,0,0.35);
   }
-  .panel h2{
-    margin:0 0 14px; font-weight:700; letter-spacing:.2px; font-size:20px
-  }
-  .grid{
-    display:grid; gap:16px;
-    grid-template-columns: 1fr 1fr;
-  }
-  .grid-1{grid-template-columns: 1fr;}
-  .row{display:flex; gap:16px}
-  label{
-    display:block; margin:0 0 8px; color:var(--muted); font-size:12px; letter-spacing:.3px
-  }
-  input[type="text"], input[type="datetime-local"], textarea{
-    width:100%; background:#0c101a; color:var(--text);
-    border:1px solid var(--border); border-radius:10px;
-    padding:12px 14px; outline:none; transition:.15s border, .15s box-shadow
-  }
-  input[type="text"]:focus, input[type="datetime-local"]:focus, textarea:focus{
-    border-color:var(--focus);
-    box-shadow:0 0 0 3px color-mix(in oklab, var(--focus) 25%, transparent);
-  }
-  textarea{min-height:110px; resize:vertical}
+  .slot.valid{background:var(--valid)}
+  .slot.lock{background:var(--lock)}
+  .slot.occ{background:var(--occ)}
+  .slot.prob{background:var(--prob)}
 
-  .hint{color:var(--muted); font-size:12px; margin-top:2px}
-
-  .actions{display:flex; gap:12px; justify-content:flex-end; margin-top:6px}
-  .btn{
-    appearance:none; border:1px solid var(--border); background:#0c101a; color:var(--text);
-    padding:10px 14px; border-radius:10px; cursor:pointer; transition:.15s transform, .15s background, .15s border-color
-  }
-  .btn:active{transform:translateY(1px)}
-  .btn-primary{
-    background:linear-gradient(180deg, #2a6cf6, #1857e6);
-    border-color: #1f49c7;
-  }
-  .btn-ghost{background:transparent}
-  .btn:hover{border-color:#2a6cf6}
-
-  /* Coluna direita */
-  .side{display:flex; flex-direction:column; gap:16px}
-  .legend{
-    display:flex; gap:10px; align-items:center; color:var(--muted); font-size:12px
-  }
-  .dot{
-    width:10px; height:10px; border-radius:50%
-  }
-  .dot.ag{background:var(--agendamento)}
-  .dot.ev{background:var(--evento)}
-
-  .list{
-    display:grid; gap:12px; max-height:calc(100vh - 240px); overflow:auto; padding-right:4px
-  }
-  .card{
-    background:#0c101a; border:1px solid var(--border); border-radius:var(--radius-sm);
-    padding:14px; box-shadow:var(--shadow);
-    display:grid; gap:6px; position:relative
-  }
-  .card .badge{
-    position:absolute; top:12px; right:12px;
-    font-size:11px; padding:2px 8px; border-radius:14px; color:#0c101a; font-weight:700;
-  }
-  .badge.ag{background:var(--agendamento)}
-  .badge.ev{background:var(--evento)}
-
-  .title{font-weight:700}
-  .meta{color:var(--muted); font-size:12px}
-  .obs{color:#cad1df; font-size:13px; white-space:pre-wrap}
-
-  .empty{
-    color:var(--muted); border:1px dashed var(--border); border-radius:10px; padding:18px; text-align:center
+  .row-label{
+    position:absolute;
+    left:10px;
+    height:30px;
+    font-weight:900;
+    font-size:12px;
+    color:#555;
+    display:flex;
+    align-items:center;
+    text-shadow:0 1px 0 rgba(255,255,255,.6);
+    z-index: 3;
   }
 
-  /* Toasters */
-  .toast{
-    position:fixed; right:20px; bottom:20px; z-index:9999;
-    display:flex; flex-direction:column; gap:10px
+  .obs-container {
+    position:relative;
+    width:100%;
+    background: rgba(255,255,255,0.95);
+    border-top: 1px solid var(--line);
+    margin-top: 0;
+    z-index: 10;
   }
-  .toast .t{
-    background:#111827; border:1px solid var(--border); color:var(--text);
-    border-left:4px solid var(--focus);
-    padding:12px 14px; border-radius:10px; min-width:260px; box-shadow:var(--shadow)
+  #obsBox{
+    padding:12px 16px;
+    min-height: 70px;
+    max-height: 150px;
+    overflow:auto;
+    background:rgba(255,255,255,.98);
+    color:#333;
+    font-size:13px;
+    white-space:pre-wrap;
+    word-break:break-word;
+    border-bottom: 1px solid var(--line);
   }
-  .t.ok{border-left-color:#22c55e}
-  .t.err{border-left-color:#ef4444}
+
+  .summary-bottom{
+    padding:10px 16px;
+    background:rgba(255,255,255,.98);
+    font-size:12px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 480px) {
+    .app {
+      padding: 12px;
+    }
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .slot {
+      min-width: 36px;
+      font-size: 11px;
+    }
+    .row {
+      gap: 4px;
+    }
+    .kbtn {
+      font-size: 13px;
+      padding: 8px;
+    }
+  }
+
+  /* Toast message para feedback mobile */
+  .toast-msg {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    z-index: 9999;
+    animation: fadeInOut 2s ease;
+    pointer-events: none;
+  }
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  }
 </style>
 </head>
 <body>
-  <div class="app">
-    <!-- ESQUERDA – Formulário -->
-    <section class="panel">
-      <h2>Cadastrar Evento</h2>
 
-      <form id="formEvento" autocomplete="off">
-        <div class="grid">
-          <div>
-            <label for="nomeEvento">Nome do Evento</label>
-            <input id="nomeEvento" name="nomeEvento" type="text" placeholder="Ex.: Janela de mudança – Core SP" required />
-          </div>
-          <div>
-            <label for="chg">Número da CHG</label>
-            <input id="chg" name="chg" type="text" placeholder="Ex.: CHG0156426" />
-            <div class="hint">Opcional. Use o padrão CHGnnnnnn.</div>
-          </div>
-        </div>
+<div class="app">
+  <header>
+    <span class="brand">vivo</span>
+    <div>
+      <div class="title">Ronda • Prédio Eco Berrini</div>
+    </div>
+  </header>
 
-        <div class="grid">
-          <div>
-            <label for="dataHora">Data e hora</label>
-            <input id="dataHora" name="dataHora" type="datetime-local" required />
-            <div class="hint">Escolha data e hora do evento.</div>
-          </div>
-          <div>
-            <label for="responsavel">Responsável</label>
-            <input id="responsavel" name="responsavel" type="text" placeholder="Opcional (Ex.: Time Workplace)" />
-          </div>
-        </div>
-
-        <div class="grid-1">
-          <div>
-            <label for="obs">Observação</label>
-            <textarea id="obs" name="obs" placeholder="Resumo, escopo, riscos, janelas, etc."></textarea>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button type="button" class="btn btn-ghost" id="btnLimpar">Limpar</button>
-          <button type="submit" class="btn btn-primary">Criar Evento</button>
-        </div>
-      </form>
-    </section>
-
-    <!-- DIREITA – Painel de Cards -->
-    <aside class="panel side">
-      <h2>Agenda (Direita)</h2>
-      <div class="legend">
-        <span class="dot ag"></span> Agendamento
-        <span style="width:14px"></span>
-        <span class="dot ev"></span> Evento
+  <div class="card">
+    <div class="grid cols-2">
+      <div>
+        <label>Prédio</label>
+        <input id="predio" value="Prédio Berrini">
       </div>
-      <div id="listaCards" class="list">
-        <div class="empty">Nenhum item ainda. Crie um evento à esquerda.</div>
+      <div>
+        <label>Responsáveis</label>
+        <input id="tecnicos" placeholder="Ex: João, Maria">
       </div>
-    </aside>
+    </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <div class="card">
+    <div class="grid cols-2">
+      <div>
+        <label>Adicionar item (andar-sala)</label>
+        <input id="onePair" placeholder="29-02">
+      </div>
+      <div>
+        <label>Status</label>
+        <select id="oneStatus">
+          <option value="VALIDADA">Validada (verde)</option>
+          <option value="TRANCADA">Trancada (cinza)</option>
+          <option value="OCUPADA">Ocupada (laranja)</option>
+          <option value="PROBLEMA">Problema (vermelho)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid cols-2" style="margin-top:8px">
+      <button id="btnAdd">Adicionar</button>
+      <button class="ghost" id="btnClear">Limpar salas</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <label>Cole sua lista (andar-sala + status opcional: trancada | ocupada | problema)</label>
+    <textarea id="bulk" placeholder="Ex.:
+29-02
+29-05 ocupada
+28-03 problema
+19-02 trancada"></textarea>
+
+    <label style="margin-top:10px">Observações</label>
+    <textarea id="observacoes" placeholder="Ex.: Sala 28-03 com projetor quebrado; 19-02 trancada, chave com segurança."></textarea>
+
+    <div class="kbar">
+      <button class="kbtn" id="btnApply">Aplicar lista</button>
+      <button class="kbtn" id="btnLoadBg">Carregar fundo</button>
+      <button class="kbtn ghost" id="btnClearBg">Remover fundo</button>
+      <button class="kbtn" id="btnPNG">📸 Exportar PNG</button>
+      <input type="file" id="bgFile" accept="image/*" style="display:none">
+    </div>
+
+    <div class="legend">
+      <span class="pill"><span class="dot v"></span> Validada</span>
+      <span class="pill"><span class="dot l"></span> Trancada</span>
+      <span class="pill"><span class="dot o"></span> Ocupada</span>
+      <span class="pill"><span class="dot p"></span> Problema</span>
+    </div>
+  </div>
+
+  <div class="card canvas-wrap" id="exportCanvas">
+    <div class="canvas-inner">
+      <div class="topbar">
+        <span class="vivo">vivo</span>
+        <div>
+          <div id="sumPredio">Prédio</div>
+          <div id="sumResp">Responsáveis</div>
+        </div>
+        <div id="sumRight">0 salas • 0 problemas</div>
+      </div>
+
+      <div class="bg-layer" id="bgLayer">
+        <div class="bg-custom" id="bgCustom"></div>
+        <svg viewBox="0 0 720 1080" aria-hidden="true">
+          <rect x="40" y="80" width="640" height="960" rx="6" fill="#EEE5F3" stroke="#E4DCEC"/>
+          <polygon points="40,80 360,20 680,80" fill="#D6C7EA"/>
+        </svg>
+        <div class="overlay" id="overlay"></div>
+      </div>
+
+      <div class="obs-container">
+        <div id="obsBox"></div>
+        <div class="summary-bottom">
+          <span id="sumDate"></span>
+          <span id="sumDist"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-/* ===========================
-   CONFIGURAÇÃO
-   =========================== */
-
-/**
- * Se a página estiver hospedada no SharePoint Online (mesmo domínio da lista),
- * o script tenta salvar usando REST (_api/web/lists/...). Caso falhe, cai no localStorage.
- *
- * → Crie as listas abaixo OU ajuste os nomes:
- * LISTA_EVENTOS:
- *   - Title (Texto)                 → nome do evento (usamos 'Title' por compatibilidade)
- *   - CHG (Texto)                   → número da mudança (opcional)
- *   - DataHora (Data e Hora)        → data/hora do evento
- *   - Responsavel (Texto)           → responsável (opcional)
- *   - Observacao (Múltiplas linhas) → observação
- *
- * LISTA_AGENDAMENTOS (se já existir e quiser mostrar junto, manter. Se não, ignorar)
- *   - Estrutura equivalente, mas com Category/Tipo = "Agendamento" (opcional)
- */
-const CONFIG = {
-  LIST_EVENTOS: 'LISTA_EVENTOS',
-  LIST_AGENDAMENTOS: 'LISTA_AGENDAMENTOS', // usado só para leitura se existir
-  // Mostra agendamentos? (se não usar, deixe false)
-  SHOW_AGENDAMENTOS: false
-};
-
-/* ===========================
-   UTILITÁRIOS
-   =========================== */
-const el = id => document.getElementById(id);
-
-function toast(msg, type='ok'){
-  const box = el('toast');
-  const t = document.createElement('div');
-  t.className = 't ' + (type === 'err' ? 'err' : 'ok');
-  t.textContent = msg;
-  box.appendChild(t);
-  setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(6px)'; }, 2500);
-  setTimeout(()=>{ box.removeChild(t); }, 3200);
-}
-
-function isSharePoint(){
-  // Heurística simples: SharePoint/Office URLs costumam conter "/sites/" ou ".sharepoint.com"
-  return location.hostname.includes('.sharepoint.com') || location.pathname.includes('/sites/');
-}
-
-function fmtDateTimeISO(dtLocal){
-  // Converte valor de input datetime-local (ex.: 2026-03-20T22:30) para ISO completo (UTC) mantendo timezone local
-  try{
-    const d = new Date(dtLocal);
-    return d.toISOString();
-  }catch(e){
-    return null;
+(() => {
+  const $ = s => document.querySelector(s);
+  
+  // Função para mostrar toast (feedback mobile)
+  function showToast(message, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-msg';
+    toast.textContent = message;
+    toast.style.background = isError ? 'rgba(229, 57, 53, 0.9)' : 'rgba(0,0,0,0.8)';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
   }
-}
 
-function fmtHuman(dtIso){
-  try{
-    const d = new Date(dtIso);
-    // Formatação brasileira curta
-    const data = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
-    const hora = d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
-    return `${data} ${hora}`;
-  }catch(e){
-    return dtIso;
-  }
-}
-
-function uid(){ return 'id_' + Math.random().toString(36).slice(2,9); }
-
-/* ===========================
-   PERSISTÊNCIA
-   =========================== */
-const STORAGE_KEYS = {
-  eventos: 'wp_eventos_v1',
-  ags:     'wp_agendamentos_v1'
-};
-
-function loadLocal(key){
-  try{ return JSON.parse(localStorage.getItem(key) || '[]'); }catch(_){ return []; }
-}
-function saveLocal(key, arr){
-  localStorage.setItem(key, JSON.stringify(arr));
-}
-
-/* ----- SharePoint REST Helpers ----- */
-async function spRequest(url, options={}){
-  // Assumindo contexto SharePoint com cookies FedAuth. Sem headers X-RequestDigest no modo GET/POST moderno (Fetch + SameSite).
-  const defaultHeaders = {
-    'Accept': 'application/json;odata=nometadata'
+  const state = { items:[], bg:null };
+  const clsByStatus = {
+    VALIDADA:"valid", TRANCADA:"lock", OCUPADA:"occ", PROBLEMA:"prob"
   };
-  options.headers = Object.assign(defaultHeaders, options.headers||{});
-  const res = await fetch(url, options);
-  if(!res.ok){
-    const txt = await res.text().catch(()=> '');
-    throw new Error(`SharePoint ${res.status}: ${txt || res.statusText}`);
-  }
-  return res.json().catch(()=> ({}));
-}
 
-function spBase(){
-  // Ex.: https://tenant.sharepoint.com/sites/MeuSite/_api/...
-  const base = location.origin + location.pathname.split('/_layouts')[0].replace(/\/$/, '');
-  return base + '/_api';
-}
-
-async function spAddEvento(item){
-  const url = `${spBase()}/web/lists/getbytitle('${encodeURIComponent(CONFIG.LIST_EVENTOS)}')/items`;
-  return spRequest(url, {
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json;odata=verbose'
-    },
-    body: JSON.stringify({
-      Title: item.nome,          // usa Title para compat
-      CHG: item.chg || '',
-      DataHora: item.dataHoraISO,
-      Responsavel: item.responsavel || '',
-      Observacao: item.obs || ''
-    })
-  });
-}
-
-async function spLoadList(listTitle, select='Id,Title,CHG,DataHora,Responsavel,Observacao', top=50){
-  const url = `${spBase()}/web/lists/getbytitle('${encodeURIComponent(listTitle)}')/items?$select=${select}&$top=${top}&$orderby=DataHora desc`;
-  return spRequest(url, { method:'GET' });
-}
-
-/* ===========================
-   RENDER
-   =========================== */
-function render(items){
-  const box = el('listaCards');
-  box.innerHTML = '';
-
-  if(!items.length){
-    const emp = document.createElement('div');
-    emp.className = 'empty';
-    emp.textContent = 'Nenhum item ainda. Crie um evento à esquerda.';
-    box.appendChild(emp);
-    return;
-  }
-
-  for(const it of items){
-    const card = document.createElement('div');
-    card.className = 'card';
-
-    const badge = document.createElement('div');
-    badge.className = 'badge ' + (it.tipo === 'agendamento' ? 'ag' : 'ev');
-    badge.textContent = it.tipo === 'agendamento' ? 'Agendamento' : 'Evento';
-    card.appendChild(badge);
-
-    const title = document.createElement('div');
-    title.className = 'title';
-    title.textContent = it.nome || '(Sem título)';
-    card.appendChild(title);
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    const pedacos = [];
-    if(it.dataHoraISO) pedacos.push('📅 ' + fmtHuman(it.dataHoraISO));
-    if(it.chg) pedacos.push('🔁 ' + it.chg);
-    if(it.responsavel) pedacos.push('👤 ' + it.responsavel);
-    meta.textContent = pedacos.join('   •   ');
-    card.appendChild(meta);
-
-    if(it.obs){
-      const obs = document.createElement('div');
-      obs.className = 'obs';
-      obs.textContent = it.obs;
-      card.appendChild(obs);
-    }
-
-    box.appendChild(card);
-  }
-}
-
-/* ===========================
-   LOAD INICIAL (SharePoint → fallback local)
-   =========================== */
-async function loadAll(){
-  let eventos = [];
-  let ags = [];
-
-  if(isSharePoint()){
-    try{
-      const dataEv = await spLoadList(CONFIG.LIST_EVENTOS);
-      eventos = (dataEv.value || []).map(x => ({
-        id: x.Id, tipo:'evento',
-        nome: x.Title, chg: x.CHG, dataHoraISO: x.DataHora, responsavel: x.Responsavel, obs: x.Observacao
-      }));
-    }catch(e){
-      console.warn('Falha ao ler eventos no SharePoint:', e.message);
-      eventos = loadLocal(STORAGE_KEYS.eventos);
-    }
-
-    if(CONFIG.SHOW_AGENDAMENTOS){
-      try{
-        const dataAg = await spLoadList(CONFIG.LIST_AGENDAMENTOS);
-        ags = (dataAg.value || []).map(x => ({
-          id: x.Id, tipo:'agendamento',
-          nome: x.Title, chg: x.CHG, dataHoraISO: x.DataHora, responsavel: x.Responsavel, obs: x.Observacao
-        }));
-      }catch(e){
-        console.warn('Falha ao ler agendamentos no SharePoint:', e.message);
-        ags = loadLocal(STORAGE_KEYS.ags);
-      }
-    }
-  }else{
-    eventos = loadLocal(STORAGE_KEYS.eventos);
-    if(CONFIG.SHOW_AGENDAMENTOS) ags = loadLocal(STORAGE_KEYS.ags);
-  }
-
-  // Combina e ordena por data (desc)
-  const all = [...eventos, ...ags].sort((a,b)=>{
-    return (b.dataHoraISO||'').localeCompare(a.dataHoraISO||'');
-  });
-
-  render(all);
-}
-
-/* ===========================
-   SUBMISSÃO DO FORMULÁRIO
-   =========================== */
-function collectForm(){
-  const nome = el('nomeEvento').value.trim();
-  const chg = el('chg').value.trim();
-  const dataLocal = el('dataHora').value;
-  const responsavel = el('responsavel').value.trim();
-  const obs = el('obs').value.trim();
-
-  if(!nome){ throw new Error('Informe o Nome do Evento.'); }
-  if(!dataLocal){ throw new Error('Informe Data e hora.'); }
-
-  // Regras simples para CHG
-  let chgNorm = chg;
-  if(chg && !/^CHG/i.test(chg)) chgNorm = 'CHG' + chg;
-
-  const dataHoraISO = fmtDateTimeISO(dataLocal);
-  if(!dataHoraISO){ throw new Error('Data/hora inválida.'); }
-
-  return {
-    id: uid(),
-    tipo:'evento',
-    nome, chg: chgNorm,
-    dataHoraISO,
-    responsavel,
-    obs
+  const pad2 = n => String(n).padStart(2,"0");
+  const parsePair = (t) => {
+    const m = String(t).trim().match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
+    if(!m) return null;
+    return { floor:parseInt(m[1],10), room:pad2(parseInt(m[2],10)) };
   };
-}
+  
+  const parseStatusHint = (rest) => {
+    const s = String(rest||"").toLowerCase();
+    if(/problema|problem|falha|erro|issue/.test(s)) return "PROBLEMA";
+    if(/tranc/.test(s)) return "TRANCADA";
+    if(/ocup/.test(s))  return "OCUPADA";
+    return "VALIDADA";
+  };
 
-async function handleSubmit(ev){
-  ev.preventDefault();
-  try{
-    const item = collectForm();
+  function render(){
+    $("#sumPredio").textContent = $("#predio").value || "Prédio";
+    $("#sumResp").textContent   = $("#tecnicos").value || "";
+    $("#obsBox").textContent = $("#observacoes").value.trim() || "Nenhuma observação registrada.";
 
-    if(isSharePoint()){
-      // tenta gravar no SharePoint
-      try{
-        await spAddEvento(item);
-        toast('Evento criado no SharePoint com sucesso.', 'ok');
-      }catch(e){
-        console.warn('Erro ao salvar no SharePoint, usando localStorage. Detalhe:', e.message);
-        // fallback local
-        const arr = loadLocal(STORAGE_KEYS.eventos);
-        arr.unshift(item);
-        saveLocal(STORAGE_KEYS.eventos, arr);
-        toast('SharePoint indisponível. Evento salvo localmente.', 'err');
-      }
-    }else{
-      // ambiente local
-      const arr = loadLocal(STORAGE_KEYS.eventos);
-      arr.unshift(item);
-      saveLocal(STORAGE_KEYS.eventos, arr);
-      toast('Evento criado (armazenado localmente).', 'ok');
+    const overlay = $("#overlay");
+    overlay.innerHTML = "";
+
+    const floors = {};
+    state.items.forEach(i => {
+      if(!floors[i.floor]) floors[i.floor] = [];
+      floors[i.floor].push(i);
+    });
+    const ordered = Object.keys(floors).sort((a,b)=>parseInt(b)-parseInt(a));
+    
+    if(ordered.length === 0) {
+      const emptyMsg = document.createElement("div");
+      emptyMsg.style.position = "absolute";
+      emptyMsg.style.top = "50%";
+      emptyMsg.style.left = "50%";
+      emptyMsg.style.transform = "translate(-50%, -50%)";
+      emptyMsg.style.color = "#999";
+      emptyMsg.style.fontSize = "14px";
+      emptyMsg.style.fontWeight = "bold";
+      emptyMsg.textContent = "Nenhuma sala cadastrada. Use os campos acima.";
+      overlay.appendChild(emptyMsg);
+    } else {
+      const topY = 100;
+      const bottomY = 980;
+      const total = ordered.length;
+      const span = (bottomY - topY);
+      
+      ordered.forEach((f, idx) => {
+        let y = topY + (span * (idx / (total - 1 || 1)));
+        y = Math.min(Math.max(y, topY), bottomY - 30);
+        
+        const label = document.createElement("div");
+        label.className = "row-label";
+        label.style.top = y + "px";
+        label.textContent = "Andar " + pad2(parseInt(f));
+        overlay.appendChild(label);
+        
+        const row = document.createElement("div");
+        row.className = "row";
+        row.style.top = y + "px";
+        
+        const salas = floors[f].sort((a,b) => parseInt(a.room) - parseInt(b.room));
+        salas.forEach(sala => {
+          const slot = document.createElement("div");
+          slot.className = "slot " + clsByStatus[sala.status];
+          slot.textContent = sala.room;
+          row.appendChild(slot);
+        });
+        
+        overlay.appendChild(row);
+      });
     }
 
-    // limpe e recarregue
-    el('formEvento').reset();
-    await loadAll();
+    const dist = {VALIDADA:0, TRANCADA:0, OCUPADA:0, PROBLEMA:0};
+    state.items.forEach(x => dist[x.status]++);
+    const problemas = dist.TRANCADA + dist.OCUPADA + dist.PROBLEMA;
+    $("#sumRight").textContent = `${state.items.length} salas • ${problemas} problemas`;
+    $("#sumDist").textContent = `✅ ${dist.VALIDADA} | 🔒 ${dist.TRANCADA} | 🟠 ${dist.OCUPADA} | 🔴 ${dist.PROBLEMA}`;
+    $("#sumDate").textContent = new Date().toLocaleString("pt-BR");
 
-  }catch(e){
-    toast(e.message || 'Erro ao criar evento.', 'err');
+    const bgDiv = $("#bgCustom");
+    if(state.bg){
+      bgDiv.style.backgroundImage = `url(${state.bg})`;
+      bgDiv.style.display = "block";
+    } else {
+      bgDiv.style.display = "none";
+    }
   }
-}
 
-/* ===========================
-   WIRES
-   =========================== */
-document.addEventListener('DOMContentLoaded', ()=>{
-  // Pre-popula data-hora com agora+30min
-  const d = new Date(Date.now() + 30*60*1000);
-  const pad = n => String(n).padStart(2,'0');
-  const localValue = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
-  el('dataHora').value = localValue;
+  // Função de exportação otimizada para mobile
+  async function exportToPNG() {
+    const node = $("#exportCanvas");
+    const btn = $("#btnPNG");
+    const originalText = btn.textContent;
+    
+    try {
+      // Feedback visual
+      btn.textContent = "⏳ Gerando...";
+      btn.disabled = true;
+      
+      showToast("📸 Gerando imagem... Aguarde");
+      
+      // Configuração otimizada para mobile
+      const canvas = await html2canvas(node, {
+        scale: 2.5, // Maior qualidade
+        backgroundColor: "#ffffff",
+        logging: false,
+        useCORS: true,
+        allowTaint: false,
+        windowWidth: node.scrollWidth,
+        windowHeight: node.scrollHeight,
+        onclone: (clonedDoc, element) => {
+          // Garantir que elementos clonados mantenham o estilo
+          console.log("Clone realizado com sucesso");
+        }
+      });
+      
+      // Criar download
+      const link = document.createElement('a');
+      const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, '-');
+      const predioNome = ($("#predio").value || "Predio").replace(/\s+/g, "_");
+      const filename = `Ronda_${predioNome}_${timestamp}.png`;
+      
+      // Verificar se é mobile (iOS/Android)
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Mobile: abrir em nova aba para salvar
+        const dataUrl = canvas.toDataURL("image/png");
+        const newWindow = window.open();
+        if (newWindow) {
+          newWindow.document.write(`
+            <html>
+              <head><title>Salvar Imagem</title></head>
+              <body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#000;">
+                <img src="${dataUrl}" style="max-width:100%;height:auto;border:1px solid #ccc;" />
+                <p style="position:fixed;bottom:20px;left:0;right:0;text-align:center;color:#fff;background:rgba(0,0,0,0.7);padding:10px;margin:0;">
+                  📱 Pressione e segure na imagem para salvar
+                </p>
+              </body>
+            </html>
+          `);
+          showToast("✅ Imagem gerada! Toque e segure para salvar");
+        } else {
+          // Fallback: tentar download direto
+          link.download = filename;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+          showToast("✅ Imagem salva! Verifique seus downloads");
+        }
+      } else {
+        // Desktop: download direto
+        link.download = filename;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+        showToast("✅ Imagem exportada com sucesso!");
+      }
+      
+    } catch (error) {
+      console.error("Erro na exportação:", error);
+      showToast("❌ Erro ao gerar imagem. Tente novamente.", true);
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  }
 
-  el('formEvento').addEventListener('submit', handleSubmit);
-  el('btnLimpar').addEventListener('click', ()=> el('formEvento').reset());
-  loadAll();
-});
+  // ===== EVENTOS DOS BOTÕES =====
+  $("#btnAdd").onclick = () => {
+    const pair = parsePair($("#onePair").value);
+    if(!pair) {
+      showToast("❌ Use o formato: 29-02 ou 29/02", true);
+      return;
+    }
+    state.items = state.items.filter(x => !(x.floor === pair.floor && x.room === pair.room));
+    state.items.push({ floor: pair.floor, room: pair.room, status: $("#oneStatus").value });
+    $("#onePair").value = "";
+    render();
+    showToast("✅ Sala adicionada!");
+  };
+
+  $("#btnApply").onclick = () => {
+    const lines = $("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);
+    if(lines.length === 0) {
+      showToast("❌ Cole uma lista no campo acima", true);
+      return;
+    }
+    
+    lines.forEach(l => {
+      const m = l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);
+      if(!m) return;
+      const floor = parseInt(m[1], 10);
+      const room = pad2(parseInt(m[2], 10));
+      const status = parseStatusHint(m[3]);
+      state.items = state.items.filter(x => !(x.floor === floor && x.room === room));
+      state.items.push({ floor, room, status });
+    });
+    $("#bulk").value = "";
+    render();
+    showToast(`✅ ${lines.length} sala(s) adicionadas!`);
+  };
+
+  $("#btnClear").onclick = () => { 
+    if(confirm("Tem certeza que deseja remover todas as salas?")){ 
+      state.items = []; 
+      render();
+      showToast("🗑️ Todas as salas foram removidas");
+    } 
+  };
+
+  $("#btnLoadBg").onclick = () => $("#bgFile").click();
+  $("#btnClearBg").onclick = () => { 
+    state.bg = null; 
+    render();
+    showToast("🖼️ Fundo removido");
+  };
+  
+  $("#bgFile").onchange = ev => {
+    const f = ev.target.files?.[0]; 
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = e => { 
+      state.bg = e.target.result; 
+      render();
+      showToast("🖼️ Fundo carregado!");
+    };
+    r.readAsDataURL(f);
+  };
+
+  $("#predio").oninput = render;
+  $("#tecnicos").oninput = render;
+  $("#observacoes").oninput = render;
+  
+  // Botão de exportação - AGORA FUNCIONA EM MOBILE!
+  $("#btnPNG").onclick = exportToPNG;
+
+  // Dados iniciais
+  state.items = [
+    {floor:32, room:"37", status:"PROBLEMA"},
+    {floor:31, room:"33", status:"PROBLEMA"},
+    {floor:30, room:"29", status:"PROBLEMA"},
+    {floor:29, room:"02", status:"VALIDADA"},
+    {floor:29, room:"05", status:"VALIDADA"},
+    {floor:29, room:"25", status:"PROBLEMA"},
+    {floor:28, room:"03", status:"PROBLEMA"},
+    {floor:27, room:"17", status:"OCUPADA"},
+    {floor:26, room:"13", status:"OCUPADA"},
+    {floor:25, room:"09", status:"OCUPADA"},
+    {floor:24, room:"05", status:"TRANCADA"},
+    {floor:23, room:"01", status:"TRANCADA"},
+    {floor:22, room:"17", status:"TRANCADA"},
+    {floor:21, room:"13", status:"TRANCADA"},
+    {floor:20, room:"09", status:"TRANCADA"},
+    {floor:19, room:"01", status:"VALIDADA"},
+    {floor:19, room:"02", status:"VALIDADA"},
+    {floor:19, room:"05", status:"VALIDADA"}
+  ];
+  
+  $("#observacoes").value = "Problema com o projetor na 29-05\nProblema com o projetor na 29-05\nProblema com o projetor na 29-05";
+  
+  render();
+})();
 </script>
 </body>
 </html>
