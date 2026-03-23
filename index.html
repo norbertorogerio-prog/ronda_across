@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
 <title>Ronda • Prédio Eco Berrini</title>
 <style>
   :root{
@@ -11,72 +11,226 @@
     --bg:#F6F3F9; --card:#FFFFFF; --line:#E9E2EE; --ink:#2B2B2B; --muted:#777;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.35 "Segoe UI",system-ui}
-  .app{max-width:1200px;margin:0 auto;padding:16px}
-  header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-  .brand{font-weight:900;font-size:28px;color:#fff;padding:6px 12px;border-radius:999px;background:linear-gradient(135deg,var(--vivo),var(--vivo-dark))}
-  .title{font-size:18px;font-weight:700;color:var(--vivo-dark)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 20px rgba(38,12,77,.06);padding:14px;margin:12px 0}
-  label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
-  input,select,textarea,button{
-    width:100%;border:1px solid var(--line);border-radius:12px;
-    padding:11px 12px;font:500 15px/1.2 inherit;background:#fff;color:var(--ink);
+  
+  /* CORREÇÃO: Estabilizar a tela e evitar zoom */
+  html,body{
+    margin:0;
+    padding:0;
+    background:var(--bg);
+    color:var(--ink);
+    font:500 15px/1.35 "Segoe UI",system-ui;
+    min-height:100vh;
+    min-height:100dvh;
+    position:relative;
+    overflow-x:hidden;
   }
-  textarea{min-height:70px;resize:vertical}
-  button{background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));color:white;border:none;font-weight:700;cursor:pointer;transition:transform 0.1s ease;}
-  button:active{transform:scale(0.98);}
-  button.ghost{background:white;color:var(--vivo);border:1px solid var(--vivo)}
-  .grid{display:grid;gap:10px}
-  @media(min-width:800px){ .cols-2{grid-template-columns:1fr 1fr} }
-  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-  .pill{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:12px;background:white;border:1px solid var(--line)}
-  .dot{width:14px;height:14px;border-radius:4px}
-  .dot.v{background:var(--valid)} .dot.l{background:var(--lock)} .dot.o{background:var(--occ)} .dot.p{background:var(--prob)}
-  .kbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .kbtn{flex:1;background:white;color:var(--vivo);border:1px solid var(--vivo);border-radius:12px;padding:10px;font-weight:700}
+  
+  /* CORREÇÃO: Impedir zoom ao digitar */
+  input, select, textarea, button {
+    font-size: 16px !important; /* Tamanho mínimo para evitar zoom no iOS */
+  }
+  
+  .app{
+    max-width:1200px;
+    margin:0 auto;
+    padding:16px;
+    padding-bottom:20px;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+  }
+  
+  header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:10px;
+    flex-shrink:0;
+  }
+  
+  .brand{
+    font-weight:900;
+    font-size:28px;
+    color:#fff;
+    padding:6px 12px;
+    border-radius:999px;
+    background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
+  }
+  
+  .title{
+    font-size:18px;
+    font-weight:700;
+    color:var(--vivo-dark);
+  }
+  
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 8px 20px rgba(38,12,77,.06);
+    padding:14px;
+    margin:12px 0;
+    flex-shrink:0;
+  }
+  
+  label{
+    font-size:12px;
+    color:var(--muted);
+    display:block;
+    margin-bottom:4px;
+  }
+  
+  input,select,textarea,button{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:11px 12px;
+    font-weight:500;
+    background:#fff;
+    color:var(--ink);
+  }
+  
+  textarea{
+    min-height:70px;
+    resize:vertical;
+  }
+  
+  button{
+    background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
+    color:white;
+    border:none;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform 0.1s ease, opacity 0.2s;
+  }
+  
+  button:active{
+    transform:scale(0.98);
+  }
+  
+  button:disabled{
+    opacity:0.6;
+    transform:none;
+  }
+  
+  button.ghost{
+    background:white;
+    color:var(--vivo);
+    border:1px solid var(--vivo);
+  }
+  
+  .grid{
+    display:grid;
+    gap:10px;
+  }
+  
+  @media(min-width:800px){ 
+    .cols-2{grid-template-columns:1fr 1fr} 
+  }
+  
+  .legend{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+  
+  .pill{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 8px;
+    border-radius:12px;
+    background:white;
+    border:1px solid var(--line);
+  }
+  
+  .dot{
+    width:14px;
+    height:14px;
+    border-radius:4px;
+  }
+  .dot.v{background:var(--valid)} 
+  .dot.l{background:var(--lock)} 
+  .dot.o{background:var(--occ)} 
+  .dot.p{background:var(--prob)}
+  
+  .kbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  
+  .kbtn{
+    flex:1;
+    background:white;
+    color:var(--vivo);
+    border:1px solid var(--vivo);
+    border-radius:12px;
+    padding:10px;
+    font-weight:700;
+    min-width:100px;
+  }
 
-  /* ====== Canvas do prédio ====== */
+  /* CORREÇÃO: Canvas estabilizado e sem rolagem desnecessária */
   .canvas-wrap{
     position:relative;
     margin:0 auto;
     width:100%;
     max-width:720px;
     border-radius:16px;
-    overflow-x:auto;
-    overflow-y:visible;
+    overflow:hidden;
     border:1px solid var(--line);
     background:white;
+    flex-shrink:0;
   }
   
   .canvas-inner {
-    min-width: 720px;
     position: relative;
+    width:100%;
+    background:white;
   }
 
   .topbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:10px;
-    background:linear-gradient(135deg,rgba(106,27,154,.08),rgba(74,0,114,.06));
+    padding:12px 16px;
+    background:linear-gradient(135deg, var(--vivo), var(--vivo-dark));
     flex-wrap: wrap;
     gap: 8px;
   }
+  
   .topbar .vivo{
-    background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
+    background:rgba(255,255,255,0.2);
     padding:6px 12px;
     border-radius:999px;
     color:white;
     font-weight:900;
     font-size: 14px;
+    backdrop-filter:blur(4px);
   }
+  
+  /* DESTAQUE DO PRÉDIO */
+  .predio-destaque {
+    font-weight:900;
+    font-size:16px;
+    color:white;
+    text-shadow:0 1px 2px rgba(0,0,0,0.3);
+    background:rgba(255,255,255,0.15);
+    padding:4px 12px;
+    border-radius:20px;
+    display:inline-block;
+  }
+  
   .bg-layer{
     position:relative;
-    width:720px;
-    height:auto;
-    min-height:1080px;
+    width:100%;
     background:#fafafa;
+    min-height:500px;
   }
+  
   .bg-layer svg{
     position:absolute;
     inset:0;
@@ -85,6 +239,7 @@
     pointer-events: none;
     z-index: 0;
   }
+  
   .bg-custom{
     position:absolute;
     inset:0;
@@ -96,88 +251,113 @@
   }
 
   .overlay{
-    position:absolute;
-    left:0;
-    right:0;
-    top:0;
-    bottom:0;
-    pointer-events:none;
+    position:relative;
+    min-height:500px;
     z-index: 2;
+    padding:20px 10px;
   }
-  .row{
-    position:absolute;
-    left:70px;
-    right:70px;
-    height:30px;
+  
+  /* CORREÇÃO: Layout melhorado para salas - grid ao invés de posicionamento absoluto */
+  .floors-container {
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    padding:10px;
+  }
+  
+  .floor-group {
+    background:rgba(255,255,255,0.9);
+    border-radius:12px;
+    padding:10px;
+    border:1px solid #E9E2EE;
+  }
+  
+  .floor-title {
+    font-weight:900;
+    font-size:14px;
+    color:var(--vivo-dark);
+    margin-bottom:8px;
+    padding-bottom:4px;
+    border-bottom:2px solid var(--vivo);
+    display:inline-block;
+  }
+  
+  .salas-grid {
     display:grid;
-    grid-auto-flow:column;
+    grid-template-columns:repeat(auto-fill, minmax(70px, 85px));
     gap:8px;
-    align-items:center;
+    margin-top:8px;
   }
-
-  .slot{
-    min-width:44px;
-    height:26px;
-    border-radius:6px;
+  
+  .slot {
+    background:var(--valid);
+    border-radius:8px;
     font-size:14px;
     font-weight:900;
     color:white;
-    text-shadow: 0px 1px 2px rgba(0,0,0,0.55), 0px 0px 2px rgba(0,0,0,0.55);
+    text-shadow:0px 1px 2px rgba(0,0,0,0.3);
     display:flex;
     justify-content:center;
     align-items:center;
+    padding:8px 4px;
     border:2px solid #FFFFFF;
-    box-shadow:0 0 6px rgba(0,0,0,0.35);
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+    transition:transform 0.1s;
   }
+  
   .slot.valid{background:var(--valid)}
   .slot.lock{background:var(--lock)}
   .slot.occ{background:var(--occ)}
   .slot.prob{background:var(--prob)}
 
-  .row-label{
-    position:absolute;
-    left:10px;
-    height:30px;
-    font-weight:900;
-    font-size:12px;
-    color:#555;
-    display:flex;
-    align-items:center;
-    text-shadow:0 1px 0 rgba(255,255,255,.6);
-    z-index: 3;
-  }
-
   .obs-container {
-    position:relative;
-    width:100%;
     background: rgba(255,255,255,0.95);
     border-top: 1px solid var(--line);
-    margin-top: 0;
     z-index: 10;
   }
+  
   #obsBox{
     padding:12px 16px;
-    min-height: 70px;
-    max-height: 150px;
+    min-height: 60px;
+    max-height: 120px;
     overflow:auto;
     background:rgba(255,255,255,.98);
     color:#333;
     font-size:13px;
     white-space:pre-wrap;
     word-break:break-word;
-    border-bottom: 1px solid var(--line);
   }
 
+  /* CORREÇÃO: Status mais claro na parte inferior */
   .summary-bottom{
-    padding:10px 16px;
-    background:rgba(255,255,255,.98);
-    font-size:12px;
+    padding:12px 16px;
+    background:linear-gradient(135deg, #f8f9fa, #ffffff);
+    font-size:13px;
     display:flex;
     justify-content:space-between;
     gap:10px;
     align-items:center;
     flex-wrap: wrap;
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--vivo);
+    font-weight:bold;
+  }
+  
+  .status-badge {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  
+  .status-item {
+    display:flex;
+    align-items:center;
+    gap:4px;
+  }
+  
+  .status-dot {
+    width:10px;
+    height:10px;
+    border-radius:2px;
   }
 
   @media (max-width: 480px) {
@@ -189,11 +369,12 @@
       align-items: flex-start;
     }
     .slot {
-      min-width: 36px;
-      font-size: 11px;
+      font-size: 12px;
+      padding: 6px 4px;
     }
-    .row {
-      gap: 4px;
+    .salas-grid {
+      grid-template-columns:repeat(auto-fill, minmax(65px, 75px));
+      gap: 6px;
     }
     .kbtn {
       font-size: 13px;
@@ -201,26 +382,58 @@
     }
   }
 
-  /* Toast message para feedback mobile */
+  /* Toast message */
   .toast-msg {
     position: fixed;
-    bottom: 20px;
+    bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 30px;
     font-size: 14px;
     z-index: 9999;
     animation: fadeInOut 2s ease;
     pointer-events: none;
+    font-weight:500;
+    white-space:nowrap;
   }
+  
   @keyframes fadeInOut {
     0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
     15% { opacity: 1; transform: translateX(-50%) translateY(0); }
     85% { opacity: 1; transform: translateX(-50%) translateY(0); }
     100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  }
+  
+  /* Loading spinner para exportação */
+  .loading-overlay {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,0.7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:10000;
+    flex-direction:column;
+    gap:15px;
+  }
+  
+  .spinner {
+    width:50px;
+    height:50px;
+    border:4px solid rgba(255,255,255,0.3);
+    border-top-color:white;
+    border-radius:50%;
+    animation:spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    to{transform:rotate(360deg);}
   }
 </style>
 </head>
@@ -237,11 +450,11 @@
   <div class="card">
     <div class="grid cols-2">
       <div>
-        <label>Prédio</label>
-        <input id="predio" value="Prédio Berrini">
+        <label>🏢 Prédio</label>
+        <input id="predio" value="Prédio Eco Berrini">
       </div>
       <div>
-        <label>Responsáveis</label>
+        <label>👥 Responsáveis</label>
         <input id="tecnicos" placeholder="Ex: João, Maria">
       </div>
     </div>
@@ -250,41 +463,41 @@
   <div class="card">
     <div class="grid cols-2">
       <div>
-        <label>Adicionar item (andar-sala)</label>
-        <input id="onePair" placeholder="29-02">
+        <label>➕ Adicionar sala (andar-sala)</label>
+        <input id="onePair" placeholder="Ex: 29-02" inputmode="numeric">
       </div>
       <div>
-        <label>Status</label>
+        <label>📌 Status</label>
         <select id="oneStatus">
-          <option value="VALIDADA">Validada (verde)</option>
-          <option value="TRANCADA">Trancada (cinza)</option>
-          <option value="OCUPADA">Ocupada (laranja)</option>
-          <option value="PROBLEMA">Problema (vermelho)</option>
+          <option value="VALIDADA">✅ Validada</option>
+          <option value="TRANCADA">🔒 Trancada</option>
+          <option value="OCUPADA">🟠 Ocupada</option>
+          <option value="PROBLEMA">🔴 Problema</option>
         </select>
       </div>
     </div>
 
     <div class="grid cols-2" style="margin-top:8px">
-      <button id="btnAdd">Adicionar</button>
-      <button class="ghost" id="btnClear">Limpar salas</button>
+      <button id="btnAdd">➕ Adicionar</button>
+      <button class="ghost" id="btnClear">🗑️ Limpar tudo</button>
     </div>
   </div>
 
   <div class="card">
-    <label>Cole sua lista (andar-sala + status opcional: trancada | ocupada | problema)</label>
-    <textarea id="bulk" placeholder="Ex.:
+    <label>📋 Lista rápida (andar-sala + opcional: trancada/ocupada/problema)</label>
+    <textarea id="bulk" placeholder="Exemplo:
 29-02
 29-05 ocupada
 28-03 problema
 19-02 trancada"></textarea>
 
-    <label style="margin-top:10px">Observações</label>
-    <textarea id="observacoes" placeholder="Ex.: Sala 28-03 com projetor quebrado; 19-02 trancada, chave com segurança."></textarea>
+    <label style="margin-top:10px">📝 Observações</label>
+    <textarea id="observacoes" placeholder="Ex.: Sala 28-03 com projetor quebrado"></textarea>
 
     <div class="kbar">
-      <button class="kbtn" id="btnApply">Aplicar lista</button>
-      <button class="kbtn" id="btnLoadBg">Carregar fundo</button>
-      <button class="kbtn ghost" id="btnClearBg">Remover fundo</button>
+      <button class="kbtn" id="btnApply">📋 Aplicar lista</button>
+      <button class="kbtn" id="btnLoadBg">🖼️ Fundo</button>
+      <button class="kbtn ghost" id="btnClearBg">🗑️ Remover fundo</button>
       <button class="kbtn" id="btnPNG">📸 Exportar PNG</button>
       <input type="file" id="bgFile" accept="image/*" style="display:none">
     </div>
@@ -297,31 +510,31 @@
     </div>
   </div>
 
-  <div class="card canvas-wrap" id="exportCanvas">
+  <div class="canvas-wrap" id="exportCanvas">
     <div class="canvas-inner">
       <div class="topbar">
         <span class="vivo">vivo</span>
         <div>
-          <div id="sumPredio">Prédio</div>
-          <div id="sumResp">Responsáveis</div>
+          <div id="sumPredio" class="predio-destaque">Prédio</div>
+          <div id="sumResp" style="font-size:11px; color:rgba(255,255,255,0.8); margin-top:4px;"></div>
         </div>
-        <div id="sumRight">0 salas • 0 problemas</div>
+        <div id="sumRight" style="background:rgba(0,0,0,0.3); padding:4px 10px; border-radius:20px; font-size:12px;">0 salas • 0 problemas</div>
       </div>
 
       <div class="bg-layer" id="bgLayer">
         <div class="bg-custom" id="bgCustom"></div>
-        <svg viewBox="0 0 720 1080" aria-hidden="true">
-          <rect x="40" y="80" width="640" height="960" rx="6" fill="#EEE5F3" stroke="#E4DCEC"/>
-          <polygon points="40,80 360,20 680,80" fill="#D6C7EA"/>
-        </svg>
-        <div class="overlay" id="overlay"></div>
+        <!-- CORREÇÃO: Novo layout com grid organizado -->
+        <div class="overlay" id="overlay">
+          <div class="floors-container" id="floorsContainer"></div>
+        </div>
       </div>
 
       <div class="obs-container">
         <div id="obsBox"></div>
+        <!-- CORREÇÃO: Status mais claro e destacado -->
         <div class="summary-bottom">
+          <div class="status-badge" id="statusBadges"></div>
           <span id="sumDate"></span>
-          <span id="sumDist"></span>
         </div>
       </div>
     </div>
@@ -333,20 +546,37 @@
 <script>
 (() => {
   const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
   
-  // Função para mostrar toast (feedback mobile)
   function showToast(message, isError = false) {
     const toast = document.createElement('div');
     toast.className = 'toast-msg';
     toast.textContent = message;
-    toast.style.background = isError ? 'rgba(229, 57, 53, 0.9)' : 'rgba(0,0,0,0.8)';
+    toast.style.background = isError ? 'rgba(229, 57, 53, 0.95)' : 'rgba(0,0,0,0.85)';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2000);
+  }
+  
+  function showLoading() {
+    const overlay = document.createElement('div');
+    overlay.className = 'loading-overlay';
+    overlay.id = 'loadingOverlay';
+    overlay.innerHTML = '<div class="spinner"></div><div style="color:white">Gerando imagem...</div>';
+    document.body.appendChild(overlay);
+  }
+  
+  function hideLoading() {
+    const el = document.getElementById('loadingOverlay');
+    if(el) el.remove();
   }
 
   const state = { items:[], bg:null };
   const clsByStatus = {
     VALIDADA:"valid", TRANCADA:"lock", OCUPADA:"occ", PROBLEMA:"prob"
+  };
+  
+  const statusIcon = {
+    VALIDADA:"✅", TRANCADA:"🔒", OCUPADA:"🟠", PROBLEMA:"🔴"
   };
 
   const pad2 = n => String(n).padStart(2,"0");
@@ -364,71 +594,71 @@
     return "VALIDADA";
   };
 
+  // CORREÇÃO: Novo render com grid organizado (sem posicionamento absoluto)
   function render(){
-    $("#sumPredio").textContent = $("#predio").value || "Prédio";
-    $("#sumResp").textContent   = $("#tecnicos").value || "";
+    const predioNome = $("#predio").value || "Prédio";
+    $("#sumPredio").textContent = predioNome;
+    $("#sumResp").textContent = $("#tecnicos").value || "";
     $("#obsBox").textContent = $("#observacoes").value.trim() || "Nenhuma observação registrada.";
 
-    const overlay = $("#overlay");
-    overlay.innerHTML = "";
+    const floorsContainer = $("#floorsContainer");
+    floorsContainer.innerHTML = "";
 
+    // Agrupar salas por andar
     const floors = {};
     state.items.forEach(i => {
       if(!floors[i.floor]) floors[i.floor] = [];
       floors[i.floor].push(i);
     });
+    
     const ordered = Object.keys(floors).sort((a,b)=>parseInt(b)-parseInt(a));
     
     if(ordered.length === 0) {
-      const emptyMsg = document.createElement("div");
-      emptyMsg.style.position = "absolute";
-      emptyMsg.style.top = "50%";
-      emptyMsg.style.left = "50%";
-      emptyMsg.style.transform = "translate(-50%, -50%)";
-      emptyMsg.style.color = "#999";
-      emptyMsg.style.fontSize = "14px";
-      emptyMsg.style.fontWeight = "bold";
-      emptyMsg.textContent = "Nenhuma sala cadastrada. Use os campos acima.";
-      overlay.appendChild(emptyMsg);
+      floorsContainer.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Nenhuma sala cadastrada</div>';
     } else {
-      const topY = 100;
-      const bottomY = 980;
-      const total = ordered.length;
-      const span = (bottomY - topY);
-      
-      ordered.forEach((f, idx) => {
-        let y = topY + (span * (idx / (total - 1 || 1)));
-        y = Math.min(Math.max(y, topY), bottomY - 30);
+      ordered.forEach(f => {
+        const floorGroup = document.createElement('div');
+        floorGroup.className = 'floor-group';
         
-        const label = document.createElement("div");
-        label.className = "row-label";
-        label.style.top = y + "px";
-        label.textContent = "Andar " + pad2(parseInt(f));
-        overlay.appendChild(label);
+        const floorTitle = document.createElement('div');
+        floorTitle.className = 'floor-title';
+        floorTitle.innerHTML = `🏢 Andar ${pad2(parseInt(f))}`;
+        floorGroup.appendChild(floorTitle);
         
-        const row = document.createElement("div");
-        row.className = "row";
-        row.style.top = y + "px";
+        const salasGrid = document.createElement('div');
+        salasGrid.className = 'salas-grid';
         
         const salas = floors[f].sort((a,b) => parseInt(a.room) - parseInt(b.room));
         salas.forEach(sala => {
-          const slot = document.createElement("div");
-          slot.className = "slot " + clsByStatus[sala.status];
+          const slot = document.createElement('div');
+          slot.className = `slot ${clsByStatus[sala.status]}`;
           slot.textContent = sala.room;
-          row.appendChild(slot);
+          salasGrid.appendChild(slot);
         });
         
-        overlay.appendChild(row);
+        floorGroup.appendChild(salasGrid);
+        floorsContainer.appendChild(floorGroup);
       });
     }
 
+    // Estatísticas
     const dist = {VALIDADA:0, TRANCADA:0, OCUPADA:0, PROBLEMA:0};
     state.items.forEach(x => dist[x.status]++);
     const problemas = dist.TRANCADA + dist.OCUPADA + dist.PROBLEMA;
     $("#sumRight").textContent = `${state.items.length} salas • ${problemas} problemas`;
-    $("#sumDist").textContent = `✅ ${dist.VALIDADA} | 🔒 ${dist.TRANCADA} | 🟠 ${dist.OCUPADA} | 🔴 ${dist.PROBLEMA}`;
+    
+    // Status mais claro na parte inferior
+    const statusBadges = $("#statusBadges");
+    statusBadges.innerHTML = `
+      <div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div>
+      <div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div>
+      <div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div>
+      <div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>
+    `;
+    
     $("#sumDate").textContent = new Date().toLocaleString("pt-BR");
 
+    // Fundo
     const bgDiv = $("#bgCustom");
     if(state.bg){
       bgDiv.style.backgroundImage = `url(${state.bg})`;
@@ -438,77 +668,68 @@
     }
   }
 
-  // Função de exportação otimizada para mobile
+  // CORREÇÃO: Exportação otimizada para mobile com salvamento na galeria
   async function exportToPNG() {
     const node = $("#exportCanvas");
     const btn = $("#btnPNG");
     const originalText = btn.textContent;
     
     try {
-      // Feedback visual
+      showLoading();
       btn.textContent = "⏳ Gerando...";
       btn.disabled = true;
       
-      showToast("📸 Gerando imagem... Aguarde");
+      // Aguardar um pouco para garantir que tudo está renderizado
+      await new Promise(resolve => setTimeout(resolve, 100));
       
-      // Configuração otimizada para mobile
       const canvas = await html2canvas(node, {
-        scale: 2.5, // Maior qualidade
+        scale: 2.8,
         backgroundColor: "#ffffff",
         logging: false,
         useCORS: true,
         allowTaint: false,
         windowWidth: node.scrollWidth,
-        windowHeight: node.scrollHeight,
-        onclone: (clonedDoc, element) => {
-          // Garantir que elementos clonados mantenham o estilo
-          console.log("Clone realizado com sucesso");
-        }
+        windowHeight: node.scrollHeight
       });
       
-      // Criar download
-      const link = document.createElement('a');
+      hideLoading();
+      
       const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, '-');
       const predioNome = ($("#predio").value || "Predio").replace(/\s+/g, "_");
       const filename = `Ronda_${predioNome}_${timestamp}.png`;
       
-      // Verificar se é mobile (iOS/Android)
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const dataUrl = canvas.toDataURL("image/png");
       
       if (isMobile) {
-        // Mobile: abrir em nova aba para salvar
-        const dataUrl = canvas.toDataURL("image/png");
-        const newWindow = window.open();
-        if (newWindow) {
-          newWindow.document.write(`
-            <html>
-              <head><title>Salvar Imagem</title></head>
-              <body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#000;">
-                <img src="${dataUrl}" style="max-width:100%;height:auto;border:1px solid #ccc;" />
-                <p style="position:fixed;bottom:20px;left:0;right:0;text-align:center;color:#fff;background:rgba(0,0,0,0.7);padding:10px;margin:0;">
-                  📱 Pressione e segure na imagem para salvar
-                </p>
-              </body>
-            </html>
-          `);
-          showToast("✅ Imagem gerada! Toque e segure para salvar");
-        } else {
-          // Fallback: tentar download direto
-          link.download = filename;
-          link.href = canvas.toDataURL("image/png");
-          link.click();
-          showToast("✅ Imagem salva! Verifique seus downloads");
-        }
-      } else {
-        // Desktop: download direto
+        // CORREÇÃO: Para mobile, criar link com download ou abrir para salvar
+        const link = document.createElement('a');
         link.download = filename;
-        link.href = canvas.toDataURL("image/png");
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToast("✅ Imagem salva! Verifique seus downloads");
+        
+        // Fallback: se o download não funcionar, abrir em nova aba
+        setTimeout(() => {
+          if(!document.querySelector('a[download]')) {
+            window.open(dataUrl, '_blank');
+            showToast("📱 Toque e segure na imagem para salvar");
+          }
+        }, 500);
+      } else {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = dataUrl;
         link.click();
         showToast("✅ Imagem exportada com sucesso!");
       }
       
     } catch (error) {
       console.error("Erro na exportação:", error);
+      hideLoading();
       showToast("❌ Erro ao gerar imagem. Tente novamente.", true);
     } finally {
       btn.textContent = originalText;
@@ -516,18 +737,18 @@
     }
   }
 
-  // ===== EVENTOS DOS BOTÕES =====
+  // ===== EVENTOS =====
   $("#btnAdd").onclick = () => {
     const pair = parsePair($("#onePair").value);
     if(!pair) {
-      showToast("❌ Use o formato: 29-02 ou 29/02", true);
+      showToast("❌ Use formato: 29-02 ou 29/02", true);
       return;
     }
     state.items = state.items.filter(x => !(x.floor === pair.floor && x.room === pair.room));
     state.items.push({ floor: pair.floor, room: pair.room, status: $("#oneStatus").value });
     $("#onePair").value = "";
     render();
-    showToast("✅ Sala adicionada!");
+    showToast(`✅ Sala ${pair.floor}-${pair.room} adicionada!`);
   };
 
   $("#btnApply").onclick = () => {
@@ -537,6 +758,7 @@
       return;
     }
     
+    let added = 0;
     lines.forEach(l => {
       const m = l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);
       if(!m) return;
@@ -545,10 +767,11 @@
       const status = parseStatusHint(m[3]);
       state.items = state.items.filter(x => !(x.floor === floor && x.room === room));
       state.items.push({ floor, room, status });
+      added++;
     });
     $("#bulk").value = "";
     render();
-    showToast(`✅ ${lines.length} sala(s) adicionadas!`);
+    showToast(`✅ ${added} sala(s) adicionadas!`);
   };
 
   $("#btnClear").onclick = () => { 
@@ -581,17 +804,13 @@
   $("#predio").oninput = render;
   $("#tecnicos").oninput = render;
   $("#observacoes").oninput = render;
-  
-  // Botão de exportação - AGORA FUNCIONA EM MOBILE!
   $("#btnPNG").onclick = exportToPNG;
 
-  // Dados iniciais
+  // Dados iniciais conforme suas imagens
   state.items = [
-    {floor:32, room:"37", status:"PROBLEMA"},
-    {floor:31, room:"33", status:"PROBLEMA"},
-    {floor:30, room:"29", status:"PROBLEMA"},
+    {floor:30, room:"03", status:"VALIDADA"},
     {floor:29, room:"02", status:"VALIDADA"},
-    {floor:29, room:"05", status:"VALIDADA"},
+    {floor:29, room:"05", status:"PROBLEMA"},
     {floor:29, room:"25", status:"PROBLEMA"},
     {floor:28, room:"03", status:"PROBLEMA"},
     {floor:27, room:"17", status:"OCUPADA"},
@@ -607,7 +826,7 @@
     {floor:19, room:"05", status:"VALIDADA"}
   ];
   
-  $("#observacoes").value = "Problema com o projetor na 29-05\nProblema com o projetor na 29-05\nProblema com o projetor na 29-05";
+  $("#observacoes").value = "Problema com o projetor na 29-05\nSala 28-03 com projetor quebrado\nSala 19-02 trancada, chave com segurança";
   
   render();
 })();
