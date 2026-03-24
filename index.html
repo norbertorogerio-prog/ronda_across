@@ -25,12 +25,19 @@
   button.ghost{background:white;color:var(--vivo);border:1px solid var(--vivo)}
   .grid{display:grid;gap:10px}
   @media(min-width:800px){.cols-2{grid-template-columns:1fr 1fr}}
+  
+  /* LEGEND COM FUNDO BRANCO SÓLIDO E NA FRENTE */
   .legend{
     display:flex;
     gap:12px;
     flex-wrap:wrap;
     margin-top:8px;
-    padding:8px 0;
+    padding:12px;
+    background:white;
+    border-radius:16px;
+    border:1px solid var(--line);
+    position:relative;
+    z-index:10;
   }
   .pill{
     display:inline-flex;
@@ -38,10 +45,11 @@
     gap:8px;
     padding:6px 14px;
     border-radius:30px;
-    background:#f5f5f5;
+    background:white;
     font-size:13px;
     font-weight:600;
     border:1px solid #e0e0e0;
+    box-shadow:0 1px 3px rgba(0,0,0,0.1);
   }
   .dot{
     width:14px;
@@ -53,6 +61,7 @@
   .dot.l{background:var(--lock)}
   .dot.o{background:var(--occ)}
   .dot.p{background:var(--prob)}
+  
   .kbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
   .kbtn{flex:1;background:white;color:var(--vivo);border:1px solid var(--vivo);border-radius:12px;padding:10px;font-weight:700;cursor:pointer}
   .kbtn:active{transform:scale(0.98)}
@@ -124,7 +133,7 @@
       <button class="kbtn" id="btnPNG">📸 Salvar</button>
       <input type="file" id="bgFile" accept="image/*" style="display:none">
     </div>
-    <!-- LEGEND - SOMENTE HTML, SEM TEXTO MARKDOWN -->
+    <!-- LEGEND COM FUNDO BRANCO E NA FRENTE -->
     <div class="legend">
       <div class="pill"><span class="dot v"></span> Validado</div>
       <div class="pill"><span class="dot l"></span> Trancada</div>
