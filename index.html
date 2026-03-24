@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>Prédio SVG • Alinhamento Fino</title>
+<title>Prédio SVG • Alinhamento Fixo 100%</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -16,6 +16,7 @@
   background:var(--bg); color:#2B2B2B;
   font:500 14px/1.2 system-ui,"Segoe UI";
   padding: 10px;
+  overflow-x: hidden; /* Trava o balanço lateral da tela */
  }
 
  .app{ max-width:1100px; margin:0 auto; display: flex; flex-direction: column; gap:15px; }
@@ -27,57 +28,77 @@
  select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; margin-bottom: 10px; }
 
  button{ background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; }
- button:active{ opacity: 0.8; transform: scale(0.98); }
+ button:active{ opacity: 0.8; }
  .btn-ok { width: 60px; background: #444; margin-left: 5px; }
  .btn-clear { background: #fff; color: #e74c3c; border: 1px solid #ffcccc; margin-top: 5px; }
  .btn-png { background: #27ae60; padding: 16px; font-size: 16px; margin-top: 10px; }
  .row-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
- /* CONTAINER DO PRÉDIO - AJUSTE DE ALINHAMENTO */
- .viewer-card { display: flex; justify-content: center; background: #fff; padding: 20px 5px; overflow-x: auto; }
+ /* VISUALIZAÇÃO TRAVADA (FIXA) */
+ .viewer-card { 
+  display: flex; 
+  justify-content: center; 
+  background: #fff; 
+  padding: 20px 0; 
+  overflow-x: auto; /* Permite scroll se o celular for muito pequeno, mas não "samba" */
+ }
  
  .building-container {
   position: relative;
   display: flex;
-  width: 420px; /* Largura fixa para garantir alinhamento */
+  width: 400px; /* Largura total fixa para evitar quebras */
   flex-shrink: 0;
+  height: 880px; /* Altura fixa para estabilizar */
  }
 
  .floors-labels-col {
   display: flex;
   flex-direction: column;
-  /* AJUSTE CRÍTICO: 40px (topo do SVG) + 22px (altura da janela/2 para centralizar o texto) */
-  padding-top: 40px; 
-  width: 70px;
+  /* AJUSTE DE PRECISÃO: Subi alguns milímetros para alinhar com o centro da janela */
+  padding-top: 36px; 
+  width: 75px;
   flex-shrink: 0;
  }
 
  .f-lbl {
-  height: 22px; /* Altura exata da fileira no SVG */
+  height: 22px; /* Altura idêntica à repetição do SVG */
   font-size: 11px;
   font-weight: 800;
   color: var(--vivo);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 10px;
+  padding-right: 12px;
  }
 
- .facade-wrapper { position: relative; width: 320px; flex-shrink: 0; }
- #facade-svg { width: 100%; height: auto; display: block; }
+ .facade-wrapper { 
+  position: relative; 
+  width: 320px; 
+  height: 860px;
+  flex-shrink: 0; 
+ }
+ 
+ #facade-svg { width: 320px; height: 860px; display: block; }
  
  .overlay-badges { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
  
  .badge {
-  position: absolute; width: 24px; height: 12px;
-  border-radius: 3px; color: #fff; font-size: 9px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
+  position: absolute; 
+  width: 24px; 
+  height: 12px;
+  border-radius: 2px; 
+  color: #fff; 
+  font-size: 9px; 
+  font-weight: 900;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
   pointer-events: auto;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.2) inset;
  }
 
  #footerNoteDisplay {
-    position: absolute; bottom: 15px; left: 0; width: 100%;
+    position: absolute; bottom: 12px; left: 0; width: 100%;
     text-align: center; font-weight: 800; color: var(--vivo-dark); padding: 0 10px; font-size: 12px;
  }
 </style>
@@ -122,18 +143,18 @@
   </div>
 
   <div class="card viewer-card">
-    <div class="building-container" id="captureArea">
+    <div class="building-container">
       
       <div class="floors-labels-col" id="floorsCol"></div>
 
       <div class="facade-wrapper">
         <svg id="facade-svg" viewBox="0 0 320 860" xmlns="http://www.w3.org/2000/svg">
           <rect width="320" height="860" rx="10" fill="#E6EAF0" stroke="#B9C1CE" stroke-width="1"/>
-          <text x="160" y="25" text-anchor="middle" font-weight="900" font-size="14" fill="#6A1B9A">VIVO</text>
+          <text x="160" y="22" text-anchor="middle" font-weight="900" font-size="13" fill="#6A1B9A">VIVO</text>
           
           <g id="winGroup" transform="translate(22,40)" fill="#DDE8F7" stroke="#BFC9D8"></g>
           
-          <rect y="810" width="320" height="50" fill="#D6CDE7" rx="0 0 10 10"/>
+          <rect y="820" width="320" height="40" fill="#D6CDE7" rx="0 0 10 10"/>
         </svg>
         
         <div class="overlay-badges" id="overlay"></div>
@@ -147,7 +168,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_v4_align";
+const STORAGE_KEY = "predio_v5_final_fix";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 
 function init() {
@@ -156,7 +177,6 @@ function init() {
   const fCol = $("#floorsCol");
   const winG = $("#winGroup");
 
-  // Gerar Labels laterais
   for (let f = 32; f >= 1; f--) {
     fSel.appendChild(new Option(`Andar ${f}`, f));
     const lbl = document.createElement("div");
@@ -166,7 +186,6 @@ function init() {
   }
   for (let r = 1; r <= 50; r++) rSel.appendChild(new Option(`Sala ${String(r).padStart(2,'0')}`, r));
 
-  // Gerar Janelas: Altura 12 + Gap 10 = 22px por fileira
   for (let r = 0; r < 32; r++) {
     for (let c = 0; c < 8; c++) {
       const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -194,7 +213,6 @@ function render() {
     b.className = `badge ${status}`;
     b.style.backgroundColor = getHex(status);
     b.textContent = String(r).padStart(2,'0');
-    // Alinhamento exato com as janelas (Top 40 do grupo + fileira * 22)
     b.style.top = (40 + row * 22) + "px";
     b.style.left = (22 + col * 35) + "px";
     overlay.appendChild(b);
@@ -228,7 +246,7 @@ $("#btnQuick").onclick = () => {
   $("#quickInput").value = "";
 };
 
-$("#btnClear").onclick = () => { if(confirm("Limpar?")) { rooms={}; localStorage.clear(); render(); } };
+$("#btnClear").onclick = () => { if(confirm("Limpar dados?")) { rooms={}; localStorage.clear(); render(); } };
 
 $("#btnSave").onclick = () => {
   const blob = new Blob([JSON.stringify({rooms, obs: $("#obsText").value})], {type:"application/json"});
@@ -252,25 +270,25 @@ $("#btnPNG").onclick = async () => {
     const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = 420; canvas.height = 900;
-    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,420,900);
+    canvas.width = 400; canvas.height = 900;
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,400,900);
 
     ctx.fillStyle = "#E6EAF0"; ctx.beginPath();
-    ctx.roundRect(80, 10, 320, 850, 10); ctx.fill();
+    ctx.roundRect(75, 10, 320, 850, 10); ctx.fill();
 
     ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText("VIVO", 240, 35);
+    ctx.fillText("VIVO", 235, 32);
 
     ctx.font = "bold 10px sans-serif"; ctx.textAlign = "right";
     for(let f=32; f>=1; f--) {
-        ctx.fillText("Andar "+f, 75, 40 + (32-f)*22 + 10);
+        ctx.fillText("Andar "+f, 70, 36 + (32-f)*22 + 10.5);
     }
 
     Object.keys(rooms).forEach(key => {
         const [f, r] = key.split('-').map(Number);
         const st = rooms[key];
         ctx.fillStyle = getHex(st);
-        const x = 80 + 22 + ((r-1)%8)*35;
+        const x = 75 + 22 + ((r-1)%8)*35;
         const y = 40 + (32-f)*22;
         ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.font = "900 8px sans-serif";
@@ -278,7 +296,7 @@ $("#btnPNG").onclick = async () => {
     });
 
     ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 12px sans-serif";
-    ctx.fillText($("#obsText").value, 210, 885);
+    ctx.fillText($("#obsText").value, 200, 885);
 
     const link = document.createElement("a");
     link.download = "mapa-predio.png";
@@ -287,7 +305,6 @@ $("#btnPNG").onclick = async () => {
     btn.textContent = "📸 EXPORTAR PNG";
 };
 
-// Polyfill roundRect
 if (!Path2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
