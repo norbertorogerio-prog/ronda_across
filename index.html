@@ -5,262 +5,195 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
 <title>Ronda • Prédio Eco Berrini</title>
 <style>
-  :root{
-    --vivo:#6A1B9A; --vivo-dark:#4A0072;
-    --valid:#2ECC71; --lock:#9E9E9E; --occ:#FF9800; --prob:#E53935;
-    --bg:#F6F3F9; --card:#FFFFFF; --line:#E9E2EE; --ink:#2B2B2B;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.35 system-ui;min-height:100dvh}
-  input,select,textarea,button{font-size:16px!important}
-  .app{max-width:1200px;margin:0 auto;padding:16px;min-height:100dvh;display:flex;flex-direction:column}
-  header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-  .brand{font-weight:900;font-size:28px;color:#fff;padding:6px 12px;border-radius:999px;background:linear-gradient(135deg,var(--vivo),var(--vivo-dark))}
-  .title{font-size:18px;font-weight:700;color:var(--vivo-dark)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
-  label{font-size:12px;color:#777;display:block;margin-bottom:4px}
-  input,select,textarea,button{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff}
-  button{background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));color:white;border:none;font-weight:700;cursor:pointer}
-  button:active{transform:scale(0.98)}
-  button.ghost{background:white;color:var(--vivo);border:1px solid var(--vivo)}
-  .grid{display:grid;gap:10px}
-  @media(min-width:800px){.cols-2{grid-template-columns:1fr 1fr}}
-  
-  /* LEGEND - FUNDO BRANCO SÓLIDO, SEM BORRÃO */
-  .legend{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-top:8px;
-    padding:12px;
-    background:white !important;
-    border-radius:16px;
-    border:1px solid var(--line);
-    position:relative;
-    z-index:10;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
-  }
-  .pill{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:6px 14px;
-    border-radius:30px;
-    background:white !important;
-    font-size:13px;
-    font-weight:600;
-    border:1px solid #e0e0e0;
-    box-shadow:0 1px 2px rgba(0,0,0,0.05);
-  }
-  .dot{
-    width:14px;
-    height:14px;
-    border-radius:4px;
-    display:inline-block;
-  }
-  .dot.v{background:var(--valid)}
-  .dot.l{background:var(--lock)}
-  .dot.o{background:var(--occ)}
-  .dot.p{background:var(--prob)}
-  
-  .kbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .kbtn{flex:1;background:white;color:var(--vivo);border:1px solid var(--vivo);border-radius:12px;padding:10px;font-weight:700;cursor:pointer}
-  .kbtn:active{transform:scale(0.98)}
-  .canvas-wrap{margin:0 auto;width:100%;max-width:720px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:white}
-  .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));flex-wrap:wrap;gap:8px}
-  .topbar .vivo{background:rgba(255,255,255,0.2);padding:6px 12px;border-radius:999px;color:white;font-weight:900}
-  .predio-destaque{font-weight:900;color:white;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px}
-  .bg-layer{position:relative;background:#fafafa;min-height:400px}
-  .bg-custom{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.28;z-index:1}
-  .overlay{position:relative;z-index:2;padding:15px}
-  .floors-container{display:flex;flex-direction:column;gap:15px}
-  .floor-group{background:rgba(255,255,255,0.95);border-radius:12px;padding:12px;border:1px solid #E9E2EE}
-  .floor-title{font-weight:900;font-size:14px;color:var(--vivo-dark);margin-bottom:8px;border-bottom:2px solid var(--vivo);display:inline-block}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#F6F3F9;font-family:system-ui,sans-serif;padding:16px}
+  .card{background:white;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+  input,select,textarea,button{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:16px}
+  button{background:#6A1B9A;color:white;border:none;font-weight:bold;cursor:pointer}
+  button.ghost{background:white;color:#6A1B9A;border:1px solid #6A1B9A}
+  .grid{display:grid;gap:12px}
+  .cols-2{grid-template-columns:1fr 1fr}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;background:white;padding:12px;border-radius:16px}
+  .pill{display:flex;align-items:center;gap:8px;padding:6px 14px;background:#f5f5f5;border-radius:30px;font-size:13px}
+  .dot{width:14px;height:14px;border-radius:4px}
+  .dot.verde{background:#2ECC71}
+  .dot.cinza{background:#9E9E9E}
+  .dot.laranja{background:#FF9800}
+  .dot.vermelho{background:#E53935}
+  .kbar{display:flex;gap:10px;margin-top:12px}
+  .kbtn{flex:1;background:white;color:#6A1B9A;border:1px solid #6A1B9A;padding:10px;border-radius:12px}
+  .canvas-wrap{background:white;border-radius:16px;overflow:hidden}
+  .topbar{background:#6A1B9A;padding:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;color:white}
+  .vivo-badge{background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px}
+  .floors-container{display:flex;flex-direction:column;gap:16px;padding:16px}
+  .floor-group{background:#fafafa;border-radius:12px;padding:12px}
+  .floor-title{font-weight:bold;color:#6A1B9A;border-bottom:2px solid #6A1B9A;display:inline-block;margin-bottom:8px}
   .salas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,85px));gap:8px;margin-top:8px}
-  .slot{
-    border-radius:8px;
-    font-size:14px;
-    font-weight:900;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:8px 4px;
-    border:2px solid #FFF;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
-  }
-  .slot.valid{background:linear-gradient(135deg, var(--valid), #27ae60)}
-  .slot.lock{background:linear-gradient(135deg, var(--lock), #757575)}
-  .slot.occ{background:linear-gradient(135deg, var(--occ), #f39c12)}
-  .slot.prob{background:linear-gradient(135deg, var(--prob), #c0392b)}
-  .obs-container{background:rgba(255,255,255,0.95);border-top:1px solid var(--line)}
-  #obsBox{padding:12px 16px;min-height:60px;max-height:120px;overflow:auto;font-size:13px;white-space:pre-wrap;background:#fff}
-  .summary-bottom{padding:12px 16px;background:linear-gradient(135deg,#f8f9fa,#fff);font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:2px solid var(--vivo);font-weight:bold}
-  .status-badge{display:flex;gap:12px;flex-wrap:wrap}
-  .status-item{display:flex;align-items:center;gap:4px}
-  .status-dot{width:10px;height:10px;border-radius:2px}
-  @media(max-width:480px){.salas-grid{grid-template-columns:repeat(auto-fill,minmax(65px,75px));gap:6px}.slot{font-size:12px;padding:6px 4px}}
-  .toast-msg{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;z-index:9999;animation:fadeInOut 2s ease;pointer-events:none;white-space:nowrap;max-width:90%}
-  @keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(20px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
-  .loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000;flex-direction:column;gap:15px}
-  .spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
+  .slot{border-radius:8px;padding:8px;text-align:center;font-weight:bold;color:white;border:2px solid white}
+  .slot.valid{background:#2ECC71}
+  .slot.lock{background:#9E9E9E}
+  .slot.occ{background:#FF9800}
+  .slot.prob{background:#E53935}
+  .obs-container{padding:12px;background:white;border-top:1px solid #eee}
+  .summary-bottom{padding:12px;display:flex;justify-content:space-between;background:#f9f9f9;border-top:2px solid #6A1B9A}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:black;color:white;padding:10px 20px;border-radius:30px;font-size:14px;z-index:9999}
 </style>
 </head>
 <body>
-<div class="app">
-  <header><span class="brand">vivo</span><div><div class="title">Ronda • Prédio Eco Berrini</div></div></header>
-  
-  <div class="card"><div class="grid cols-2">
+
+<div class="card">
+  <div class="cols-2" style="display:grid;gap:12px">
     <div><label>🏢 Prédio</label><input id="predio" value="Prédio Eco Berrini"></div>
     <div><label>👥 Responsáveis</label><input id="tecnicos" placeholder="Ex: João, Maria"></div>
-  </div></div>
+  </div>
+</div>
 
-  <div class="card"><div class="grid cols-2">
+<div class="card">
+  <div class="cols-2" style="display:grid;gap:12px">
     <div><label>➕ Adicionar sala</label><input id="onePair" placeholder="29-02"></div>
     <div><label>📌 Status</label><select id="oneStatus"><option value="VALIDADA">✅ Validado</option><option value="TRANCADA">🔒 Trancada</option><option value="OCUPADA">🟠 Ocupada</option><option value="PROBLEMA">🔴 Problema</option></select></div>
   </div>
-  <div class="grid cols-2" style="margin-top:8px"><button id="btnAdd">➕ Adicionar</button><button class="ghost" id="btnClear">🗑️ Limpar tudo</button></div></div>
-
-  <div class="card">
-    <label>📋 Lista rápida</label>
-    <textarea id="bulk" placeholder="Ex:&#10;29-02&#10;29-05 ocupada&#10;28-03 problema"></textarea>
-    <label style="margin-top:10px">📝 Observações</label>
-    <textarea id="observacoes"></textarea>
-    <div class="kbar">
-      <button class="kbtn" id="btnApply">📋 Aplicar</button>
-      <button class="kbtn" id="btnLoadBg">🖼️ Fundo</button>
-      <button class="kbtn ghost" id="btnClearBg">🗑️ Fundo</button>
-      <button class="kbtn" id="btnPNG">📸 Salvar</button>
-      <input type="file" id="bgFile" accept="image/*" style="display:none">
-    </div>
-    <!-- LEGEND - SEM BORRÃO, FUNDO BRANCO SÓLIDO -->
-    <div class="legend">
-      <div class="pill"><span class="dot v"></span> Validado</div>
-      <div class="pill"><span class="dot l"></span> Trancada</div>
-      <div class="pill"><span class="dot o"></span> Ocupada</div>
-      <div class="pill"><span class="dot p"></span> Problema</div>
-    </div>
-  </div>
-
-  <div class="canvas-wrap" id="exportCanvas">
-    <div class="topbar">
-      <span class="vivo">vivo</span>
-      <div><div id="sumPredio" class="predio-destaque">Prédio</div><div id="sumResp" style="font-size:11px;color:rgba(255,255,255,0.8)"></div></div>
-      <div id="sumRight" style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px">0 salas</div>
-    </div>
-    <div class="bg-layer"><div class="bg-custom" id="bgCustom"></div><div class="overlay"><div class="floors-container" id="floorsContainer"></div></div></div>
-    <div class="obs-container"><div id="obsBox"></div><div class="summary-bottom"><div class="status-badge" id="statusBadges"></div><span id="sumDate"></span></div></div>
+  <div class="cols-2" style="display:grid;gap:12px;margin-top:12px">
+    <button id="btnAdd">➕ Adicionar</button>
+    <button id="btnClear" class="ghost">🗑️ Limpar tudo</button>
   </div>
 </div>
+
+<div class="card">
+  <label>📋 Lista rápida</label>
+  <textarea id="bulk" rows="3" placeholder="29-02&#10;29-05 ocupada&#10;28-03 problema"></textarea>
+  <label style="margin-top:12px">📝 Observações</label>
+  <textarea id="observacoes" rows="2"></textarea>
+  <div class="kbar">
+    <button id="btnApply" class="kbtn">📋 Aplicar</button>
+    <button id="btnLoadBg" class="kbtn">🖼️ Fundo</button>
+    <button id="btnClearBg" class="kbtn">🗑️ Fundo</button>
+    <button id="btnPNG" class="kbtn">📸 Salvar</button>
+    <input type="file" id="bgFile" style="display:none">
+  </div>
+  <!-- LEGEND - APENAS HTML, SEM MARKDOWN -->
+  <div class="legend">
+    <div class="pill"><span class="dot verde"></span> Validado</div>
+    <div class="pill"><span class="dot cinza"></span> Trancada</div>
+    <div class="pill"><span class="dot laranja"></span> Ocupada</div>
+    <div class="pill"><span class="dot vermelho"></span> Problema</div>
+  </div>
+</div>
+
+<div class="canvas-wrap" id="exportCanvas">
+  <div class="topbar">
+    <span class="vivo-badge">vivo</span>
+    <div><strong id="sumPredio">Prédio</strong><br><span id="sumResp" style="font-size:11px"></span></div>
+    <span id="sumRight" style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px">0 salas</span>
+  </div>
+  <div id="floorsContainer" class="floors-container"></div>
+  <div class="obs-container"><div id="obsBox">Nenhuma observação</div></div>
+  <div class="summary-bottom"><div id="statusBadges"></div><span id="sumDate"></span></div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-(()=>{
-const $=s=>document.querySelector(s);
-const showToast=(m,e)=>{let t=document.createElement('div');t.className='toast-msg';t.textContent=m;t.style.background=e?'rgba(229,57,53,0.95)':'rgba(0,0,0,0.85)';document.body.appendChild(t);setTimeout(()=>t.remove(),3000)};
-const showLoading=()=>{let o=document.createElement('div');o.className='loading-overlay';o.id='loadingOverlay';o.innerHTML='<div class="spinner"></div><div style="color:white">Gerando imagem...</div>';document.body.appendChild(o)};
-const hideLoading=()=>{let e=document.getElementById('loadingOverlay');if(e)e.remove()};
+(function(){
+const $=x=>document.querySelector(x);
+const toast=(m)=>{let t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2500)};
+const loading=(show)=>{let l=document.getElementById('loading');if(show && !l){let d=document.createElement('div');d.id='loading';d.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;color:white;z-index:10000';d.innerHTML='<div style="background:white;color:#6A1B9A;padding:20px;border-radius:12px">⏳ Gerando imagem...</div>';document.body.appendChild(d)}else if(!show && l)l.remove()};
 const state={items:[],bg:null};
-const cls={VALIDADA:"valid",TRANCADA:"lock",OCUPADA:"occ",PROBLEMA:"prob"};
-const pad2=n=>String(n).padStart(2,"0");
-const parsePair=t=>{let m=String(t).trim().match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);return m?{floor:parseInt(m[1],10),room:pad2(parseInt(m[2],10))}:null};
-const parseStatus=r=>{let s=String(r||"").toLowerCase();return /problema|problem|falha|erro/.test(s)?"PROBLEMA":/tranc/.test(s)?"TRANCADA":/ocup/.test(s)?"OCUPADA":"VALIDADA"};
-
-async function saveImageToDevice(dataUrl, filename) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (navigator.share && navigator.canShare) {
-        const blob = await fetch(dataUrl).then(r => r.blob());
-        const file = new File([blob], filename, { type: 'image/png' });
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({ title: 'Ronda', files: [file] });
-          resolve(true);
-          return;
-        }
-      }
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = dataUrl;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      setTimeout(() => { document.body.removeChild(link); resolve(true); }, 500);
-    } catch (err) { reject(err); }
-  });
-}
-
-async function exportPNG(){
-  const btn=$("#btnPNG"),orig=btn.textContent;
-  try{
-    showLoading(); btn.textContent="⏳..."; btn.disabled=true;
-    await new Promise(r=>setTimeout(r,200));
-    const canvas=await html2canvas($("#exportCanvas"),{scale:2.5,backgroundColor:"#fff",logging:false,useCORS:true});
-    hideLoading();
-    const now=new Date();
-    const ts=`${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}-${pad2(now.getMinutes())}`;
-    const nome=($("#predio").value||"Predio").replace(/\s+/g,"_");
-    const filename=`Ronda_${nome}_${ts}.png`;
-    const dataUrl=canvas.toDataURL("image/png");
-    try {
-      await saveImageToDevice(dataUrl, filename);
-      showToast("✅ Imagem gerada!");
-    } catch (err) {
-      const newWin = window.open();
-      if(newWin){
-        newWin.document.write(`<html><head><title>Salvar</title><meta name="viewport" content="width=device-width"></head><body style="margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column"><img src="${dataUrl}" style="max-width:100%"><div style="position:fixed;bottom:0;background:rgba(0,0,0,0.9);color:#fff;padding:15px;text-align:center;width:100%">📱 Toque e segure na imagem > Salvar Imagem</div></body></html>`);
-        showToast("📱 Toque e segure na imagem para salvar");
-      } else { showToast("❌ Erro ao salvar",true); }
-    }
-  }catch(e){ hideLoading(); showToast("❌ Erro",true);
-  }finally{ btn.textContent=orig; btn.disabled=false; }
-}
+const pad2=n=>String(n).padStart(2,'0');
 
 function render(){
-  $("#sumPredio").textContent=$("#predio").value||"Prédio";
-  $("#sumResp").textContent=$("#tecnicos").value||"";
-  $("#obsBox").textContent=$("#observacoes").value.trim()||"Nenhuma observação";
-  let fc=$("#floorsContainer"),floors={};
+  $("#sumPredio").innerHTML=$("#predio").value;
+  $("#sumResp").innerHTML=$("#tecnicos").value;
+  $("#obsBox").innerHTML=$("#observacoes").value.trim()||"Nenhuma observação";
+  
+  let floors={};
   state.items.forEach(i=>{if(!floors[i.floor])floors[i.floor]=[];floors[i.floor].push(i)});
-  let ordered=Object.keys(floors).sort((a,b)=>parseInt(b)-parseInt(a));
-  fc.innerHTML=ordered.length?ordered.map(f=>`<div class="floor-group"><div class="floor-title">🏢 Andar ${pad2(parseInt(f))}</div><div class="salas-grid">${floors[f].sort((a,b)=>parseInt(a.room)-parseInt(b.room)).map(s=>`<div class="slot ${cls[s.status]}">${s.room}</div>`).join('')}</div></div>`).join(''):'<div style="text-align:center;padding:40px;color:#999">Nenhuma sala cadastrada</div>';
+  let ordered=Object.keys(floors).sort((a,b)=>b-a);
+  let fc=$("#floorsContainer");
+  if(ordered.length){
+    fc.innerHTML=ordered.map(f=>`
+      <div class="floor-group">
+        <div class="floor-title">🏢 Andar ${pad2(parseInt(f))}</div>
+        <div class="salas-grid">
+          ${floors[f].sort((a,b)=>a.room-b.room).map(s=>`<div class="slot ${s.status==='VALIDADA'?'valid':s.status==='TRANCADA'?'lock':s.status==='OCUPADA'?'occ':'prob'}">${s.room}</div>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  }else{
+    fc.innerHTML='<div style="text-align:center;padding:40px;color:#999">Nenhuma sala cadastrada</div>';
+  }
+  
   let dist={VALIDADA:0,TRANCADA:0,OCUPADA:0,PROBLEMA:0};
   state.items.forEach(x=>dist[x.status]++);
   let probs=dist.TRANCADA+dist.OCUPADA+dist.PROBLEMA;
-  $("#sumRight").textContent=`${state.items.length} salas • ${probs} problemas`;
+  $("#sumRight").innerHTML=`${state.items.length} salas • ${probs} problemas`;
   $("#statusBadges").innerHTML=`
-    <div class="status-item"><div class="status-dot" style="background:#2ECC71"></div>✅ ${dist.VALIDADA}</div>
-    <div class="status-item"><div class="status-dot" style="background:#9E9E9E"></div>🔒 ${dist.TRANCADA}</div>
-    <div class="status-item"><div class="status-dot" style="background:#FF9800"></div>🟠 ${dist.OCUPADA}</div>
-    <div class="status-item"><div class="status-dot" style="background:#E53935"></div>🔴 ${dist.PROBLEMA}</div>
+    <div style="display:flex;gap:12px">
+      <span>✅ ${dist.VALIDADA}</span>
+      <span>🔒 ${dist.TRANCADA}</span>
+      <span>🟠 ${dist.OCUPADA}</span>
+      <span>🔴 ${dist.PROBLEMA}</span>
+    </div>
   `;
-  $("#sumDate").textContent=new Date().toLocaleString("pt-BR");
-  let bg=$("#bgCustom");if(state.bg){bg.style.backgroundImage=`url(${state.bg})`;bg.style.display="block"}else bg.style.display="none";
+  $("#sumDate").innerHTML=new Date().toLocaleString('pt-BR');
+  if(state.bg){$("#bgCustom")?.remove();let d=document.createElement('div');d.id='bgCustom';d.style.cssText='position:absolute;inset:0;background-image:url('+state.bg+');background-size:cover;background-position:center;opacity:0.3;z-index:0';$("#exportCanvas .bg-layer")?.prepend(d)}
 }
 
-$("#btnClear").onclick=()=>{
-  if(confirm("Limpar todas as salas, lista rápida e observações?")){
-    state.items=[];
-    $("#bulk").value="";
-    $("#observacoes").value="";
-    $("#onePair").value="";
-    render();
-    showToast("🗑️ Tudo limpo!");
-  }
+async function salvar(){
+  let btn=$("#btnPNG"),txt=btn.innerHTML;
+  try{
+    loading(true); btn.innerHTML="⏳..."; btn.disabled=true;
+    await new Promise(r=>setTimeout(r,200));
+    let canvas=await html2canvas($("#exportCanvas"),{scale:2.5,backgroundColor:"#fff",logging:false});
+    loading(false);
+    let data=canvas.toDataURL('image/png');
+    let link=document.createElement('a');
+    link.download=`Ronda_${$("#predio").value.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.png`;
+    link.href=data;
+    link.click();
+    toast("✅ Imagem gerada! Verifique seus downloads");
+  }catch(e){loading(false);toast("❌ Erro ao gerar");console.error(e)}
+  finally{btn.innerHTML=txt;btn.disabled=false}
+}
+
+$("#btnAdd").onclick=()=>{
+  let m=$("#onePair").value.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
+  if(!m){toast("❌ Use formato: 29-02");return}
+  let floor=parseInt(m[1]),room=pad2(parseInt(m[2]));
+  state.items=state.items.filter(x=>!(x.floor===floor&&x.room===room));
+  state.items.push({floor,room,status:$("#oneStatus").value});
+  $("#onePair").value="";
+  render();
+  toast(`✅ ${floor}-${room} adicionada`);
 };
 
-$("#btnAdd").onclick=()=>{let p=parsePair($("#onePair").value);if(!p){showToast("❌ Formato: 29-02",true);return}state.items=state.items.filter(x=>!(x.floor===p.floor&&x.room===p.room));state.items.push({floor:p.floor,room:p.room,status:$("#oneStatus").value});$("#onePair").value="";render();showToast(`✅ ${p.floor}-${p.room}`)};
-$("#btnApply").onclick=()=>{let lines=$("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);if(!lines.length){showToast("❌ Cole uma lista",true);return}lines.forEach(l=>{let m=l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);if(m){let f=parseInt(m[1],10),r=pad2(parseInt(m[2],10)),s=parseStatus(m[3]);state.items=state.items.filter(x=>!(x.floor===f&&x.room===r));state.items.push({floor:f,room:r,status:s})}});$("#bulk").value="";render();showToast(`✅ ${lines.length} sala(s)`)};
-$("#btnLoadBg").onclick=()=>$("#bgFile").click();
-$("#btnClearBg").onclick=()=>{state.bg=null;render();showToast("🖼️ Fundo removido")};
-$("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();showToast("🖼️ Fundo OK")};r.readAsDataURL(f)}};
-$("#predio").oninput=render;$("#tecnicos").oninput=render;$("#observacoes").oninput=render;$("#btnPNG").onclick=exportPNG;
+$("#btnApply").onclick=()=>{
+  let lines=$("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  lines.forEach(l=>{
+    let m=l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);
+    if(m){
+      let floor=parseInt(m[1]),room=pad2(parseInt(m[2])),rest=m[3]||"";
+      let status="VALIDADA";
+      if(/problema|falha|erro/i.test(rest)) status="PROBLEMA";
+      else if(/tranc/i.test(rest)) status="TRANCADA";
+      else if(/ocup/i.test(rest)) status="OCUPADA";
+      state.items=state.items.filter(x=>!(x.floor===floor&&x.room===room));
+      state.items.push({floor,room,status});
+    }
+  });
+  $("#bulk").value="";
+  render();
+  toast(`✅ ${lines.length} sala(s) adicionadas`);
+};
 
-// TELA INICIAL COMPLETAMENTE LIMPA
-state.items = [];
-$("#observacoes").value = "";
-$("#bulk").value = "";
+$("#btnClear").onclick=()=>{if(confirm("Limpar tudo?")){state.items=[];$("#bulk").value="";$("#observacoes").value="";$("#onePair").value="";render();toast("🗑️ Tudo limpo!")}};
+$("#btnLoadBg").onclick=()=>$("#bgFile").click();
+$("#btnClearBg").onclick=()=>{state.bg=null;render();toast("🖼️ Fundo removido")};
+$("#bgFile").onchange=e=>{let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();toast("🖼️ Fundo carregado")};r.readAsDataURL(f)}};
+$("#predio").oninput=render;$("#tecnicos").oninput=render;$("#observacoes").oninput=render;$("#btnPNG").onclick=salvar;
+
+state.items=[];
 render();
-showToast("👋 Bem-vindo! Adicione suas salas");
+toast("👋 Pronto! Adicione suas salas");
 })();
 </script>
 </body>
