@@ -1,323 +1,762 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
-<title>Ronda • Prédio Eco Berrini</title>
+<title>Ronda Interativa • Validação de Salas</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:#F6F3F9;font-family:system-ui,sans-serif;padding:16px}
-  .card{background:white;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-  input,select,textarea,button{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:16px}
-  button{background:#6A1B9A;color:white;border:none;font-weight:bold;cursor:pointer}
-  button.ghost{background:white;color:#6A1B9A;border:1px solid #6A1B9A}
-  .grid{display:grid;gap:12px}
-  .cols-2{grid-template-columns:1fr 1fr}
-  .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;background:white;padding:12px;border-radius:16px}
-  .pill{display:flex;align-items:center;gap:8px;padding:6px 14px;background:#f5f5f5;border-radius:30px;font-size:13px}
-  .dot{width:14px;height:14px;border-radius:4px}
-  .dot.verde{background:#2ECC71}
-  .dot.cinza{background:#9E9E9E}
-  .dot.laranja{background:#FF9800}
-  .dot.vermelho{background:#E53935}
-  .kbar{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-  .kbtn{flex:1;background:white;color:#6A1B9A;border:1px solid #6A1B9A;padding:10px;border-radius:12px;min-width:80px}
-  .canvas-wrap{background:white;border-radius:16px;overflow:hidden}
-  .topbar{background:#6A1B9A;padding:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;color:white}
-  .vivo-badge{background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px}
-  .floors-container{display:flex;flex-direction:column;gap:16px;padding:16px}
-  .floor-group{background:#fafafa;border-radius:12px;padding:12px}
-  .floor-title{font-weight:bold;color:#6A1B9A;border-bottom:2px solid #6A1B9A;display:inline-block;margin-bottom:8px}
-  .salas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,85px));gap:8px;margin-top:8px}
-  .slot{border-radius:8px;padding:8px;text-align:center;font-weight:bold;color:white;border:2px solid white}
-  .slot.valid{background:#2ECC71}
-  .slot.lock{background:#9E9E9E}
-  .slot.occ{background:#FF9800}
-  .slot.prob{background:#E53935}
-  .obs-container{padding:12px;background:white;border-top:1px solid #eee}
-  .summary-bottom{padding:12px;display:flex;justify-content:space-between;background:#f9f9f9;border-top:2px solid #6A1B9A;flex-wrap:wrap;gap:8px}
-  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:black;color:white;padding:12px 20px;border-radius:30px;font-size:14px;z-index:9999;white-space:nowrap}
-  .loading-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000}
-  .loading-content{background:white;padding:24px;border-radius:16px;text-align:center}
-  .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#6A1B9A;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  @media(max-width:480px){.salas-grid{grid-template-columns:repeat(auto-fill,minmax(65px,75px))}.slot{font-size:12px;padding:6px}}
+  body{
+    background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%);
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Card principal */
+  .main-card {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  
+  /* Outdoor no telhado */
+  .outdoor {
+    background: linear-gradient(135deg, #2c3e50, #1a2632);
+    padding: 20px 30px;
+    text-align: center;
+    border-bottom: 4px solid #ffd700;
+  }
+  
+  .outdoor h1 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #ffd700;
+    letter-spacing: 2px;
+  }
+  
+  .outdoor p {
+    color: rgba(255,255,255,0.8);
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  /* Topbar Vivo */
+  .topbar-vivo {
+    background: #6A1B9A;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .vivo-logo {
+    background: rgba(255,255,255,0.2);
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-weight: 900;
+    font-size: 20px;
+    color: white;
+  }
+  
+  .stats-info {
+    background: rgba(0,0,0,0.3);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: bold;
+  }
+  
+  /* Área do mapa */
+  .mapa-area {
+    position: relative;
+    background: #f0f0f0;
+    overflow: auto;
+    max-height: 70vh;
+    cursor: pointer;
+  }
+  
+  .mapa-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+  
+  .mapa-imagem {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: auto;
+    user-select: none;
+  }
+  
+  /* Overlay para cliques nas salas */
+  .sala-click-area {
+    position: absolute;
+    background: rgba(106,27,154,0.3);
+    border: 2px solid rgba(106,27,154,0.5);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    pointer-events: auto;
+  }
+  
+  .sala-click-area:hover {
+    background: rgba(106,27,154,0.5);
+    border-color: #6A1B9A;
+    transform: scale(1.02);
+  }
+  
+  .sala-click-area.validada {
+    background: rgba(46,204,113,0.4);
+    border-color: #2ECC71;
+  }
+  
+  .sala-click-area.trancada {
+    background: rgba(158,158,158,0.4);
+    border-color: #9E9E9E;
+  }
+  
+  .sala-click-area.ocupada {
+    background: rgba(255,152,0,0.4);
+    border-color: #FF9800;
+  }
+  
+  .sala-click-area.problema {
+    background: rgba(229,57,53,0.4);
+    border-color: #E53935;
+  }
+  
+  /* Modal de seleção de status */
+  .modal-status {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    z-index: 1000;
+    min-width: 280px;
+    animation: slideIn 0.2s ease;
+  }
+  
+  .modal-status h3 {
+    color: #6A1B9A;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .status-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .status-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s;
+    font-size: 14px;
+  }
+  
+  .status-btn:active {
+    transform: scale(0.98);
+  }
+  
+  .status-btn.validado { background: #2ECC71; color: white; }
+  .status-btn.trancada { background: #9E9E9E; color: white; }
+  .status-btn.ocupada { background: #FF9800; color: white; }
+  .status-btn.problema { background: #E53935; color: white; }
+  .status-btn.outros { background: #3498db; color: white; grid-column: span 2; }
+  
+  .modal-close {
+    background: #f0f0f0;
+    color: #666;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  
+  .overlay-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+  }
+  
+  /* Barra de ferramentas */
+  .toolbar {
+    background: white;
+    padding: 20px;
+    border-top: 1px solid #eee;
+  }
+  
+  .toolbar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .input-group label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+  }
+  
+  .input-group input, .input-group select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+  
+  button {
+    background: #6A1B9A;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .btn-salvar {
+    background: linear-gradient(135deg, #2ECC71, #27ae60);
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    font-size: 16px;
+  }
+  
+  .btn-limpar {
+    background: #e74c3c;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .obs-area textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+    resize: vertical;
+  }
+  
+  .legenda {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 12px;
+  }
+  
+  .legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+  
+  .legenda-cor {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+  }
+  
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: black;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    z-index: 1000;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -40%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .outdoor h1 { font-size: 20px; }
+    .status-buttons { grid-template-columns: 1fr; }
+    .status-btn.outros { grid-column: span 1; }
+    .toolbar-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
-
-<div class="card">
-  <div class="cols-2" style="display:grid;gap:12px">
-    <div><label>🏢 Prédio</label><input id="predio" value="Prédio Eco Berrini"></div>
-    <div><label>👥 Responsáveis</label><input id="tecnicos" placeholder="Ex: João, Maria"></div>
+<div class="container">
+  <div class="main-card" id="exportCard">
+    <!-- Outdoor no telhado -->
+    <div class="outdoor">
+      <h1 id="predioOutdoor">ECO BERRINI</h1>
+      <p>Av. Eng. Luiz Carlos Berrini, 1376</p>
+    </div>
+    
+    <!-- Topbar Vivo -->
+    <div class="topbar-vivo">
+      <span class="vivo-logo">vivo</span>
+      <div>
+        <span style="font-size:12px">Responsável:</span>
+        <strong id="responsavelNome">Não definido</strong>
+      </div>
+      <span class="stats-info" id="statsInfo">0 salas • 0 problemas</span>
+    </div>
+    
+    <!-- Área do mapa interativo -->
+    <div class="mapa-area">
+      <div class="mapa-container" id="mapaContainer">
+        <img id="mapaFundo" class="mapa-imagem" src="" alt="Prédio Eco Berrini - Clique nas salas">
+        <div id="salasOverlay" class="salas-overlay"></div>
+      </div>
+    </div>
+    
+    <!-- Barra de ferramentas -->
+    <div class="toolbar">
+      <div class="toolbar-grid">
+        <div class="input-group">
+          <label>🏢 Nome do Prédio</label>
+          <input type="text" id="predioNome" value="ECO BERRINI">
+        </div>
+        <div class="input-group">
+          <label>👤 Responsável</label>
+          <input type="text" id="responsavel" placeholder="Nome do responsável">
+        </div>
+        <div class="input-group">
+          <label>➕ Adicionar Sala (Andar-Sala)</label>
+          <input type="text" id="novaSala" placeholder="Ex: 29-05">
+        </div>
+      </div>
+      
+      <div class="obs-area">
+        <label>📝 Observações</label>
+        <textarea id="observacoes" rows="2" placeholder="Registre observações importantes..."></textarea>
+      </div>
+      
+      <div class="legenda">
+        <div class="legenda-item"><div class="legenda-cor" style="background:#2ECC71"></div> Validado</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background:#9E9E9E"></div> Trancada</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background:#FF9800"></div> Ocupada</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background:#E53935"></div> Problema</div>
+        <div class="legenda-item"><div class="legenda-cor" style="background:#3498db"></div> Outros</div>
+      </div>
+      
+      <button id="btnLimpar" class="btn-limpar">🗑️ LIMPAR TODAS AS SALAS</button>
+      <button id="btnSalvar" class="btn-salvar">📸 SALVAR IMAGEM</button>
+    </div>
   </div>
-</div>
-
-<div class="card">
-  <div class="cols-2" style="display:grid;gap:12px">
-    <div><label>➕ Adicionar sala</label><input id="onePair" placeholder="29-02"></div>
-    <div><label>📌 Status</label><select id="oneStatus"><option value="VALIDADA">✅ Validado</option><option value="TRANCADA">🔒 Trancada</option><option value="OCUPADA">🟠 Ocupada</option><option value="PROBLEMA">🔴 Problema</option></select></div>
-  </div>
-  <div class="cols-2" style="display:grid;gap:12px;margin-top:12px">
-    <button id="btnAdd">➕ Adicionar</button>
-    <button id="btnClear" class="ghost">🗑️ Limpar tudo</button>
-  </div>
-</div>
-
-<div class="card">
-  <label>📋 Lista rápida</label>
-  <textarea id="bulk" rows="3" placeholder="29-02&#10;29-05 ocupada&#10;28-03 problema"></textarea>
-  <label style="margin-top:12px">📝 Observações</label>
-  <textarea id="observacoes" rows="2"></textarea>
-  <div class="kbar">
-    <button id="btnApply" class="kbtn">📋 Aplicar</button>
-    <button id="btnLoadBg" class="kbtn">🖼️ Fundo</button>
-    <button id="btnClearBg" class="kbtn">🗑️ Fundo</button>
-    <button id="btnPNG" class="kbtn">📸 Salvar</button>
-    <input type="file" id="bgFile" style="display:none">
-  </div>
-  <div class="legend">
-    <div class="pill"><span class="dot verde"></span> Validado</div>
-    <div class="pill"><span class="dot cinza"></span> Trancada</div>
-    <div class="pill"><span class="dot laranja"></span> Ocupada</div>
-    <div class="pill"><span class="dot vermelho"></span> Problema</div>
-  </div>
-</div>
-
-<div class="canvas-wrap" id="exportCanvas">
-  <div class="topbar">
-    <span class="vivo-badge">vivo</span>
-    <div><strong id="sumPredio">Prédio</strong><br><span id="sumResp" style="font-size:11px"></span></div>
-    <span id="sumRight" style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px">0 salas</span>
-  </div>
-  <div id="floorsContainer" class="floors-container"></div>
-  <div class="obs-container"><div id="obsBox">Nenhuma observação</div></div>
-  <div class="summary-bottom"><div id="statusBadges"></div><span id="sumDate"></span></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 (function(){
-const $=x=>document.querySelector(x);
-let loadingDiv=null;
-
-function toast(m,isError=false){
-  let t=document.createElement('div');
-  t.className='toast';
-  t.textContent=m;
-  t.style.background=isError?'#c0392b':'black';
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(),3000);
-}
-
-function showLoading(){
-  if(loadingDiv) return;
-  loadingDiv=document.createElement('div');
-  loadingDiv.className='loading-modal';
-  loadingDiv.innerHTML='<div class="loading-content"><div class="spinner"></div><div>Gerando imagem...</div></div>';
-  document.body.appendChild(loadingDiv);
-}
-
-function hideLoading(){
-  if(loadingDiv){
-    loadingDiv.remove();
-    loadingDiv=null;
-  }
-}
-
-const state={items:[],bg:null};
-const pad2=n=>String(n).padStart(2,'0');
-
-function render(){
-  $("#sumPredio").innerHTML=$("#predio").value;
-  $("#sumResp").innerHTML=$("#tecnicos").value;
-  $("#obsBox").innerHTML=$("#observacoes").value.trim()||"Nenhuma observação";
+  // ==================== CONFIGURAÇÃO DAS SALAS ====================
+  // Lista de salas disponíveis no prédio (andar e número)
+  const salasDisponiveis = [
+    {andar: 32, sala: "01", x: 70, y: 8, largura: 60, altura: 30},
+    {andar: 32, sala: "02", x: 140, y: 8, largura: 60, altura: 30},
+    {andar: 31, sala: "01", x: 70, y: 14, largura: 60, altura: 30},
+    {andar: 31, sala: "02", x: 140, y: 14, largura: 60, altura: 30},
+    {andar: 30, sala: "01", x: 70, y: 20, largura: 60, altura: 30},
+    {andar: 30, sala: "02", x: 140, y: 20, largura: 60, altura: 30},
+    {andar: 29, sala: "01", x: 70, y: 26, largura: 60, altura: 30},
+    {andar: 29, sala: "02", x: 140, y: 26, largura: 60, altura: 30},
+    {andar: 28, sala: "01", x: 70, y: 32, largura: 60, altura: 30},
+    {andar: 28, sala: "02", x: 140, y: 32, largura: 60, altura: 30},
+    {andar: 27, sala: "01", x: 70, y: 38, largura: 60, altura: 30},
+    {andar: 27, sala: "02", x: 140, y: 38, largura: 60, altura: 30},
+    {andar: 26, sala: "01", x: 70, y: 44, largura: 60, altura: 30},
+    {andar: 26, sala: "02", x: 140, y: 44, largura: 60, altura: 30},
+    {andar: 25, sala: "01", x: 70, y: 50, largura: 60, altura: 30},
+    {andar: 25, sala: "02", x: 140, y: 50, largura: 60, altura: 30},
+    {andar: 24, sala: "01", x: 70, y: 56, largura: 60, altura: 30},
+    {andar: 24, sala: "02", x: 140, y: 56, largura: 60, altura: 30},
+    {andar: 23, sala: "01", x: 70, y: 62, largura: 60, altura: 30},
+    {andar: 23, sala: "02", x: 140, y: 62, largura: 60, altura: 30},
+    {andar: 22, sala: "01", x: 70, y: 68, largura: 60, altura: 30},
+    {andar: 22, sala: "02", x: 140, y: 68, largura: 60, altura: 30},
+    {andar: 21, sala: "01", x: 70, y: 74, largura: 60, altura: 30},
+    {andar: 21, sala: "02", x: 140, y: 74, largura: 60, altura: 30},
+    {andar: 20, sala: "01", x: 70, y: 80, largura: 60, altura: 30},
+    {andar: 20, sala: "02", x: 140, y: 80, largura: 60, altura: 30},
+    {andar: 19, sala: "01", x: 70, y: 86, largura: 60, altura: 30},
+    {andar: 19, sala: "02", x: 140, y: 86, largura: 60, altura: 30},
+    {andar: 18, sala: "01", x: 70, y: 92, largura: 60, altura: 30},
+    {andar: 18, sala: "02", x: 140, y: 92, largura: 60, altura: 30}
+  ];
   
-  let floors={};
-  state.items.forEach(i=>{if(!floors[i.floor])floors[i.floor]=[];floors[i.floor].push(i)});
-  let ordered=Object.keys(floors).sort((a,b)=>b-a);
-  let fc=$("#floorsContainer");
-  if(ordered.length){
-    fc.innerHTML=ordered.map(f=>`
-      <div class="floor-group">
-        <div class="floor-title">🏢 Andar ${pad2(parseInt(f))}</div>
-        <div class="salas-grid">
-          ${floors[f].sort((a,b)=>a.room-b.room).map(s=>`<div class="slot ${s.status==='VALIDADA'?'valid':s.status==='TRANCADA'?'lock':s.status==='OCUPADA'?'occ':'prob'}">${s.room}</div>`).join('')}
-        </div>
-      </div>
-    `).join('');
-  }else{
-    fc.innerHTML='<div style="text-align:center;padding:40px;color:#999">Nenhuma sala cadastrada</div>';
+  let salasValidacao = {}; // Armazena o status de cada sala { "32-01": "VALIDADA", etc }
+  let modalAtivo = null;
+  
+  const $ = x => document.querySelector(x);
+  
+  function toast(msg, isError = false) {
+    let t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    t.style.background = isError ? '#e74c3c' : 'black';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
   }
   
-  let dist={VALIDADA:0,TRANCADA:0,OCUPADA:0,PROBLEMA:0};
-  state.items.forEach(x=>dist[x.status]++);
-  let probs=dist.TRANCADA+dist.OCUPADA+dist.PROBLEMA;
-  $("#sumRight").innerHTML=`${state.items.length} salas • ${probs} problemas`;
-  $("#statusBadges").innerHTML=`
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <span>✅ ${dist.VALIDADA}</span>
-      <span>🔒 ${dist.TRANCADA}</span>
-      <span>🟠 ${dist.OCUPADA}</span>
-      <span>🔴 ${dist.PROBLEMA}</span>
-    </div>
-  `;
-  $("#sumDate").innerHTML=new Date().toLocaleString('pt-BR');
+  // Carregar imagem do prédio
+  function carregarImagem() {
+    // URL da imagem do prédio (substitua pela sua)
+    const imgUrl = "https://i.imgur.com/placeholder.jpg"; // COLE A URL DA SUA IMAGEM AQUI
+    
+    const img = $("#mapaFundo");
+    img.onload = () => {
+      renderizarAreasClique();
+    };
+    img.onerror = () => {
+      criarImagemFallback();
+    };
+    img.src = imgUrl;
+  }
   
-  let oldBg=document.getElementById('bgCustom');
-  if(oldBg) oldBg.remove();
-  if(state.bg){
-    let bgDiv=document.createElement('div');
-    bgDiv.id='bgCustom';
-    bgDiv.style.cssText='position:absolute;inset:0;background-image:url('+state.bg+');background-size:cover;background-position:center;opacity:0.3;z-index:0;pointer-events:none';
-    let layer=$("#exportCanvas .bg-layer");
-    if(!layer){
-      let wrapper=$("#exportCanvas");
-      let newLayer=document.createElement('div');
-      newLayer.className='bg-layer';
-      newLayer.style.position='relative';
-      wrapper.insertBefore(newLayer, wrapper.firstChild);
-      newLayer.appendChild(bgDiv);
-    }else{
-      layer.style.position='relative';
-      layer.prepend(bgDiv);
+  function criarImagemFallback() {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 1000;
+    
+    ctx.fillStyle = '#e8e8e8';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = '#2c3e50';
+    ctx.font = 'bold 24px system-ui';
+    ctx.fillText('ECO BERRINI', canvas.width/2 - 100, 50);
+    
+    ctx.fillStyle = '#666';
+    ctx.font = '14px monospace';
+    let y = 100;
+    for(let i = 32; i >= 18; i--) {
+      ctx.fillStyle = '#999';
+      ctx.fillRect(50, y - 8, 40, 25);
+      ctx.fillStyle = '#333';
+      ctx.fillText(i, 60, y + 5);
+      ctx.fillStyle = '#ddd';
+      ctx.fillRect(120, y - 8, canvas.width - 180, 25);
+      y += 45;
     }
+    
+    ctx.fillStyle = '#888';
+    ctx.font = '12px system-ui';
+    ctx.fillText('Av. Eng. Luiz Carlos Berrini, 1376', canvas.width/2 - 150, canvas.height - 30);
+    
+    $("#mapaFundo").src = canvas.toDataURL();
+    setTimeout(renderizarAreasClique, 100);
+    toast("⚠️ Usando visualização padrão. Adicione a URL da sua imagem no código.");
   }
-}
-
-async function salvarImagem(){
-  const btn=$("#btnPNG");
-  const textoOriginal=btn.innerHTML;
   
-  try{
-    showLoading();
-    btn.innerHTML="⏳...";
-    btn.disabled=true;
+  // Renderizar áreas clicáveis para cada sala
+  function renderizarAreasClique() {
+    const overlay = $("#salasOverlay");
+    if(!overlay) return;
+    overlay.innerHTML = '';
+    overlay.style.position = 'absolute';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.pointerEvents = 'auto';
     
-    await new Promise(r=>setTimeout(r,100));
+    const img = $("#mapaFundo");
+    if (!img.complete || img.naturalWidth === 0) {
+      setTimeout(renderizarAreasClique, 200);
+      return;
+    }
     
-    const elemento=$("#exportCanvas");
-    const canvas=await html2canvas(elemento,{
-      scale:2.5,
-      backgroundColor:"#ffffff",
-      logging:false,
-      useCORS:true
+    const imgWidth = img.clientWidth;
+    const imgHeight = img.clientHeight;
+    
+    salasDisponiveis.forEach(sala => {
+      const key = `${sala.andar}-${sala.sala}`;
+      const status = salasValidacao[key] || null;
+      
+      const area = document.createElement('div');
+      area.className = 'sala-click-area';
+      if(status === 'VALIDADA') area.classList.add('validada');
+      else if(status === 'TRANCADA') area.classList.add('trancada');
+      else if(status === 'OCUPADA') area.classList.add('ocupada');
+      else if(status === 'PROBLEMA') area.classList.add('problema');
+      
+      // Converter posições percentuais para pixels
+      const leftPercent = sala.x;
+      const topPercent = sala.y;
+      const widthPercent = sala.largura;
+      const heightPercent = sala.altura;
+      
+      area.style.position = 'absolute';
+      area.style.left = `${leftPercent}%`;
+      area.style.top = `${topPercent}%`;
+      area.style.width = `${widthPercent}%`;
+      area.style.height = `${heightPercent}%`;
+      area.style.borderRadius = '8px';
+      area.style.cursor = 'pointer';
+      
+      // Tooltip com o nome da sala
+      area.title = `Sala ${sala.andar}-${sala.sala} ${status ? `- ${status}` : ''}`;
+      
+      area.onclick = (e) => {
+        e.stopPropagation();
+        abrirModalStatus(sala);
+      };
+      
+      overlay.appendChild(area);
     });
     
-    hideLoading();
+    atualizarStats();
+  }
+  
+  // Abrir modal para selecionar status da sala
+  function abrirModalStatus(sala) {
+    if(modalAtivo) return;
     
-    const data=new Date();
-    const timestamp=`${data.getFullYear()}-${pad2(data.getMonth()+1)}-${pad2(data.getDate())}_${pad2(data.getHours())}-${pad2(data.getMinutes())}`;
-    const nomePredio=($("#predio").value||"Predio").replace(/\s+/g,"_");
-    const filename=`Ronda_${nomePredio}_${timestamp}.png`;
-    const dataUrl=canvas.toDataURL("image/png");
+    const key = `${sala.andar}-${sala.sala}`;
+    const statusAtual = salasValidacao[key] || null;
     
-    if(navigator.share){
-      try{
-        const blob=await fetch(dataUrl).then(r=>r.blob());
-        const file=new File([blob], filename, {type:'image/png'});
-        await navigator.share({
-          title:'Ronda - Mapa de Salas',
-          text:`Mapa do ${$("#predio").value}`,
-          files:[file]
-        });
-        toast("✅ Imagem compartilhada! Salve na galeria");
-        return;
-      }catch(e){}
-    }
+    const overlayModal = document.createElement('div');
+    overlayModal.className = 'overlay-modal';
     
-    const link=document.createElement('a');
-    link.download=filename;
-    link.href=dataUrl;
-    link.style.display='none';
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(()=>document.body.removeChild(link),1000);
-    toast("✅ Imagem gerada! Verifique seus downloads");
+    const modal = document.createElement('div');
+    modal.className = 'modal-status';
+    modal.innerHTML = `
+      <h3>📍 Sala ${sala.andar}-${sala.sala}</h3>
+      <div class="status-buttons">
+        <button class="status-btn validado" data-status="VALIDADA">✅ Validado</button>
+        <button class="status-btn trancada" data-status="TRANCADA">🔒 Trancada</button>
+        <button class="status-btn ocupada" data-status="OCUPADA">🟠 Ocupada</button>
+        <button class="status-btn problema" data-status="PROBLEMA">🔴 Problema</button>
+        <button class="status-btn outros" data-status="OUTROS">📝 Outros</button>
+      </div>
+      <button class="modal-close">Cancelar</button>
+    `;
     
-    setTimeout(()=>{
-      if(!document.querySelector('a[download]')){
-        const novaJanela=window.open();
-        if(novaJanela){
-          novaJanela.document.write(`
-            <html>
-              <head><title>Salvar Imagem</title><meta name="viewport" content="width=device-width"></head>
-              <body style="margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column">
-                <img src="${dataUrl}" style="max-width:100%;height:auto;border-radius:8px" />
-                <div style="position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.9);color:white;padding:15px;text-align:center">
-                  📱 Toque e segure na imagem > Salvar Imagem
-                </div>
-              </body>
-            </html>
-          `);
-          toast("📱 Toque e segure na imagem para salvar");
+    document.body.appendChild(overlayModal);
+    document.body.appendChild(modal);
+    
+    modalAtivo = { modal, overlayModal, sala };
+    
+    // Eventos dos botões
+    modal.querySelectorAll('.status-btn').forEach(btn => {
+      btn.onclick = () => {
+        const status = btn.dataset.status;
+        salasValidacao[key] = status;
+        renderizarAreasClique();
+        fecharModal();
+        toast(`✅ Sala ${sala.andar}-${sala.sala} marcada como ${status === 'VALIDADA' ? 'Validado' : status === 'TRANCADA' ? 'Trancada' : status === 'OCUPADA' ? 'Ocupada' : status === 'PROBLEMA' ? 'Problema' : 'Outros'}`);
+        
+        // Se for "Outros", abrir campo de observação
+        if(status === 'OUTROS') {
+          setTimeout(() => {
+            const obs = prompt(`Digite uma observação para a sala ${sala.andar}-${sala.sala}:`);
+            if(obs) {
+              const obsAtual = $("#observacoes").value;
+              $("#observacoes").value = obsAtual + (obsAtual ? '\n' : '') + `Sala ${sala.andar}-${sala.sala}: ${obs}`;
+              toast("📝 Observação adicionada!");
+            }
+          }, 100);
         }
-      }
-    },500);
+      };
+    });
     
-  }catch(erro){
-    console.error("Erro:",erro);
-    hideLoading();
-    toast("❌ Erro ao gerar imagem. Tente novamente.",true);
-  }finally{
-    btn.innerHTML=textoOriginal;
-    btn.disabled=false;
+    modal.querySelector('.modal-close').onclick = () => {
+      fecharModal();
+    };
+    
+    overlayModal.onclick = () => {
+      fecharModal();
+    };
   }
-}
-
-$("#btnAdd").onclick=()=>{
-  let m=$("#onePair").value.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
-  if(!m){toast("❌ Use formato: 29-02",true);return}
-  let floor=parseInt(m[1]),room=pad2(parseInt(m[2]));
-  state.items=state.items.filter(x=>!(x.floor===floor&&x.room===room));
-  state.items.push({floor,room,status:$("#oneStatus").value});
-  $("#onePair").value="";
-  render();
-  toast(`✅ ${floor}-${room} adicionada`);
-};
-
-$("#btnApply").onclick=()=>{
-  let lines=$("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);
-  if(!lines.length){toast("❌ Cole uma lista primeiro",true);return}
-  lines.forEach(l=>{
-    let m=l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);
-    if(m){
-      let floor=parseInt(m[1]),room=pad2(parseInt(m[2])),rest=m[3]||"";
-      let status="VALIDADA";
-      if(/problema|falha|erro/i.test(rest)) status="PROBLEMA";
-      else if(/tranc/i.test(rest)) status="TRANCADA";
-      else if(/ocup/i.test(rest)) status="OCUPADA";
-      state.items=state.items.filter(x=>!(x.floor===floor&&x.room===room));
-      state.items.push({floor,room,status});
+  
+  function fecharModal() {
+    if(modalAtivo) {
+      modalAtivo.modal.remove();
+      modalAtivo.overlayModal.remove();
+      modalAtivo = null;
     }
-  });
-  $("#bulk").value="";
-  render();
-  toast(`✅ ${lines.length} sala(s) adicionadas`);
-};
-
-$("#btnClear").onclick=()=>{
-  if(confirm("Limpar todas as salas, lista e observações?")){
-    state.items=[];
-    $("#bulk").value="";
-    $("#observacoes").value="";
-    $("#onePair").value="";
-    render();
-    toast("🗑️ Tudo limpo!");
   }
-};
-
-$("#btnLoadBg").onclick=()=>$("#bgFile").click();
-$("#btnClearBg").onclick=()=>{state.bg=null;render();toast("🖼️ Fundo removido")};
-$("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();toast("🖼️ Fundo carregado")};r.readAsDataURL(f)}};
-$("#predio").oninput=render;
-$("#tecnicos").oninput=render;
-$("#observacoes").oninput=render;
-$("#btnPNG").onclick=salvarImagem;
-
-state.items=[];
-render();
-toast("👋 Pronto! Adicione suas salas");
+  
+  function atualizarStats() {
+    const total = Object.keys(salasValidacao).length;
+    const problemas = Object.values(salasValidacao).filter(v => v === 'PROBLEMA').length;
+    const validadas = Object.values(salasValidacao).filter(v => v === 'VALIDADA').length;
+    const trancadas = Object.values(salasValidacao).filter(v => v === 'TRANCADA').length;
+    const ocupadas = Object.values(salasValidacao).filter(v => v === 'OCUPADA').length;
+    
+    $("#statsInfo").innerHTML = `${total} sala${total !== 1 ? 's' : ''} • ${problemas} problema${problemas !== 1 ? 's' : ''}`;
+    
+    // Atualizar outdoor
+    const nomePredio = $("#predioNome").value;
+    $("#predioOutdoor").innerHTML = nomePredio.toUpperCase();
+    
+    // Atualizar responsável
+    const responsavel = $("#responsavel").value;
+    $("#responsavelNome").innerHTML = responsavel || "Não definido";
+  }
+  
+  function adicionarSalaManual() {
+    const input = $("#novaSala").value.trim();
+    const match = input.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
+    if(!match) {
+      toast("❌ Use formato: 29-05", true);
+      return;
+    }
+    
+    const andar = parseInt(match[1]);
+    const sala = match[2].padStart(2, '0');
+    const key = `${andar}-${sala}`;
+    
+    // Verificar se a sala existe na lista
+    const salaExiste = salasDisponiveis.some(s => s.andar === andar && s.sala === sala);
+    if(!salaExiste) {
+      toast(`⚠️ Sala ${andar}-${sala} não encontrada no mapa`, true);
+      return;
+    }
+    
+    if(salasValidacao[key]) {
+      toast(`❌ Sala ${andar}-${sala} já foi validada!`, true);
+      return;
+    }
+    
+    // Abrir modal para selecionar status
+    abrirModalStatus({andar, sala});
+    $("#novaSala").value = "";
+  }
+  
+  function limparTudo() {
+    if(confirm("Limpar todas as validações e observações?")) {
+      salasValidacao = {};
+      $("#observacoes").value = "";
+      renderizarAreasClique();
+      toast("🗑️ Todas as salas foram limpas!");
+    }
+  }
+  
+  async function salvarImagem() {
+    const btn = $("#btnSalvar");
+    const originalText = btn.innerHTML;
+    
+    const loading = document.createElement('div');
+    loading.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000';
+    loading.innerHTML = '<div style="background:white;padding:20px;border-radius:16px;text-align:center"><div style="width:40px;height:40px;border:4px solid #ddd;border-top-color:#6A1B9A;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px"></div><div>Gerando imagem...</div></div>';
+    document.body.appendChild(loading);
+    
+    try {
+      btn.innerHTML = "⏳ GERANDO...";
+      btn.disabled = true;
+      
+      await new Promise(r => setTimeout(r, 100));
+      
+      const elemento = $("#exportCard");
+      const canvas = await html2canvas(elemento, {
+        scale: 2.5,
+        backgroundColor: "#ffffff",
+        logging: false,
+        useCORS: true
+      });
+      
+      document.body.removeChild(loading);
+      
+      const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, '-');
+      const nomePredio = $("#predioNome").value.replace(/\s/g, '_');
+      const filename = `Ronda_${nomePredio}_${timestamp}.png`;
+      const dataUrl = canvas.toDataURL("image/png");
+      
+      if(navigator.share) {
+        try {
+          const blob = await fetch(dataUrl).then(r => r.blob());
+          const file = new File([blob], filename, {type: 'image/png'});
+          await navigator.share({
+            title: 'Ronda - Mapa de Salas',
+            text: `Mapa do ${$("#predioNome").value}`,
+            files: [file]
+          });
+          toast("✅ Imagem compartilhada! Salve na galeria");
+          return;
+        } catch(e) {}
+      }
+      
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = dataUrl;
+      link.click();
+      toast("✅ Imagem salva! Verifique seus downloads");
+      
+    } catch(error) {
+      console.error(error);
+      document.body.removeChild(loading);
+      toast("❌ Erro ao gerar imagem. Tente novamente.", true);
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  }
+  
+  // Eventos
+  $("#btnSalvar").onclick = salvarImagem;
+  $("#btnLimpar").onclick = limparTudo;
+  $("#predioNome").oninput = atualizarStats;
+  $("#responsavel").oninput = atualizarStats;
+  
+  // Botão para adicionar sala manual (criar um botão ou usar enter)
+  const btnAdd = document.createElement('button');
+  btnAdd.textContent = "➕ Adicionar Sala";
+  btnAdd.style.marginTop = "10px";
+  btnAdd.onclick = adicionarSalaManual;
+  document.querySelector('.toolbar-grid').appendChild(btnAdd);
+  
+  $("#novaSala").onkeypress = (e) => { if(e.key === 'Enter') adicionarSalaManual(); };
+  
+  // Inicializar
+  carregarImagem();
+  
+  const style = document.createElement('style');
+  style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+  document.head.appendChild(style);
+  
+  toast("👋 Clique nas salas para validar! Toque em cada sala e escolha o status.");
 })();
 </script>
 </body>
