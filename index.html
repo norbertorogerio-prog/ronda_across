@@ -26,18 +26,19 @@
   .grid{display:grid;gap:10px}
   @media(min-width:800px){.cols-2{grid-template-columns:1fr 1fr}}
   
-  /* LEGEND COM FUNDO BRANCO SÓLIDO E NA FRENTE */
+  /* LEGEND - FUNDO BRANCO SÓLIDO, SEM BORRÃO */
   .legend{
     display:flex;
     gap:12px;
     flex-wrap:wrap;
     margin-top:8px;
     padding:12px;
-    background:white;
+    background:white !important;
     border-radius:16px;
     border:1px solid var(--line);
     position:relative;
     z-index:10;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
   }
   .pill{
     display:inline-flex;
@@ -45,11 +46,11 @@
     gap:8px;
     padding:6px 14px;
     border-radius:30px;
-    background:white;
+    background:white !important;
     font-size:13px;
     font-weight:600;
     border:1px solid #e0e0e0;
-    box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    box-shadow:0 1px 2px rgba(0,0,0,0.05);
   }
   .dot{
     width:14px;
@@ -133,7 +134,7 @@
       <button class="kbtn" id="btnPNG">📸 Salvar</button>
       <input type="file" id="bgFile" accept="image/*" style="display:none">
     </div>
-    <!-- LEGEND COM FUNDO BRANCO E NA FRENTE -->
+    <!-- LEGEND - SEM BORRÃO, FUNDO BRANCO SÓLIDO -->
     <div class="legend">
       <div class="pill"><span class="dot v"></span> Validado</div>
       <div class="pill"><span class="dot l"></span> Trancada</div>
