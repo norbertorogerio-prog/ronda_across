@@ -22,26 +22,72 @@
   .dot.vermelho{background:#E53935}
   .kbar{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
   .kbtn{flex:1;background:white;color:#6A1B9A;border:1px solid #6A1B9A;padding:10px;border-radius:12px;min-width:80px}
-  .canvas-wrap{background:white;border-radius:16px;overflow:hidden}
+  .canvas-wrap{background:white;border-radius:16px;overflow:hidden;position:relative}
   .topbar{background:#6A1B9A;padding:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;color:white}
   .vivo-badge{background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px}
-  .floors-container{display:flex;flex-direction:column;gap:16px;padding:16px}
-  .floor-group{background:#fafafa;border-radius:12px;padding:12px}
-  .floor-title{font-weight:bold;color:#6A1B9A;border-bottom:2px solid #6A1B9A;display:inline-block;margin-bottom:8px}
-  .salas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,85px));gap:8px;margin-top:8px}
-  .slot{border-radius:8px;padding:8px;text-align:center;font-weight:bold;color:white;border:2px solid white}
-  .slot.valid{background:#2ECC71}
-  .slot.lock{background:#9E9E9E}
-  .slot.occ{background:#FF9800}
-  .slot.prob{background:#E53935}
+  
+  /* Área do mapa com imagem de fundo */
+  .mapa-container {
+    position: relative;
+    width: 100%;
+    background: #f5f5f5;
+  }
+  
+  .mapa-imagem {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+  }
+  
+  .overlay-salas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+  .sala-marcador {
+    position: absolute;
+    background: #2ECC71;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 20px;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.2s;
+    white-space: nowrap;
+    z-index: 10;
+    font-family: monospace;
+  }
+  
+  .sala-marcador:hover {
+    transform: scale(1.05);
+    z-index: 20;
+  }
+  
+  .sala-marcador.problema { background: #E53935; }
+  .sala-marcador.trancada { background: #9E9E9E; }
+  .sala-marcador.ocupada { background: #FF9800; }
+  
   .obs-container{padding:12px;background:white;border-top:1px solid #eee}
   .summary-bottom{padding:12px;display:flex;justify-content:space-between;background:#f9f9f9;border-top:2px solid #6A1B9A;flex-wrap:wrap;gap:8px}
+  
   .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:black;color:white;padding:12px 20px;border-radius:30px;font-size:14px;z-index:9999;white-space:nowrap}
   .loading-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000}
   .loading-content{background:white;padding:24px;border-radius:16px;text-align:center}
   .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#6A1B9A;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
   @keyframes spin{to{transform:rotate(360deg)}}
-  @media(max-width:480px){.salas-grid{grid-template-columns:repeat(auto-fill,minmax(65px,75px))}.slot{font-size:12px;padding:6px}}
+  
+  @media(max-width:480px){
+    .sala-marcador{font-size:10px;padding:2px 6px}
+  }
 </style>
 </head>
 <body>
@@ -90,7 +136,13 @@
     <div><strong id="sumPredio">Prédio</strong><br><span id="sumResp" style="font-size:11px"></span></div>
     <span id="sumRight" style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px">0 salas</span>
   </div>
-  <div id="floorsContainer" class="floors-container"></div>
+  
+  <!-- Área do mapa com imagem do prédio -->
+  <div class="mapa-container" id="mapaContainer">
+    <img id="mapaPredio" class="mapa-imagem" src="" alt="Prédio Eco Berrini - Mapa de Andares">
+    <div class="overlay-salas" id="overlaySalas"></div>
+  </div>
+  
   <div class="obs-container"><div id="obsBox">Nenhuma observação</div></div>
   <div class="summary-bottom"><div id="statusBadges"></div><span id="sumDate"></span></div>
 </div>
@@ -100,6 +152,32 @@
 (function(){
 const $=x=>document.querySelector(x);
 let loadingDiv=null;
+
+// Posições dos andares na imagem (percentual do topo)
+// Ajuste esses valores conforme a posição exata de cada andar na sua imagem
+const posicoesAndares = {
+  32: 8.5,   // Cobertura
+  31: 14.5,
+  30: 20.5,
+  29: 26.5,
+  28: 32.5,
+  27: 38.5,
+  26: 44.5,
+  25: 50.5,
+  24: 56.5,
+  23: 62.5,
+  22: 68.5,
+  21: 74.5,
+  20: 80.5,
+  19: 86.5,
+  18: 92.5
+};
+
+// Posição horizontal dos marcadores (percentual da largura)
+const posX = 85; // 85% da largura (lado direito)
+
+const state={items:[],bg:null};
+const pad2=n=>String(n).padStart(2,'0');
 
 function toast(m,isError=false){
   let t=document.createElement('div');
@@ -125,30 +203,106 @@ function hideLoading(){
   }
 }
 
-const state={items:[],bg:null};
-const pad2=n=>String(n).padStart(2,'0');
+// Carregar imagem do prédio
+function carregarImagemPredio() {
+  // URL da imagem do prédio (substitua pela sua)
+  const imgUrl = "https://i.imgur.com/placeholder.jpg"; // <-- COLE A URL DA SUA IMAGEM AQUI
+  
+  const img = $("#mapaPredio");
+  img.onload = () => {
+    renderizarMarcadores();
+  };
+  img.onerror = () => {
+    console.warn("Imagem não encontrada, criando fallback");
+    criarFallbackImagem();
+  };
+  img.src = imgUrl;
+}
 
-function render(){
+// Fallback caso a imagem não carregue
+function criarFallbackImagem() {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 600;
+  canvas.height = 800;
+  
+  ctx.fillStyle = '#e8e8e8';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.fillStyle = '#2c3e50';
+  ctx.font = 'bold 20px system-ui';
+  ctx.fillText('ECO BERRINI', canvas.width/2 - 80, 40);
+  
+  ctx.fillStyle = '#666';
+  ctx.font = '14px monospace';
+  let y = 80;
+  const andares = [32,31,30,29,28,27,26,25,24,23,22,21,20,19,18];
+  andares.forEach((andar) => {
+    ctx.fillStyle = '#999';
+    ctx.fillRect(30, y - 8, 25, 16);
+    ctx.fillStyle = '#333';
+    ctx.fillText(andar, 38, y + 2);
+    ctx.fillStyle = '#ddd';
+    ctx.fillRect(70, y - 8, canvas.width - 100, 16);
+    y += 42;
+  });
+  
+  ctx.fillStyle = '#888';
+  ctx.font = '10px system-ui';
+  ctx.fillText('Av. Eng. Luiz Carlos Berrini, 1376', canvas.width/2 - 120, canvas.height - 20);
+  
+  $("#mapaPredio").src = canvas.toDataURL();
+  setTimeout(renderizarMarcadores, 100);
+  toast("⚠️ Usando visualização padrão. Adicione a URL da sua imagem do prédio no código.");
+}
+
+// Renderizar marcadores das salas sobre a imagem
+function renderizarMarcadores() {
+  const overlay = $("#overlaySalas");
+  overlay.innerHTML = '';
+  
+  const img = $("#mapaPredio");
+  if (!img.complete || img.naturalWidth === 0) {
+    setTimeout(renderizarMarcadores, 200);
+    return;
+  }
+  
+  state.items.forEach((sala, index) => {
+    const posY = posicoesAndares[sala.floor];
+    if (posY !== undefined) {
+      const marcador = document.createElement('div');
+      let statusClass = '';
+      if (sala.status === 'PROBLEMA') statusClass = 'problema';
+      else if (sala.status === 'TRANCADA') statusClass = 'trancada';
+      else if (sala.status === 'OCUPADA') statusClass = 'ocupada';
+      
+      marcador.className = `sala-marcador ${statusClass}`;
+      const icon = sala.status === 'PROBLEMA' ? '🔴' : sala.status === 'TRANCADA' ? '🔒' : sala.status === 'OCUPADA' ? '🟠' : '✅';
+      marcador.textContent = `${icon} ${sala.floor}-${sala.room}`;
+      
+      marcador.style.left = `${posX}%`;
+      marcador.style.top = `${posY}%`;
+      marcador.style.transform = 'translateX(-50%) translateY(-50%)';
+      
+      marcador.onclick = (e) => {
+        e.stopPropagation();
+        if(confirm(`Remover sala ${sala.floor}-${sala.room}?`)) {
+          state.items = state.items.filter((_, i) => i !== index);
+          renderizarMarcadores();
+          renderStats();
+          toast(`🗑️ Sala ${sala.floor}-${sala.room} removida`);
+        }
+      };
+      
+      overlay.appendChild(marcador);
+    }
+  });
+}
+
+function renderStats(){
   $("#sumPredio").innerHTML=$("#predio").value;
   $("#sumResp").innerHTML=$("#tecnicos").value;
   $("#obsBox").innerHTML=$("#observacoes").value.trim()||"Nenhuma observação";
-  
-  let floors={};
-  state.items.forEach(i=>{if(!floors[i.floor])floors[i.floor]=[];floors[i.floor].push(i)});
-  let ordered=Object.keys(floors).sort((a,b)=>b-a);
-  let fc=$("#floorsContainer");
-  if(ordered.length){
-    fc.innerHTML=ordered.map(f=>`
-      <div class="floor-group">
-        <div class="floor-title">🏢 Andar ${pad2(parseInt(f))}</div>
-        <div class="salas-grid">
-          ${floors[f].sort((a,b)=>a.room-b.room).map(s=>`<div class="slot ${s.status==='VALIDADA'?'valid':s.status==='TRANCADA'?'lock':s.status==='OCUPADA'?'occ':'prob'}">${s.room}</div>`).join('')}
-        </div>
-      </div>
-    `).join('');
-  }else{
-    fc.innerHTML='<div style="text-align:center;padding:40px;color:#999">Nenhuma sala cadastrada</div>';
-  }
   
   let dist={VALIDADA:0,TRANCADA:0,OCUPADA:0,PROBLEMA:0};
   state.items.forEach(x=>dist[x.status]++);
@@ -170,19 +324,15 @@ function render(){
     let bgDiv=document.createElement('div');
     bgDiv.id='bgCustom';
     bgDiv.style.cssText='position:absolute;inset:0;background-image:url('+state.bg+');background-size:cover;background-position:center;opacity:0.3;z-index:0;pointer-events:none';
-    let layer=$("#exportCanvas .bg-layer");
-    if(!layer){
-      let wrapper=$("#exportCanvas");
-      let newLayer=document.createElement('div');
-      newLayer.className='bg-layer';
-      newLayer.style.position='relative';
-      wrapper.insertBefore(newLayer, wrapper.firstChild);
-      newLayer.appendChild(bgDiv);
-    }else{
-      layer.style.position='relative';
-      layer.prepend(bgDiv);
-    }
+    let wrapper=$("#exportCanvas");
+    wrapper.style.position='relative';
+    wrapper.insertBefore(bgDiv, wrapper.firstChild);
   }
+}
+
+function renderCompleto(){
+  renderStats();
+  renderizarMarcadores();
 }
 
 async function salvarImagem(){
@@ -235,26 +385,6 @@ async function salvarImagem(){
     setTimeout(()=>document.body.removeChild(link),1000);
     toast("✅ Imagem gerada! Verifique seus downloads");
     
-    setTimeout(()=>{
-      if(!document.querySelector('a[download]')){
-        const novaJanela=window.open();
-        if(novaJanela){
-          novaJanela.document.write(`
-            <html>
-              <head><title>Salvar Imagem</title><meta name="viewport" content="width=device-width"></head>
-              <body style="margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column">
-                <img src="${dataUrl}" style="max-width:100%;height:auto;border-radius:8px" />
-                <div style="position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.9);color:white;padding:15px;text-align:center">
-                  📱 Toque e segure na imagem > Salvar Imagem
-                </div>
-              </body>
-            </html>
-          `);
-          toast("📱 Toque e segure na imagem para salvar");
-        }
-      }
-    },500);
-    
   }catch(erro){
     console.error("Erro:",erro);
     hideLoading();
@@ -269,10 +399,14 @@ $("#btnAdd").onclick=()=>{
   let m=$("#onePair").value.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
   if(!m){toast("❌ Use formato: 29-02",true);return}
   let floor=parseInt(m[1]),room=pad2(parseInt(m[2]));
+  if(!posicoesAndares[floor]){
+    toast(`⚠️ Andar ${floor} não encontrado. Andares: 32-18`,true);
+    return;
+  }
   state.items=state.items.filter(x=>!(x.floor===floor&&x.room===room));
   state.items.push({floor,room,status:$("#oneStatus").value});
   $("#onePair").value="";
-  render();
+  renderCompleto();
   toast(`✅ ${floor}-${room} adicionada`);
 };
 
@@ -292,7 +426,7 @@ $("#btnApply").onclick=()=>{
     }
   });
   $("#bulk").value="";
-  render();
+  renderCompleto();
   toast(`✅ ${lines.length} sala(s) adicionadas`);
 };
 
@@ -302,22 +436,24 @@ $("#btnClear").onclick=()=>{
     $("#bulk").value="";
     $("#observacoes").value="";
     $("#onePair").value="";
-    render();
+    renderCompleto();
     toast("🗑️ Tudo limpo!");
   }
 };
 
 $("#btnLoadBg").onclick=()=>$("#bgFile").click();
-$("#btnClearBg").onclick=()=>{state.bg=null;render();toast("🖼️ Fundo removido")};
-$("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();toast("🖼️ Fundo carregado")};r.readAsDataURL(f)}};
-$("#predio").oninput=render;
-$("#tecnicos").oninput=render;
-$("#observacoes").oninput=render;
+$("#btnClearBg").onclick=()=>{state.bg=null;renderCompleto();toast("🖼️ Fundo removido")};
+$("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;renderCompleto();toast("🖼️ Fundo carregado")};r.readAsDataURL(f)}};
+$("#predio").oninput=renderStats;
+$("#tecnicos").oninput=renderStats;
+$("#observacoes").oninput=renderStats;
 $("#btnPNG").onclick=salvarImagem;
 
-state.items=[];
-render();
-toast("👋 Pronto! Adicione suas salas");
+// Inicializar
+carregarImagemPredio();
+renderStats();
+
+toast("👋 Clique nos marcadores para remover | Ajuste as posições dos andares se necessário");
 })();
 </script>
 </body>
