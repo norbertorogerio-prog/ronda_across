@@ -2,220 +2,370 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ronda Inteligente</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+<title>Ronda • Prédio Eco Berrini</title>
 <style>
-body{
-  margin:0;
-  font-family:system-ui;
-  background:#F6F3F9;
-  padding:12px;
-}
-
-.card{
-  background:white;
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:12px;
-}
-
-input{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid #ddd;
-}
-
-.building{
-  background:white;
-  border-radius:16px;
-  overflow:hidden;
-}
-
-.top{
-  background:#6A1B9A;
-  color:white;
-  padding:12px;
-  font-weight:bold;
-}
-
-.floors{
-  padding:12px;
-}
-
-.floor{
-  margin-bottom:12px;
-}
-
-.label{
-  font-weight:bold;
-  margin-bottom:6px;
-}
-
-.rooms{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(45px,1fr));
-  gap:6px;
-}
-
-.slot{
-  height:30px;
-  border-radius:6px;
-  background:#bbb;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  font-weight:bold;
-}
-
-.valid{background:#2ECC71}
-.lock{background:#9E9E9E}
-.occ{background:#FF9800}
-.prob{background:#E53935}
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;
-  justify-content:center;
-  align-items:flex-end;
-}
-
-.modal-box{
-  background:white;
-  width:100%;
-  padding:16px;
-  border-radius:16px 16px 0 0;
-}
-
-.modal button{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  border:none;
-  border-radius:10px;
-  font-weight:bold;
-}
-
-.validBtn{background:#2ECC71;color:white}
-.lockBtn{background:#9E9E9E;color:white}
-.occBtn{background:#FF9800;color:white}
-.probBtn{background:#E53935;color:white}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#F6F3F9;font-family:system-ui,sans-serif;padding:16px}
+  .card{background:white;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+  input,select,textarea,button{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:16px}
+  button{background:#6A1B9A;color:white;border:none;font-weight:bold;cursor:pointer}
+  button.ghost{background:white;color:#6A1B9A;border:1px solid #6A1B9A}
+  .grid{display:grid;gap:12px}
+  .cols-2{grid-template-columns:1fr 1fr}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;background:white;padding:12px;border-radius:16px}
+  .pill{display:flex;align-items:center;gap:8px;padding:6px 14px;background:#f5f5f5;border-radius:30px;font-size:13px}
+  .dot{width:14px;height:14px;border-radius:4px}
+  .dot.verde{background:#2ECC71}
+  .dot.cinza{background:#9E9E9E}
+  .dot.laranja{background:#FF9800}
+  .dot.vermelho{background:#E53935}
+  .dot.roxo{background:#9C27B0}
+  .kbar{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .kbtn{flex:1;background:white;color:#6A1B9A;border:1px solid #6A1B9A;padding:10px;border-radius:12px;min-width:80px}
+  .canvas-wrap{background:white;border-radius:16px;overflow:hidden;position:relative}
+  .topbar{background:#6A1B9A;padding:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;color:white}
+  .vivo-badge{background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px}
+  .floors-container{display:flex;flex-direction:column;gap:16px;padding:16px}
+  .floor-group{background:#fafafa;border-radius:12px;padding:12px}
+  .floor-title{font-weight:bold;color:#6A1B9A;border-bottom:2px solid #6A1B9A;display:inline-block;margin-bottom:8px}
+  .salas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,85px));gap:8px;margin-top:8px}
+  .slot{border-radius:8px;padding:8px;text-align:center;font-weight:bold;color:white;border:2px solid white;cursor:pointer}
+  .slot.valid{background:#2ECC71}
+  .slot.lock{background:#9E9E9E}
+  .slot.occ{background:#FF9800}
+  .slot.prob{background:#E53935}
+  .slot.outros{background:#9C27B0}
+  .obs-container{padding:12px;background:white;border-top:1px solid #eee}
+  .summary-bottom{padding:12px;display:flex;justify-content:space-between;background:#f9f9f9;border-top:2px solid #6A1B9A;flex-wrap:wrap;gap:8px}
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:black;color:white;padding:12px 20px;border-radius:30px;font-size:14px;z-index:9999;white-space:nowrap}
+  .loading-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000}
+  .loading-content{background:white;padding:24px;border-radius:16px;text-align:center}
+  .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#6A1B9A;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:10000}
+  .modal-content{background:white;padding:24px;border-radius:16px;width:90%;max-width:340px;text-align:center}
+  @media(max-width:480px){.salas-grid{grid-template-columns:repeat(auto-fill,minmax(65px,75px))}.slot{font-size:12px;padding:6px}}
 </style>
 </head>
-
 <body>
 
 <div class="card">
-  <input id="predio" placeholder="Nome do prédio" value="ECO BERRINI">
-  <input id="resp" placeholder="Responsável">
-</div>
-
-<div class="building" id="canvas">
-  <div class="top" id="title">ECO BERRINI</div>
-  <div class="floors" id="floors"></div>
+  <div class="cols-2" style="display:grid;gap:12px">
+    <div><label>🏢 Prédio</label><input id="predio" value="Prédio Eco Berrini"></div>
+    <div><label>👥 Responsáveis</label><input id="tecnicos" placeholder="Ex: João, Maria"></div>
+  </div>
 </div>
 
 <div class="card">
-  <button onclick="exportPNG()">📸 Gerar imagem</button>
+  <div class="cols-2" style="display:grid;gap:12px">
+    <div><label>➕ Adicionar sala</label><input id="onePair" placeholder="29-02"></div>
+    <div><label>📌 Status inicial</label>
+      <select id="oneStatus">
+        <option value="VALIDADA">✅ Validado</option>
+        <option value="TRANCADA">🔒 Trancada</option>
+        <option value="OCUPADA">🟠 Ocupada</option>
+        <option value="PROBLEMA">🔴 Problema</option>
+        <option value="OUTROS">❓ Outros</option>
+      </select>
+    </div>
+  </div>
+  <div class="cols-2" style="display:grid;gap:12px;margin-top:12px">
+    <button id="btnAdd">➕ Adicionar</button>
+    <button id="btnClear" class="ghost">🗑️ Limpar tudo</button>
+  </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <button class="validBtn" onclick="setStatus('VALIDADA')">✅ Validado</button>
-    <button class="lockBtn" onclick="setStatus('TRANCADA')">🔒 Trancado</button>
-    <button class="occBtn" onclick="setStatus('OCUPADA')">🟠 Ocupada</button>
-    <button class="probBtn" onclick="setStatus('PROBLEMA')">🔴 Problema</button>
+<div class="card">
+  <label>📋 Lista rápida (uma sala por linha)</label>
+  <textarea id="bulk" rows="3" placeholder="29-02&#10;29-05 problema&#10;30-03"></textarea>
+  <label style="margin-top:12px">📝 Observações</label>
+  <textarea id="observacoes" rows="2"></textarea>
+  <div class="kbar">
+    <button id="btnApply" class="kbtn">📋 Aplicar</button>
+    <button id="btnLoadBg" class="kbtn">🖼️ Fundo</button>
+    <button id="btnClearBg" class="kbtn">🗑️ Fundo</button>
+    <button id="btnPNG" class="kbtn">📸 Salvar Imagem</button>
+    <input type="file" id="bgFile" style="display:none">
+  </div>
+  <div class="legend">
+    <div class="pill"><span class="dot verde"></span> Validado</div>
+    <div class="pill"><span class="dot cinza"></span> Trancada</div>
+    <div class="pill"><span class="dot laranja"></span> Ocupada</div>
+    <div class="pill"><span class="dot vermelho"></span> Problema</div>
+    <div class="pill"><span class="dot roxo"></span> Outros</div>
+  </div>
+  <p style="margin-top:12px;font-size:13px;color:#666;text-align:center">💡 Clique nas salas no preview abaixo para alterar o status</p>
+</div>
+
+<div class="canvas-wrap" id="exportCanvas">
+  <div class="topbar">
+    <span class="vivo-badge">vivo</span>
+    <div><strong id="sumPredio">Prédio</strong><br><span id="sumResp" style="font-size:11px"></span></div>
+    <span id="sumRight" style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px">0 salas</span>
+  </div>
+  <div id="floorsContainer" class="floors-container"></div>
+  <div class="obs-container"><div id="obsBox">Nenhuma observação</div></div>
+  <div class="summary-bottom"><div id="statusBadges"></div><span id="sumDate"></span></div>
+</div>
+
+<!-- MODAL DE STATUS (nova abordagem) -->
+<div id="statusModal" class="modal">
+  <div class="modal-content">
+    <h3 id="modalRoomTitle" style="margin-bottom:20px;color:#6A1B9A">Andar XX • Sala YY</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
+      <button onclick="setStatus('VALIDADA')" style="background:#2ECC71;color:white;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:bold">✅ Validado</button>
+      <button onclick="setStatus('TRANCADA')" style="background:#9E9E9E;color:white;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:bold">🔒 Trancada</button>
+      <button onclick="setStatus('OCUPADA')" style="background:#FF9800;color:white;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:bold">🟠 Ocupada</button>
+      <button onclick="setStatus('PROBLEMA')" style="background:#E53935;color:white;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:bold">🔴 Problema</button>
+      <button onclick="setStatus('OUTROS')" style="background:#9C27B0;color:white;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:bold">❓ Outros</button>
+    </div>
+    <button onclick="closeModal()" style="margin-top:20px;width:100%;background:#eee;color:#333;border:none;padding:12px;border-radius:12px;font-weight:bold">Cancelar</button>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 <script>
-const floorsEl = document.getElementById("floors");
-const modal = document.getElementById("modal");
+(function(){
+const $=x=>document.querySelector(x);
+let loadingDiv=null;
+let currentFloor=0, currentRoom='';
 
-let current = null;
+function toast(m,isError=false){
+  let t=document.createElement('div');
+  t.className='toast';
+  t.textContent=m;
+  t.style.background=isError?'#c0392b':'black';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
 
-// CONFIG PRÉDIO
-let structure = [];
+function showLoading(){
+  if(loadingDiv) return;
+  loadingDiv=document.createElement('div');
+  loadingDiv.className='loading-modal';
+  loadingDiv.innerHTML='<div class="loading-content"><div class="spinner"></div><div>Gerando imagem...</div></div>';
+  document.body.appendChild(loadingDiv);
+}
 
-for(let f=32; f>=1; f--){
-  for(let r=1; r<=10; r++){
-    structure.push({
-      floor:f,
-      room:String(r).padStart(2,"0"),
-      status:null
-    });
+function hideLoading(){
+  if(loadingDiv){loadingDiv.remove();loadingDiv=null;}
+}
+
+const state={items:[],bg:null};
+const pad2=n=>String(n).padStart(2,'0');
+
+function getSlotClass(s){
+  switch(s.status){
+    case 'VALIDADA': return 'valid';
+    case 'TRANCADA': return 'lock';
+    case 'OCUPADA': return 'occ';
+    case 'PROBLEMA': return 'prob';
+    case 'OUTROS': return 'outros';
+    default: return '';
   }
 }
 
-// RENDER
-function render(){
-  let floors = {};
-  structure.forEach(i=>{
-    if(!floors[i.floor]) floors[i.floor]=[];
-    floors[i.floor].push(i);
+function attachSlotListeners(){
+  document.querySelectorAll('#floorsContainer .slot').forEach(slot=>{
+    slot.style.cursor='pointer';
+    slot.title='Clique para mudar o status';
+    slot.onclick=()=>{
+      const f=parseInt(slot.dataset.floor);
+      const r=slot.dataset.room;
+      openStatusModal(f,r);
+    };
   });
+}
 
-  floorsEl.innerHTML = Object.keys(floors).map(f=>`
-    <div class="floor">
-      <div class="label">Andar ${f}</div>
-      <div class="rooms">
-        ${floors[f].map(r=>`
-          <div class="slot ${cls(r.status)}"
-            onclick="openModal(${f},'${r.room}')">
-            ${r.room}
-          </div>
-        `).join("")}
+function render(){
+  $("#sumPredio").innerHTML=$("#predio").value;
+  $("#sumResp").innerHTML=$("#tecnicos").value;
+  $("#obsBox").innerHTML=$("#observacoes").value.trim()||"Nenhuma observação";
+  
+  let floors={};
+  state.items.forEach(i=>{if(!floors[i.floor])floors[i.floor]=[];floors[i.floor].push(i)});
+  let ordered=Object.keys(floors).sort((a,b)=>b-a);
+  let fc=$("#floorsContainer");
+  if(ordered.length){
+    fc.innerHTML=ordered.map(f=>`
+      <div class="floor-group">
+        <div class="floor-title">🏢 Andar ${pad2(parseInt(f))}</div>
+        <div class="salas-grid">
+          ${floors[f].sort((a,b)=>a.room-b.room).map(s=>`
+            <div class="slot ${getSlotClass(s)}" data-floor="${f}" data-room="${s.room}">${s.room}</div>
+          `).join('')}
+        </div>
       </div>
-    </div>
-  `).join("");
-
-  document.getElementById("title").innerText =
-    document.getElementById("predio").value;
-}
-
-function cls(s){
-  return {
-    VALIDADA:"valid",
-    TRANCADA:"lock",
-    OCUPADA:"occ",
-    PROBLEMA:"prob"
-  }[s] || "";
-}
-
-// MODAL
-function openModal(floor,room){
-  current = structure.find(x=>x.floor==floor && x.room==room);
-  modal.style.display="flex";
-}
-
-function setStatus(status){
-  if(current){
-    current.status = status;
-    render();
+    `).join('');
+    attachSlotListeners();
+  }else{
+    fc.innerHTML='<div style="text-align:center;padding:40px;color:#999">Nenhuma sala cadastrada<br><small>Clique em "Adicionar" ou use a lista rápida</small></div>';
   }
-  modal.style.display="none";
+  
+  let dist={VALIDADA:0,TRANCADA:0,OCUPADA:0,PROBLEMA:0,OUTROS:0};
+  state.items.forEach(x=>{if(dist.hasOwnProperty(x.status)) dist[x.status]++});
+  let problems = state.items.length - dist.VALIDADA;
+  $("#sumRight").innerHTML=`${state.items.length} salas • ${problems} problemas`;
+  $("#statusBadges").innerHTML=`
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <span>✅ ${dist.VALIDADA}</span>
+      <span>🔒 ${dist.TRANCADA}</span>
+      <span>🟠 ${dist.OCUPADA}</span>
+      <span>🔴 ${dist.PROBLEMA}</span>
+      <span>❓ ${dist.OUTROS}</span>
+    </div>
+  `;
+  $("#sumDate").innerHTML=new Date().toLocaleString('pt-BR');
+  
+  // fundo customizado
+  let oldBg=document.getElementById('bgCustom');
+  if(oldBg) oldBg.remove();
+  if(state.bg){
+    let bgDiv=document.createElement('div');
+    bgDiv.id='bgCustom';
+    bgDiv.style.cssText='position:absolute;inset:0;background-image:url('+state.bg+');background-size:cover;background-position:center;opacity:0.25;z-index:0;pointer-events:none';
+    let wrapper=$("#exportCanvas");
+    let layer=wrapper.querySelector('.bg-layer')||(()=>{let l=document.createElement('div');l.className='bg-layer';l.style.position='relative';wrapper.insertBefore(l,wrapper.firstChild);return l;})();
+    layer.prepend(bgDiv);
+  }
 }
 
-// EXPORT
-async function exportPNG(){
-  const canvas = await html2canvas(document.getElementById("canvas"),{scale:2});
-  const a = document.createElement("a");
-  a.href = canvas.toDataURL();
-  a.download = "ronda.png";
-  a.click();
+function openStatusModal(floor, room){
+  currentFloor=floor;
+  currentRoom=room;
+  $("#modalRoomTitle").textContent=`Andar ${pad2(floor)} • Sala ${room}`;
+  $("#statusModal").style.display='flex';
 }
 
-// INIT
+window.closeModal=()=>{ $("#statusModal").style.display='none'; };
+
+window.setStatus=(status)=>{
+  const idx=state.items.findIndex(x=>x.floor===currentFloor && x.room===currentRoom);
+  if(idx!==-1){
+    state.items[idx].status=status;
+    closeModal();
+    render();
+    toast(`✅ Sala ${currentFloor}-${currentRoom} atualizada!`);
+  }
+};
+
+async function salvarImagem(){
+  const btn=$("#btnPNG");
+  const textoOriginal=btn.innerHTML;
+  try{
+    showLoading();
+    btn.innerHTML="⏳...";
+    btn.disabled=true;
+    await new Promise(r=>setTimeout(r,100));
+    
+    const canvas=await html2canvas($("#exportCanvas"),{scale:2.5,backgroundColor:"#ffffff",logging:false,useCORS:true});
+    hideLoading();
+    
+    const data=new Date();
+    const timestamp=`${data.getFullYear()}-${pad2(data.getMonth()+1)}-${pad2(data.getDate())}_${pad2(data.getHours())}-${pad2(data.getMinutes())}`;
+    const nomePredio=($("#predio").value||"Predio").replace(/\s+/g,"_");
+    const filename=`Ronda_${nomePredio}_${timestamp}.png`;
+    const dataUrl=canvas.toDataURL("image/png");
+    
+    if(navigator.share){
+      try{
+        const blob=await fetch(dataUrl).then(r=>r.blob());
+        const file=new File([blob],filename,{type:'image/png'});
+        await navigator.share({title:'Ronda - Mapa de Salas',text:`Mapa do ${$("#predio").value}`,files:[file]});
+        toast("✅ Compartilhado! Salve na galeria do celular");
+        return;
+      }catch(e){}
+    }
+    
+    const link=document.createElement('a');
+    link.download=filename;
+    link.href=dataUrl;
+    link.style.display='none';
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(()=>document.body.removeChild(link),1000);
+    toast("✅ Imagem baixada! Verifique Downloads ou Galeria");
+    
+    setTimeout(()=>{
+      const novaJanela=window.open();
+      if(novaJanela){
+        novaJanela.document.write(`
+          <html><head><title>Salvar Imagem</title><meta name="viewport" content="width=device-width"></head>
+          <body style="margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column">
+            <img src="${dataUrl}" style="max-width:100%;height:auto;border-radius:8px" />
+            <div style="position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.9);color:white;padding:15px;text-align:center">
+              📱 Toque e segure na imagem → Salvar imagem
+            </div>
+          </body></html>
+        `);
+      }
+    },500);
+  }catch(erro){
+    hideLoading();
+    toast("❌ Erro ao gerar imagem",true);
+  }finally{
+    btn.innerHTML=textoOriginal;
+    btn.disabled=false;
+  }
+}
+
+$("#btnAdd").onclick=()=>{
+  let m=$("#onePair").value.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
+  if(!m){toast("❌ Use formato: 29-02",true);return}
+  let floor=parseInt(m[1]),room=pad2(parseInt(m[2]));
+  state.items=state.items.filter(x=>!(x.floor===floor&&x.room===room));
+  state.items.push({floor,room,status:$("#oneStatus").value});
+  $("#onePair").value="";
+  render();
+  toast(`✅ ${floor}-${room} adicionada`);
+};
+
+$("#btnApply").onclick=()=>{
+  let lines=$("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  if(!lines.length){toast("❌ Cole uma lista",true);return}
+  lines.forEach(l=>{
+    let m=l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);
+    if(m){
+      let floor=parseInt(m[1]),room=pad2(parseInt(m[2])),rest=m[3]||"";
+      let status="VALIDADA";
+      if(/problema|falha|erro/i.test(rest)) status="PROBLEMA";
+      else if(/tranc/i.test(rest)) status="TRANCADA";
+      else if(/ocup/i.test(rest)) status="OCUPADA";
+      else if(/outros/i.test(rest)) status="OUTROS";
+      state.items=state.items.filter(x=>!(x.floor===floor&&x.room===room));
+      state.items.push({floor,room,status});
+    }
+  });
+  $("#bulk").value="";
+  render();
+  toast(`✅ ${lines.length} sala(s) adicionadas`);
+};
+
+$("#btnClear").onclick=()=>{
+  if(confirm("Limpar tudo?")){
+    state.items=[];
+    $("#bulk").value="";
+    $("#observacoes").value="";
+    $("#onePair").value="";
+    render();
+    toast("🗑️ Tudo limpo!");
+  }
+};
+
+$("#btnLoadBg").onclick=()=>$("#bgFile").click();
+$("#btnClearBg").onclick=()=>{state.bg=null;render();toast("🖼️ Fundo removido")};
+$("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();toast("🖼️ Fundo carregado")};r.readAsDataURL(f)}};
+
+$("#predio").oninput=render;
+$("#tecnicos").oninput=render;
+$("#observacoes").oninput=render;
+$("#btnPNG").onclick=salvarImagem;
+
+state.items=[];
 render();
+toast("👋 Nova versão pronta! Adicione salas e clique nelas no preview para escolher Validado / Trancado / Ocupada / Problema / Outros");
+})();
 </script>
-
 </body>
 </html>
