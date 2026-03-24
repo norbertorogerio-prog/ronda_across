@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ronda Inteligente</title>
+<title>Ronda Visual Prédio</title>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
@@ -31,11 +31,6 @@ input{
 }
 
 /* GRID OPERAÇÃO */
-.floor-title{
-  font-weight:bold;
-  margin:8px 0 4px;
-}
-
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(45px,1fr));
@@ -90,31 +85,65 @@ input{
 .occBtn{background:#FF9800;color:white}
 .probBtn{background:#E53935;color:white}
 
-/* EXPORT PRÉDIO */
-.building-export{
-  background:#eaeff4;
+/* ===== EXPORT VISUAL PRÉDIO ===== */
+
+.export-wrapper{
+  background:#e9edf3;
   padding:20px;
-  border-radius:16px;
-  width:fit-content;
+  border-radius:20px;
+  display:inline-block;
 }
 
-.floor-row{
+.building{
+  background:linear-gradient(#dfe6ee,#cfd8e3);
+  padding:10px 6px;
+  border-radius:10px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.top-sign{
+  text-align:center;
+  font-weight:bold;
+  background:#6A1B9A;
+  color:white;
+  padding:6px;
+  border-radius:6px;
+  margin-bottom:6px;
+  font-size:12px;
+}
+
+.floor{
   display:flex;
   align-items:center;
-  margin-bottom:4px;
+  margin:2px 0;
 }
 
 .floor-label{
-  width:40px;
+  width:28px;
+  font-size:10px;
   font-weight:bold;
+  color:#555;
+}
+
+.windows{
+  display:flex;
+  flex-wrap:wrap;
+  gap:2px;
 }
 
 .window{
-  width:20px;
-  height:20px;
-  margin:2px;
+  width:14px;
+  height:14px;
+  border-radius:2px;
+  background:#bbb;
+}
+
+/* base prédio */
+.base{
+  height:25px;
+  background:#b0bec5;
+  margin-top:4px;
   border-radius:4px;
-  background:#ccc;
 }
 </style>
 </head>
@@ -132,7 +161,6 @@ input{
   <button onclick="exportar()">📸 Gerar imagem</button>
 </div>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
     <button class="validBtn" onclick="setStatus('VALIDADA')">✅ Validado</button>
@@ -143,29 +171,26 @@ input{
 </div>
 
 <script>
-/* CONFIGURAÇÃO REAL DO PRÉDIO */
 const config = {
   32:{start:1,end:10},
   31:{start:1,end:10},
   30:{start:1,end:10},
   29:{start:1,end:10},
-  28:{start:1,end:34}, // 👈 maior
-  27:{start:1,end:25}, // 👈 diferente
-  26:{start:1,end:18}
+  28:{start:1,end:34},
+  27:{start:1,end:25},
+  26:{start:1,end:18},
+  18:{start:19,end:34} // 👈 seu caso real
 };
 
-/* ESTADO */
 let data = {};
 let current = null;
 
-/* INICIALIZA */
 Object.keys(config).forEach(f=>{
   for(let i=config[f].start;i<=config[f].end;i++){
     data[f+"-"+i]=null;
   }
 });
 
-/* CLASSE */
 function cls(s){
   return {
     VALIDADA:"valid",
@@ -175,15 +200,13 @@ function cls(s){
   }[s]||"";
 }
 
-/* RENDER */
 function render(){
   const app = document.getElementById("app");
   app.innerHTML="";
 
   Object.keys(config).sort((a,b)=>b-a).forEach(f=>{
     let title=document.createElement("div");
-    title.className="floor-title";
-    title.innerText="Andar "+f;
+    title.innerHTML="<b>Andar "+f+"</b>";
 
     let grid=document.createElement("div");
     grid.className="grid";
@@ -208,7 +231,6 @@ function render(){
   });
 }
 
-/* SET STATUS */
 function setStatus(status){
   if(current){
     data[current]=status;
@@ -217,48 +239,59 @@ function setStatus(status){
   render();
 }
 
-/* EXPORT VISUAL PRÉDIO */
+/* EXPORT VISUAL TOP */
 async function exportar(){
 
-  let container=document.createElement("div");
-  container.className="building-export";
+  let wrapper=document.createElement("div");
+  wrapper.className="export-wrapper";
 
-  let title=document.createElement("div");
-  title.style.fontWeight="bold";
-  title.style.marginBottom="10px";
-  title.innerText=document.getElementById("predio").value;
-  container.appendChild(title);
+  let building=document.createElement("div");
+  building.className="building";
+
+  let sign=document.createElement("div");
+  sign.className="top-sign";
+  sign.innerText=document.getElementById("predio").value;
+
+  building.appendChild(sign);
 
   Object.keys(config).sort((a,b)=>b-a).forEach(f=>{
-    let row=document.createElement("div");
-    row.className="floor-row";
+    let floor=document.createElement("div");
+    floor.className="floor";
 
     let label=document.createElement("div");
     label.className="floor-label";
     label.innerText=f;
-    row.appendChild(label);
+
+    let windows=document.createElement("div");
+    windows.className="windows";
 
     for(let i=config[f].start;i<=config[f].end;i++){
       let w=document.createElement("div");
       w.className="window "+cls(data[f+"-"+i]);
-      row.appendChild(w);
+      windows.appendChild(w);
     }
 
-    container.appendChild(row);
+    floor.appendChild(label);
+    floor.appendChild(windows);
+    building.appendChild(floor);
   });
 
-  document.body.appendChild(container);
+  let base=document.createElement("div");
+  base.className="base";
+  building.appendChild(base);
 
-  const canvas = await html2canvas(container,{scale:2});
-  document.body.removeChild(container);
+  wrapper.appendChild(building);
+  document.body.appendChild(wrapper);
+
+  const canvas = await html2canvas(wrapper,{scale:3});
+  document.body.removeChild(wrapper);
 
   const link=document.createElement("a");
   link.href=canvas.toDataURL();
-  link.download="predio.png";
+  link.download="predio_visual.png";
   link.click();
 }
 
-/* INIT */
 render();
 </script>
 
