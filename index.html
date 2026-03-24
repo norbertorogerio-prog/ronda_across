@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>Prédio SVG • Mobile Fix</title>
+<title>Prédio SVG • Alinhamento Fino</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -33,34 +33,34 @@
  .btn-png { background: #27ae60; padding: 16px; font-size: 16px; margin-top: 10px; }
  .row-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
- /* CONTAINER DO PRÉDIO - CORREÇÃO DO ENCAVALAMENTO */
- .viewer-card { display: flex; justify-content: center; background: #fff; padding: 20px 10px; overflow: hidden; }
+ /* CONTAINER DO PRÉDIO - AJUSTE DE ALINHAMENTO */
+ .viewer-card { display: flex; justify-content: center; background: #fff; padding: 20px 5px; overflow-x: auto; }
  
  .building-container {
   position: relative;
   display: flex;
-  width: 100%;
-  max-width: 450px; /* Limita largura no mobile */
+  width: 420px; /* Largura fixa para garantir alinhamento */
+  flex-shrink: 0;
  }
 
  .floors-labels-col {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 118px; /* Alinha com o topo das janelas */
-  width: 60px;
+  /* AJUSTE CRÍTICO: 40px (topo do SVG) + 22px (altura da janela/2 para centralizar o texto) */
+  padding-top: 40px; 
+  width: 70px;
   flex-shrink: 0;
  }
 
  .f-lbl {
-  height: 22px; /* MESMA ALTURA DA LINHA DAS JANELAS */
-  font-size: 10px;
+  height: 22px; /* Altura exata da fileira no SVG */
+  font-size: 11px;
   font-weight: 800;
   color: var(--vivo);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 8px;
+  padding-right: 10px;
  }
 
  .facade-wrapper { position: relative; width: 320px; flex-shrink: 0; }
@@ -73,12 +73,12 @@
   border-radius: 3px; color: #fff; font-size: 9px; font-weight: 900;
   display: flex; align-items: center; justify-content: center;
   pointer-events: auto;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
  }
 
  #footerNoteDisplay {
     position: absolute; bottom: 15px; left: 0; width: 100%;
-    text-align: center; font-weight: 800; color: var(--vivo-dark); padding: 0 10px;
+    text-align: center; font-weight: 800; color: var(--vivo-dark); padding: 0 10px; font-size: 12px;
  }
 </style>
 </head>
@@ -103,11 +103,11 @@
     </select>
 
     <label>Observações</label>
-    <textarea id="obsText" rows="2" placeholder="Aparecerá no rodapé..."></textarea>
+    <textarea id="obsText" rows="2" placeholder="Notas do rodapé..."></textarea>
 
     <button id="btnApply" style="background:var(--vivo-dark)">APLICAR NO MAPA</button>
 
-    <label style="margin-top:10px">Entrada Rápida (ex: 32-05-v)</label>
+    <label style="margin-top:10px">Entrada Rápida</label>
     <div style="display:flex">
       <input id="quickInput" type="text" placeholder="32-05-v">
       <button id="btnQuick" class="btn-ok">OK</button>
@@ -118,7 +118,6 @@
       <button id="btnLoad" style="background:#f4f4f9; color:var(--vivo)">Abrir JSON</button>
     </div>
     <button id="btnClear" class="btn-clear">LIMPAR TUDO</button>
-    
     <button id="btnPNG" class="btn-png">📸 EXPORTAR PNG</button>
   </div>
 
@@ -129,10 +128,12 @@
 
       <div class="facade-wrapper">
         <svg id="facade-svg" viewBox="0 0 320 860" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="860" rx="10" fill="#E6EAF0" stroke="#B9C1CE" stroke-width="2"/>
-          <text x="160" y="30" text-anchor="middle" font-weight="900" font-size="14" fill="#6A1B9A">VIVO</text>
+          <rect width="320" height="860" rx="10" fill="#E6EAF0" stroke="#B9C1CE" stroke-width="1"/>
+          <text x="160" y="25" text-anchor="middle" font-weight="900" font-size="14" fill="#6A1B9A">VIVO</text>
+          
           <g id="winGroup" transform="translate(22,40)" fill="#DDE8F7" stroke="#BFC9D8"></g>
-          <rect y="810" width="320" height="40" fill="#D6CDE7" rx="0 0 10 10"/>
+          
+          <rect y="810" width="320" height="50" fill="#D6CDE7" rx="0 0 10 10"/>
         </svg>
         
         <div class="overlay-badges" id="overlay"></div>
@@ -146,7 +147,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_data_final";
+const STORAGE_KEY = "predio_v4_align";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 
 function init() {
@@ -155,7 +156,7 @@ function init() {
   const fCol = $("#floorsCol");
   const winG = $("#winGroup");
 
-  // Gerar seletores e labels de andares
+  // Gerar Labels laterais
   for (let f = 32; f >= 1; f--) {
     fSel.appendChild(new Option(`Andar ${f}`, f));
     const lbl = document.createElement("div");
@@ -165,16 +166,18 @@ function init() {
   }
   for (let r = 1; r <= 50; r++) rSel.appendChild(new Option(`Sala ${String(r).padStart(2,'0')}`, r));
 
-  // Gerar janelas SVG
+  // Gerar Janelas: Altura 12 + Gap 10 = 22px por fileira
   for (let r = 0; r < 32; r++) {
     for (let c = 0; c < 8; c++) {
       const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      rect.setAttribute("x", c * 35); rect.setAttribute("y", r * 22);
-      rect.setAttribute("width", 24); rect.setAttribute("height", 12); rect.setAttribute("rx", 2);
+      rect.setAttribute("x", c * 35); 
+      rect.setAttribute("y", r * 22);
+      rect.setAttribute("width", 24); 
+      rect.setAttribute("height", 12); 
+      rect.setAttribute("rx", 2);
       winG.appendChild(rect);
     }
   }
-
   render();
 }
 
@@ -191,6 +194,7 @@ function render() {
     b.className = `badge ${status}`;
     b.style.backgroundColor = getHex(status);
     b.textContent = String(r).padStart(2,'0');
+    // Alinhamento exato com as janelas (Top 40 do grupo + fileira * 22)
     b.style.top = (40 + row * 22) + "px";
     b.style.left = (22 + col * 35) + "px";
     overlay.appendChild(b);
@@ -206,11 +210,8 @@ function getHex(s) {
   return s==='valid'?'#2ECC71': s==='occ'?'#FF9800': s==='lock'?'#9E9E9E':'#E53935';
 }
 
-// Ações
 $("#btnApply").onclick = () => {
-  const f = $("#selFloor").value;
-  const r = $("#selRoom").value;
-  const s = $("#selStatus").value;
+  const f = $("#selFloor").value, r = $("#selRoom").value, s = $("#selStatus").value;
   if(s === 'none') delete rooms[`${f}-${r}`];
   else rooms[`${f}-${r}`] = s;
   localStorage.setItem(STORAGE_KEY + "_obs", $("#obsText").value);
@@ -219,24 +220,18 @@ $("#btnApply").onclick = () => {
 
 $("#btnQuick").onclick = () => {
   const v = $("#quickInput").value.toLowerCase().split('-');
-  if(v.length < 3) return alert("Formato: 32-05-v");
+  if(v.length < 3) return;
   const f = parseInt(v[0]), r = parseInt(v[1]), sChar = v[2][0];
-  let status = sChar==='v'?'valid': sChar==='o'?'occ': sChar==='t'?'lock': sChar==='p'?'prob':'none';
-  if(status === 'none') delete rooms[`${f}-${r}`];
-  else rooms[`${f}-${r}`] = status;
+  let s = sChar==='v'?'valid': sChar==='o'?'occ': sChar==='t'?'lock': sChar==='p'?'prob':'none';
+  if(s === 'none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`] = s;
   render();
   $("#quickInput").value = "";
 };
 
-$("#btnClear").onclick = () => {
-  if(confirm("Limpar tudo?")) {
-    rooms = {}; localStorage.clear(); render();
-  }
-};
+$("#btnClear").onclick = () => { if(confirm("Limpar?")) { rooms={}; localStorage.clear(); render(); } };
 
 $("#btnSave").onclick = () => {
-  const data = JSON.stringify({rooms, obs: $("#obsText").value});
-  const blob = new Blob([data], {type:"application/json"});
+  const blob = new Blob([JSON.stringify({rooms, obs: $("#obsText").value})], {type:"application/json"});
   const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="mapa.json"; a.click();
 };
 
@@ -253,74 +248,52 @@ $("#btnLoad").onclick = () => {
   i.click();
 };
 
-// EXPORTAR PNG (Adaptado para mobile)
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG");
-    btn.textContent = "GERANDO...";
-    
+    const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = 450; canvas.height = 900;
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0,0,450,900);
+    canvas.width = 420; canvas.height = 900;
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,420,900);
 
-    // Desenha Fundo do Prédio
-    ctx.fillStyle = "#E6EAF0";
-    ctx.roundRect(80, 20, 320, 840, 10);
-    ctx.fill();
+    ctx.fillStyle = "#E6EAF0"; ctx.beginPath();
+    ctx.roundRect(80, 10, 320, 850, 10); ctx.fill();
 
-    // Texto Vivo e Andares
-    ctx.fillStyle = "#6A1B9A";
-    ctx.font = "bold 14px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("VIVO", 240, 50);
+    ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("VIVO", 240, 35);
 
-    ctx.font = "bold 10px sans-serif";
-    ctx.textAlign = "right";
+    ctx.font = "bold 10px sans-serif"; ctx.textAlign = "right";
     for(let f=32; f>=1; f--) {
-        ctx.fillText("Andar "+f, 70, 118 + (32-f)*22 + 10);
+        ctx.fillText("Andar "+f, 75, 40 + (32-f)*22 + 10);
     }
 
-    // Desenha Janelas e Badges
     Object.keys(rooms).forEach(key => {
         const [f, r] = key.split('-').map(Number);
         const st = rooms[key];
         ctx.fillStyle = getHex(st);
         const x = 80 + 22 + ((r-1)%8)*35;
-        const y = 118 + (32-f)*22;
-        ctx.roundRect(x, y, 24, 12, 2);
-        ctx.fill();
-        ctx.fillStyle = "#fff";
-        ctx.font = "900 8px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
+        const y = 40 + (32-f)*22;
+        ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.font = "900 8px sans-serif";
+        ctx.textAlign = "center"; ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
 
-    // Nota de rodapé
-    ctx.fillStyle = "#6A1B9A";
-    ctx.font = "bold 12px sans-serif";
-    ctx.fillText($("#obsText").value, 225, 885);
+    ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 12px sans-serif";
+    ctx.fillText($("#obsText").value, 210, 885);
 
     const link = document.createElement("a");
-    link.download = "mapa-vivo.png";
+    link.download = "mapa-predio.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
     btn.textContent = "📸 EXPORTAR PNG";
 };
 
-// Polyfill para roundRect em navegadores antigos
+// Polyfill roundRect
 if (!Path2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
-    if (w < 2 * r) r = w / 2;
-    if (h < 2 * r) r = h / 2;
-    this.beginPath();
-    this.moveTo(x + r, y);
-    this.arcTo(x + w, y, x + w, y + h, r);
-    this.arcTo(x + w, y + h, x, y + h, r);
-    this.arcTo(x, y + h, x, y, r);
-    this.arcTo(x, y, x + w, y, r);
-    this.closePath();
-    return this;
+    if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
+    this.beginPath(); this.moveTo(x+r,y); this.arcTo(x+w,y,x+w,y+h,r);
+    this.arcTo(x+w,y+h,x,y+h,r); this.arcTo(x,y+h,x,y,r);
+    this.arcTo(x,y,x+w,y,r); this.closePath(); return this;
   };
 }
 
