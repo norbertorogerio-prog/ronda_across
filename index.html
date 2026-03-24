@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>Prédio SVG • Exportação Mobile</title>
+<title>Prédio SVG • Mobile Estável</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -11,102 +11,92 @@
   --bg:#F6F3F9; --card:#FFFFFF; --line:#E6E1EF; --ink:#2B2B2B;
   --svg-w: 480px; --svg-h: 960px;
   --outside-left: 56px;
-  --win-w: 24px; --win-h: 12px;
-  --gap-x: 12px; --gap-y: 10px;
-  --badge-w: var(--win-w); --badge-h: var(--win-h);
  }
 
  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
  body{
   margin:0; background:var(--bg); color:var(--ink);
-  font:500 15px/1.35 system-ui,"Segoe UI";
+  font:500 15px/1.3 system-ui,"Segoe UI";
+  overflow-x: hidden; /* Evita que o site balance para os lados */
  }
 
  .app{
-  max-width:1280px; margin:0 auto; padding:12px;
-  display:flex; flex-direction: column; gap:16px;
+  max-width:1200px; margin:0 auto; padding:10px;
+  display: flex; flex-direction: column; gap:15px;
  }
- 
- /* Ajuste para desktop */
- @media (min-width:1160px){
-  .app{ display: grid; grid-template-columns:380px 1fr; }
+
+ @media (min-width:1100px){
+  .app{ display: grid; grid-template-columns: 350px 1fr; align-items: start; }
  }
 
  .card{
   background:var(--card); border:1px solid var(--line);
-  border-radius:14px; box-shadow:0 8px 20px rgba(38,12,77,.06);
-  padding:14px;
+  border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  padding:15px;
  }
 
- label{ font-size:12px; color:#666; margin:6px 0 4px; display:block; }
- input[type="text"], textarea, select, button{
+ label{ font-size:12px; color:#666; margin-bottom:4px; display:block; font-weight: 700; }
+ input, textarea, select, button {
   width:100%; border:1px solid var(--line);
-  border-radius:10px; padding:12px;
-  background:#fff; color:#333; font:500 15px inherit;
+  border-radius:8px; padding:10px;
+  background:#fff; color:#333; font:inherit;
  }
- textarea{ resize:vertical; min-height:80px; }
 
  button{
-  background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));
-  color:#fff; font-weight:800; cursor:pointer; border:none;
-  transition: opacity 0.2s;
+  background: var(--vivo); color:#fff; font-weight:800; 
+  cursor:pointer; border:none; transition: 0.2s;
  }
- button:active{ opacity: 0.8; }
- button.ghost{
-  background:#fff; color:var(--vivo); border:1px solid var(--vivo);
- }
+ button:active{ transform: scale(0.98); opacity: 0.9; }
+ button.ghost{ background:#f8f5ff; color:var(--vivo); border:1px solid var(--line); }
 
- .kbar{ display:grid; gap:8px; margin-top:8px }
-
- /* Scroll horizontal para o prédio no mobile */
- .viewer-container {
-   width: 100%;
-   overflow-x: auto;
-   padding-bottom: 20px;
-   display: flex;
-   justify-content: flex-start;
- }
- 
- @media (min-width: 600px) {
-   .viewer-container { justify-content: center; }
+ /* Container do Prédio - Ajuste para ficar fixo/ajustado no mobile */
+ .viewer-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden; /* Mantém o site fixo */
  }
 
- #exportArea{
-  --extra: 24px;
-  background:#fff; border-radius:16px; border:1px solid var(--line);
-  padding:12px; padding-left: var(--outside-left);
-  width: calc(480px + var(--outside-left) + var(--extra));
-  flex-shrink: 0;
+ #exportArea {
+  background:#fff; padding: 15px 15px 15px var(--outside-left);
+  border-radius: 12px; border: 1px solid var(--line);
+  position: relative;
+  /* Escala o prédio para caber na tela do celular */
+  transform-origin: top center;
+  width: 560px; /* Largura base total */
  }
 
- #buildingBox{ position:relative; width:var(--svg-w); height:var(--svg-h); }
- #overlay{ position:absolute; inset:0; pointer-events:none }
+ @media (max-width: 580px) {
+  #exportArea {
+    transform: scale(0.65); /* Reduz para caber no celular padrão */
+    margin-bottom: -350px; /* Compensa o espaço vazio da escala */
+  }
+ }
 
- .floor-label{
+ #buildingBox { position:relative; width:var(--svg-w); height:var(--svg-h); }
+ #overlay { position:absolute; inset:0; pointer-events:none; }
+
+ .floor-label {
   position:absolute; transform:translateY(-50%);
-  color:#2f274b; font-weight:900; font-size:12px;
+  color:#2f274b; font-weight:900; font-size:12px; left: -50px;
  }
 
- .badge{
-  position:absolute; width:var(--badge-w); height:var(--badge-h);
-  border-radius:4px; color:#fff; font-weight:900; font-size:10px;
+ .badge {
+  position:absolute; width:24px; height:12px;
+  border-radius:3px; color:#fff; font-weight:900; font-size:9px;
   display:flex; align-items:center; justify-content:center;
-  box-shadow: 0 1px 0 0 #fff inset, 0 0 0 2px rgba(230,225,239,.9) inset, 0 2px 6px rgba(0,0,0,.14);
-  cursor:pointer; pointer-events:auto;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.3) inset;
+  pointer-events: auto;
  }
- .valid{ background:var(--valid) }
- .occ{   background:var(--occ) }
- .lock{  background:var(--lock) }
- .prob{  background:var(--prob) }
+ .valid { background: var(--valid); }
+ .occ   { background: var(--occ); }
+ .lock  { background: var(--lock); }
+ .prob  { background: var(--prob); }
 
- #footerNote{
-  position:absolute; left:12px; right:12px; bottom:10px;
-  font-size:13px; font-weight:700; color:#4b3b7a;
-  white-space:pre-wrap; text-shadow:0 1px 0 rgba(255,255,255,.4);
-  pointer-events:none;
+ #footerNote {
+  position:absolute; left:10px; bottom:10px; width: calc(100% - 20px);
+  font-size:13px; font-weight:700; color:#4b3b7a; pointer-events:none;
  }
-
- body.exporting .controls{ display:none!important }
 </style>
 </head>
 
@@ -114,16 +104,13 @@
 <div class="app">
 
   <div class="card controls">
-    <div style="display:grid;gap:12px">
-
+    <div style="display:grid; gap:10px;">
       <div>
-        <label>Andar</label>
-        <select id="selFloor"></select>
-      </div>
-
-      <div>
-        <label>Sala</label>
-        <select id="selRoom"></select>
+        <label>Localização</label>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+          <select id="selFloor"></select>
+          <select id="selRoom"></select>
+        </div>
       </div>
 
       <div>
@@ -138,227 +125,249 @@
       </div>
 
       <div>
-        <label>Observações (no rodapé da imagem)</label>
-        <textarea id="obsText" placeholder="Ex.: Manutenção agendada..."></textarea>
+        <label>Observações</label>
+        <textarea id="obsText" placeholder="Notas do rodapé..."></textarea>
       </div>
 
-      <button id="btnApply" style="padding: 16px;">Aplicar Alteração</button>
+      <button id="btnApply" style="background:var(--vivo-dark); padding:14px;">APLICAR ALTERAÇÃO</button>
 
-      <hr style="width:100%; border:0; border-top:1px solid var(--line); margin:8px 0">
-
-      <div>
-        <label>Entrada rápida <small>(ex.: 32-06-Verde)</small></label>
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px">
-          <input id="quickInput" type="text" placeholder="32-06-v"/>
-          <button id="btnQuick" style="width:60px">OK</button>
+      <div style="margin-top:10px;">
+        <label>Entrada Rápida (Ex: 32-05-v)</label>
+        <div style="display:flex; gap:5px;">
+          <input id="quickInput" type="text" placeholder="Andar-Sala-Status"/>
+          <button id="btnQuick" style="width:60px;">OK</button>
         </div>
       </div>
 
-      <div class="kbar">
-        <button class="ghost" id="btnClear">Limpar tudo</button>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px">
-            <button class="ghost" id="btnSave">💾 JSON</button>
-            <button class="ghost" id="btnLoad">📂 JSON</button>
-        </div>
-        <button id="btnPNG" style="background: #27ae60; height: 50px;">📸 EXPORTAR PARA GALERIA</button>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:10px;">
+        <button class="ghost" id="btnSave">Salvar JSON</button>
+        <button class="ghost" id="btnLoad">Abrir JSON</button>
       </div>
-
+      <button class="ghost" id="btnClear" style="color:red; border-color:#ffcccc;">LIMPAR TUDO</button>
+      
+      <button id="btnPNG" style="background:#27ae60; padding:15px; margin-top:5px;">📸 EXPORTAR IMAGEM</button>
     </div>
   </div>
 
-  <div class="viewer-container">
-      <div id="exportArea">
-        <div id="buildingBox">
-          <svg id="facade" width="100%" height="100%" viewBox="0 0 480 960" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EAF2FF"/><stop offset="1" stop-color="#F7F7FF"/></linearGradient>
-              <linearGradient id="wall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C8CFDA"/><stop offset=".5" stop-color="#D6DCE6"/><stop offset="1" stop-color="#C8CFDA"/></linearGradient>
-              <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9AA2B2"/><stop offset="1" stop-color="#7D8696"/></linearGradient>
-              <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DDE8F7"/><stop offset=".6" stop-color="#CFE0F3"/><stop offset="1" stop-color="#C6DAF0"/></linearGradient>
-              <linearGradient id="sideShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000000" stop-opacity="0.08"/><stop offset="1" stop-color="#000000" stop-opacity="0"/></linearGradient>
-            </defs>
-            <rect x="0" y="0" width="480" height="960" fill="url(#sky)"/>
-            <g id="body" transform="translate(80,80)">
-              <rect x="0" y="0" width="18" height="780" fill="url(#sideShade)"/>
-              <rect x="0" y="0" width="320" height="780" rx="10" fill="url(#wall)" stroke="#B9C1CE" stroke-width="2"/>
-              <g id="windows" transform="translate(22,40)" fill="url(#glass)" stroke="#BFC9D8" stroke-width="1" opacity=".9"></g>
-              <rect x="105" y="-34" width="110" height="26" rx="13" fill="url(#roofGrad)" stroke="#6d7483"/>
-              <text x="160" y="-16" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">vivo</text>
-              <g transform="translate(80,730)">
-                <rect width="160" height="50" rx="6" fill="#EEF1F7" stroke="#B8C0CF" stroke-width="3"/>
-                <rect x="70" width="20" height="50" fill="#DADFE9"/>
-              </g>
-            </g>
-            <rect x="0" y="860" width="480" height="36" fill="#E9E3F2"/>
-          </svg>
-          <div id="overlay"></div>
-          <div id="footerNote"></div>
-        </div>
+  <div class="viewer-wrapper">
+    <div id="exportArea">
+      <div id="buildingBox">
+        <svg id="facade" width="480" height="960" viewBox="0 0 480 960" xmlns="http://www.w3.org/2000/svg">
+          <rect width="480" height="960" fill="#EAF2FF"/>
+          <g transform="translate(80,80)">
+            <rect width="320" height="780" rx="10" fill="#D6DCE6" stroke="#B9C1CE" stroke-width="2"/>
+            <g id="windows" transform="translate(22,40)" fill="#DDE8F7" stroke="#BFC9D8"></g>
+            <text x="160" y="-15" text-anchor="middle" font-weight="900" fill="#6A1B9A">VIVO</text>
+          </g>
+          <rect x="0" y="860" width="480" height="36" fill="#E9E3F2"/>
+        </svg>
+        <div id="overlay"></div>
+        <div id="footerNote"></div>
       </div>
+    </div>
   </div>
 
 </div>
 
 <script>
-const CFG = {
-  floorsMin:1, floorsMax:32, roomsPerFloor:50,
-  building:{ x:80, y:80, w:320, h:780 },
-  grid:{ ox:22, oy:40, cols:8, rows:32, w:24, h:12, gapX:12, gapY:10, rx:3 }
-};
-
 const $ = s => document.querySelector(s);
-const pad2 = n => String(n).padStart(2,"0");
-function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
-
-const STORAGE_KEY = "predio_salas_state_vB_final";
+const STORAGE_KEY = "predio_data_v3";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-let obsTxt = localStorage.getItem(STORAGE_KEY+"_obs") || "";
 
-function fillSelectors(){
-  const fSel=$("#selFloor"); fSel.innerHTML="";
-  for(let f=CFG.floorsMax; f>=CFG.floorsMin; f--) fSel.appendChild(new Option(`Andar ${pad2(f)}`, String(f)));
-  const rSel=$("#selRoom"); rSel.innerHTML="";
-  for(let i=1;i<=CFG.roomsPerFloor;i++) rSel.appendChild(new Option(pad2(i), String(i)));
-}
-
-function _scales(){ const box=$("#buildingBox"); return { sx:box.clientWidth/480, sy:box.clientHeight/960 }; }
-function buildingLeftPx(){ return CFG.building.x * _scales().sx; }
-function cellCenterPx(row,col){
-  const {sx,sy}=_scales();
-  const {x,y}=CFG.building;
-  const G=CFG.grid;
-  return { cx:(x+G.ox+col*(G.w+G.gapX)+G.w/2)*sx, cy:(y+G.oy+row*(G.h+G.gapY)+G.h/2)*sy };
-}
-
-(function drawWindows(){
-  const g=$("#windows"); const G=CFG.grid;
-  for(let r=0;r<G.rows;r++){
-    for(let c=0;c<G.cols;c++){
-      let R=document.createElementNS("http://www.w3.org/2000/svg","rect");
-      R.setAttribute("x",c*(G.w+G.gapX)); R.setAttribute("y",r*(G.h+G.gapY));
-      R.setAttribute("width",G.w); R.setAttribute("height",G.h); R.setAttribute("rx",G.rx);
-      g.appendChild(R);
+// Inicialização
+function init(){
+  const fSel=$("#selFloor"); const rSel=$("#selRoom");
+  for(let f=32; f>=1; f--) fSel.appendChild(new Option(`Andar ${f}`, f));
+  for(let r=1; r<=50; r++) rSel.appendChild(new Option(`Sala ${String(r).padStart(2,'0')}`, r));
+  
+  // Desenha janelas base
+  const winG = $("#windows");
+  for(let r=0; r<32; r++){
+    for(let c=0; c<8; c++){
+      let rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+      rect.setAttribute("x", c*36); rect.setAttribute("y", r*22);
+      rect.setAttribute("width",24); rect.setAttribute("height",12); rect.setAttribute("rx",2);
+      winG.appendChild(rect);
     }
   }
-})();
+  renderBadges();
+  $("#footerNote").textContent = localStorage.getItem(STORAGE_KEY+"_obs") || "";
+  $("#obsText").value = $("#footerNote").textContent;
+}
 
-function upsertBadge(floor,room,status){
-  const key=`${pad2(floor)}-${pad2(room)}`;
-  const overlay=$("#overlay");
-  if(status==="none"){
-    delete rooms[key];
-    let old=overlay.querySelector(`.badge[data-key="${key}"]`);
-    if(old) old.remove();
-    saveState(); return;
-  }
-  rooms[key]=status;
-  const row=CFG.floorsMax-floor;
-  const col=(room-1)%CFG.grid.cols;
-  const {cx,cy}=cellCenterPx(row,col);
+function renderBadges(){
+  const overlay = $("#overlay");
+  overlay.innerHTML = "";
   
-  let b=overlay.querySelector(`.badge[data-key="${key}"]`);
-  if(!b){
-    b=document.createElement("div");
-    b.className=`badge ${status}`;
-    b.dataset.key=key;
-    b.textContent=pad2(room);
+  Object.keys(rooms).forEach(key => {
+    const [f, r] = key.split('-').map(Number);
+    const status = rooms[key];
+    const floorRow = 32 - f;
+    const roomCol = (r - 1) % 8;
+
+    // Adiciona Label do Andar se não existir
+    if(!overlay.querySelector(`[data-f="${f}"]`)){
+      const lbl = document.createElement("div");
+      lbl.className = "floor-label";
+      lbl.dataset.f = f;
+      lbl.textContent = `A${String(f).padStart(2,'0')}`;
+      lbl.style.top = (120 + floorRow * 22) + "px";
+      overlay.appendChild(lbl);
+    }
+
+    const b = document.createElement("div");
+    b.className = `badge ${status}`;
+    b.textContent = String(r).padStart(2,'0');
+    b.style.top = (114 + floorRow * 22) + "px";
+    b.style.left = (102 + roomCol * 36) + "px";
     overlay.appendChild(b);
-  } else b.className=`badge ${status}`;
-
-  b.style.left=(cx-12)+"px";
-  b.style.top =(cy-6)+"px";
-  saveState();
+  });
 }
 
-function saveState(){ 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms)); 
-    localStorage.setItem(STORAGE_KEY+"_obs", $("#obsText").value);
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
+  localStorage.setItem(STORAGE_KEY+"_obs", $("#obsText").value);
 }
 
-// Lógica de exportação robusta para Mobile
-async function exportPNG(){
-  const EA=$("#exportArea"), BB=$("#buildingBox"), svg=$("#facade");
+// Ações
+$("#btnApply").onclick = () => {
+  const f = $("#selFloor").value;
+  const r = $("#selRoom").value;
+  const s = $("#selStatus").value;
+  const key = `${f}-${r}`;
+  
+  if(s === "none") delete rooms[key];
+  else rooms[key] = s;
+  
+  save();
+  renderBadges();
+  $("#footerNote").textContent = $("#obsText").value;
+};
+
+// CORREÇÃO: Entrada Rápida
+$("#btnQuick").onclick = () => {
+  const val = $("#quickInput").value.toLowerCase().trim();
+  if(!val) return;
+  const parts = val.split('-');
+  if(parts.length < 3) return alert("Use: Andar-Sala-Status (Ex: 32-05-v)");
+  
+  const f = parseInt(parts[0]);
+  const r = parseInt(parts[1]);
+  const sChar = parts[2][0];
+  
+  let status = "valid";
+  if(sChar === 'o' || sChar === 'l') status = "occ";
+  if(sChar === 'c' || sChar === 't') status = "lock";
+  if(sChar === 'p' || sChar === 'r') status = "prob";
+  if(sChar === 'n' || sChar === 'a') status = "none";
+
+  if(status === "none") delete rooms[`${f}-${r}`];
+  else rooms[`${f}-${r}`] = status;
+
+  save();
+  renderBadges();
+  $("#quickInput").value = "";
+};
+
+// CORREÇÃO: Limpar Tudo
+$("#btnClear").onclick = () => {
+  if(confirm("Deseja apagar todos os dados marcados?")){
+    rooms = {};
+    $("#obsText").value = "";
+    $("#footerNote").textContent = "";
+    save();
+    renderBadges();
+  }
+};
+
+// CORREÇÃO: Exportar PNG (Híbrido Mobile/PC)
+async function exportImage(){
+  const area = $("#exportArea");
   const btn = $("#btnPNG");
-  btn.disabled = true;
-  btn.textContent = "PROCESSANDO...";
+  btn.textContent = "GERANDO...";
+  
+  try {
+    // Importante: Resetar escala temporariamente para captura limpa no mobile
+    const originalTransform = area.style.transform;
+    area.style.transform = "none";
 
-  try{
-    const rect=EA.getBoundingClientRect();
-    const canvas=document.createElement("canvas");
-    canvas.width=rect.width*2; canvas.height=rect.height*2;
-    const ctx=canvas.getContext("2d");
+    // Criar Canvas
+    const canvas = document.createElement("canvas");
+    canvas.width = 560 * 2; 
+    canvas.height = 1000 * 2;
+    const ctx = canvas.getContext("2d");
     ctx.scale(2,2);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,560,1000);
 
-    // Fundo branco
-    ctx.fillStyle="#ffffff";
-    ctx.fillRect(0,0,rect.width,rect.height);
-
-    // Desenhar SVG no Canvas
-    const svgData = new XMLSerializer().serializeToString(svg);
+    // Renderizar o SVG no Canvas
+    const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString($("#facade")));
     const img = new Image();
-    const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
-    const url = URL.createObjectURL(svgBlob);
-    
-    await new Promise(resolve => {
-        img.onload = resolve;
-        img.src = url;
-    });
-    ctx.drawImage(img, parseFloat(getComputedStyle(EA).paddingLeft), 12, 480, 960);
-    URL.revokeObjectURL(url);
+    await new Promise(res => { img.onload = res; img.src = svgUrl; });
+    ctx.drawImage(img, 56, 15);
 
-    // Desenhar badges e texto (Simplificado para o exemplo)
-    ctx.fillStyle = "#4b3b7a";
-    ctx.font = "bold 14px sans-serif";
-    ctx.fillText($("#obsText").value, 20, rect.height - 30);
-
-    // CONVERSÃO PARA BLOB PARA COMPARTILHAMENTO NATUAL
-    canvas.toBlob(async (blob) => {
-        const file = new File([blob], `Mapa_Predio_${Date.now()}.png`, { type: "image/png" });
+    // Desenhar Badges e Labels manualmente no Canvas para garantir que apareçam
+    ctx.font = "bold 11px sans-serif";
+    Object.keys(rooms).forEach(key => {
+        const [f, r] = key.split('-').map(Number);
+        const st = rooms[key];
+        const floorRow = 32 - f;
+        const roomCol = (r - 1) % 8;
         
-        // Se o navegador suportar compartilhamento (Mobile Chrome/Safari)
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: 'Mapa do Prédio',
-                text: 'Exportação do Prédio SVG'
-            });
-        } else {
-            // Fallback para download comum em PC
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "predio_mapa.png";
-            a.click();
-        }
-    }, "image/png");
+        ctx.fillStyle = st === 'valid' ? '#2ECC71' : st === 'occ' ? '#FF9800' : st === 'lock' ? '#9E9E9E' : '#E53935';
+        ctx.roundRect(102+56, 114+15 + (floorRow*22), 24, 12, 2);
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.fillText(String(r).padStart(2,'0'), 102+56+12, 114+15 + (floorRow*22)+9.5);
+    });
 
-  } catch(e) {
-    alert("Erro ao exportar: " + e);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "📸 EXPORTAR PARA GALERIA";
-  }
+    // Texto de Observação
+    ctx.fillStyle = "#4b3b7a";
+    ctx.textAlign = "left";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText($("#obsText").value, 60, 980);
+
+    area.style.transform = originalTransform;
+
+    // ENVIO / DOWNLOAD
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], "mapa_predio.png", {type:"image/png"});
+      if (navigator.canShare && navigator.canShare({files:[file]})) {
+        await navigator.share({ files: [file], title: "Mapa Prédio" });
+      } else {
+        const link = document.createElement("a");
+        link.download = "mapa_predio.png";
+        link.href = URL.createObjectURL(blob);
+        link.click();
+      }
+    });
+  } catch(e) { alert("Erro ao exportar"); console.error(e); }
+  btn.textContent = "📸 EXPORTAR IMAGEM";
 }
 
-$("#btnApply").onclick = ()=> {
-    upsertBadge(Number($("#selFloor").value), Number($("#selRoom").value), $("#selStatus").value);
-    $("#footerNote").textContent = $("#obsText").value;
+$("#btnPNG").onclick = exportImage;
+$("#btnSave").onclick = () => {
+  const data = JSON.stringify({rooms, obs: $("#obsText").value});
+  const blob = new Blob([data], {type:"application/json"});
+  const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="dados_predio.json"; a.click();
+};
+$("#btnLoad").onclick = () => {
+  const inp = document.createElement("input"); inp.type="file";
+  inp.onchange = e => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const parsed = JSON.parse(ev.target.result);
+      rooms = parsed.rooms;
+      $("#obsText").value = parsed.obs;
+      save(); renderBadges();
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+  inp.click();
 };
 
-$("#obsText").oninput = (e) => {
-    $("#footerNote").textContent = e.target.value;
-    saveState();
-};
-
-$("#btnPNG").onclick = () => exportPNG();
-
-document.addEventListener("DOMContentLoaded", ()=>{
-  fillSelectors();
-  $("#obsText").value = obsTxt;
-  $("#footerNote").textContent = obsTxt;
-  for(const [k,st] of Object.entries(rooms)){
-    upsertBadge(Number(k.slice(0,2)), Number(k.slice(3)), st);
-  }
-});
+window.onload = init;
 </script>
 </body>
 </html>
