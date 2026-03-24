@@ -2,762 +2,220 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
-<title>Ronda Interativa • Validação de Salas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ronda Inteligente</title>
+
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{
-    background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%);
-    font-family: system-ui, -apple-system, sans-serif;
-    padding: 20px;
-    min-height: 100vh;
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* Card principal */
-  .main-card {
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  }
-  
-  /* Outdoor no telhado */
-  .outdoor {
-    background: linear-gradient(135deg, #2c3e50, #1a2632);
-    padding: 20px 30px;
-    text-align: center;
-    border-bottom: 4px solid #ffd700;
-  }
-  
-  .outdoor h1 {
-    font-size: 28px;
-    font-weight: 900;
-    color: #ffd700;
-    letter-spacing: 2px;
-  }
-  
-  .outdoor p {
-    color: rgba(255,255,255,0.8);
-    font-size: 12px;
-    margin-top: 5px;
-  }
-  
-  /* Topbar Vivo */
-  .topbar-vivo {
-    background: #6A1B9A;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .vivo-logo {
-    background: rgba(255,255,255,0.2);
-    padding: 8px 20px;
-    border-radius: 40px;
-    font-weight: 900;
-    font-size: 20px;
-    color: white;
-  }
-  
-  .stats-info {
-    background: rgba(0,0,0,0.3);
-    padding: 8px 16px;
-    border-radius: 30px;
-    color: white;
-    font-weight: bold;
-  }
-  
-  /* Área do mapa */
-  .mapa-area {
-    position: relative;
-    background: #f0f0f0;
-    overflow: auto;
-    max-height: 70vh;
-    cursor: pointer;
-  }
-  
-  .mapa-container {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-  }
-  
-  .mapa-imagem {
-    display: block;
-    width: 100%;
-    height: auto;
-    pointer-events: auto;
-    user-select: none;
-  }
-  
-  /* Overlay para cliques nas salas */
-  .sala-click-area {
-    position: absolute;
-    background: rgba(106,27,154,0.3);
-    border: 2px solid rgba(106,27,154,0.5);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    pointer-events: auto;
-  }
-  
-  .sala-click-area:hover {
-    background: rgba(106,27,154,0.5);
-    border-color: #6A1B9A;
-    transform: scale(1.02);
-  }
-  
-  .sala-click-area.validada {
-    background: rgba(46,204,113,0.4);
-    border-color: #2ECC71;
-  }
-  
-  .sala-click-area.trancada {
-    background: rgba(158,158,158,0.4);
-    border-color: #9E9E9E;
-  }
-  
-  .sala-click-area.ocupada {
-    background: rgba(255,152,0,0.4);
-    border-color: #FF9800;
-  }
-  
-  .sala-click-area.problema {
-    background: rgba(229,57,53,0.4);
-    border-color: #E53935;
-  }
-  
-  /* Modal de seleção de status */
-  .modal-status {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    z-index: 1000;
-    min-width: 280px;
-    animation: slideIn 0.2s ease;
-  }
-  
-  .modal-status h3 {
-    color: #6A1B9A;
-    margin-bottom: 16px;
-    text-align: center;
-  }
-  
-  .status-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  
-  .status-btn {
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.1s;
-    font-size: 14px;
-  }
-  
-  .status-btn:active {
-    transform: scale(0.98);
-  }
-  
-  .status-btn.validado { background: #2ECC71; color: white; }
-  .status-btn.trancada { background: #9E9E9E; color: white; }
-  .status-btn.ocupada { background: #FF9800; color: white; }
-  .status-btn.problema { background: #E53935; color: white; }
-  .status-btn.outros { background: #3498db; color: white; grid-column: span 2; }
-  
-  .modal-close {
-    background: #f0f0f0;
-    color: #666;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-  }
-  
-  .overlay-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 999;
-  }
-  
-  /* Barra de ferramentas */
-  .toolbar {
-    background: white;
-    padding: 20px;
-    border-top: 1px solid #eee;
-  }
-  
-  .toolbar-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 15px;
-  }
-  
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  .input-group label {
-    font-size: 12px;
-    font-weight: bold;
-    color: #666;
-  }
-  
-  .input-group input, .input-group select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 14px;
-  }
-  
-  button {
-    background: #6A1B9A;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .btn-salvar {
-    background: linear-gradient(135deg, #2ECC71, #27ae60);
-    width: 100%;
-    margin-top: 15px;
-    padding: 14px;
-    font-size: 16px;
-  }
-  
-  .btn-limpar {
-    background: #e74c3c;
-    width: 100%;
-    margin-top: 10px;
-  }
-  
-  .obs-area textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 14px;
-    resize: vertical;
-  }
-  
-  .legenda {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-    padding: 12px;
-    background: #f9f9f9;
-    border-radius: 12px;
-  }
-  
-  .legenda-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-  }
-  
-  .legenda-cor {
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
-  }
-  
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: black;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-size: 14px;
-    z-index: 1000;
-  }
-  
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -40%);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, -50%);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .outdoor h1 { font-size: 20px; }
-    .status-buttons { grid-template-columns: 1fr; }
-    .status-btn.outros { grid-column: span 1; }
-    .toolbar-grid { grid-template-columns: 1fr; }
-  }
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#F6F3F9;
+  padding:12px;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:14px;
+  margin-bottom:12px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
+}
+
+.building{
+  background:white;
+  border-radius:16px;
+  overflow:hidden;
+}
+
+.top{
+  background:#6A1B9A;
+  color:white;
+  padding:12px;
+  font-weight:bold;
+}
+
+.floors{
+  padding:12px;
+}
+
+.floor{
+  margin-bottom:12px;
+}
+
+.label{
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.rooms{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(45px,1fr));
+  gap:6px;
+}
+
+.slot{
+  height:30px;
+  border-radius:6px;
+  background:#bbb;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.valid{background:#2ECC71}
+.lock{background:#9E9E9E}
+.occ{background:#FF9800}
+.prob{background:#E53935}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  justify-content:center;
+  align-items:flex-end;
+}
+
+.modal-box{
+  background:white;
+  width:100%;
+  padding:16px;
+  border-radius:16px 16px 0 0;
+}
+
+.modal button{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.validBtn{background:#2ECC71;color:white}
+.lockBtn{background:#9E9E9E;color:white}
+.occBtn{background:#FF9800;color:white}
+.probBtn{background:#E53935;color:white}
 </style>
 </head>
+
 <body>
-<div class="container">
-  <div class="main-card" id="exportCard">
-    <!-- Outdoor no telhado -->
-    <div class="outdoor">
-      <h1 id="predioOutdoor">ECO BERRINI</h1>
-      <p>Av. Eng. Luiz Carlos Berrini, 1376</p>
-    </div>
-    
-    <!-- Topbar Vivo -->
-    <div class="topbar-vivo">
-      <span class="vivo-logo">vivo</span>
-      <div>
-        <span style="font-size:12px">Responsável:</span>
-        <strong id="responsavelNome">Não definido</strong>
-      </div>
-      <span class="stats-info" id="statsInfo">0 salas • 0 problemas</span>
-    </div>
-    
-    <!-- Área do mapa interativo -->
-    <div class="mapa-area">
-      <div class="mapa-container" id="mapaContainer">
-        <img id="mapaFundo" class="mapa-imagem" src="" alt="Prédio Eco Berrini - Clique nas salas">
-        <div id="salasOverlay" class="salas-overlay"></div>
-      </div>
-    </div>
-    
-    <!-- Barra de ferramentas -->
-    <div class="toolbar">
-      <div class="toolbar-grid">
-        <div class="input-group">
-          <label>🏢 Nome do Prédio</label>
-          <input type="text" id="predioNome" value="ECO BERRINI">
-        </div>
-        <div class="input-group">
-          <label>👤 Responsável</label>
-          <input type="text" id="responsavel" placeholder="Nome do responsável">
-        </div>
-        <div class="input-group">
-          <label>➕ Adicionar Sala (Andar-Sala)</label>
-          <input type="text" id="novaSala" placeholder="Ex: 29-05">
-        </div>
-      </div>
-      
-      <div class="obs-area">
-        <label>📝 Observações</label>
-        <textarea id="observacoes" rows="2" placeholder="Registre observações importantes..."></textarea>
-      </div>
-      
-      <div class="legenda">
-        <div class="legenda-item"><div class="legenda-cor" style="background:#2ECC71"></div> Validado</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background:#9E9E9E"></div> Trancada</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background:#FF9800"></div> Ocupada</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background:#E53935"></div> Problema</div>
-        <div class="legenda-item"><div class="legenda-cor" style="background:#3498db"></div> Outros</div>
-      </div>
-      
-      <button id="btnLimpar" class="btn-limpar">🗑️ LIMPAR TODAS AS SALAS</button>
-      <button id="btnSalvar" class="btn-salvar">📸 SALVAR IMAGEM</button>
-    </div>
+
+<div class="card">
+  <input id="predio" placeholder="Nome do prédio" value="ECO BERRINI">
+  <input id="resp" placeholder="Responsável">
+</div>
+
+<div class="building" id="canvas">
+  <div class="top" id="title">ECO BERRINI</div>
+  <div class="floors" id="floors"></div>
+</div>
+
+<div class="card">
+  <button onclick="exportPNG()">📸 Gerar imagem</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="validBtn" onclick="setStatus('VALIDADA')">✅ Validado</button>
+    <button class="lockBtn" onclick="setStatus('TRANCADA')">🔒 Trancado</button>
+    <button class="occBtn" onclick="setStatus('OCUPADA')">🟠 Ocupada</button>
+    <button class="probBtn" onclick="setStatus('PROBLEMA')">🔴 Problema</button>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <script>
-(function(){
-  // ==================== CONFIGURAÇÃO DAS SALAS ====================
-  // Lista de salas disponíveis no prédio (andar e número)
-  const salasDisponiveis = [
-    {andar: 32, sala: "01", x: 70, y: 8, largura: 60, altura: 30},
-    {andar: 32, sala: "02", x: 140, y: 8, largura: 60, altura: 30},
-    {andar: 31, sala: "01", x: 70, y: 14, largura: 60, altura: 30},
-    {andar: 31, sala: "02", x: 140, y: 14, largura: 60, altura: 30},
-    {andar: 30, sala: "01", x: 70, y: 20, largura: 60, altura: 30},
-    {andar: 30, sala: "02", x: 140, y: 20, largura: 60, altura: 30},
-    {andar: 29, sala: "01", x: 70, y: 26, largura: 60, altura: 30},
-    {andar: 29, sala: "02", x: 140, y: 26, largura: 60, altura: 30},
-    {andar: 28, sala: "01", x: 70, y: 32, largura: 60, altura: 30},
-    {andar: 28, sala: "02", x: 140, y: 32, largura: 60, altura: 30},
-    {andar: 27, sala: "01", x: 70, y: 38, largura: 60, altura: 30},
-    {andar: 27, sala: "02", x: 140, y: 38, largura: 60, altura: 30},
-    {andar: 26, sala: "01", x: 70, y: 44, largura: 60, altura: 30},
-    {andar: 26, sala: "02", x: 140, y: 44, largura: 60, altura: 30},
-    {andar: 25, sala: "01", x: 70, y: 50, largura: 60, altura: 30},
-    {andar: 25, sala: "02", x: 140, y: 50, largura: 60, altura: 30},
-    {andar: 24, sala: "01", x: 70, y: 56, largura: 60, altura: 30},
-    {andar: 24, sala: "02", x: 140, y: 56, largura: 60, altura: 30},
-    {andar: 23, sala: "01", x: 70, y: 62, largura: 60, altura: 30},
-    {andar: 23, sala: "02", x: 140, y: 62, largura: 60, altura: 30},
-    {andar: 22, sala: "01", x: 70, y: 68, largura: 60, altura: 30},
-    {andar: 22, sala: "02", x: 140, y: 68, largura: 60, altura: 30},
-    {andar: 21, sala: "01", x: 70, y: 74, largura: 60, altura: 30},
-    {andar: 21, sala: "02", x: 140, y: 74, largura: 60, altura: 30},
-    {andar: 20, sala: "01", x: 70, y: 80, largura: 60, altura: 30},
-    {andar: 20, sala: "02", x: 140, y: 80, largura: 60, altura: 30},
-    {andar: 19, sala: "01", x: 70, y: 86, largura: 60, altura: 30},
-    {andar: 19, sala: "02", x: 140, y: 86, largura: 60, altura: 30},
-    {andar: 18, sala: "01", x: 70, y: 92, largura: 60, altura: 30},
-    {andar: 18, sala: "02", x: 140, y: 92, largura: 60, altura: 30}
-  ];
-  
-  let salasValidacao = {}; // Armazena o status de cada sala { "32-01": "VALIDADA", etc }
-  let modalAtivo = null;
-  
-  const $ = x => document.querySelector(x);
-  
-  function toast(msg, isError = false) {
-    let t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = msg;
-    t.style.background = isError ? '#e74c3c' : 'black';
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 2500);
-  }
-  
-  // Carregar imagem do prédio
-  function carregarImagem() {
-    // URL da imagem do prédio (substitua pela sua)
-    const imgUrl = "https://i.imgur.com/placeholder.jpg"; // COLE A URL DA SUA IMAGEM AQUI
-    
-    const img = $("#mapaFundo");
-    img.onload = () => {
-      renderizarAreasClique();
-    };
-    img.onerror = () => {
-      criarImagemFallback();
-    };
-    img.src = imgUrl;
-  }
-  
-  function criarImagemFallback() {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 1000;
-    
-    ctx.fillStyle = '#e8e8e8';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.fillStyle = '#2c3e50';
-    ctx.font = 'bold 24px system-ui';
-    ctx.fillText('ECO BERRINI', canvas.width/2 - 100, 50);
-    
-    ctx.fillStyle = '#666';
-    ctx.font = '14px monospace';
-    let y = 100;
-    for(let i = 32; i >= 18; i--) {
-      ctx.fillStyle = '#999';
-      ctx.fillRect(50, y - 8, 40, 25);
-      ctx.fillStyle = '#333';
-      ctx.fillText(i, 60, y + 5);
-      ctx.fillStyle = '#ddd';
-      ctx.fillRect(120, y - 8, canvas.width - 180, 25);
-      y += 45;
-    }
-    
-    ctx.fillStyle = '#888';
-    ctx.font = '12px system-ui';
-    ctx.fillText('Av. Eng. Luiz Carlos Berrini, 1376', canvas.width/2 - 150, canvas.height - 30);
-    
-    $("#mapaFundo").src = canvas.toDataURL();
-    setTimeout(renderizarAreasClique, 100);
-    toast("⚠️ Usando visualização padrão. Adicione a URL da sua imagem no código.");
-  }
-  
-  // Renderizar áreas clicáveis para cada sala
-  function renderizarAreasClique() {
-    const overlay = $("#salasOverlay");
-    if(!overlay) return;
-    overlay.innerHTML = '';
-    overlay.style.position = 'absolute';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.pointerEvents = 'auto';
-    
-    const img = $("#mapaFundo");
-    if (!img.complete || img.naturalWidth === 0) {
-      setTimeout(renderizarAreasClique, 200);
-      return;
-    }
-    
-    const imgWidth = img.clientWidth;
-    const imgHeight = img.clientHeight;
-    
-    salasDisponiveis.forEach(sala => {
-      const key = `${sala.andar}-${sala.sala}`;
-      const status = salasValidacao[key] || null;
-      
-      const area = document.createElement('div');
-      area.className = 'sala-click-area';
-      if(status === 'VALIDADA') area.classList.add('validada');
-      else if(status === 'TRANCADA') area.classList.add('trancada');
-      else if(status === 'OCUPADA') area.classList.add('ocupada');
-      else if(status === 'PROBLEMA') area.classList.add('problema');
-      
-      // Converter posições percentuais para pixels
-      const leftPercent = sala.x;
-      const topPercent = sala.y;
-      const widthPercent = sala.largura;
-      const heightPercent = sala.altura;
-      
-      area.style.position = 'absolute';
-      area.style.left = `${leftPercent}%`;
-      area.style.top = `${topPercent}%`;
-      area.style.width = `${widthPercent}%`;
-      area.style.height = `${heightPercent}%`;
-      area.style.borderRadius = '8px';
-      area.style.cursor = 'pointer';
-      
-      // Tooltip com o nome da sala
-      area.title = `Sala ${sala.andar}-${sala.sala} ${status ? `- ${status}` : ''}`;
-      
-      area.onclick = (e) => {
-        e.stopPropagation();
-        abrirModalStatus(sala);
-      };
-      
-      overlay.appendChild(area);
+const floorsEl = document.getElementById("floors");
+const modal = document.getElementById("modal");
+
+let current = null;
+
+// CONFIG PRÉDIO
+let structure = [];
+
+for(let f=32; f>=1; f--){
+  for(let r=1; r<=10; r++){
+    structure.push({
+      floor:f,
+      room:String(r).padStart(2,"0"),
+      status:null
     });
-    
-    atualizarStats();
   }
-  
-  // Abrir modal para selecionar status da sala
-  function abrirModalStatus(sala) {
-    if(modalAtivo) return;
-    
-    const key = `${sala.andar}-${sala.sala}`;
-    const statusAtual = salasValidacao[key] || null;
-    
-    const overlayModal = document.createElement('div');
-    overlayModal.className = 'overlay-modal';
-    
-    const modal = document.createElement('div');
-    modal.className = 'modal-status';
-    modal.innerHTML = `
-      <h3>📍 Sala ${sala.andar}-${sala.sala}</h3>
-      <div class="status-buttons">
-        <button class="status-btn validado" data-status="VALIDADA">✅ Validado</button>
-        <button class="status-btn trancada" data-status="TRANCADA">🔒 Trancada</button>
-        <button class="status-btn ocupada" data-status="OCUPADA">🟠 Ocupada</button>
-        <button class="status-btn problema" data-status="PROBLEMA">🔴 Problema</button>
-        <button class="status-btn outros" data-status="OUTROS">📝 Outros</button>
+}
+
+// RENDER
+function render(){
+  let floors = {};
+  structure.forEach(i=>{
+    if(!floors[i.floor]) floors[i.floor]=[];
+    floors[i.floor].push(i);
+  });
+
+  floorsEl.innerHTML = Object.keys(floors).map(f=>`
+    <div class="floor">
+      <div class="label">Andar ${f}</div>
+      <div class="rooms">
+        ${floors[f].map(r=>`
+          <div class="slot ${cls(r.status)}"
+            onclick="openModal(${f},'${r.room}')">
+            ${r.room}
+          </div>
+        `).join("")}
       </div>
-      <button class="modal-close">Cancelar</button>
-    `;
-    
-    document.body.appendChild(overlayModal);
-    document.body.appendChild(modal);
-    
-    modalAtivo = { modal, overlayModal, sala };
-    
-    // Eventos dos botões
-    modal.querySelectorAll('.status-btn').forEach(btn => {
-      btn.onclick = () => {
-        const status = btn.dataset.status;
-        salasValidacao[key] = status;
-        renderizarAreasClique();
-        fecharModal();
-        toast(`✅ Sala ${sala.andar}-${sala.sala} marcada como ${status === 'VALIDADA' ? 'Validado' : status === 'TRANCADA' ? 'Trancada' : status === 'OCUPADA' ? 'Ocupada' : status === 'PROBLEMA' ? 'Problema' : 'Outros'}`);
-        
-        // Se for "Outros", abrir campo de observação
-        if(status === 'OUTROS') {
-          setTimeout(() => {
-            const obs = prompt(`Digite uma observação para a sala ${sala.andar}-${sala.sala}:`);
-            if(obs) {
-              const obsAtual = $("#observacoes").value;
-              $("#observacoes").value = obsAtual + (obsAtual ? '\n' : '') + `Sala ${sala.andar}-${sala.sala}: ${obs}`;
-              toast("📝 Observação adicionada!");
-            }
-          }, 100);
-        }
-      };
-    });
-    
-    modal.querySelector('.modal-close').onclick = () => {
-      fecharModal();
-    };
-    
-    overlayModal.onclick = () => {
-      fecharModal();
-    };
+    </div>
+  `).join("");
+
+  document.getElementById("title").innerText =
+    document.getElementById("predio").value;
+}
+
+function cls(s){
+  return {
+    VALIDADA:"valid",
+    TRANCADA:"lock",
+    OCUPADA:"occ",
+    PROBLEMA:"prob"
+  }[s] || "";
+}
+
+// MODAL
+function openModal(floor,room){
+  current = structure.find(x=>x.floor==floor && x.room==room);
+  modal.style.display="flex";
+}
+
+function setStatus(status){
+  if(current){
+    current.status = status;
+    render();
   }
-  
-  function fecharModal() {
-    if(modalAtivo) {
-      modalAtivo.modal.remove();
-      modalAtivo.overlayModal.remove();
-      modalAtivo = null;
-    }
-  }
-  
-  function atualizarStats() {
-    const total = Object.keys(salasValidacao).length;
-    const problemas = Object.values(salasValidacao).filter(v => v === 'PROBLEMA').length;
-    const validadas = Object.values(salasValidacao).filter(v => v === 'VALIDADA').length;
-    const trancadas = Object.values(salasValidacao).filter(v => v === 'TRANCADA').length;
-    const ocupadas = Object.values(salasValidacao).filter(v => v === 'OCUPADA').length;
-    
-    $("#statsInfo").innerHTML = `${total} sala${total !== 1 ? 's' : ''} • ${problemas} problema${problemas !== 1 ? 's' : ''}`;
-    
-    // Atualizar outdoor
-    const nomePredio = $("#predioNome").value;
-    $("#predioOutdoor").innerHTML = nomePredio.toUpperCase();
-    
-    // Atualizar responsável
-    const responsavel = $("#responsavel").value;
-    $("#responsavelNome").innerHTML = responsavel || "Não definido";
-  }
-  
-  function adicionarSalaManual() {
-    const input = $("#novaSala").value.trim();
-    const match = input.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
-    if(!match) {
-      toast("❌ Use formato: 29-05", true);
-      return;
-    }
-    
-    const andar = parseInt(match[1]);
-    const sala = match[2].padStart(2, '0');
-    const key = `${andar}-${sala}`;
-    
-    // Verificar se a sala existe na lista
-    const salaExiste = salasDisponiveis.some(s => s.andar === andar && s.sala === sala);
-    if(!salaExiste) {
-      toast(`⚠️ Sala ${andar}-${sala} não encontrada no mapa`, true);
-      return;
-    }
-    
-    if(salasValidacao[key]) {
-      toast(`❌ Sala ${andar}-${sala} já foi validada!`, true);
-      return;
-    }
-    
-    // Abrir modal para selecionar status
-    abrirModalStatus({andar, sala});
-    $("#novaSala").value = "";
-  }
-  
-  function limparTudo() {
-    if(confirm("Limpar todas as validações e observações?")) {
-      salasValidacao = {};
-      $("#observacoes").value = "";
-      renderizarAreasClique();
-      toast("🗑️ Todas as salas foram limpas!");
-    }
-  }
-  
-  async function salvarImagem() {
-    const btn = $("#btnSalvar");
-    const originalText = btn.innerHTML;
-    
-    const loading = document.createElement('div');
-    loading.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000';
-    loading.innerHTML = '<div style="background:white;padding:20px;border-radius:16px;text-align:center"><div style="width:40px;height:40px;border:4px solid #ddd;border-top-color:#6A1B9A;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px"></div><div>Gerando imagem...</div></div>';
-    document.body.appendChild(loading);
-    
-    try {
-      btn.innerHTML = "⏳ GERANDO...";
-      btn.disabled = true;
-      
-      await new Promise(r => setTimeout(r, 100));
-      
-      const elemento = $("#exportCard");
-      const canvas = await html2canvas(elemento, {
-        scale: 2.5,
-        backgroundColor: "#ffffff",
-        logging: false,
-        useCORS: true
-      });
-      
-      document.body.removeChild(loading);
-      
-      const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, '-');
-      const nomePredio = $("#predioNome").value.replace(/\s/g, '_');
-      const filename = `Ronda_${nomePredio}_${timestamp}.png`;
-      const dataUrl = canvas.toDataURL("image/png");
-      
-      if(navigator.share) {
-        try {
-          const blob = await fetch(dataUrl).then(r => r.blob());
-          const file = new File([blob], filename, {type: 'image/png'});
-          await navigator.share({
-            title: 'Ronda - Mapa de Salas',
-            text: `Mapa do ${$("#predioNome").value}`,
-            files: [file]
-          });
-          toast("✅ Imagem compartilhada! Salve na galeria");
-          return;
-        } catch(e) {}
-      }
-      
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = dataUrl;
-      link.click();
-      toast("✅ Imagem salva! Verifique seus downloads");
-      
-    } catch(error) {
-      console.error(error);
-      document.body.removeChild(loading);
-      toast("❌ Erro ao gerar imagem. Tente novamente.", true);
-    } finally {
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    }
-  }
-  
-  // Eventos
-  $("#btnSalvar").onclick = salvarImagem;
-  $("#btnLimpar").onclick = limparTudo;
-  $("#predioNome").oninput = atualizarStats;
-  $("#responsavel").oninput = atualizarStats;
-  
-  // Botão para adicionar sala manual (criar um botão ou usar enter)
-  const btnAdd = document.createElement('button');
-  btnAdd.textContent = "➕ Adicionar Sala";
-  btnAdd.style.marginTop = "10px";
-  btnAdd.onclick = adicionarSalaManual;
-  document.querySelector('.toolbar-grid').appendChild(btnAdd);
-  
-  $("#novaSala").onkeypress = (e) => { if(e.key === 'Enter') adicionarSalaManual(); };
-  
-  // Inicializar
-  carregarImagem();
-  
-  const style = document.createElement('style');
-  style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
-  document.head.appendChild(style);
-  
-  toast("👋 Clique nas salas para validar! Toque em cada sala e escolha o status.");
-})();
+  modal.style.display="none";
+}
+
+// EXPORT
+async function exportPNG(){
+  const canvas = await html2canvas(document.getElementById("canvas"),{scale:2});
+  const a = document.createElement("a");
+  a.href = canvas.toDataURL();
+  a.download = "ronda.png";
+  a.click();
+}
+
+// INIT
+render();
 </script>
+
 </body>
 </html>
