@@ -20,8 +20,8 @@
   .dot.cinza{background:#9E9E9E}
   .dot.laranja{background:#FF9800}
   .dot.vermelho{background:#E53935}
-  .kbar{display:flex;gap:10px;margin-top:12px}
-  .kbtn{flex:1;background:white;color:#6A1B9A;border:1px solid #6A1B9A;padding:10px;border-radius:12px}
+  .kbar{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .kbtn{flex:1;background:white;color:#6A1B9A;border:1px solid #6A1B9A;padding:10px;border-radius:12px;min-width:80px}
   .canvas-wrap{background:white;border-radius:16px;overflow:hidden}
   .topbar{background:#6A1B9A;padding:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;color:white}
   .vivo-badge{background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px}
@@ -35,8 +35,13 @@
   .slot.occ{background:#FF9800}
   .slot.prob{background:#E53935}
   .obs-container{padding:12px;background:white;border-top:1px solid #eee}
-  .summary-bottom{padding:12px;display:flex;justify-content:space-between;background:#f9f9f9;border-top:2px solid #6A1B9A}
-  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:black;color:white;padding:10px 20px;border-radius:30px;font-size:14px;z-index:9999}
+  .summary-bottom{padding:12px;display:flex;justify-content:space-between;background:#f9f9f9;border-top:2px solid #6A1B9A;flex-wrap:wrap;gap:8px}
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:black;color:white;padding:12px 20px;border-radius:30px;font-size:14px;z-index:9999;white-space:nowrap}
+  .loading-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000}
+  .loading-content{background:white;padding:24px;border-radius:16px;text-align:center}
+  .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#6A1B9A;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media(max-width:480px){.salas-grid{grid-template-columns:repeat(auto-fill,minmax(65px,75px))}.slot{font-size:12px;padding:6px}}
 </style>
 </head>
 <body>
@@ -71,7 +76,6 @@
     <button id="btnPNG" class="kbtn">📸 Salvar</button>
     <input type="file" id="bgFile" style="display:none">
   </div>
-  <!-- LEGEND - APENAS HTML, SEM MARKDOWN -->
   <div class="legend">
     <div class="pill"><span class="dot verde"></span> Validado</div>
     <div class="pill"><span class="dot cinza"></span> Trancada</div>
@@ -95,8 +99,32 @@
 <script>
 (function(){
 const $=x=>document.querySelector(x);
-const toast=(m)=>{let t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2500)};
-const loading=(show)=>{let l=document.getElementById('loading');if(show && !l){let d=document.createElement('div');d.id='loading';d.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;color:white;z-index:10000';d.innerHTML='<div style="background:white;color:#6A1B9A;padding:20px;border-radius:12px">⏳ Gerando imagem...</div>';document.body.appendChild(d)}else if(!show && l)l.remove()};
+let loadingDiv=null;
+
+function toast(m,isError=false){
+  let t=document.createElement('div');
+  t.className='toast';
+  t.textContent=m;
+  t.style.background=isError?'#c0392b':'black';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
+
+function showLoading(){
+  if(loadingDiv) return;
+  loadingDiv=document.createElement('div');
+  loadingDiv.className='loading-modal';
+  loadingDiv.innerHTML='<div class="loading-content"><div class="spinner"></div><div>Gerando imagem...</div></div>';
+  document.body.appendChild(loadingDiv);
+}
+
+function hideLoading(){
+  if(loadingDiv){
+    loadingDiv.remove();
+    loadingDiv=null;
+  }
+}
+
 const state={items:[],bg:null};
 const pad2=n=>String(n).padStart(2,'0');
 
@@ -127,7 +155,7 @@ function render(){
   let probs=dist.TRANCADA+dist.OCUPADA+dist.PROBLEMA;
   $("#sumRight").innerHTML=`${state.items.length} salas • ${probs} problemas`;
   $("#statusBadges").innerHTML=`
-    <div style="display:flex;gap:12px">
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
       <span>✅ ${dist.VALIDADA}</span>
       <span>🔒 ${dist.TRANCADA}</span>
       <span>🟠 ${dist.OCUPADA}</span>
@@ -135,29 +163,120 @@ function render(){
     </div>
   `;
   $("#sumDate").innerHTML=new Date().toLocaleString('pt-BR');
-  if(state.bg){$("#bgCustom")?.remove();let d=document.createElement('div');d.id='bgCustom';d.style.cssText='position:absolute;inset:0;background-image:url('+state.bg+');background-size:cover;background-position:center;opacity:0.3;z-index:0';$("#exportCanvas .bg-layer")?.prepend(d)}
+  
+  // Remover fundo antigo e adicionar novo
+  let oldBg=document.getElementById('bgCustom');
+  if(oldBg) oldBg.remove();
+  if(state.bg){
+    let bgDiv=document.createElement('div');
+    bgDiv.id='bgCustom';
+    bgDiv.style.cssText='position:absolute;inset:0;background-image:url('+state.bg+');background-size:cover;background-position:center;opacity:0.3;z-index:0;pointer-events:none';
+    let layer=$("#exportCanvas .bg-layer");
+    if(!layer){
+      let wrapper=$("#exportCanvas");
+      let newLayer=document.createElement('div');
+      newLayer.className='bg-layer';
+      newLayer.style.position='relative';
+      wrapper.insertBefore(newLayer, wrapper.firstChild);
+      newLayer.appendChild(bgDiv);
+    }else{
+      layer.style.position='relative';
+      layer.prepend(bgDiv);
+    }
+  }
 }
 
-async function salvar(){
-  let btn=$("#btnPNG"),txt=btn.innerHTML;
+// Função de salvar MELHORADA para mobile
+async function salvarImagem(){
+  const btn=$("#btnPNG");
+  const textoOriginal=btn.innerHTML;
+  
   try{
-    loading(true); btn.innerHTML="⏳..."; btn.disabled=true;
-    await new Promise(r=>setTimeout(r,200));
-    let canvas=await html2canvas($("#exportCanvas"),{scale:2.5,backgroundColor:"#fff",logging:false});
-    loading(false);
-    let data=canvas.toDataURL('image/png');
-    let link=document.createElement('a');
-    link.download=`Ronda_${$("#predio").value.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.png`;
-    link.href=data;
+    showLoading();
+    btn.innerHTML="⏳...";
+    btn.disabled=true;
+    
+    await new Promise(r=>setTimeout(r,100));
+    
+    const elemento=$("#exportCanvas");
+    const canvas=await html2canvas(elemento,{
+      scale:2.5,
+      backgroundColor:"#ffffff",
+      logging:false,
+      useCORS:true
+    });
+    
+    hideLoading();
+    
+    // Nome do arquivo
+    const data=new Date();
+    const timestamp=`${data.getFullYear()}-${pad2(data.getMonth()+1)}-${pad2(data.getDate())}_${pad2(data.getHours())}-${pad2(data.getMinutes())}`;
+    const nomePredio=($("#predio").value||"Predio").replace(/\s+/g,"_");
+    const filename=`Ronda_${nomePredio}_${timestamp}.png`;
+    
+    const dataUrl=canvas.toDataURL("image/png");
+    
+    // MÉTODO 1: Tentar usar a API de compartilhamento (funciona bem no mobile)
+    if(navigator.share){
+      try{
+        const blob=await fetch(dataUrl).then(r=>r.blob());
+        const file=new File([blob], filename, {type:'image/png'});
+        await navigator.share({
+          title:'Ronda - Mapa de Salas',
+          text:`Mapa do ${$("#predio").value}`,
+          files:[file]
+        });
+        toast("✅ Imagem compartilhada! Salve na galeria");
+        return;
+      }catch(e){
+        console.log("Compartilhamento cancelado ou falhou:",e);
+      }
+    }
+    
+    // MÉTODO 2: Criar link de download
+    const link=document.createElement('a');
+    link.download=filename;
+    link.href=dataUrl;
+    link.style.display='none';
+    document.body.appendChild(link);
     link.click();
+    setTimeout(()=>document.body.removeChild(link),1000);
     toast("✅ Imagem gerada! Verifique seus downloads");
-  }catch(e){loading(false);toast("❌ Erro ao gerar");console.error(e)}
-  finally{btn.innerHTML=txt;btn.disabled=false}
+    
+    // MÉTODO 3: Fallback - abrir em nova aba (último recurso)
+    setTimeout(()=>{
+      if(!document.querySelector('a[download]')){
+        const novaJanela=window.open();
+        if(novaJanela){
+          novaJanela.document.write(`
+            <html>
+              <head><title>Salvar Imagem</title><meta name="viewport" content="width=device-width"></head>
+              <body style="margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column">
+                <img src="${dataUrl}" style="max-width:100%;height:auto;border-radius:8px" />
+                <div style="position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.9);color:white;padding:15px;text-align:center">
+                  📱 Toque e segure na imagem > Salvar Imagem
+                </div>
+              </body>
+            </html>
+          `);
+          toast("📱 Toque e segure na imagem para salvar");
+        }
+      }
+    },500);
+    
+  }catch(erro){
+    console.error("Erro:",erro);
+    hideLoading();
+    toast("❌ Erro ao gerar imagem. Tente novamente.",true);
+  }finally{
+    btn.innerHTML=textoOriginal;
+    btn.disabled=false;
+  }
 }
 
 $("#btnAdd").onclick=()=>{
   let m=$("#onePair").value.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})/);
-  if(!m){toast("❌ Use formato: 29-02");return}
+  if(!m){toast("❌ Use formato: 29-02",true);return}
   let floor=parseInt(m[1]),room=pad2(parseInt(m[2]));
   state.items=state.items.filter(x=>!(x.floor===floor&&x.room===room));
   state.items.push({floor,room,status:$("#oneStatus").value});
@@ -168,6 +287,7 @@ $("#btnAdd").onclick=()=>{
 
 $("#btnApply").onclick=()=>{
   let lines=$("#bulk").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  if(!lines.length){toast("❌ Cole uma lista primeiro",true);return}
   lines.forEach(l=>{
     let m=l.match(/^(\d{1,2})\s*[-\/]\s*(\d{1,2})(.*)$/i);
     if(m){
@@ -185,12 +305,26 @@ $("#btnApply").onclick=()=>{
   toast(`✅ ${lines.length} sala(s) adicionadas`);
 };
 
-$("#btnClear").onclick=()=>{if(confirm("Limpar tudo?")){state.items=[];$("#bulk").value="";$("#observacoes").value="";$("#onePair").value="";render();toast("🗑️ Tudo limpo!")}};
+$("#btnClear").onclick=()=>{
+  if(confirm("Limpar todas as salas, lista e observações?")){
+    state.items=[];
+    $("#bulk").value="";
+    $("#observacoes").value="";
+    $("#onePair").value="";
+    render();
+    toast("🗑️ Tudo limpo!");
+  }
+};
+
 $("#btnLoadBg").onclick=()=>$("#bgFile").click();
 $("#btnClearBg").onclick=()=>{state.bg=null;render();toast("🖼️ Fundo removido")};
-$("#bgFile").onchange=e=>{let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();toast("🖼️ Fundo carregado")};r.readAsDataURL(f)}};
-$("#predio").oninput=render;$("#tecnicos").oninput=render;$("#observacoes").oninput=render;$("#btnPNG").onclick=salvar;
+$("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();toast("🖼️ Fundo carregado")};r.readAsDataURL(f)}};
+$("#predio").oninput=render;
+$("#tecnicos").oninput=render;
+$("#observacoes").oninput=render;
+$("#btnPNG").onclick=salvarImagem;
 
+// Dados iniciais vazios
 state.items=[];
 render();
 toast("👋 Pronto! Adicione suas salas");
