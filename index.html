@@ -3,69 +3,82 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>Prédio SVG • Versão Final Calibrada</title>
+<title>Prédio SVG • Mobile Fix</title>
 <style>
  :root{
-  --vivo:#6A1B9A; --valid:#2ECC71; --occ:#FF9800; --lock:#9E9E9E; --prob:#E53935;
-  --bg:#F6F3F9; --line:#E6E1EF;
-  /* Dimensões fixas do projeto */
-  --base-w: 480px; --base-h: 960px;
+  --vivo:#6A1B9A; --vivo-dark:#4A0072;
+  --valid:#2ECC71; --occ:#FF9800; --lock:#9E9E9E; --prob:#E53935;
+  --bg:#F6F3F9; --card:#FFFFFF; --line:#E6E1EF;
  }
 
- *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+ *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
  body{
-  margin:0; background:var(--bg); color:#2B2B2B;
-  font:500 15px/1.2 system-ui,"Segoe UI";
-  overflow-x: hidden;
+  background:var(--bg); color:#2B2B2B;
+  font:500 14px/1.2 system-ui,"Segoe UI";
+  padding: 10px;
  }
 
- .app{ max-width:1200px; margin:0 auto; padding:10px; display: flex; flex-direction: column; gap:15px; }
- @media (min-width:1100px){ .app{ display: grid; grid-template-columns: 350px 1fr; } }
+ .app{ max-width:1100px; margin:0 auto; display: flex; flex-direction: column; gap:15px; }
+ @media (min-width:900px){ .app{ display: grid; grid-template-columns: 320px 1fr; align-items: start; } }
 
- .card{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:15px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+ .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:15px; box-shadow:0 4px 10px rgba(0,0,0,0.03); }
+
  label{ font-size:11px; color:#666; margin-bottom:4px; display:block; font-weight: 700; text-transform: uppercase; }
+ select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; margin-bottom: 10px; }
+
+ button{ background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; }
+ button:active{ opacity: 0.8; transform: scale(0.98); }
+ .btn-ok { width: 60px; background: #444; margin-left: 5px; }
+ .btn-clear { background: #fff; color: #e74c3c; border: 1px solid #ffcccc; margin-top: 5px; }
+ .btn-png { background: #27ae60; padding: 16px; font-size: 16px; margin-top: 10px; }
+ .row-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+ /* CONTAINER DO PRÉDIO - CORREÇÃO DO ENCAVALAMENTO */
+ .viewer-card { display: flex; justify-content: center; background: #fff; padding: 20px 10px; overflow: hidden; }
  
- input, textarea, select, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:10px; background:#fff; font:inherit; }
- button{ background: var(--vivo); color:#fff; font-weight:800; cursor:pointer; border:none; }
- button.ghost{ background:#f8f5ff; color:var(--vivo); border:1px solid var(--line); }
+ .building-container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 450px; /* Limita largura no mobile */
+ }
 
- /* Área do Prédio */
- .viewer-wrapper { width: 100%; display: flex; justify-content: center; overflow: hidden; background: #ddd; border-radius: 12px; padding: 20px 0; }
+ .floors-labels-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 118px; /* Alinha com o topo das janelas */
+  width: 60px;
+  flex-shrink: 0;
+ }
+
+ .f-lbl {
+  height: 22px; /* MESMA ALTURA DA LINHA DAS JANELAS */
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--vivo);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+ }
+
+ .facade-wrapper { position: relative; width: 320px; flex-shrink: 0; }
+ #facade-svg { width: 100%; height: auto; display: block; }
  
- #exportArea {
-  background:#fff; width: var(--base-w); height: var(--base-h);
-  position: relative; flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
- }
-
- /* Ajuste de Escala Mobile para caber na tela sem quebrar */
- @media (max-width: 500px) {
-  .viewer-wrapper { padding: 0; height: 620px; align-items: flex-start; }
-  #exportArea { transform: scale(0.6); transform-origin: top center; }
- }
-
- #buildingBox { position:relative; width:100%; height:100%; }
- #overlay { position:absolute; inset:0; pointer-events:none; }
-
- .floor-label {
-  position:absolute; color:#4A0072; font-weight:900; font-size:13px;
-  left: 15px; width: 60px; text-align: left;
- }
-
+ .overlay-badges { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+ 
  .badge {
-  position:absolute; width:24px; height:12px; border-radius:2px;
-  color:#fff; font-weight:900; font-size:9px;
-  display:flex; align-items:center; justify-content:center;
-  pointer-events: auto; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  position: absolute; width: 24px; height: 12px;
+  border-radius: 3px; color: #fff; font-size: 9px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
  }
- .valid { background: var(--valid); }
- .occ   { background: var(--occ); }
- .lock  { background: var(--lock); }
- .prob  { background: var(--prob); }
 
- #footerNote {
-  position:absolute; left:20px; bottom:15px; width: 440px;
-  font-size:14px; font-weight:700; color:#4b3b7a; line-height: 1.2;
+ #footerNoteDisplay {
+    position: absolute; bottom: 15px; left: 0; width: 100%;
+    text-align: center; font-weight: 800; color: var(--vivo-dark); padding: 0 10px;
  }
 </style>
 </head>
@@ -73,64 +86,59 @@
 <body>
 <div class="app">
 
-  <div class="card controls">
-    <div style="display:grid; gap:10px;">
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
-        <div><label>Andar</label><select id="selFloor"></select></div>
-        <div><label>Sala</label><select id="selRoom"></select></div>
-      </div>
-
-      <div>
-        <label>Status</label>
-        <select id="selStatus">
-          <option value="valid">Validada (verde)</option>
-          <option value="occ">Ocupada (laranja)</option>
-          <option value="lock">Trancada (cinza)</option>
-          <option value="prob">Problema (vermelho)</option>
-          <option value="none">Remover</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Observações</label>
-        <textarea id="obsText" placeholder="Aparecerá no rodapé..."></textarea>
-      </div>
-
-      <button id="btnApply" style="padding:15px; background:#4A0072">APLICAR NO MAPA</button>
-
-      <div style="border-top: 1px solid #eee; padding-top: 10px;">
-        <label>Entrada Rápida (Ex: 32-05-v)</label>
-        <div style="display:flex; gap:5px;">
-          <input id="quickInput" type="text" placeholder="32-05-v"/>
-          <button id="btnQuick" style="width:60px; background:#666">OK</button>
-        </div>
-      </div>
-
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-        <button class="ghost" id="btnSave">Salvar JSON</button>
-        <button class="ghost" id="btnLoad">Abrir JSON</button>
-      </div>
-      <button class="ghost" id="btnClear" style="color:red; font-size: 12px;">LIMPAR TUDO</button>
-      
-      <button id="btnPNG" style="background:#27ae60; padding:18px;">📸 EXPORTAR PNG</button>
+  <div class="card">
+    <label>Localização</label>
+    <div style="display:flex; gap:5px">
+      <select id="selFloor"></select>
+      <select id="selRoom"></select>
     </div>
+
+    <label>Status</label>
+    <select id="selStatus">
+      <option value="valid">✅ Validada</option>
+      <option value="occ">🟠 Ocupada</option>
+      <option value="lock">🔒 Trancada</option>
+      <option value="prob">❌ Problema</option>
+      <option value="none">🗑️ Remover</option>
+    </select>
+
+    <label>Observações</label>
+    <textarea id="obsText" rows="2" placeholder="Aparecerá no rodapé..."></textarea>
+
+    <button id="btnApply" style="background:var(--vivo-dark)">APLICAR NO MAPA</button>
+
+    <label style="margin-top:10px">Entrada Rápida (ex: 32-05-v)</label>
+    <div style="display:flex">
+      <input id="quickInput" type="text" placeholder="32-05-v">
+      <button id="btnQuick" class="btn-ok">OK</button>
+    </div>
+
+    <div class="row-btns">
+      <button id="btnSave" style="background:#f4f4f9; color:var(--vivo)">Salvar JSON</button>
+      <button id="btnLoad" style="background:#f4f4f9; color:var(--vivo)">Abrir JSON</button>
+    </div>
+    <button id="btnClear" class="btn-clear">LIMPAR TUDO</button>
+    
+    <button id="btnPNG" class="btn-png">📸 EXPORTAR PNG</button>
   </div>
 
-  <div class="viewer-wrapper">
-    <div id="exportArea">
-      <div id="buildingBox">
-        <svg id="facade" width="480" height="960" viewBox="0 0 480 960" xmlns="http://www.w3.org/2000/svg">
-          <rect width="480" height="960" fill="#F0F4FA"/>
-          <g transform="translate(102,120)">
-            <rect width="316" height="740" rx="8" fill="#D6DCE6" stroke="#B9C1CE" stroke-width="2"/>
-            <g id="windows" fill="#DDE8F7" stroke="#BFC9D8" stroke-width="0.5"></g>
-            <text x="158" y="-20" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="900" fill="#6A1B9A">VIVO</text>
-          </g>
-          <rect y="880" width="480" height="40" fill="#E9E3F2"/>
+  <div class="card viewer-card">
+    <div class="building-container" id="captureArea">
+      
+      <div class="floors-labels-col" id="floorsCol"></div>
+
+      <div class="facade-wrapper">
+        <svg id="facade-svg" viewBox="0 0 320 860" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="860" rx="10" fill="#E6EAF0" stroke="#B9C1CE" stroke-width="2"/>
+          <text x="160" y="30" text-anchor="middle" font-weight="900" font-size="14" fill="#6A1B9A">VIVO</text>
+          <g id="winGroup" transform="translate(22,40)" fill="#DDE8F7" stroke="#BFC9D8"></g>
+          <rect y="810" width="320" height="40" fill="#D6CDE7" rx="0 0 10 10"/>
         </svg>
-        <div id="overlay"></div>
-        <div id="footerNote"></div>
+        
+        <div class="overlay-badges" id="overlay"></div>
+        <div id="footerNoteDisplay"></div>
       </div>
+
     </div>
   </div>
 
@@ -138,182 +146,185 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_v4_stable";
+const STORAGE_KEY = "predio_data_final";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 
-// CONFIGURAÇÃO DE COORDENADAS (Calibração exata com o SVG)
-const COORDS = {
-    offX: 102 + 20, // Margem esquerda do prédio + padding interno das janelas
-    offY: 120 + 40, // Margem topo do prédio + padding interno das janelas
-    gapX: 34.5,     // Espaço horizontal entre janelas
-    gapY: 21.3      // Espaço vertical entre janelas
-};
+function init() {
+  const fSel = $("#selFloor");
+  const rSel = $("#selRoom");
+  const fCol = $("#floorsCol");
+  const winG = $("#winGroup");
 
-function init(){
-  const fSel=$("#selFloor"); const rSel=$("#selRoom");
-  for(let f=32; f>=1; f--) fSel.appendChild(new Option(`Andar ${f}`, f));
-  for(let r=1; r<=50; r++) rSel.appendChild(new Option(`Sala ${String(r).padStart(2,'0')}`, r));
-  
-  const winG = $("#windows");
-  for(let r=0; r<32; r++){
-    for(let c=0; c<8; c++){
-      let rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      rect.setAttribute("x", c * COORDS.gapX); 
-      rect.setAttribute("y", r * COORDS.gapY);
+  // Gerar seletores e labels de andares
+  for (let f = 32; f >= 1; f--) {
+    fSel.appendChild(new Option(`Andar ${f}`, f));
+    const lbl = document.createElement("div");
+    lbl.className = "f-lbl";
+    lbl.textContent = `Andar ${f}`;
+    fCol.appendChild(lbl);
+  }
+  for (let r = 1; r <= 50; r++) rSel.appendChild(new Option(`Sala ${String(r).padStart(2,'0')}`, r));
+
+  // Gerar janelas SVG
+  for (let r = 0; r < 32; r++) {
+    for (let c = 0; c < 8; c++) {
+      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      rect.setAttribute("x", c * 35); rect.setAttribute("y", r * 22);
       rect.setAttribute("width", 24); rect.setAttribute("height", 12); rect.setAttribute("rx", 2);
       winG.appendChild(rect);
     }
   }
-  renderBadges();
+
+  render();
 }
 
-function renderBadges(){
+function render() {
   const overlay = $("#overlay");
   overlay.innerHTML = "";
-  
-  // Renderizar Nomes dos Andares (Lado de fora)
-  for(let f=1; f<=32; f++){
-    const row = 32 - f;
-    const lbl = document.createElement("div");
-    lbl.className = "floor-label";
-    lbl.textContent = `Andar ${String(f).padStart(2,'0')}`;
-    lbl.style.top = (COORDS.offY + row * COORDS.gapY - 2) + "px";
-    overlay.appendChild(lbl);
-  }
-
-  // Renderizar Badges (Sobre as janelas)
   Object.keys(rooms).forEach(key => {
     const [f, r] = key.split('-').map(Number);
-    const floorRow = 32 - f;
-    const roomCol = (r - 1) % 8;
+    const status = rooms[key];
+    const row = 32 - f;
+    const col = (r - 1) % 8;
 
     const b = document.createElement("div");
-    b.className = `badge ${rooms[key]}`;
+    b.className = `badge ${status}`;
+    b.style.backgroundColor = getHex(status);
     b.textContent = String(r).padStart(2,'0');
-    b.style.top = (COORDS.offY + floorRow * COORDS.gapY) + "px";
-    b.style.left = (COORDS.offX + roomCol * COORDS.gapX) + "px";
+    b.style.top = (40 + row * 22) + "px";
+    b.style.left = (22 + col * 35) + "px";
     overlay.appendChild(b);
   });
   
-  $("#footerNote").textContent = $("#obsText").value;
+  const obs = localStorage.getItem(STORAGE_KEY + "_obs") || "";
+  $("#footerNoteDisplay").textContent = obs;
+  $("#obsText").value = obs;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
 }
 
+function getHex(s) {
+  return s==='valid'?'#2ECC71': s==='occ'?'#FF9800': s==='lock'?'#9E9E9E':'#E53935';
+}
+
+// Ações
 $("#btnApply").onclick = () => {
   const f = $("#selFloor").value;
   const r = $("#selRoom").value;
   const s = $("#selStatus").value;
-  if(s === "none") delete rooms[`${f}-${r}`];
+  if(s === 'none') delete rooms[`${f}-${r}`];
   else rooms[`${f}-${r}`] = s;
-  save();
+  localStorage.setItem(STORAGE_KEY + "_obs", $("#obsText").value);
+  render();
 };
 
 $("#btnQuick").onclick = () => {
-  const val = $("#quickInput").value.toLowerCase().trim();
-  const p = val.split('-');
-  if(p.length < 3) return;
-  const f = parseInt(p[0]), r = parseInt(p[1]), sChar = p[2][0];
-  let s = "valid";
-  if(sChar==='o') s='occ'; if(sChar==='c') s='lock'; if(sChar==='p') s='prob'; if(sChar==='n') s='none';
-  if(s==='none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`]=s;
-  save();
+  const v = $("#quickInput").value.toLowerCase().split('-');
+  if(v.length < 3) return alert("Formato: 32-05-v");
+  const f = parseInt(v[0]), r = parseInt(v[1]), sChar = v[2][0];
+  let status = sChar==='v'?'valid': sChar==='o'?'occ': sChar==='t'?'lock': sChar==='p'?'prob':'none';
+  if(status === 'none') delete rooms[`${f}-${r}`];
+  else rooms[`${f}-${r}`] = status;
+  render();
   $("#quickInput").value = "";
 };
 
-$("#btnClear").onclick = () => { if(confirm("Limpar tudo?")){ rooms={}; $("#obsText").value=""; save(); } };
-
-function save(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
-  localStorage.setItem(STORAGE_KEY+"_obs", $("#obsText").value);
-  renderBadges();
-}
-
-async function exportPNG(){
-  const btn = $("#btnPNG");
-  btn.textContent = "GERANDO...";
-  
-  const canvas = document.createElement("canvas");
-  canvas.width = 480 * 2; canvas.height = 960 * 2;
-  const ctx = canvas.getContext("2d");
-  ctx.scale(2,2);
-  
-  // Fundo
-  ctx.fillStyle = "#F0F4FA";
-  ctx.fillRect(0,0,480,960);
-
-  // Desenhar SVG
-  const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString($("#facade")));
-  const img = new Image();
-  await new Promise(res => { img.onload = res; img.src = svgUrl; });
-  ctx.drawImage(img, 0, 0);
-
-  // Desenhar Labels dos Andares na Imagem
-  ctx.fillStyle = "#4A0072";
-  ctx.font = "bold 13px sans-serif";
-  ctx.textAlign = "left";
-  for(let f=1; f<=32; f++){
-    const row = 32 - f;
-    ctx.fillText(`Andar ${String(f).padStart(2,'0')}`, 15, COORDS.offY + row * COORDS.gapY + 10);
+$("#btnClear").onclick = () => {
+  if(confirm("Limpar tudo?")) {
+    rooms = {}; localStorage.clear(); render();
   }
+};
 
-  // Desenhar Badges na Imagem
-  Object.keys(rooms).forEach(key => {
-    const [f, r] = key.split('-').map(Number);
-    const st = rooms[key];
-    const row = 32 - f;
-    const col = (r - 1) % 8;
-    const x = COORDS.offX + col * COORDS.gapX;
-    const y = COORDS.offY + row * COORDS.gapY;
+$("#btnSave").onclick = () => {
+  const data = JSON.stringify({rooms, obs: $("#obsText").value});
+  const blob = new Blob([data], {type:"application/json"});
+  const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="mapa.json"; a.click();
+};
+
+$("#btnLoad").onclick = () => {
+  const i = document.createElement("input"); i.type="file";
+  i.onchange = e => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const d = JSON.parse(ev.target.result);
+      rooms = d.rooms; localStorage.setItem(STORAGE_KEY+"_obs", d.obs); render();
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+  i.click();
+};
+
+// EXPORTAR PNG (Adaptado para mobile)
+$("#btnPNG").onclick = async () => {
+    const btn = $("#btnPNG");
+    btn.textContent = "GERANDO...";
     
-    ctx.fillStyle = st === 'valid' ? '#2ECC71' : st === 'occ' ? '#FF9800' : st === 'lock' ? '#9E9E9E' : '#E53935';
-    ctx.beginPath();
-    ctx.roundRect(x, y, 24, 12, 2);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 450; canvas.height = 900;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,450,900);
+
+    // Desenha Fundo do Prédio
+    ctx.fillStyle = "#E6EAF0";
+    ctx.roundRect(80, 20, 320, 840, 10);
     ctx.fill();
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 9px sans-serif";
+
+    // Texto Vivo e Andares
+    ctx.fillStyle = "#6A1B9A";
+    ctx.font = "bold 14px sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText(String(r).padStart(2,'0'), x + 12, y + 9.5);
-  });
+    ctx.fillText("VIVO", 240, 50);
 
-  // Observações
-  ctx.fillStyle = "#4b3b7a";
-  ctx.font = "bold 14px sans-serif";
-  ctx.textAlign = "left";
-  ctx.fillText($("#obsText").value, 20, 910);
-
-  canvas.toBlob(async blob => {
-    const file = new File([blob], "mapa_predio.png", {type:"image/png"});
-    if(navigator.canShare && navigator.canShare({files:[file]})) {
-        await navigator.share({files:[file], title:"Mapa"});
-    } else {
-        const a = document.createElement("a"); a.download="mapa.png"; a.href=URL.createObjectURL(blob); a.click();
+    ctx.font = "bold 10px sans-serif";
+    ctx.textAlign = "right";
+    for(let f=32; f>=1; f--) {
+        ctx.fillText("Andar "+f, 70, 118 + (32-f)*22 + 10);
     }
+
+    // Desenha Janelas e Badges
+    Object.keys(rooms).forEach(key => {
+        const [f, r] = key.split('-').map(Number);
+        const st = rooms[key];
+        ctx.fillStyle = getHex(st);
+        const x = 80 + 22 + ((r-1)%8)*35;
+        const y = 118 + (32-f)*22;
+        ctx.roundRect(x, y, 24, 12, 2);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "900 8px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
+    });
+
+    // Nota de rodapé
+    ctx.fillStyle = "#6A1B9A";
+    ctx.font = "bold 12px sans-serif";
+    ctx.fillText($("#obsText").value, 225, 885);
+
+    const link = document.createElement("a");
+    link.download = "mapa-vivo.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
     btn.textContent = "📸 EXPORTAR PNG";
-  });
+};
+
+// Polyfill para roundRect em navegadores antigos
+if (!Path2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+    if (w < 2 * r) r = w / 2;
+    if (h < 2 * r) r = h / 2;
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
+    this.closePath();
+    return this;
+  };
 }
 
-$("#btnPNG").onclick = exportPNG;
-$("#btnSave").onclick = () => {
-    const blob = new Blob([JSON.stringify({rooms, obs: $("#obsText").value})], {type:"application/json"});
-    const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="mapa.json"; a.click();
-};
-$("#btnLoad").onclick = () => {
-    const inp = document.createElement("input"); inp.type="file";
-    inp.onchange = e => {
-        const r = new FileReader();
-        r.onload = ev => {
-            const d = JSON.parse(ev.target.result);
-            rooms = d.rooms; $("#obsText").value = d.obs; save();
-        };
-        r.readAsText(e.target.files[0]);
-    };
-    inp.click();
-};
-
-window.onload = () => {
-    init();
-    $("#obsText").value = localStorage.getItem(STORAGE_KEY+"_obs") || "";
-    renderBadges();
-};
+init();
 </script>
 </body>
 </html>
