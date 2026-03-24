@@ -3,51 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ronda Visual Prédio</title>
+<title>Ronda 3D</title>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
-body{
-  margin:0;
-  font-family:system-ui;
-  background:#F6F3F9;
-  padding:12px;
-}
+body{margin:0;font-family:system-ui;background:#F6F3F9;padding:12px}
 
-.card{
-  background:white;
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:12px;
-}
+.card{background:white;border-radius:14px;padding:12px;margin-bottom:12px}
 
-input{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ddd;
-  margin-bottom:8px;
-}
+input{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-bottom:8px}
 
-/* GRID OPERAÇÃO */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(45px,1fr));
-  gap:6px;
-}
-
-.slot{
-  height:30px;
-  border-radius:6px;
-  background:#bbb;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-weight:bold;
-  font-size:12px;
-}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(45px,1fr));gap:6px}
+.slot{height:30px;border-radius:6px;background:#bbb;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px}
 
 .valid{background:#2ECC71}
 .lock{background:#9E9E9E}
@@ -55,60 +24,37 @@ input{
 .prob{background:#E53935}
 
 /* MODAL */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;
-  justify-content:center;
-  align-items:flex-end;
-}
-
-.modal-box{
-  background:white;
-  width:100%;
-  padding:16px;
-  border-radius:16px 16px 0 0;
-}
-
-.modal button{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  border:none;
-  border-radius:10px;
-  font-weight:bold;
-}
-
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-end}
+.modal-box{background:white;width:100%;padding:16px;border-radius:16px 16px 0 0}
+.modal button{width:100%;padding:12px;margin-top:8px;border:none;border-radius:10px;font-weight:bold}
 .validBtn{background:#2ECC71;color:white}
 .lockBtn{background:#9E9E9E;color:white}
 .occBtn{background:#FF9800;color:white}
 .probBtn{background:#E53935;color:white}
 
-/* ===== EXPORT VISUAL PRÉDIO ===== */
-
-.export-wrapper{
-  background:#e9edf3;
+/* ===== PRÉDIO 3D ===== */
+.exportScene{
+  background:linear-gradient(#dfe6ee,#cfd8e3);
   padding:20px;
-  border-radius:20px;
   display:inline-block;
 }
 
-.building{
-  background:linear-gradient(#dfe6ee,#cfd8e3);
-  padding:10px 6px;
-  border-radius:10px;
-  box-shadow:0 10px 25px rgba(0,0,0,.15);
+.building3d{
+  transform:perspective(800px) rotateX(8deg);
+  background:#d0d7e2;
+  padding:10px;
+  border-radius:8px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
 }
 
-.top-sign{
+.topSign{
   text-align:center;
-  font-weight:bold;
   background:#6A1B9A;
   color:white;
+  font-weight:bold;
   padding:6px;
-  border-radius:6px;
   margin-bottom:6px;
+  border-radius:4px;
   font-size:12px;
 }
 
@@ -118,11 +64,10 @@ input{
   margin:2px 0;
 }
 
-.floor-label{
+.floorLabel{
   width:28px;
   font-size:10px;
   font-weight:bold;
-  color:#555;
 }
 
 .windows{
@@ -138,11 +83,11 @@ input{
   background:#bbb;
 }
 
-/* base prédio */
+/* BASE */
 .base{
-  height:25px;
-  background:#b0bec5;
-  margin-top:4px;
+  height:20px;
+  background:#9aa7b3;
+  margin-top:6px;
   border-radius:4px;
 }
 </style>
@@ -178,8 +123,7 @@ const config = {
   29:{start:1,end:10},
   28:{start:1,end:34},
   27:{start:1,end:25},
-  26:{start:1,end:18},
-  18:{start:19,end:34} // 👈 seu caso real
+  18:{start:19,end:34}
 };
 
 let data = {};
@@ -198,6 +142,15 @@ function cls(s){
     OCUPADA:"occ",
     PROBLEMA:"prob"
   }[s]||"";
+}
+
+function color(s){
+  return {
+    VALIDADA:"#2ECC71",
+    TRANCADA:"#9E9E9E",
+    OCUPADA:"#FF9800",
+    PROBLEMA:"#E53935"
+  }[s] || "#bbb";
 }
 
 function render(){
@@ -239,17 +192,17 @@ function setStatus(status){
   render();
 }
 
-/* EXPORT VISUAL TOP */
+/* EXPORT CORRIGIDO */
 async function exportar(){
 
-  let wrapper=document.createElement("div");
-  wrapper.className="export-wrapper";
+  let scene=document.createElement("div");
+  scene.className="exportScene";
 
   let building=document.createElement("div");
-  building.className="building";
+  building.className="building3d";
 
   let sign=document.createElement("div");
-  sign.className="top-sign";
+  sign.className="topSign";
   sign.innerText=document.getElementById("predio").value;
 
   building.appendChild(sign);
@@ -259,7 +212,7 @@ async function exportar(){
     floor.className="floor";
 
     let label=document.createElement("div");
-    label.className="floor-label";
+    label.className="floorLabel";
     label.innerText=f;
 
     let windows=document.createElement("div");
@@ -267,7 +220,8 @@ async function exportar(){
 
     for(let i=config[f].start;i<=config[f].end;i++){
       let w=document.createElement("div");
-      w.className="window "+cls(data[f+"-"+i]);
+      w.className="window";
+      w.style.background = color(data[f+"-"+i]);
       windows.appendChild(w);
     }
 
@@ -280,18 +234,27 @@ async function exportar(){
   base.className="base";
   building.appendChild(base);
 
-  wrapper.appendChild(building);
-  document.body.appendChild(wrapper);
+  scene.appendChild(building);
+  document.body.appendChild(scene);
 
-  const canvas = await html2canvas(wrapper,{scale:3});
-  document.body.removeChild(wrapper);
+  const canvas = await html2canvas(scene,{scale:3});
+  document.body.removeChild(scene);
 
-  const link=document.createElement("a");
-  link.href=canvas.toDataURL();
-  link.download="predio_visual.png";
-  link.click();
+  const dataUrl = canvas.toDataURL();
+
+  // 📱 MOBILE FIX
+  const win = window.open();
+  win.document.write(`
+    <html>
+      <body style="margin:0;background:black;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column">
+        <img src="${dataUrl}" style="max-width:100%">
+        <p style="color:white">Toque e segure para salvar</p>
+      </body>
+    </html>
+  `);
 }
 
+/* INIT */
 render();
 </script>
 
