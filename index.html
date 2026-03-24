@@ -35,17 +35,18 @@
   .pill{
     display:inline-flex;
     align-items:center;
-    gap:6px;
-    padding:5px 10px;
-    border-radius:20px;
-    background:#f0f0f0;
+    gap:8px;
+    padding:6px 14px;
+    border-radius:30px;
+    background:#f5f5f5;
     font-size:13px;
-    font-weight:500;
+    font-weight:600;
+    border:1px solid #e0e0e0;
   }
   .dot{
-    width:12px;
-    height:12px;
-    border-radius:3px;
+    width:14px;
+    height:14px;
+    border-radius:4px;
     display:inline-block;
   }
   .dot.v{background:var(--valid)}
@@ -53,7 +54,8 @@
   .dot.o{background:var(--occ)}
   .dot.p{background:var(--prob)}
   .kbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .kbtn{flex:1;background:white;color:var(--vivo);border:1px solid var(--vivo);border-radius:12px;padding:10px;font-weight:700}
+  .kbtn{flex:1;background:white;color:var(--vivo);border:1px solid var(--vivo);border-radius:12px;padding:10px;font-weight:700;cursor:pointer}
+  .kbtn:active{transform:scale(0.98)}
   .canvas-wrap{margin:0 auto;width:100%;max-width:720px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:white}
   .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));flex-wrap:wrap;gap:8px}
   .topbar .vivo{background:rgba(255,255,255,0.2);padding:6px 12px;border-radius:999px;color:white;font-weight:900}
@@ -82,7 +84,7 @@
   .slot.occ{background:linear-gradient(135deg, var(--occ), #f39c12)}
   .slot.prob{background:linear-gradient(135deg, var(--prob), #c0392b)}
   .obs-container{background:rgba(255,255,255,0.95);border-top:1px solid var(--line)}
-  #obsBox{padding:12px 16px;min-height:60px;max-height:120px;overflow:auto;font-size:13px;white-space:pre-wrap}
+  #obsBox{padding:12px 16px;min-height:60px;max-height:120px;overflow:auto;font-size:13px;white-space:pre-wrap;background:#fff}
   .summary-bottom{padding:12px 16px;background:linear-gradient(135deg,#f8f9fa,#fff);font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:2px solid var(--vivo);font-weight:bold}
   .status-badge{display:flex;gap:12px;flex-wrap:wrap}
   .status-item{display:flex;align-items:center;gap:4px}
@@ -122,12 +124,12 @@
       <button class="kbtn" id="btnPNG">📸 Salvar</button>
       <input type="file" id="bgFile" accept="image/*" style="display:none">
     </div>
-    <!-- LEGEND CORRIGIDA - SEM MARKDOWN, APENAS HTML -->
+    <!-- LEGEND - SOMENTE HTML, SEM TEXTO MARKDOWN -->
     <div class="legend">
-      <span class="pill"><span class="dot v"></span> Validado</span>
-      <span class="pill"><span class="dot l"></span> Trancada</span>
-      <span class="pill"><span class="dot o"></span> Ocupada</span>
-      <span class="pill"><span class="dot p"></span> Problema</span>
+      <div class="pill"><span class="dot v"></span> Validado</div>
+      <div class="pill"><span class="dot l"></span> Trancada</div>
+      <div class="pill"><span class="dot o"></span> Ocupada</div>
+      <div class="pill"><span class="dot p"></span> Problema</div>
     </div>
   </div>
 
@@ -225,7 +227,6 @@ function render(){
   let bg=$("#bgCustom");if(state.bg){bg.style.backgroundImage=`url(${state.bg})`;bg.style.display="block"}else bg.style.display="none";
 }
 
-// Botão Limpar - limpa TUDO (salas, lista, observações)
 $("#btnClear").onclick=()=>{
   if(confirm("Limpar todas as salas, lista rápida e observações?")){
     state.items=[];
@@ -244,12 +245,12 @@ $("#btnClearBg").onclick=()=>{state.bg=null;render();showToast("🖼️ Fundo re
 $("#bgFile").onchange=e=>{let f=e.target.files?.[0];if(f){let r=new FileReader();r.onload=ev=>{state.bg=ev.target.result;render();showToast("🖼️ Fundo OK")};r.readAsDataURL(f)}};
 $("#predio").oninput=render;$("#tecnicos").oninput=render;$("#observacoes").oninput=render;$("#btnPNG").onclick=exportPNG;
 
-// TELA INICIAL LIMPA - NENHUMA SALA PRÉ-CARREGADA
+// TELA INICIAL COMPLETAMENTE LIMPA
 state.items = [];
 $("#observacoes").value = "";
 $("#bulk").value = "";
 render();
-showToast("👋 Tela limpa! Adicione suas salas");
+showToast("👋 Bem-vindo! Adicione suas salas");
 })();
 </script>
 </body>
