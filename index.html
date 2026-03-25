@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Ultra HD v13</title>
+<title>Vivo Infra • Ultra HD v14</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -120,10 +120,11 @@
           <rect x="148" y="855" width="3" height="20" fill="#94A3B8" />
           <rect x="169" y="855" width="3" height="20" fill="#94A3B8" />
 
-          <rect x="25" y="865" width="20" height="25" fill="#451a03" />
-          <path d="M20,865 Q35,830 50,865" fill="#166534" />
-          <rect x="275" y="865" width="20" height="25" fill="#451a03" />
-          <path d="M270,865 Q285,830 300,865" fill="#166534" />
+          <rect x="25" y="889" width="20" height="25" fill="#451a03" />
+          <path d="M20,889 Q35,854 50,889" fill="#166534" />
+          
+          <rect x="275" y="889" width="20" height="25" fill="#451a03" />
+          <path d="M270,889 Q285,854 300,889" fill="#166534" />
         </svg>
 
         <div class="overlay-badges" id="overlay"></div>
@@ -136,7 +137,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_v13_final_doors";
+const STORAGE_KEY = "vivo_pro_v14_vasos_chao";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -262,12 +263,16 @@ $("#btnPNG").onclick = async () => {
 
     ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 814, 340, 110, 10); ctx.fill();
     
-    // Portas no PNG (Chão ao Teto)
+    // Portas no PNG
     ctx.fillStyle = "#334155"; 
     ctx.fillRect(170, 814, 55, 100); 
     ctx.fillRect(235, 814, 55, 100);
     ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 1;
     ctx.strokeRect(170, 814, 55, 100); ctx.strokeRect(235, 814, 55, 100);
+
+    // Vasos no Chão do PNG
+    ctx.fillStyle = "#451a03"; ctx.fillRect(95, 889, 20, 25);
+    ctx.fillStyle = "#451a03"; ctx.fillRect(345, 889, 20, 25);
 
     ctx.fillStyle = "#334155"; ctx.textAlign = "left"; ctx.font = "bold 11px sans-serif";
     ctx.fillText(`${new Date().toLocaleDateString('pt-BR')} | Auditor: ${$("#inputResp").value}`, 80, 955);
@@ -276,7 +281,6 @@ $("#btnPNG").onclick = async () => {
     ctx.fillStyle = "#777"; ctx.font = "italic 9px sans-serif";
     wrapText(ctx, resumoIA || "", 80, curY + 10, 300, 12);
 
-    // CORREÇÃO DE DOWNLOAD PARA CELULAR
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
     link.download = `Mapa_Vivo_Infra_${Date.now()}.png`;
