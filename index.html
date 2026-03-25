@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
 
 <title>Relatório de Vistoria</title>
 
@@ -12,23 +12,49 @@
     --text:#fff; --muted:#cbd5e1; --gold:#ffd966;
     --green:#27ae60; --yellow:#f1c40f; --red:#e74c3c; --purple:#6A1B9A;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-
-  /* LAYOUT FIXO - sem sambar */
+  *{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+  }
+  
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    min-height:100vh;
+    padding:12px;
+  }
+  
+  /* LAYOUT FIXO - SEM SAMBAR */
   .app{
     max-width:1400px;
     margin:0 auto;
-    padding:12px;
-    display:block;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
   }
   
   @media(min-width:980px){
-    .app{
-      display:grid;
-      grid-template-columns:340px 1fr;
-      gap:16px;
+    body{
       padding:16px;
+    }
+    .app{
+      flex-direction:row;
+      gap:20px;
+      align-items:flex-start;
+    }
+  }
+
+  /* LARGURAS FIXAS EM DESKTOP */
+  @media(min-width:980px){
+    .app > :first-child{
+      width:340px;
+      flex-shrink:0;
+    }
+    .app > :last-child{
+      flex:1;
+      min-width:0;
     }
   }
 
@@ -38,18 +64,10 @@
     border-radius:12px;
     padding:14px;
     backdrop-filter:blur(4px);
-    margin-bottom:16px;
-  }
-  
-  @media(min-width:980px){
-    .card{
-      margin-bottom:0;
-      padding:16px;
-    }
   }
 
   h2{
-    margin:0 0 10px 0;
+    margin:0 0 12px 0;
     font-weight:800;
     font-size:15px;
     letter-spacing:.4px;
@@ -62,7 +80,7 @@
     font-weight:700;
   }
 
-  /* FORMULÁRIO COMPACTO */
+  /* FORMULÁRIO */
   label{
     display:block;
     margin:10px 0 4px 0;
@@ -98,15 +116,15 @@
   }
   
   textarea.form-field{
-    min-height:60px;
+    min-height:55px;
     resize:vertical;
     font-size:12px;
   }
 
-  /* ÍCONES COMPACTOS */
+  /* ÍCONES COM LARGURA FIXA */
   .icon-strip{
     display:grid;
-    gap:4px;
+    gap:5px;
     margin-top:6px;
   }
   
@@ -116,16 +134,6 @@
   
   .rooms-strip{
     grid-template-columns:repeat(10, 1fr);
-  }
-  
-  /* Mobile: ajuste automático sem quebrar */
-  @media(max-width:640px){
-    .floors-strip{
-      grid-template-columns:repeat(8, minmax(28px, 1fr));
-    }
-    .rooms-strip{
-      grid-template-columns:repeat(10, minmax(28px, 1fr));
-    }
   }
   
   .icon{
@@ -150,12 +158,12 @@
     box-shadow:0 0 0 1px rgba(255,217,102,.4);
   }
 
-  /* STATUS STRIP COMPACTO */
+  /* STATUS STRIP */
   .status-strip{
     display:grid;
     grid-template-columns:repeat(4, 1fr);
     gap:6px;
-    margin:8px 0 4px;
+    margin:10px 0 4px;
   }
   
   .status{
@@ -163,7 +171,7 @@
     align-items:center;
     justify-content:center;
     gap:5px;
-    padding:5px 4px;
+    padding:6px 4px;
     border-radius:20px;
     color:#111;
     background:#fff;
@@ -197,13 +205,12 @@
     cursor:pointer;
     text-transform:uppercase;
     font-size:12px;
-    transition:all 0.1s ease;
   }
   
   .row{
     display:grid;
     gap:8px;
-    margin-top:8px;
+    margin-top:12px;
   }
   
   @media(min-width:480px){
@@ -212,7 +219,7 @@
     }
   }
 
-  /* VIEWER */
+  /* VIEWER - SEM SAMBAR */
   .viewer{
     display:flex;
     flex-direction:column;
@@ -235,9 +242,8 @@
   /* GRADE DE ITENS */
   .created-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));
+    grid-template-columns:repeat(auto-fill, minmax(100px, 1fr));
     gap:8px;
-    margin-bottom:4px;
   }
   
   .room-card{
@@ -303,6 +309,7 @@
   
   .report-title span{
     font-size:13px;
+    font-weight:800;
   }
   
   .report-actions{
@@ -319,25 +326,31 @@
     padding:4px 10px;
     border-radius:6px;
     cursor:pointer;
+    transition:all 0.1s ease;
+  }
+  
+  .btn-action:active{
+    transform:translateY(1px);
   }
   
   .report-content{
     white-space:pre-wrap;
-    font-family:system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    font-size:12px;
+    font-family:monospace;
+    font-size:11px;
     color:#eaf2f8;
     line-height:1.5;
     padding:12px;
     max-height:450px;
     overflow-y:auto;
+    background:rgba(0,0,0,0.2);
   }
 
-  /* TOAST */
+  /* TOAST FIXO */
   .toast{
     position:fixed;
     right:16px;
     bottom:16px;
-    background:rgba(0,0,0,0.85);
+    background:rgba(0,0,0,0.9);
     color:#fff;
     padding:8px 14px;
     border-radius:8px;
@@ -347,6 +360,7 @@
     transform:translateY(8px);
     transition:opacity .15s ease, transform .15s ease;
     pointer-events:none;
+    font-weight:500;
   }
   
   .toast.show{
@@ -368,6 +382,26 @@
     background:var(--gold);
     border-radius:4px;
   }
+  
+  /* MOBILE AJUSTES SEM SAMBAR */
+  @media(max-width:640px){
+    .floors-strip{
+      grid-template-columns:repeat(8, minmax(32px, 1fr));
+    }
+    .rooms-strip{
+      grid-template-columns:repeat(10, minmax(32px, 1fr));
+    }
+    .icon{
+      font-size:10px;
+    }
+    .status{
+      font-size:10px;
+      padding:5px 2px;
+    }
+    .status-strip{
+      gap:4px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -377,17 +411,17 @@
     <h2>📋 Entrada de dados</h2>
 
     <label>👤 Auditor</label>
-    <input id="auditor" class="form-field" placeholder="Nome"/>
+    <input id="auditor" class="form-field" placeholder="Nome completo" value=""/>
 
     <label>🏢 Prédio</label>
     <select id="predio" class="form-field">
-      <option value="">Selecione</option>
+      <option value="">Selecione o prédio</option>
       <option value="Eco Berrini">Eco Berrini</option>
       <option value="Chucri Zaidan">Chucri Zaidan</option>
     </select>
 
     <label>📍 Endereço</label>
-    <input id="endereco" class="form-field" placeholder="Endereço"/>
+    <input id="endereco" class="form-field" placeholder="Endereço automático"/>
 
     <label>🏬 Andar</label>
     <div id="floorsStrip" class="icon-strip floors-strip"></div>
@@ -403,35 +437,40 @@
       <button class="status" data-status="other"><span class="dot other"></span>Outros</button>
     </div>
 
-    <label>📝 Obs</label>
-    <textarea id="obs" class="form-field" placeholder="Observações..."></textarea>
+    <label>📝 Observações</label>
+    <textarea id="obs" class="form-field" placeholder="Observações gerais da vistoria..."></textarea>
 
     <div class="row row-2">
-      <button id="btnAdd" class="btn">➕ Add</button>
+      <button id="btnAdd" class="btn">➕ Adicionar</button>
       <button id="btnClear" class="btn">🗑️ Limpar</button>
     </div>
 
-    <p class="small">Selecione andar/sala → clique no status</p>
+    <p class="small">💡 Selecione andar/sala → clique no status</p>
   </div>
 
   <!-- DIREITA -->
   <div class="viewer">
     <div class="section">
-      <h3>📦 Salas ({{total}})</h3>
-      <div id="createdGrid" class="created-grid"></div>
+      <h3 id="sectionTitle">📦 Salas registradas (0)</h3>
+      <div id="createdGrid" class="created-grid">
+        <p class="small" style="text-align:center; grid-column:1/-1">Nenhuma sala registrada</p>
+      </div>
     </div>
 
     <div class="section">
       <div class="report-box">
         <div class="report-title">
-          <span>📋 Relatório</span>
+          <span>📋 Relatório de Vistoria</span>
           <div class="report-actions">
-            <button id="btnCopy" class="btn-action">Copiar</button>
-            <button id="btnDownload" class="btn-action">Baixar</button>
+            <button id="btnCopy" class="btn-action">📋 Copiar</button>
+            <button id="btnDownload" class="btn-action">💾 Baixar</button>
           </div>
         </div>
         <div id="relatorio" class="report-content">
-📋 RELATÓRIO DE VISTORIA
+═══════════════════════════════
+   RELATÓRIO DE VISTORIA
+═══════════════════════════════
+Aguardando registros...
         </div>
       </div>
     </div>
@@ -439,7 +478,7 @@
 </div>
 
 <script>
-  const STORAGE_KEY = "vistoria_compact_v2";
+  const STORAGE_KEY = "vistoria_fixed_v3";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom  = 1;
@@ -457,13 +496,15 @@
   const enderecoInp  = document.getElementById("endereco");
   const auditorInp   = document.getElementById("auditor");
   const obsInp       = document.getElementById("obs");
+  const sectionTitle = document.getElementById("sectionTitle");
 
   function buildFloorIcons(){
     floorsStrip.innerHTML = "";
     for(let f=1; f<=32; f++){
       const el = document.createElement("div");
-      el.className = "icon" + (f===selectedFloor ? " is-selected" : "");
+      el.className = "icon" + (f === selectedFloor ? " is-selected" : "");
       el.textContent = pad2(f);
+      el.title = `Andar ${pad2(f)}`;
       el.addEventListener("click", (e)=>{
         e.stopPropagation();
         selectedFloor = f;
@@ -478,8 +519,9 @@
     roomsStrip.innerHTML = "";
     for(let r=1; r<=50; r++){
       const el = document.createElement("div");
-      el.className = "icon" + (r===selectedRoom ? " is-selected" : "");
+      el.className = "icon" + (r === selectedRoom ? " is-selected" : "");
       el.textContent = pad2(r);
+      el.title = `Sala ${pad2(r)}`;
       el.addEventListener("click", (e)=>{
         e.stopPropagation();
         selectedRoom = r;
@@ -493,56 +535,65 @@
   document.querySelectorAll(".status").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const status = btn.dataset.status;
-      const f = selectedFloor, r = selectedRoom;
-      const idx = entries.findIndex(e => e.f===f && e.r===r);
-      if(idx>=0){ 
+      const f = selectedFloor;
+      const r = selectedRoom;
+      const idx = entries.findIndex(e => e.f === f && e.r === r);
+      
+      if(idx >= 0){ 
         entries[idx].status = status; 
       } else { 
-        entries.push({f,r,status}); 
+        entries.push({f, r, status}); 
       }
+      
       persist();
       renderCreated();
       renderReport();
-      showToast(`${pad2(f)}-${pad2(r)}: ${statusName(status)}`);
+      showToast(`A${pad2(f)}-S${pad2(r)}: ${statusName(status)}`);
     });
   });
 
   document.getElementById("btnAdd").addEventListener("click", ()=>{
-    const f = selectedFloor, r = selectedRoom;
-    const idx = entries.findIndex(e => e.f===f && e.r===r);
-    if(idx<0){ 
-      entries.push({f,r,status:"other"}); 
-      showToast(`Sala ${pad2(f)}-${pad2(r)} adicionada`);
+    const f = selectedFloor;
+    const r = selectedRoom;
+    const idx = entries.findIndex(e => e.f === f && e.r === r);
+    
+    if(idx < 0){ 
+      entries.push({f, r, status:"other"}); 
+      showToast(`Sala A${pad2(f)}-S${pad2(r)} adicionada`);
+      persist();
+      renderCreated();
+      renderReport();
     } else {
-      showToast(`Sala já existe`);
+      showToast(`Sala já existe, use os status`);
     }
-    persist();
-    renderCreated();
-    renderReport();
   });
 
   function renderCreated(){
-    createdGrid.innerHTML = "";
-    const sorted = [...entries].sort((a,b)=> a.f-b.f || a.r-b.r);
+    const sorted = [...entries].sort((a,b)=> a.f - b.f || a.r - b.r);
+    sectionTitle.innerHTML = `📦 Salas registradas (${entries.length})`;
+    
     if(sorted.length === 0){
       createdGrid.innerHTML = '<p class="small" style="text-align:center; grid-column:1/-1">Nenhuma sala registrada</p>';
       return;
     }
-    sorted.forEach(item=>{
+    
+    createdGrid.innerHTML = "";
+    sorted.forEach(item => {
       const card = document.createElement("div");
       card.className = "room-card";
+      
       const badge = document.createElement("div");
       badge.className = "badge";
-      badge.textContent = `${pad2(item.f)}-${pad2(item.r)}`;
+      badge.textContent = `A${pad2(item.f)} • S${pad2(item.r)}`;
       card.appendChild(badge);
+      
       const tag = document.createElement("div");
       tag.className = `pill ${statusClass(item.status)}`;
       tag.textContent = `${statusEmoji(item.status)} ${statusName(item.status)}`;
       card.appendChild(tag);
+      
       createdGrid.appendChild(card);
     });
-    // Atualiza contador no título
-    document.querySelector('.section h3').innerHTML = `📦 Salas (${entries.length})`;
   }
 
   function renderReport(){
@@ -550,53 +601,68 @@
     const endereco = enderecoInp.value || "Não informado";
     const auditor  = auditorInp.value || "Não informado";
     const obsGeral = (obsInp.value || "").trim();
-    const dataStr  = new Date().toLocaleString("pt-BR");
+    const dataStr  = new Date().toLocaleString("pt-BR", { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
     const stats = { valid:0, lock:0, prob:0, other:0 };
     entries.forEach(e => stats[e.status]++);
-
-    const byFloor = {};
-    entries.forEach(e=>{
-      if(!byFloor[e.f]) byFloor[e.f] = { valid:[], lock:[], prob:[], other:[] };
-      byFloor[e.f][e.status].push(pad2(e.r));
-    });
-
-    let info = "";
-    const total = entries.length;
-    if(total===0){
-      info = "Nenhuma sala registrada.";
-    } else {
-      info += `Total: ${total} salas\n`;
-      info += `✅ ${stats.valid} | 🔒 ${stats.lock} | ❌ ${stats.prob} | ◻️ ${stats.other}\n`;
-      const floors = Object.keys(byFloor).map(Number).sort((a,b)=>a-b);
-      if(floors.length){
-        info += `\nPor andar:\n`;
-        floors.forEach(f=>{
-          const a = byFloor[f];
-          const parts = [];
-          if(a.valid.length) parts.push(`✅${a.valid.length}`);
-          if(a.lock.length)  parts.push(`🔒${a.lock.length}`);
-          if(a.prob.length)  parts.push(`❌${a.prob.length}`);
-          if(a.other.length) parts.push(`◻️${a.other.length}`);
-          info += `  A${pad2(f)}: ${parts.join(" ")}\n`;
-        });
-      }
-    }
-
-    const blocoObs = obsGeral ? `\nObs: ${obsGeral}\n` : "";
     
-    const text =
-`RELATÓRIO DE VISTORIA
-━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const total = entries.length;
+    
+    let info = "";
+    if(total === 0){
+      info = "Nenhuma sala vistoriada até o momento.";
+    } else {
+      info = `TOTAL: ${total} sala(s)\n`;
+      info += `✅ Validada: ${stats.valid}  |  🔒 Trancada: ${stats.lock}\n`;
+      info += `❌ Problemas: ${stats.prob}  |  ◻️ Outros: ${stats.other}\n\n`;
+      
+      // Agrupar por andar
+      const byFloor = {};
+      entries.forEach(e => {
+        if(!byFloor[e.f]) byFloor[e.f] = [];
+        byFloor[e.f].push({r: e.r, status: e.status});
+      });
+      
+      const floors = Object.keys(byFloor).map(Number).sort((a,b)=>a-b);
+      info += "DETALHAMENTO:\n";
+      floors.forEach(f => {
+        const rooms = byFloor[f];
+        const validados = rooms.filter(r => r.status === "valid").length;
+        const trancados = rooms.filter(r => r.status === "lock").length;
+        const problemas = rooms.filter(r => r.status === "prob").length;
+        const outros = rooms.filter(r => r.status === "other").length;
+        
+        info += `  Andar ${pad2(f)}: `;
+        const parts = [];
+        if(validados > 0) parts.push(`✅${validados}`);
+        if(trancados > 0) parts.push(`🔒${trancados}`);
+        if(problemas > 0) parts.push(`❌${problemas}`);
+        if(outros > 0) parts.push(`◻️${outros}`);
+        info += parts.join(" ") + "\n";
+      });
+    }
+    
+    const blocoObs = obsGeral ? `\n📝 OBSERVAÇÕES:\n${obsGeral}\n` : "";
+    
+    const text = 
+`═══════════════════════════════
+   RELATÓRIO DE VISTORIA
+═══════════════════════════════
 🏢 ${predio}
 📍 ${endereco}
 📅 ${dataStr}
-👤 ${auditor}
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 DADOS
+👤 Auditor(a): ${auditor}
+───────────────────────────────
+📊 ESTATÍSTICAS
 ${info}
-${blocoObs}
-━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+${blocoObs}───────────────────────────────
+🔧 Gerado em ${new Date().toLocaleDateString()}`;
 
     relatorioEl.textContent = text;
   }
@@ -607,9 +673,13 @@ ${blocoObs}
   
   function copyReportToClipboard() {
     const text = getReportText();
-    if (!text.trim()) { showToast("Vazio"); return; }
+    if (!text.trim() || text.includes("Aguardando registros")) { 
+      showToast("Nada para copiar"); 
+      return; 
+    }
+    
     navigator.clipboard?.writeText(text).then(
-      () => showToast("✓ Copiado"),
+      () => showToast("✓ Relatório copiado!"),
       () => fallbackCopy(text)
     );
   }
@@ -622,19 +692,23 @@ ${blocoObs}
       ta.select(); 
       document.execCommand("copy");
       ta.remove();
-      showToast("✓ Copiado");
+      showToast("✓ Copiado!");
     } catch {
-      showToast("Erro");
+      showToast("Erro ao copiar");
     }
   }
   
   function downloadReportTxt() {
     const text = getReportText();
-    if (!text.trim()) { showToast("Vazio"); return; }
+    if (!text.trim() || text.includes("Aguardando registros")) { 
+      showToast("Nada para baixar"); 
+      return; 
+    }
+    
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const predio = (document.getElementById("predio")?.value || "vistoria").replace(/\s+/g,'_');
+    const predio = (document.getElementById("predio")?.value || "vistoria").replace(/\s+/g, '_');
     const dt = new Date();
     const stamp = `${dt.getFullYear()}${(dt.getMonth()+1).toString().padStart(2,'0')}${dt.getDate().toString().padStart(2,'0')}`;
     a.href = url;
@@ -643,7 +717,7 @@ ${blocoObs}
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-    showToast("⬇️ Download");
+    showToast("⬇️ Download iniciado!");
   }
 
   function showToast(msg) {
@@ -666,7 +740,7 @@ ${blocoObs}
   }
 
   document.getElementById("btnClear").addEventListener("click", ()=>{
-    if(!confirm("Limpar tudo?")) return;
+    if(!confirm("⚠️ Limpar TODOS os registros?")) return;
     entries = [];
     auditorInp.value = "";
     predioSel.value = "";
@@ -675,15 +749,15 @@ ${blocoObs}
     persist();
     renderCreated();
     renderReport();
-    showToast("Limpo");
+    showToast("✓ Todos os dados removidos");
   });
 
   predioSel.addEventListener("change", ()=>{
     const v = predioSel.value;
-    if(v==="Eco Berrini"){
-      enderecoInp.value = "Av. Eng. L. C. Berrini, 1376";
-    } else if(v==="Chucri Zaidan"){
-      enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460";
+    if(v === "Eco Berrini"){
+      enderecoInp.value = "Av. Eng. Luís Carlos Berrini, 1376 - SP";
+    } else if(v === "Chucri Zaidan"){
+      enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460 - SP";
     } else {
       enderecoInp.value = "";
     }
@@ -694,6 +768,7 @@ ${blocoObs}
   enderecoInp.addEventListener("input", renderReport);
   obsInp.addEventListener("input", renderReport);
 
+  // Inicialização
   (function init(){
     selectedFloor = 1;
     selectedRoom  = 1;
