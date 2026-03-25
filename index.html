@@ -5,117 +5,116 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
 <title>Vivo Infra • Prédio Corporativo</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  :root{
-    --vivo:#6A1B9A;--vivo-dark:#4A0072;--gold:#f1c40f;
-    --valid:#27ae60;--occ:#f39c12;--lock:#7f8c8d;--prob:#e74c3c;
-  }
-  body{
-    background:linear-gradient(135deg,#0a2f1a 0%,#1a4a2a 100%);
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-    padding:12px;min-height:100vh;overflow-x:hidden;color:#111;
-  }
-  .app{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-  @media(min-width:1024px){.app{display:grid;grid-template-columns:360px 1fr;gap:24px}}
-  .card{
-    background:rgba(255,255,255,0.96);border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.2);
-    padding:16px;backdrop-filter:blur(2px);overflow-x:hidden
-  }
-  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
-  .stat-box{text-align:center;padding:10px 4px;border-radius:14px;color:#fff;font-weight:700;font-size:11px;transition:transform .2s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
-  .stat-box:active{transform:scale(.96)} .stat-number{font-size:22px;font-weight:900;display:block;margin-bottom:2px}
-  label{font-size:11px;font-weight:800;text-transform:uppercase;color:#2c3e50;margin-bottom:4px;display:block;letter-spacing:.5px}
-  select,input,textarea,button{
-    width:100%;border:2px solid #e2e8f0;border-radius:12px;padding:10px 12px;font-size:14px;font-family:inherit;margin-bottom:10px;transition:all .2s;background:white
-  }
-  select:focus,input:focus,textarea:focus{outline:none;border-color:var(--vivo);box-shadow:0 0 0 3px rgba(106,27,154,.1)}
-  textarea{resize:vertical;min-height:60px}
-  .btn-apply{background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));color:#fff;font-weight:800;border:none;cursor:pointer;font-size:14px;text-transform:uppercase}
-  .btn-png{background:linear-gradient(135deg,#2c3e50,#1a2632);color:#fff;font-weight:800;border:none;cursor:pointer;font-size:14px}
-  .btn-ai{background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;font-weight:700;border:none;cursor:pointer;font-size:13px}
-  .btn-clear{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;cursor:pointer;font-size:12px;padding:8px;border-radius:10px;font-weight:600}
-  .viewer-card{padding:16px;background:linear-gradient(135deg,#cbd5e1 0%,#94a3b8 100%);overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-  .building-container{min-width:320px;max-width:100%;margin:0 auto}
-  .real-building{position:relative;background:linear-gradient(180deg,#1a2a3a 0%,#0f1a24 100%);border-radius:16px 16px 12px 12px;overflow:hidden;box-shadow:0 15px 30px rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.3)}
-  .cobertura{
-    position:relative;padding:16px 8px;background:linear-gradient(135deg,#2c3e50,#1a2632);border-radius:16px 16px 0 0;
-    display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;box-shadow:inset 0 1px 3px rgba(255,255,255,.2),0 4px 10px rgba(0,0,0,.3);border-bottom:2px solid var(--gold)
-  }
-  .outdoor-vivo{background:linear-gradient(135deg,#660099,#4A0072);padding:8px 24px;border-radius:40px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 4px 15px rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.5)}
-  .outdoor-vivo span{font-size:20px;font-weight:900;color:#fff;letter-spacing:2px}
-  .outdoor-vivo small{font-size:10px;color:var(--gold);font-weight:bold}
-  .cobertura-text{color:#ffd966;font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase}
-  .floors-container{max-height:55vh;overflow-y:auto;padding:6px;background:rgba(0,0,0,.3)}
-  .floors-container::-webkit-scrollbar{width:4px}
-  .floors-container::-webkit-scrollbar-track{background:rgba(0,0,0,.5);border-radius:2px}
-  .floors-container::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
-  .floor-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;padding:4px 8px;border-radius:10px;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(0,0,0,.2));transition:all .2s}
-  .floor-number{width:50px;font-size:11px;font-weight:800;color:#ffd966;text-align:right;padding-right:6px;flex-shrink:0;text-shadow:0 1px 1px #000;padding-top:4px}
-  .glass-facade{
-    flex:1;background:linear-gradient(145deg,rgba(100,150,200,.3),rgba(50,80,120,.5));backdrop-filter:blur(2px);border-radius:10px;padding:8px;min-height:52px;
-    display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:6px;border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 0 15px rgba(0,0,0,.2);
-    position:relative;overflow-x:auto;overflow-y:hidden
-  }
-  .glass-facade::-webkit-scrollbar{height:3px}
-  .glass-facade::-webkit-scrollbar-track{background:rgba(0,0,0,.3);border-radius:3px}
-  .glass-facade::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
-  .glass-facade::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shine 8s infinite;pointer-events:none}
-  @keyframes shine{100%{left:100%}}
-  .room-tag{background:rgba(0,0,0,.75);backdrop-filter:blur(4px);border-radius:16px;padding:4px 8px;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:bold;border:1px solid rgba(255,255,255,.3);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.2s;cursor:pointer;white-space:nowrap;flex-shrink:0}
-  .room-tag:active{transform:scale(.96)}
-  .glass-facade .room-tag{flex-shrink:1;min-width:55px;max-width:85px;font-size:clamp(8px,2vw,11px);padding:3px 5px}
-  .room-tag.valid{border-left:2px solid var(--valid);background:rgba(39,174,96,.30)}
-  .room-tag.occ{border-left:2px solid var(--occ);background:rgba(243,156,18,.30)}
-  .room-tag.lock{border-left:2px solid var(--lock);background:rgba(127,140,141,.30)}
-  .room-tag.prob{border-left:2px solid var(--prob);background:rgba(231,76,60,.30);animation:tagPulse 1s infinite}
-  @keyframes tagPulse{0%,100%{box-shadow:0 0 1px rgba(231,76,60,.5)}50%{box-shadow:0 0 5px rgba(231,76,60,.8)}}
-  .room-number-tag{font-weight:800;color:#fff;font-size:clamp(9px,1.8vw,11px)}
-  .room-status-tag{font-size:clamp(10px,2vw,12px)}
+/* ===================== BASE ===================== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--vivo:#6A1B9A;--vivo-dark:#4A0072;--gold:#f1c40f;--valid:#27ae60;--occ:#f39c12;--lock:#7f8c8d;--prob:#e74c3c}
+body{background:linear-gradient(135deg,#0a2f1a 0%,#1a4a2a 100%);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;padding:12px;min-height:100vh;overflow-x:hidden}
+.app{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:1024px){.app{display:grid;grid-template-columns:360px 1fr;gap:24px}}
+.card{background:rgba(255,255,255,0.96);border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,.2);padding:16px;backdrop-filter:blur(2px);overflow-x:hidden}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+.stat-box{text-align:center;padding:10px 4px;border-radius:14px;color:#fff;font-weight:700;font-size:11px;transition:transform .2s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.stat-box:active{transform:scale(.96)} .stat-number{font-size:22px;font-weight:900;margin-bottom:2px}
+label{font-size:11px;font-weight:800;text-transform:uppercase;color:#2c3e50;margin-bottom:4px;letter-spacing:.5px;display:block}
+select,input,textarea,button{width:100%;border:2px solid #e2e8f0;border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:10px;background:#fff;transition:.2s}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--vivo);box-shadow:0 0 0 3px rgba(106,27,154,.1)}
+textarea{resize:vertical;min-height:60px}
+.btn-apply{background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));color:#fff;font-weight:800;border:none;cursor:pointer;font-size:14px;text-transform:uppercase}
+.btn-png{background:linear-gradient(135deg,#2c3e50,#1a2632);color:#fff;font-weight:800;border:none;cursor:pointer;font-size:14px}
+.btn-ai{background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;font-weight:700;border:none;cursor:pointer;font-size:13px}
+.btn-clear{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;cursor:pointer;font-size:12px;padding:8px;border-radius:10px;font-weight:600}
 
-  .marquee-address{background:linear-gradient(135deg,#1f2d3a,#14202b);border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);padding:8px 12px;text-align:center}
-  .marquee-address span{color:#ffd966;font-weight:900;letter-spacing:1px;text-transform:uppercase;font-size:11px;text-shadow:0 1px 1px rgba(0,0,0,.7)}
+/* ===================== VIEWER / PRÉDIO ===================== */
+.viewer-card{padding:16px;background:linear-gradient(135deg,#cbd5e1,#94a3b8);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.building-container{min-width:320px;max-width:100%;margin:0 auto}
+.real-building{position:relative;background:linear-gradient(180deg,#1a2a3a,#0f1a24);border-radius:16px 16px 12px 12px;overflow:hidden;box-shadow:0 15px 30px rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.3)}
+.cobertura{padding:16px 8px;background:linear-gradient(135deg,#2c3e50,#1a2632);border-radius:16px 16px 0 0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;border-bottom:2px solid var(--gold)}
+.outdoor-vivo{background:linear-gradient(135deg,#660099,#4A0072);padding:8px 24px;border-radius:40px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 4px 15px rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.5)}
+.outdoor-vivo span{font-size:20px;font-weight:900;color:#fff;letter-spacing:2px}
+.outdoor-vivo small{font-size:10px;color:var(--gold);font-weight:bold}
+.cobertura-text{color:#ffd966;font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase}
+.floors-container{max-height:55vh;overflow-y:auto;padding:6px;background:rgba(0,0,0,.3)}
+.floors-container::-webkit-scrollbar{width:4px}
+.floors-container::-webkit-scrollbar-track{background:rgba(0,0,0,.5);border-radius:2px}
+.floors-container::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+.floor-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;padding:4px 8px;border-radius:10px;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(0,0,0,.2))}
+.floor-number{width:50px;font-size:12px;font-weight:900;color:#ffd966;text-align:right;padding-right:6px;flex-shrink:0;text-shadow:0 1px 1px #000;padding-top:4px}
+.glass-facade{flex:1;background:linear-gradient(145deg,rgba(100,150,200,.3),rgba(50,80,120,.5));backdrop-filter:blur(2px);border-radius:10px;padding:8px;min-height:52px;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:6px;border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 0 15px rgba(0,0,0,.2);position:relative;overflow-x:auto;overflow-y:hidden}
+.glass-facade::-webkit-scrollbar{height:3px}
+.glass-facade::-webkit-scrollbar-track{background:rgba(0,0,0,.3);border-radius:3px}
+.glass-facade::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+.glass-facade::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shine 8s infinite;pointer-events:none}
+@keyframes shine{100%{left:100%}}
+.room-tag{background:rgba(0,0,0,.75);backdrop-filter:blur(4px);border-radius:16px;padding:4px 8px;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:bold;border:1px solid rgba(255,255,255,.3);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.2s;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.room-tag:active{transform:scale(.96)}
+.glass-facade .room-tag{flex-shrink:1;min-width:55px;max-width:85px;font-size:clamp(8px,2vw,11px);padding:3px 5px}
+.room-tag.valid{border-left:2px solid var(--valid);background:rgba(39,174,96,.30)}
+.room-tag.occ{border-left:2px solid var(--occ);background:rgba(243,156,18,.30)}
+.room-tag.lock{border-left:2px solid var(--lock);background:rgba(127,140,141,.30)}
+.room-tag.prob{border-left:2px solid var(--prob);background:rgba(231,76,60,.30);animation:tagPulse 1s infinite}
+@keyframes tagPulse{0%,100%{box-shadow:0 0 1px rgba(231,76,60,.5)}50%{box-shadow:0 0 5px rgba(231,76,60,.8)}}
+.room-number-tag{font-weight:800;color:#fff}
+.room-status-tag{font-size:clamp(10px,2vw,12px)}
 
-  .hall-entrada{background:linear-gradient(135deg,#2c3e50,#1a2632);border-top:2px solid var(--gold);padding:20px 12px;display:flex;justify-content:center;gap:40px;min-height:110px;align-items:center;flex-wrap:wrap}
-  .glass-door-full{width:120px;min-height:110px;background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,.15));backdrop-filter:blur(8px);border-radius:12px;border:2px solid rgba(255,215,0,.6);box-shadow:0 0 15px rgba(255,215,0,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative;padding:15px 8px}
-  .door-handle{width:6px;height:30px;background:var(--gold);border-radius:3px;position:absolute;right:10px;top:50%;transform:translateY(-50%)}
-  .glass-door-full span{color:var(--gold);font-size:11px;font-weight:bold;text-transform:uppercase;text-align:center;background:rgba(0,0,0,.5);padding:4px 8px;border-radius:15px}
+/* Placa do endereço */
+.marquee-address{background:linear-gradient(135deg,#1f2d3a,#14202b);border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);padding:8px 12px;text-align:center}
+.marquee-address span{color:#ffd966;font-weight:900;letter-spacing:1px;text-transform:uppercase;font-size:11px;text-shadow:0 1px 1px rgba(0,0,0,.7)}
 
-  .footer-note{background:rgba(0,0,0,.85);backdrop-filter:blur(10px);margin-top:12px;padding:12px;border-radius:10px;border-left:3px solid var(--gold);font-size:11px;line-height:1.5;color:#e2e8f0;white-space:pre-wrap;word-break:break-word}
+/* Hall com 2 portas */
+.hall-entrada{background:linear-gradient(135deg,#2c3e50,#1a2632);border-top:2px solid var(--gold);padding:20px 12px;display:flex;justify-content:center;gap:40px;min-height:110px;align-items:center;flex-wrap:wrap}
+.glass-door-full{width:120px;min-height:110px;background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,.15));backdrop-filter:blur(8px);border-radius:12px;border:2px solid rgba(255,215,0,.6);box-shadow:0 0 15px rgba(255,215,0,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative;padding:15px 8px}
+.door-handle{width:6px;height:30px;background:var(--gold);border-radius:3px;position:absolute;right:10px;top:50%;transform:translateY(-50%)}
+.glass-door-full span{color:var(--gold);font-size:11px;font-weight:bold;text-transform:uppercase;text-align:center;background:rgba(0,0,0,.5);padding:4px 8px;border-radius:15px}
 
-  .download-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:10000;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:16px;animation:fadeIn .3s}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  .download-modal img{max-width:95%;max-height:70vh;border-radius:12px;box-shadow:0 10px 25px #000}
-  .download-modal p{color:#fff;margin-top:16px;font-size:12px;text-align:center}
-  .download-modal button{width:auto;padding:10px 20px;margin-top:16px;background:var(--vivo);color:#fff;border:none;border-radius:25px;font-size:14px}
+/* Rodapé de relatório */
+.footer-note{background:rgba(0,0,0,.85);backdrop-filter:blur(10px);margin-top:12px;padding:12px;border-radius:10px;border-left:3px solid var(--gold);font-size:11px;line-height:1.5;color:#e2e8f0;white-space:pre-wrap;word-break:break-word}
 
-  /* Banner de erro JS */
-  #errbar{display:none;position:fixed;left:10px;right:10px;top:10px;z-index:99999;background:#b91c1c;color:#fff;padding:10px 14px;border-radius:10px;font-size:12px;box-shadow:0 8px 20px rgba(0,0,0,.35)}
-  #errbar strong{font-weight:900}
+/* Modal Download */
+.download-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:10000;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:16px;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.download-modal img{max-width:95%;max-height:70vh;border-radius:12px;box-shadow:0 10px 25px #000}
+.download-modal p{color:#fff;margin-top:16px;font-size:12px;text-align:center}
+.download-modal button{width:auto;padding:10px 20px;margin-top:16px;background:var(--vivo);color:#fff;border:none;border-radius:25px;font-size:14px}
 
-  @media(max-width:640px){
-    body{padding:8px}
-    .card{padding:12px;border-radius:16px}
-    .stats-grid{gap:6px;margin-bottom:16px}
-    .stat-box{padding:8px 2px;font-size:10px}
-    .stat-number{font-size:18px}
-    .floor-number{width:45px;font-size:10px}
-    .glass-facade{padding:6px}
-    .room-tag{padding:3px 5px;min-width:48px}
-    .glass-door-full{width:95px;min-height:95px;padding:12px 6px}
-    .glass-door-full span{font-size:9px}
-    .outdoor-vivo span{font-size:16px}
-    .outdoor-vivo{padding:5px 16px}
-    .cobertura{padding:12px 6px}
-    .floors-container{max-height:50vh}
-  }
-  @media(max-width:480px){
-    .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-    .floor-row{flex-direction:column;align-items:flex-start;gap:4px}
-    .floor-number{width:auto;text-align:left;padding-left:8px}
-    .glass-facade{width:100%}
-    .hall-entrada{flex-direction:column;gap:15px}
-    .glass-door-full{width:85%;max-width:220px}
-  }
+/* Banner de erro JS */
+#errbar{display:none;position:fixed;left:10px;right:10px;top:10px;z-index:99999;background:#b91c1c;color:#fff;padding:10px 14px;border-radius:10px;font-size:12px;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+#errbar strong{font-weight:900}
+
+/* ===================== MODELOS VISUAIS (SHAPES) ===================== */
+.building-container.facade--glass .glass-facade{background:linear-gradient(145deg,rgba(110,160,210,.28),rgba(60,90,130,.40));border:1px solid rgba(255,215,0,.35)}
+.building-container.facade--classic .glass-facade{background:#243444;border-radius:10px;border:1px solid rgba(255,215,0,.35);box-shadow:inset 0 0 0 7px rgba(250,210,100,.08)}
+.building-container.facade--grid .glass-facade{background:#223445;border:1px solid rgba(255,215,0,.35);position:relative}
+.building-container.facade--grid .glass-facade::after{content:"";position:absolute;inset:6px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 1px,transparent 1px 45px);pointer-events:none}
+/* 🔵 Azul (padrão) */
+.building-container.facade--blue .glass-facade{background:linear-gradient(180deg,rgba(30,70,110,.55),rgba(20,55,90,.55));border:1px solid rgba(90,160,220,.35);position:relative}
+.building-container.facade--blue .glass-facade::after{content:"";position:absolute;top:0;bottom:0;left:25px;right:25px;background:repeating-linear-gradient(90deg,rgba(90,160,220,.18) 0 14px,transparent 14px 80px);pointer-events:none}
+.building-container.facade--blue .real-building{border-color:rgba(90,160,220,.45)}
+
+/* Responsivo */
+@media(max-width:640px){
+  body{padding:8px}
+  .card{padding:12px;border-radius:16px}
+  .stats-grid{gap:6px;margin-bottom:16px}
+  .stat-box{padding:8px 2px;font-size:10px}
+  .stat-number{font-size:18px}
+  .floor-number{width:45px;font-size:11px}
+  .glass-facade{padding:6px}
+  .room-tag{padding:3px 5px;min-width:48px}
+  .glass-door-full{width:95px;min-height:95px;padding:12px 6px}
+  .glass-door-full span{font-size:9px}
+  .outdoor-vivo span{font-size:16px}
+  .outdoor-vivo{padding:5px 16px}
+  .cobertura{padding:12px 6px}
+  .floors-container{max-height:50vh}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .floor-row{flex-direction:column;align-items:flex-start;gap:4px}
+  .floor-number{width:auto;text-align:left;padding-left:8px}
+  .glass-facade{width:100%}
+  .hall-entrada{flex-direction:column;gap:15px}
+  .glass-door-full{width:85%;max-width:220px}
+}
 </style>
 </head>
 <body>
@@ -137,12 +136,12 @@
     <label>🏢 ENDEREÇO/PRÉDIO</label>
     <input type="text" id="inputAddr" placeholder="Eco Berrini — informe o endereço (ex.: Av. ...)" />
 
-    <label>🏗️ MODELO DO PRÉDIO (export)</label>
+    <label>🏗️ MODELO DO PRÉDIO (export e visualização)</label>
     <select id="selTemplate">
       <option value="glass">Glass (padrão)</option>
       <option value="classic">Clássico</option>
       <option value="grid">Grade</option>
-      <option value="blue">Azul</option>
+      <option value="blue" selected>Azul</option>
     </select>
 
     <label>📍 LOCALIZAÇÃO</label>
@@ -182,7 +181,7 @@
 
   <!-- VISOR -->
   <div class="card viewer-card">
-    <div class="building-container">
+    <div id="buildingContainer" class="building-container facade--blue">
       <div class="real-building">
         <div class="cobertura">
           <div class="outdoor-vivo">
@@ -207,113 +206,98 @@
 </div>
 
 <script>
-/* ===== Banner de erro para debug em produção ===== */
+/* ===== Banner de erro (debug produção) ===== */
 window.onerror = function(msg, src, line, col, err){
-  const bar = document.getElementById('errbar');
-  const span = document.getElementById('errmsg');
-  if(bar && span){
-    span.textContent = (msg||'') + (line?` (linha ${line})`: '');
-    bar.style.display = 'block';
-  }
+  const bar=document.getElementById('errbar'), sp=document.getElementById('errmsg');
+  if(bar&&sp){ sp.textContent=(msg||'')+(line?` (linha ${line})`:''); bar.style.display='block'; }
 };
 
 /* ===== Persistência ===== */
-const STORAGE_KEY = "vivo_predio_v29";
-let rooms = {};
-let resumoIA = "";
-const TOTAL_FLOORS = 32;
-const MAX_SALA = 50;
-const DEFAULT_ADDR = "Eco Berrini — informe o endereço";
+const STORAGE_KEY="vivo_predio_v30";
+let rooms={};
+let resumoIA="";
+const TOTAL_FLOORS=32, MAX_SALA=50;
+const DEFAULT_ADDR="Eco Berrini — informe o endereço";
 
 /* ===== Utils ===== */
-function getStatusIcon(status){return ({valid:'✅',occ:'🟠',lock:'🔒',prob:'❌'})[status]||''}
-function getStatusText(status){return ({valid:'Validada',occ:'Ocupada',lock:'Trancada',prob:'Problema'})[status]||''}
+const getStatusIcon = s => ({valid:'✅',occ:'🟠',lock:'🔒',prob:'❌'})[s]||'';
+const getStatusText = s => ({valid:'Validada',occ:'Ocupada',lock:'Trancada',prob:'Problema'})[s]||'';
 
-/* ===== Render prévia ===== */
+/* ===== Render do prédio (visualização) ===== */
 function renderBuilding(){
-  const container = document.getElementById("floorsContainer"); if(!container) return;
-
-  const floorsMap = new Map(); for(let f=1; f<=TOTAL_FLOORS; f++) floorsMap.set(f,[]);
-  Object.entries(rooms).forEach(([key,status])=>{
-    const [floor,room]=key.split('-').map(Number);
-    if(floorsMap.has(floor)) floorsMap.get(floor).push({room,status});
-  });
+  const container=document.getElementById("floorsContainer"); if(!container) return;
+  const floorsMap=new Map(); for(let f=1; f<=TOTAL_FLOORS; f++) floorsMap.set(f,[]);
+  Object.entries(rooms).forEach(([key,status])=>{const [floor,room]=key.split('-').map(Number); floorsMap.get(floor).push({room,status});});
   for(const f of floorsMap.keys()) floorsMap.get(f).sort((a,b)=>a.room-b.room);
 
-  let html = "";
+  let html="";
   for(let floor=TOTAL_FLOORS; floor>=1; floor--){
-    const salas = floorsMap.get(floor);
-    html += `
-      <div class="floor-row">
-        <div class="floor-number">${floor}º ANDAR</div>
-        <div class="glass-facade" style="justify-content:${salas.length>0?'flex-start':'center'}">
-    `;
+    const salas=floorsMap.get(floor);
+    html+=`<div class="floor-row"><div class="floor-number">${floor}º ANDAR</div><div class="glass-facade" style="justify-content:${salas.length>0?'flex-start':'center'}">`;
     if(salas.length===0){
-      html += `<div style="color:rgba(255,255,255,.6);font-size:10px;padding:5px;font-style:italic">—— DISPONÍVEL ——</div>`;
+      html+=`<div style="color:rgba(255,255,255,.6);font-size:10px;padding:5px;font-style:italic">—— DISPONÍVEL ——</div>`;
     }else{
       for(const s of salas){
-        html += `
-          <div class="room-tag ${s.status}" data-room="${floor}-${s.room}" title="SALA ${s.room} - ${getStatusText(s.status)}">
-            <span class="room-number-tag">SALA ${s.room}</span>
-            <span class="room-status-tag">${getStatusIcon(s.status)}</span>
-          </div>
-        `;
+        html+=`<div class="room-tag ${s.status}" data-room="${floor}-${s.room}" title="SALA ${s.room} - ${getStatusText(s.status)}"><span class="room-number-tag">SALA ${s.room}</span><span class="room-status-tag">${getStatusIcon(s.status)}</span></div>`;
       }
     }
-    html += `</div></div>`;
+    html+=`</div></div>`;
   }
-  container.innerHTML = html;
+  container.innerHTML=html;
 
   document.querySelectorAll('.room-tag').forEach(el=>{
-    el.onclick = (e)=>{
-      const key = e.currentTarget.dataset.room; if(!key) return;
-      const [f,r] = key.split('-');
-      document.getElementById("selFloor").value = f;
-      document.getElementById("selRoom").value = r;
-    };
+    el.onclick=(e)=>{const key=e.currentTarget.dataset.room; if(!key) return; const [f,r]=key.split('-'); document.getElementById("selFloor").value=f; document.getElementById("selRoom").value=r;};
   });
+
+  applyTemplateToViewer(); // sincroniza modelo
 }
 
 /* ===== Stats + rodapé ===== */
 function updateStats(){
   const stats={valid:0,occ:0,lock:0,prob:0};
   Object.values(rooms).forEach(s=>{if(stats[s]!=null) stats[s]++});
-  ["stValid","stOcc","stLock","stProb"].forEach(id=>{
-    const el=document.getElementById(id); if(el){
-      const key = id==="stValid"?"valid":id==="stOcc"?"occ":id==="stLock"?"lock":"prob";
-      el.textContent = stats[key];
-    }
-  });
+  document.getElementById("stValid").textContent=stats.valid;
+  document.getElementById("stOcc").textContent=stats.occ;
+  document.getElementById("stLock").textContent=stats.lock;
+  document.getElementById("stProb").textContent=stats.prob;
   return stats;
 }
 function updateFooter(){
-  const aud = document.getElementById("inputResp")?.value || 'Não informado';
-  const addr = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
-  const tpl  = document.getElementById("selTemplate")?.value || "glass";
-
-  const addrEl = document.getElementById("addrText"); if(addrEl) addrEl.textContent = addr;
-  const note = document.getElementById("footerNoteDisplay");
-  if(note) note.innerHTML = resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.';
-
+  const aud=document.getElementById("inputResp")?.value||'Não informado';
+  const addr=document.getElementById("inputAddr")?.value||DEFAULT_ADDR;
+  const tpl=document.getElementById("selTemplate")?.value||"blue";
+  const addrEl=document.getElementById("addrText"); if(addrEl) addrEl.textContent=addr;
+  const note=document.getElementById("footerNoteDisplay"); if(note) note.innerHTML = resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.';
   // persistência
   localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
   localStorage.setItem(STORAGE_KEY+"_resp", aud);
-  localStorage.setItem(STORAGE_KEY+"_obs", document.getElementById("obsText")?.value || '');
+  localStorage.setItem(STORAGE_KEY+"_obs", document.getElementById("obsText")?.value||'');
   localStorage.setItem(STORAGE_KEY+"_addr", addr);
   localStorage.setItem(STORAGE_KEY+"_tpl", tpl);
   localStorage.setItem(STORAGE_KEY+"_ai", resumoIA);
+
+  applyTemplateToViewer();
+}
+
+/* ===== Aplica modelo na visualização ===== */
+function applyTemplateToViewer(){
+  const tpl=(document.getElementById("selTemplate")?.value)||"blue";
+  const cont=document.getElementById("buildingContainer");
+  if(!cont) return;
+  cont.classList.remove("facade--glass","facade--classic","facade--grid","facade--blue");
+  cont.classList.add(`facade--${tpl}`);
 }
 
 /* ===== Relatório IA narrativo ===== */
 function generateAIRelatorio(){
-  const stats = updateStats();
-  const total = Object.keys(rooms).length;
-  const agora = new Date();
-  const periodo = agora.getHours()<12?'manhã':(agora.getHours()<18?'tarde':'noite');
-  const dataHora = agora.toLocaleString('pt-BR');
-  const auditor = document.getElementById("inputResp")?.value || 'Não informado';
-  const obs = (document.getElementById("obsText")?.value || '').trim();
-  const addrFull = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
+  const stats=updateStats();
+  const total=Object.keys(rooms).length;
+  const agora=new Date();
+  const periodo=agora.getHours()<12?'manhã':(agora.getHours()<18?'tarde':'noite');
+  const dataHora=agora.toLocaleString('pt-BR');
+  const auditor=document.getElementById("inputResp")?.value||'Não informado';
+  const obs=(document.getElementById("obsText")?.value||'').trim();
+  const addrFull=document.getElementById("inputAddr")?.value||DEFAULT_ADDR;
 
   const byFloor={};
   Object.entries(rooms).forEach(([key,status])=>{
@@ -321,21 +305,22 @@ function generateAIRelatorio(){
     if(!byFloor[f]) byFloor[f]={total:0,valid:0,occ:0,lock:0,prob:0,roomsProb:[]};
     byFloor[f].total++; byFloor[f][status]++; if(status==='prob') byFloor[f].roomsProb.push(r);
   });
-  const andaresProb = Object.keys(byFloor).map(n=>Number(n)).filter(f=>byFloor[f].prob>0).sort((a,b)=>byFloor[b].prob-byFloor[a].prob);
-  const pct = (n)=> total? Math.round(n*100/total):0;
+  const andaresProb=Object.keys(byFloor).map(n=>Number(n)).filter(f=>byFloor[f].prob>0).sort((a,b)=>byFloor[b].prob-byFloor[a].prob);
+  const pct=n=> total? Math.round(n*100/total):0;
 
   const destaques=[];
   if(total===0){destaques.push("Nenhuma sala foi auditada nesta rodada.");}
   else{
     if(stats.valid>=Math.max(6,Math.round(total*0.8))) destaques.push("Alto nível de conformidade (salas validadas ≥ 80%).");
-    if(stats.lock>Math.round(total*0.2))          destaques.push("Muitas salas trancadas; possível restrição de acesso no período.");
-    if(stats.occ>Math.round(total*0.3))           destaques.push("Alta ocupação; considerar vistoria em outro horário.");
-    if(stats.prob===0)                             destaques.push("Nenhum problema identificado nas salas verificadas.");
+    if(stats.lock>Math.round(total*0.2)) destaques.push("Muitas salas trancadas; possível restrição de acesso no período.");
+    if(stats.occ>Math.round(total*0.3))  destaques.push("Alta ocupação; considerar vistoria em outro horário.");
+    if(stats.prob===0)                    destaques.push("Nenhum problema identificado nas salas verificadas.");
     if(stats.prob>0 && andaresProb.length>0){
-      const top = andaresProb.slice(0,3).map(f=>`${f}º (${byFloor[f].prob})`).join(', ');
+      const top=andaresProb.slice(0,3).map(f=>`${f}º (${byFloor[f].prob})`).join(', ');
       destaques.push(`Incidência concentrada nos andares: ${top}.`);
     }
   }
+
   const recomend=[];
   if(stats.prob>0){const foco=andaresProb.slice(0,3).map(f=>`${f}º`).join(', '); recomend.push(`Abrir chamados e priorizar correções nos andares ${foco||'com problemas'}.`);}
   if(stats.lock>0) recomend.push("Solicitar liberação de acesso às salas trancadas para nova vistoria.");
@@ -343,73 +328,51 @@ function generateAIRelatorio(){
   if(total>0 && stats.valid/total<0.7) recomend.push("Executar nova rodada de validação para elevar a conformidade.");
   if(recomend.length===0) recomend.push("Sem ações críticas no momento.");
 
-  let probList = '';
+  let probList='';
   if(andaresProb.length>0){
-    probList = andaresProb.map(f=>{
-      const s = byFloor[f].roomsProb.sort((a,b)=>a-b).map(n=>n.toString().padStart(2,'0')).join(', ');
+    probList=andaresProb.map(f=>{
+      const s=byFloor[f].roomsProb.sort((a,b)=>a-b).map(n=>n.toString().padStart(2,'0')).join(', ');
       return `${f}º: ${s}`;
     }).join('\n');
   }
 
-  const [predio, endParte] = (addrFull.includes('—')? addrFull.split('—'): [addrFull,'']).map(s=>s.trim());
-  let rel = `📋 RELATÓRIO DE VISTORIA — ${predio||'Eco Berrini'}\n`;
-  if(endParte) rel += `📍 ${endParte}\n`;
-  rel += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  rel += `📅 ${dataHora} (${periodo})\n`;
-  rel += `👤 Auditor: ${auditor}\n`;
-  rel += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  const [predio,endParte]=(addrFull.includes('—')?addrFull.split('—'):[addrFull,'']).map(s=>s.trim());
+  let rel=`📋 RELATÓRIO DE VISTORIA — ${predio||'Eco Berrini'}\n`;
+  if(endParte) rel+=`📍 ${endParte}\n`;
+  rel+=`━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  rel+=`📅 ${dataHora} (${periodo})\n`;
+  rel+=`👤 Auditor: ${auditor}\n`;
+  rel+=`━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
   if(total===0){
-    rel += `⚠️ Nenhuma sala vistoriada até o momento.\n`;
+    rel+=`⚠️ Nenhuma sala vistoriada até o momento.\n`;
   }else{
-    rel += `🧭 Na ${periodo}, o auditor verificou ${total} sala(s) no prédio.\n`;
-    rel += `📊 Resultados globais:\n`;
-    rel += `   ✅ Validadas: ${stats.valid} (${pct(stats.valid)}%)\n`;
-    rel += `   🟠 Ocupadas: ${stats.occ} (${pct(stats.occ)}%)\n`;
-    rel += `   🔒 Trancadas: ${stats.lock} (${pct(stats.lock)}%)\n`;
-    rel += `   ❌ Problemas: ${stats.prob} (${pct(stats.prob)}%)\n`;
-    rel += (andaresProb.length>0)? `\n⚠️ Salas com problema por andar:\n${probList}\n` : `\n✅ Sem registros de problema nesta rodada.\n`;
-    rel += `\n✨ Destaques:\n` + destaques.map(d=>'• '+d).join('\n') + '\n';
-    rel += `\n🛠️ Recomendações:\n` + recomend.map(r=>'• '+r).join('\n') + '\n';
+    rel+=`🧭 Na ${periodo}, o auditor verificou ${total} sala(s) no prédio.\n`;
+    rel+=`📊 Resultados globais:\n`;
+    rel+=`   ✅ Validadas: ${stats.valid} (${pct(stats.valid)}%)\n`;
+    rel+=`   🟠 Ocupadas: ${stats.occ} (${pct(stats.occ)}%)\n`;
+    rel+=`   🔒 Trancadas: ${stats.lock} (${pct(stats.lock)}%)\n`;
+    rel+=`   ❌ Problemas: ${stats.prob} (${pct(stats.prob)}%)\n`;
+    rel+= (andaresProb.length>0)? `\n⚠️ Salas com problema por andar:\n${probList}\n` : `\n✅ Sem registros de problema nesta rodada.\n`;
+    rel+=`\n✨ Destaques:\n`+destaques.map(d=>'• '+d).join('\n')+'\n';
+    rel+=`\n🛠️ Recomendações:\n`+recomend.map(r=>'• '+r).join('\n')+'\n';
   }
-  if(obs){ rel += `\n📝 Observações do auditor:\n${obs}\n`; }
-  rel += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  rel += (total===0)? `⚠️ Nenhuma sala auditada` : (stats.prob===0? `✅ Vistoria concluída - sem pendências críticas`:`🔧 Manutenção necessária - programar correções`);
+  if(obs){rel+=`\n📝 Observações do auditor:\n${obs}\n`;}
+  rel+=`━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  rel+= (total===0)?`⚠️ Nenhuma sala auditada`:(stats.prob===0?`✅ Vistoria concluída - sem pendências críticas`:`🔧 Manutenção necessária - programar correções`);
 
-  resumoIA = rel;
-  updateFooter();
-
-  const btn = document.getElementById("btnAI");
-  const orig = btn.textContent; btn.textContent = "✓ RELATÓRIO OK!"; setTimeout(()=>btn.textContent=orig,1500);
+  resumoIA=rel; updateFooter();
+  const btn=document.getElementById("btnAI"); const orig=btn.textContent; btn.textContent="✓ RELATÓRIO OK!"; setTimeout(()=>btn.textContent=orig,1500);
 }
 
-/* ===== Export alta legibilidade + modelos (shapes) ===== */
-const EXPORT_CFG = {
-  width:1100,maxHeight:4000,scale:2.0,padding:30,
-  bodyBg:"#0a2f3a",buildingBg:"#0f1a24",lineColor:"rgba(255,215,0,0.45)",
-  titleFont:"bold 16px sans-serif",subtitleFont:"bold 12px sans-serif",
-  floorNumberFont:"bold 12px sans-serif",
-  tagRoomFont:"bold 12px sans-serif",tagIconFont:"16px sans-serif",
-  addrFont:"bold 14px sans-serif",hdrInfoFont:"12px monospace",hdrInfo2Font:"12px monospace",
-  reportTitleFont:"bold 13px monospace",reportBodyFont:"11px monospace",reportBodyLineH:16,
-  floorHeight:54,tagMinWidth:62,tagMaxWidth:95
-};
+/* ===== Export PNG 2x + modelos (shapes) ===== */
+const EXPORT_CFG={width:1100,maxHeight:4000,scale:2.0,padding:30,bodyBg:"#0a2f3a",buildingBg:"#0f1a24",lineColor:"rgba(255,215,0,0.45)",titleFont:"bold 16px sans-serif",subtitleFont:"bold 12px sans-serif",floorNumberFont:"bold 12px sans-serif",tagRoomFont:"bold 12px sans-serif",tagIconFont:"16px sans-serif",addrFont:"bold 14px sans-serif",hdrInfoFont:"12px monospace",hdrInfo2Font:"12px monospace",reportTitleFont:"bold 13px monospace",reportBodyFont:"11px monospace",reportBodyLineH:16,floorHeight:54,tagMinWidth:62,tagMaxWidth:95};
 function roundedRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
 function drawShine(ctx,x,y,w,h){const g=ctx.createLinearGradient(x,y,x+w,y);g.addColorStop(0,"rgba(255,255,255,0.08)");g.addColorStop(0.5,"rgba(255,255,255,0.18)");g.addColorStop(1,"rgba(255,255,255,0.08)");ctx.fillStyle=g;ctx.fillRect(x,y,w,h);}
 function drawFacadeBand(ctx,model,x,y,w,h){
-  if(model==="glass"){
-    const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,"rgba(110,160,210,0.28)");g.addColorStop(1,"rgba(60,90,130,0.4)");
-    ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.strokeRect(x,y,w,h);
-  }else if(model==="classic"){
-    ctx.fillStyle="#243444";roundedRect(ctx,x,y,w,h,8);ctx.fill();ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.stroke();
-    ctx.fillStyle="rgba(250,210,100,0.08)";ctx.fillRect(x,y,8,h);ctx.fillRect(x+w-8,y,8,h);
-  }else if(model==="grid"){
-    ctx.fillStyle="#223445";ctx.fillRect(x,y,w,h);ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.strokeRect(x,y,w,h);
-    ctx.strokeStyle="rgba(255,255,255,0.08)";for(let gx=x+50;gx<x+w;gx+=50){ctx.beginPath();ctx.moveTo(gx,y);ctx.lineTo(gx,y+h);ctx.stroke();}
-  }else{ // blue
-    const g=ctx.createLinearGradient(x,y,x,y+h);g.addColorStop(0,"rgba(30,70,110,0.55)");g.addColorStop(1,"rgba(20,55,90,0.55)");
-    ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.strokeStyle="rgba(90,160,220,0.35)";ctx.strokeRect(x,y,w,h);
-    ctx.fillStyle="rgba(90,160,220,0.15)";for(let cx=x+25;cx<x+w;cx+=80) ctx.fillRect(cx,y,14,h);
-  }
+  if(model==="glass"){const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,"rgba(110,160,210,0.28)");g.addColorStop(1,"rgba(60,90,130,0.4)");ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.strokeRect(x,y,w,h);}
+  else if(model==="classic"){ctx.fillStyle="#243444";roundedRect(ctx,x,y,w,h,8);ctx.fill();ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.stroke();ctx.fillStyle="rgba(250,210,100,0.08)";ctx.fillRect(x,y,8,h);ctx.fillRect(x+w-8,y,8,h);}
+  else if(model==="grid"){ctx.fillStyle="#223445";ctx.fillRect(x,y,w,h);ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.strokeRect(x,y,w,h);ctx.strokeStyle="rgba(255,255,255,0.08)";for(let gx=x+50;gx<x+w;gx+=50){ctx.beginPath();ctx.moveTo(gx,y);ctx.lineTo(gx,y+h);ctx.stroke();}}
+  else{const g=ctx.createLinearGradient(x,y,x,y+h);g.addColorStop(0,"rgba(30,70,110,0.55)");g.addColorStop(1,"rgba(20,55,90,0.55)");ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.strokeStyle="rgba(90,160,220,0.35)";ctx.strokeRect(x,y,w,h);ctx.fillStyle="rgba(90,160,220,0.15)";for(let cx=x+25;cx<x+w;cx+=80) ctx.fillRect(cx,y,14,h);}
 }
 function drawTag(ctx,x,y,w,h,room,status){
   ctx.fillStyle="rgba(0,0,0,0.74)";roundedRect(ctx,x,y,w,h,10);ctx.fill();
@@ -417,47 +380,45 @@ function drawTag(ctx,x,y,w,h,room,status){
   const color=status==='valid'?'#27ae60':status==='occ'?'#f39c12':status==='lock'?'#7f8c8d':'#e74c3c';
   ctx.fillStyle=color;ctx.fillRect(x-2,y,4,h);
   ctx.fillStyle="#fff";ctx.font=EXPORT_CFG.tagRoomFont;ctx.fillText(String(room),x+8,y+h-10);
-  ctx.font=EXPORT_CFG.tagIconFont;const icon=status==='valid'?'✅':status==='occ'?'🟠':status==='lock'?'🔒':'❌';ctx.fillText(icon,x+w-20,y+h-12);
+  ctx.font=EXPORT_CFG.tagIconFont;ctx.fillText(status==='valid'?'✅':status==='occ'?'🟠':status==='lock'?'🔒':'❌',x+w-20,y+h-12);
 }
-
 function exportToPNG(){
-  const btn=document.getElementById("btnPNG");const orig=btn.textContent;btn.textContent="🏢 GERANDO...";btn.disabled=true;
+  const btn=document.getElementById("btnPNG"); const orig=btn.textContent; btn.textContent="🏢 GERANDO..."; btn.disabled=true;
   if(!resumoIA || resumoIA==='🤖 Clique em "GERAR RELATÓRIO" para análise automática.') generateAIRelatorio();
-
   setTimeout(()=>{
     try{
-      const model = (document.getElementById("selTemplate")?.value || "glass");
-      const {width,maxHeight,scale,padding,bodyBg,buildingBg} = EXPORT_CFG;
-
-      const floorsMap = new Map();for(let f=1;f<=TOTAL_FLOORS;f++) floorsMap.set(f,[]);
+      const model=(document.getElementById("selTemplate")?.value)||"blue";
+      const {width,maxHeight,scale,padding,bodyBg,buildingBg}=EXPORT_CFG;
+      const floorsMap=new Map(); for(let f=1; f<=TOTAL_FLOORS; f++) floorsMap.set(f,[]);
       Object.entries(rooms).forEach(([key,status])=>{const [floor,room]=key.split('-').map(Number);floorsMap.get(floor).push({room,status});});
       for(const f of floorsMap.keys()) floorsMap.get(f).sort((a,b)=>a.room-b.room);
 
-      const relLines = (resumoIA?resumoIA.split('\n').length:6);
-      const reportHeight = Math.min(60 + relLines*EXPORT_CFG.reportBodyLineH, 380);
-
-      const headH=80,floorsBlockH=TOTAL_FLOORS*EXPORT_CFG.floorHeight,addrH=50,hallH=80;
-      const contentH = headH + floorsBlockH + addrH + hallH + reportHeight + padding*2;
+      const relLines=(resumoIA?resumoIA.split('\n').length:6);
+      const reportHeight=Math.min(60 + relLines*EXPORT_CFG.reportBodyLineH, 380);
+      const headH=80, floorsBlockH=TOTAL_FLOORS*EXPORT_CFG.floorHeight, addrH=50, hallH=80;
+      const contentH=headH+floorsBlockH+addrH+hallH+reportHeight+padding*2;
 
       const canvas=document.createElement("canvas");
-      canvas.width=Math.round(width*scale);canvas.height=Math.min(Math.round(contentH*scale),Math.round(maxHeight*scale));
-      const ctx=canvas.getContext("2d");ctx.scale(scale,scale);
+      canvas.width=Math.round(width*scale);
+      canvas.height=Math.min(Math.round(contentH*scale),Math.round(maxHeight*scale));
+      const ctx=canvas.getContext("2d"); ctx.scale(scale,scale);
 
-      ctx.fillStyle=bodyBg;ctx.fillRect(0,0,width,Math.min(contentH,maxHeight));
-      const bx=padding,by=padding,bw=width-padding*2,bh=Math.min(contentH,maxHeight)-padding*2;
-      ctx.fillStyle=buildingBg;roundedRect(ctx,bx,by,bw,bh,12);ctx.fill();
+      ctx.fillStyle=bodyBg; ctx.fillRect(0,0,width,Math.min(contentH,maxHeight));
+      const bx=padding, by=padding, bw=width-padding*2, bh=Math.min(contentH,maxHeight)-padding*2;
+      ctx.fillStyle=buildingBg; roundedRect(ctx,bx,by,bw,bh,12); ctx.fill();
 
-      ctx.fillStyle="#2c3e50";roundedRect(ctx,bx,by,bw,64,12);ctx.fill();
-      ctx.fillStyle="#4A0072";roundedRect(ctx,bx+bw/2-180,by+12,360,34,18);ctx.fill();
-      ctx.fillStyle="#fff";ctx.font=EXPORT_CFG.titleFont;ctx.fillText("VIVO 5G+",bx+bw/2-58,by+36);
-      ctx.fillStyle="#ffd966";ctx.font=EXPORT_CFG.subtitleFont;ctx.fillText("INFRAESTRUTURA",bx+bw/2-86,by+56);
+      // Outdoor
+      ctx.fillStyle="#2c3e50"; roundedRect(ctx,bx,by,bw,64,12); ctx.fill();
+      ctx.fillStyle="#4A0072"; roundedRect(ctx,bx+bw/2-180,by+12,360,34,18); ctx.fill();
+      ctx.fillStyle="#fff"; ctx.font=EXPORT_CFG.titleFont; ctx.fillText("VIVO 5G+", bx+bw/2-58, by+36);
+      ctx.fillStyle="#ffd966"; ctx.font=EXPORT_CFG.subtitleFont; ctx.fillText("INFRAESTRUTURA", bx+bw/2-86, by+56);
 
+      // Andares
       let y=by+headH; const fx=bx+10, fw=bw-20;
       for(let floor=TOTAL_FLOORS; floor>=1; floor--){
         const salas=floorsMap.get(floor);
-        ctx.fillStyle="#ffd966";ctx.font=EXPORT_CFG.floorNumberFont;ctx.fillText(`${floor}º`,bx-4,y+28);
-        drawFacadeBand(ctx,model,fx,y,fw,EXPORT_CFG.floorHeight-6);drawShine(ctx,fx,y,fw,EXPORT_CFG.floorHeight-6);
-
+        ctx.fillStyle="#ffd966"; ctx.font=EXPORT_CFG.floorNumberFont; ctx.fillText(`${floor}º`, bx-4, y+28);
+        drawFacadeBand(ctx,model,fx,y,fw,EXPORT_CFG.floorHeight-6); drawShine(ctx,fx,y,fw,EXPORT_CFG.floorHeight-6);
         if(salas.length>0){
           const maxPerLine=14; let x=fx+8;
           const tagW=Math.max(EXPORT_CFG.tagMinWidth,Math.min(EXPORT_CFG.tagMaxWidth,(fw-30)/Math.min(maxPerLine,salas.length)));
@@ -468,73 +429,65 @@ function exportToPNG(){
           }
           if(salas.length>maxPerLine){ctx.fillStyle="rgba(255,255,255,0.7)";ctx.font="11px sans-serif";ctx.fillText(`+${salas.length-maxPerLine}`,x-22,y+32);}
         }else{
-          ctx.fillStyle="rgba(255,255,255,0.6)";ctx.font="italic 12px sans-serif";ctx.fillText("DISPONÍVEL",fx+fw/2-42,y+32);
+          ctx.fillStyle="rgba(255,255,255,0.6)"; ctx.font="italic 12px sans-serif"; ctx.fillText("DISPONÍVEL", fx+fw/2-42, y+32);
         }
         y+=EXPORT_CFG.floorHeight; if(y>padding+headH+floorsBlockH) break;
       }
 
-      const addr=document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
-      ctx.fillStyle="#1f2d3a";roundedRect(ctx,bx+6,y,bw-12,44,8);ctx.fill();
-      ctx.strokeStyle="#f1c40f";ctx.lineWidth=2;roundedRect(ctx,bx+6,y,bw-12,44,8);ctx.stroke();
-      ctx.fillStyle="#ffd966";ctx.font=EXPORT_CFG.addrFont;ctx.fillText(addr.length>80?addr.substring(0,80)+"…":addr,bx+24,y+28);
+      // Endereço
+      const addr=document.getElementById("inputAddr")?.value||DEFAULT_ADDR;
+      ctx.fillStyle="#1f2d3a"; roundedRect(ctx,bx+6,y,bw-12,44,8); ctx.fill();
+      ctx.strokeStyle="#f1c40f"; ctx.lineWidth=2; roundedRect(ctx,bx+6,y,bw-12,44,8); ctx.stroke();
+      ctx.fillStyle="#ffd966"; ctx.font=EXPORT_CFG.addrFont; ctx.fillText(addr.length>80?addr.substring(0,80)+"…":addr, bx+24, y+28);
 
+      // Hall
       y+=58;
-      ctx.fillStyle="#1e2a36";roundedRect(ctx,bx+6,y,bw-12,70,10);ctx.fill();ctx.strokeStyle="#203040";ctx.stroke();
+      ctx.fillStyle="#1e2a36"; roundedRect(ctx,bx+6,y,bw-12,70,10); ctx.fill(); ctx.strokeStyle="#203040"; ctx.stroke();
       const center=bx+bw/2;
-      const drawDoor=(dx)=>{ctx.fillStyle="rgba(255,255,255,0.25)";roundedRect(ctx,dx,y+14,120,42,8);ctx.fill();ctx.strokeStyle="#ffd966";ctx.stroke();ctx.fillStyle="#ffd966";ctx.font="bold 12px sans-serif";ctx.fillText("HALL",dx+42,y+41);};
-      drawDoor(center-136); drawDoor(center+16);
+      const door=dx=>{ctx.fillStyle="rgba(255,255,255,0.25)"; roundedRect(ctx,dx,y+14,120,42,8); ctx.fill(); ctx.strokeStyle="#ffd966"; ctx.stroke(); ctx.fillStyle="#ffd966"; ctx.font="bold 12px sans-serif"; ctx.fillText("HALL", dx+42, y+41);};
+      door(center-136); door(center+16);
 
+      // Relatório
       y+=88;
-      const stats=updateStats(); const auditor=document.getElementById("inputResp")?.value || '---'; const dataStr=new Date().toLocaleString('pt-BR');
-      const relH=reportHeight;
-      ctx.fillStyle="rgba(0,0,0,0.90)";roundedRect(ctx,bx+6,y,bw-12,relH,10);ctx.fill();
-      ctx.fillStyle="#e2e8f0";ctx.font=EXPORT_CFG.hdrInfoFont;ctx.fillText(`📅 ${dataStr}   |   👤 ${auditor}`,bx+20,y+18);
-      ctx.font=EXPORT_CFG.hdrInfo2Font;ctx.fillText(`📊 Total: ${Object.keys(rooms).length}   |   ✅ ${stats.valid}   🟠 ${stats.occ}   🔒 ${stats.lock}   ❌ ${stats.prob}`,bx+20,y+36);
+      const stats=updateStats(); const auditor=document.getElementById("inputResp")?.value||'---'; const dataStr=new Date().toLocaleString('pt-BR');
+      ctx.fillStyle="rgba(0,0,0,0.90)"; const relH=reportHeight; roundedRect(ctx,bx+6,y,bw-12,relH,10); ctx.fill();
+      ctx.fillStyle="#e2e8f0"; ctx.font=EXPORT_CFG.hdrInfoFont; ctx.fillText(`📅 ${dataStr}   |   👤 ${auditor}`, bx+20, y+18);
+      ctx.font=EXPORT_CFG.hdrInfo2Font; ctx.fillText(`📊 Total: ${Object.keys(rooms).length}   |   ✅ ${stats.valid}   🟠 ${stats.occ}   🔒 ${stats.lock}   ❌ ${stats.prob}`, bx+20, y+36);
 
       if(resumoIA && resumoIA!=='🤖 Clique em "GERAR RELATÓRIO" para análise automática.'){
-        ctx.fillStyle="#ffd966";ctx.font=EXPORT_CFG.reportTitleFont;ctx.fillText("📋 RELATÓRIO DE VISTORIA",bx+20,y+56);
-        ctx.fillStyle="#e2e8f0";ctx.font=EXPORT_CFG.reportBodyFont;
-        const lines=resumoIA.split('\n'); const maxL=Math.floor((relH-70)/EXPORT_CFG.reportBodyLineH);
-        let ty=y+74;
-        for(let i=0;i<Math.min(lines.length,maxL);i++){
-          let line=lines[i]; if(line.includes('━━')) line='────────────────────────────────────────────────────────';
-          ctx.fillText(line.substring(0,120),bx+20,ty); ty+=EXPORT_CFG.reportBodyLineH;
-        }
+        ctx.fillStyle="#ffd966"; ctx.font=EXPORT_CFG.reportTitleFont; ctx.fillText("📋 RELATÓRIO DE VISTORIA", bx+20, y+56);
+        ctx.fillStyle="#e2e8f0"; ctx.font=EXPORT_CFG.reportBodyFont;
+        const lines=resumoIA.split('\n'); const maxL=Math.floor((relH-70)/EXPORT_CFG.reportBodyLineH); let ty=y+74;
+        for(let i=0;i<Math.min(lines.length,maxL);i++){let line=lines[i]; if(line.includes('━━')) line='────────────────────────────────────────────────────────'; ctx.fillText(line.substring(0,120), bx+20, ty); ty+=EXPORT_CFG.reportBodyLineH;}
       }else{
-        ctx.fillStyle="#9aa4b2";ctx.font="italic 11px monospace";ctx.fillText("Nenhum relatório gerado. Clique em 'GERAR RELATÓRIO' primeiro.",bx+20,y+58);
+        ctx.fillStyle="#9aa4b2"; ctx.font="italic 11px monospace"; ctx.fillText("Nenhum relatório gerado. Clique em 'GERAR RELATÓRIO' primeiro.", bx+20, y+58);
       }
 
-      const dataURL = canvas.toDataURL("image/png"); showDownloadModal(dataURL);
+      const url=canvas.toDataURL("image/png"); showDownloadModal(url);
       btn.textContent=orig; btn.disabled=false;
-    }catch(e){
-      console.error(e);
-      alert("Falha ao exportar. Toque e segure para salvar a imagem.");
-      btn.textContent=orig; btn.disabled=false;
-    }
+    }catch(e){console.error(e); alert("Falha ao exportar. Toque e segure para salvar a imagem."); btn.textContent=orig; btn.disabled=false;}
   },120);
 }
 
-/* ===== Utilidades finais ===== */
+/* ===== Utilidades ===== */
 function showDownloadModal(dataURL){
   const old=document.querySelector('.download-modal'); if(old) old.remove();
   const m=document.createElement('div'); m.className='download-modal';
   m.innerHTML=`<img src="${dataURL}" alt="Prédio Vivo"/><p>📱 <strong>Toque e segure</strong> na imagem<br/>para salvar no celular</p><button onclick="this.parentElement.remove()">✕ FECHAR</button>`;
   document.body.appendChild(m); m.addEventListener('click',(e)=>{if(e.target===m)m.remove();});
 }
-
 function applyStatus(){
   const floor=document.getElementById("selFloor")?.value;
   const room=document.getElementById("selRoom")?.value;
   const status=document.getElementById("selStatus")?.value;
   if(!floor||!room) return;
-  const key=`${floor}-${room}`;
-  if(status==='none') delete rooms[key]; else rooms[key]=status;
+  const key=`${floor}-${room}`; if(status==='none') delete rooms[key]; else rooms[key]=status;
   renderBuilding(); updateStats(); updateFooter();
 }
 function quickApply(){
   const input=document.getElementById("quickInput")?.value.toLowerCase().trim(); if(!input) return;
-  const parts=input.split('-'); if(parts.length<3){alert("Formato: Andar-Sala-status");return;}
-  const floor=parseInt(parts[0]), room=parseInt(parts[1]), sc=parts[2][0];
+  const p=input.split('-'); if(p.length<3){alert("Formato: Andar-Sala-status");return;}
+  const floor=parseInt(p[0]), room=parseInt(p[1]), sc=p[2][0];
   if(isNaN(floor)||isNaN(room)||floor<1||floor>32||room<1||room>MAX_SALA){alert(`Andar 1-32, Sala 1-${MAX_SALA}`);return;}
   let status='none'; if(sc==='v')status='valid'; else if(sc==='o')status='occ'; else if(sc==='t')status='lock'; else if(sc==='p')status='prob';
   const key=`${floor}-${room}`; if(status==='none') delete rooms[key]; else rooms[key]=status;
@@ -551,9 +504,8 @@ function clearResumo(){resumoIA=""; updateFooter();}
 /* ===== Init ===== */
 function init(){
   try{
-    // carrega persistência
-    rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
+    rooms=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
+    resumoIA=localStorage.getItem(STORAGE_KEY+"_ai")||"";
 
     const floorSel=document.getElementById("selFloor");
     const roomSel=document.getElementById("selRoom");
@@ -563,11 +515,12 @@ function init(){
     const savedResp=localStorage.getItem(STORAGE_KEY+"_resp");
     const savedObs =localStorage.getItem(STORAGE_KEY+"_obs");
     const savedAddr=localStorage.getItem(STORAGE_KEY+"_addr");
-    const savedTpl =localStorage.getItem(STORAGE_KEY+"_tpl");
+    const savedTpl =localStorage.getItem(STORAGE_KEY+"_tpl")||"blue";
+
     if(savedResp) document.getElementById("inputResp").value=savedResp;
     if(savedObs)  document.getElementById("obsText").value=savedObs;
     document.getElementById("inputAddr").value=savedAddr||DEFAULT_ADDR;
-    if(savedTpl)  document.getElementById("selTemplate").value=savedTpl;
+    document.getElementById("selTemplate").value=savedTpl;
 
     renderBuilding(); updateStats(); updateFooter();
 
@@ -580,11 +533,9 @@ function init(){
     document.getElementById("inputResp")?.addEventListener("input",updateFooter);
     document.getElementById("obsText")?.addEventListener("input",updateFooter);
     document.getElementById("inputAddr")?.addEventListener("input",updateFooter);
-    document.getElementById("selTemplate")?.addEventListener("change",updateFooter);
+    document.getElementById("selTemplate")?.addEventListener("change",()=>{updateFooter();applyTemplateToViewer();});
     document.getElementById("quickInput")?.addEventListener("keypress",(e)=>{if(e.key==="Enter") quickApply();});
-  }catch(e){
-    console.error(e); window.onerror(String(e));
-  }
+  }catch(e){console.error(e); window.onerror(String(e));}
 }
 init();
 </script>
