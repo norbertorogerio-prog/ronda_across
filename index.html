@@ -4,106 +4,85 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes, viewport-fit=cover"/>
 
-<title>Relatório de Vistoria | Responsivo</title>
+<title>Relatório de Vistoria</title>
 
 <style>
   :root{
     --bg:#0b3d2e; --card:rgba(255,255,255,.08); --border:rgba(255,255,255,.18);
     --text:#fff; --muted:#cbd5e1; --gold:#ffd966;
-    --green:#27ae60;   /* validado */
-    --yellow:#f1c40f;  /* trancado */
-    --red:#e74c3c;     /* problemas */
-    --purple:#6A1B9A;  /* outros */
+    --green:#27ae60; --yellow:#f1c40f; --red:#e74c3c; --purple:#6A1B9A;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 
-  /* GRID RESPONSIVA - mobile first */
+  /* LAYOUT FIXO - sem sambar */
   .app{
     max-width:1400px;
     margin:0 auto;
     padding:12px;
-    display:flex;
-    flex-direction:column;
-    gap:16px;
+    display:block;
   }
   
-  /* Tablet e desktop */
-  @media(min-width:768px){
-    .app{
-      padding:20px;
-      gap:24px;
-    }
-  }
-  
-  @media(min-width:1024px){
+  @media(min-width:980px){
     .app{
       display:grid;
-      grid-template-columns:400px 1fr;
-      gap:24px;
-      align-items:start;
+      grid-template-columns:340px 1fr;
+      gap:16px;
+      padding:16px;
     }
   }
 
   .card{
     background:var(--card);
     border:1px solid var(--border);
-    border-radius:16px;
-    padding:18px;
+    border-radius:12px;
+    padding:14px;
     backdrop-filter:blur(4px);
-    overflow:hidden;
+    margin-bottom:16px;
   }
   
-  @media(min-width:768px){
+  @media(min-width:980px){
     .card{
-      padding:24px;
+      margin-bottom:0;
+      padding:16px;
     }
   }
 
   h2{
-    margin:0 0 12px 0;
+    margin:0 0 10px 0;
     font-weight:800;
-    font-size:18px;
+    font-size:15px;
     letter-spacing:.4px;
-    display:flex;
-    align-items:center;
-    gap:8px;
   }
   
   h3{
-    margin:0 0 12px 0;
-    font-size:16px;
+    margin:0 0 10px 0;
+    font-size:13px;
     color:var(--muted);
     font-weight:700;
   }
 
-  /* FORMULÁRIO */
+  /* FORMULÁRIO COMPACTO */
   label{
     display:block;
-    margin:14px 0 6px 0;
-    font-size:12px;
+    margin:10px 0 4px 0;
+    font-size:11px;
     font-weight:800;
     text-transform:uppercase;
-    letter-spacing:.5px;
+    letter-spacing:.4px;
     color:#e2e8f0;
   }
   
   .form-field{
     width:100%;
     border:1px solid var(--border);
-    border-radius:12px;
+    border-radius:8px;
     background:#fff;
     color:#111;
-    padding:10px 12px;
-    font-size:15px;
-    line-height:1.4;
+    padding:6px 10px;
+    font-size:13px;
+    line-height:1.3;
     outline:none;
-    transition: all 0.2s ease;
-  }
-  
-  .form-field:focus{
-    border-color:var(--gold);
-    box-shadow:0 0 0 3px rgba(255,217,102,0.2);
   }
   
   select.form-field{
@@ -112,114 +91,92 @@
     appearance:none;
     background-image:
       linear-gradient(45deg, transparent 50%, #6A1B9A 50%),
-      linear-gradient(135deg, #6A1B9A 50%, transparent 50%),
-      linear-gradient(to right, #ddd, #ddd);
-    background-position:
-      calc(100% - 18px) 50%,
-      calc(100% - 12px) 50%,
-      calc(100% - 28px) 50%;
-    background-size:6px 6px,6px 6px,1px 60%;
+      linear-gradient(135deg, #6A1B9A 50%, transparent 50%);
+    background-position:calc(100% - 12px) 50%, calc(100% - 6px) 50%;
+    background-size:5px 5px,5px 5px;
     background-repeat:no-repeat;
   }
   
   textarea.form-field{
-    min-height:80px;
+    min-height:60px;
     resize:vertical;
+    font-size:12px;
   }
 
-  /* GRIDS DE ÍCONES - responsivo */
+  /* ÍCONES COMPACTOS */
   .icon-strip{
     display:grid;
-    gap:8px;
-    margin-top:8px;
+    gap:4px;
+    margin-top:6px;
   }
   
   .floors-strip{
-    grid-template-columns:repeat(auto-fill, minmax(44px, 1fr));
+    grid-template-columns:repeat(8, 1fr);
   }
   
   .rooms-strip{
-    grid-template-columns:repeat(auto-fill, minmax(44px, 1fr));
+    grid-template-columns:repeat(10, 1fr);
   }
   
-  @media(min-width:480px){
+  /* Mobile: ajuste automático sem quebrar */
+  @media(max-width:640px){
     .floors-strip{
-      grid-template-columns:repeat(8, 1fr);
+      grid-template-columns:repeat(8, minmax(28px, 1fr));
     }
     .rooms-strip{
-      grid-template-columns:repeat(10, 1fr);
+      grid-template-columns:repeat(10, minmax(28px, 1fr));
     }
   }
   
   .icon{
     width:100%;
     aspect-ratio:1;
-    border-radius:10px;
+    border-radius:6px;
     border:1px solid var(--border);
     background:rgba(255,255,255,.08);
     color:var(--text);
-    font-size:13px;
+    font-size:11px;
     font-weight:600;
     display:flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    user-select:none;
-    transition: all 0.2s ease;
-  }
-  
-  .icon:active{
-    transform:scale(0.95);
-  }
-  
-  .icon:hover{
-    background:rgba(255,255,255,.15);
+    transition:all 0.1s ease;
   }
   
   .icon.is-selected{
     border-color:var(--gold);
     background:rgba(255,217,102,0.2);
-    box-shadow:0 0 0 2px rgba(255,217,102,.3);
+    box-shadow:0 0 0 1px rgba(255,217,102,.4);
   }
 
-  /* STATUS STRIP */
+  /* STATUS STRIP COMPACTO */
   .status-strip{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
-    gap:10px;
-    margin:10px 0 5px;
-  }
-  
-  @media(min-width:480px){
-    .status-strip{
-      grid-template-columns:repeat(4, 1fr);
-    }
+    grid-template-columns:repeat(4, 1fr);
+    gap:6px;
+    margin:8px 0 4px;
   }
   
   .status{
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:8px;
-    padding:10px 8px;
-    border-radius:40px;
+    gap:5px;
+    padding:5px 4px;
+    border-radius:20px;
     color:#111;
     background:#fff;
     border:1px solid var(--border);
     cursor:pointer;
-    font-size:13px;
+    font-size:11px;
     font-weight:700;
-    transition: all 0.2s ease;
-    width:100%;
-  }
-  
-  .status:active{
-    transform:scale(0.96);
+    transition:all 0.1s ease;
   }
   
   .dot{
-    width:12px;
-    height:12px;
+    width:9px;
+    height:9px;
     border-radius:50%;
     flex-shrink:0;
   }
@@ -232,28 +189,24 @@
   .btn{
     width:100%;
     border:none;
-    border-radius:12px;
+    border-radius:8px;
     background:linear-gradient(135deg,#6A1B9A,#4A0072);
     color:#fff;
     font-weight:800;
-    padding:12px;
+    padding:8px;
     cursor:pointer;
     text-transform:uppercase;
-    font-size:14px;
-    transition: all 0.2s ease;
-  }
-  
-  .btn:active{
-    transform:translateY(1px);
+    font-size:12px;
+    transition:all 0.1s ease;
   }
   
   .row{
     display:grid;
-    gap:12px;
+    gap:8px;
     margin-top:8px;
   }
   
-  @media(min-width:520px){
+  @media(min-width:480px){
     .row-2{
       grid-template-columns:1fr 1fr;
     }
@@ -263,73 +216,62 @@
   .viewer{
     display:flex;
     flex-direction:column;
-    gap:20px;
+    gap:16px;
   }
   
   .section{
     background:rgba(255,255,255,.06);
     border:1px solid var(--border);
-    border-radius:16px;
-    padding:18px;
-  }
-  
-  @media(min-width:768px){
-    .section{
-      padding:24px;
-    }
+    border-radius:12px;
+    padding:14px;
   }
   
   .small{
-    font-size:12px;
+    font-size:10px;
     color:var(--muted);
-    margin-top:12px;
+    margin-top:8px;
   }
 
   /* GRADE DE ITENS */
   .created-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
-    gap:12px;
-    margin-bottom:8px;
+    grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));
+    gap:8px;
+    margin-bottom:4px;
   }
   
   .room-card{
     display:flex;
     flex-direction:column;
-    gap:8px;
-    padding:12px;
-    border-radius:12px;
+    gap:5px;
+    padding:8px;
+    border-radius:8px;
     border:1px solid var(--border);
     background:rgba(255,255,255,.08);
-    transition: all 0.2s ease;
-  }
-  
-  .room-card:active{
-    transform:scale(0.98);
   }
   
   .badge{
     display:inline-flex;
     align-items:center;
-    gap:6px;
-    font-size:13px;
+    gap:5px;
+    font-size:11px;
     font-weight:800;
     color:#111;
     background:#fff;
-    border-radius:10px;
-    padding:6px 10px;
+    border-radius:6px;
+    padding:4px 8px;
     width:fit-content;
   }
   
   .pill{
     display:inline-flex;
     align-items:center;
-    gap:6px;
-    font-size:12px;
+    gap:5px;
+    font-size:10px;
     font-weight:600;
     color:#fff;
-    border-radius:40px;
-    padding:4px 12px;
+    border-radius:20px;
+    padding:3px 8px;
     width:fit-content;
   }
   
@@ -341,7 +283,7 @@
   /* RELATÓRIO */
   .report-box{
     border:2px solid var(--gold);
-    border-radius:16px;
+    border-radius:12px;
     background:rgba(0,0,0,.45);
     overflow:hidden;
   }
@@ -350,22 +292,22 @@
     background:linear-gradient(135deg,#2c3e50,#1a2632);
     color:var(--gold);
     font-weight:900;
-    padding:14px 16px;
+    padding:10px 12px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:12px;
+    gap:10px;
     flex-wrap:wrap;
     border-bottom:1px solid rgba(255,215,0,.3);
   }
   
   .report-title span{
-    font-size:15px;
+    font-size:13px;
   }
   
   .report-actions{
     display:inline-flex;
-    gap:8px;
+    gap:6px;
   }
   
   .btn-action{
@@ -373,63 +315,38 @@
     background:#ffffff;
     color:#111;
     font-weight:800;
-    font-size:12px;
-    padding:6px 12px;
-    border-radius:10px;
+    font-size:11px;
+    padding:4px 10px;
+    border-radius:6px;
     cursor:pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .btn-action:active{
-    transform:translateY(1px);
   }
   
   .report-content{
     white-space:pre-wrap;
     font-family:system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    font-size:13px;
+    font-size:12px;
     color:#eaf2f8;
-    line-height:1.6;
-    padding:16px;
-    max-height:500px;
+    line-height:1.5;
+    padding:12px;
+    max-height:450px;
     overflow-y:auto;
-  }
-  
-  @media(min-width:768px){
-    .report-content{
-      font-size:14px;
-      padding:20px;
-      max-height:600px;
-    }
   }
 
   /* TOAST */
   .toast{
     position:fixed;
     right:16px;
-    bottom:20px;
-    left:16px;
-    background:rgba(0,0,0,0.9);
+    bottom:16px;
+    background:rgba(0,0,0,0.85);
     color:#fff;
-    padding:12px 16px;
-    border-radius:12px;
-    font-size:13px;
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:12px;
     z-index:9999;
     opacity:0;
-    transform:translateY(10px);
-    transition:opacity .2s ease, transform .2s ease;
-    text-align:center;
+    transform:translateY(8px);
+    transition:opacity .15s ease, transform .15s ease;
     pointer-events:none;
-  }
-  
-  @media(min-width:480px){
-    .toast{
-      left:auto;
-      right:20px;
-      bottom:20px;
-      min-width:200px;
-      text-align:left;
-    }
   }
   
   .toast.show{
@@ -437,19 +354,19 @@
     transform:translateY(0);
   }
   
-  /* SCROLL RESPONSIVO */
+  /* SCROLL */
   .report-content::-webkit-scrollbar{
-    width:6px;
+    width:4px;
   }
   
   .report-content::-webkit-scrollbar-track{
     background:rgba(255,255,255,0.1);
-    border-radius:10px;
+    border-radius:4px;
   }
   
   .report-content::-webkit-scrollbar-thumb{
     background:var(--gold);
-    border-radius:10px;
+    border-radius:4px;
   }
 </style>
 </head>
@@ -460,72 +377,61 @@
     <h2>📋 Entrada de dados</h2>
 
     <label>👤 Auditor</label>
-    <input id="auditor" class="form-field" placeholder="Nome completo do responsável"/>
+    <input id="auditor" class="form-field" placeholder="Nome"/>
 
     <label>🏢 Prédio</label>
     <select id="predio" class="form-field">
-      <option value="">Selecione o prédio...</option>
+      <option value="">Selecione</option>
       <option value="Eco Berrini">Eco Berrini</option>
       <option value="Chucri Zaidan">Chucri Zaidan</option>
     </select>
 
     <label>📍 Endereço</label>
-    <input id="endereco" class="form-field" placeholder="Endereço completo"/>
+    <input id="endereco" class="form-field" placeholder="Endereço"/>
 
-    <!-- Andares e Salas -->
-    <label>🏬 Andares (01–32)</label>
+    <label>🏬 Andar</label>
     <div id="floorsStrip" class="icon-strip floors-strip"></div>
 
-    <label>🚪 Salas (01–50)</label>
+    <label>🚪 Sala</label>
     <div id="roomsStrip" class="icon-strip rooms-strip"></div>
 
-    <!-- Status -->
-    <label>📌 Status da sala</label>
+    <label>📌 Status</label>
     <div class="status-strip">
-      <button class="status" data-status="valid"><span class="dot valid"></span>Validada</button>
-      <button class="status" data-status="lock"><span class="dot lock"></span>Trancada</button>
-      <button class="status" data-status="prob"><span class="dot prob"></span>Problemas</button>
+      <button class="status" data-status="valid"><span class="dot valid"></span>Valid</button>
+      <button class="status" data-status="lock"><span class="dot lock"></span>Lock</button>
+      <button class="status" data-status="prob"><span class="dot prob"></span>Prob</button>
       <button class="status" data-status="other"><span class="dot other"></span>Outros</button>
     </div>
 
-    <label>📝 Observações</label>
-    <textarea id="obs" class="form-field" placeholder="Registre observações relevantes para o relatório..."></textarea>
+    <label>📝 Obs</label>
+    <textarea id="obs" class="form-field" placeholder="Observações..."></textarea>
 
     <div class="row row-2">
-      <button id="btnAdd" class="btn">➕ Adicionar</button>
-      <button id="btnClear" class="btn">🗑️ Limpar Tudo</button>
+      <button id="btnAdd" class="btn">➕ Add</button>
+      <button id="btnClear" class="btn">🗑️ Limpar</button>
     </div>
 
-    <p class="small">
-      💡 Selecione <strong>Prédio</strong> → clique no <strong>Andar</strong> e <strong>Sala</strong> → escolha o <strong>Status</strong> para registrar.
-    </p>
+    <p class="small">Selecione andar/sala → clique no status</p>
   </div>
 
   <!-- DIREITA -->
   <div class="viewer">
     <div class="section">
-      <h3>📦 Salas vistoriadas</h3>
+      <h3>📦 Salas ({{total}})</h3>
       <div id="createdGrid" class="created-grid"></div>
-      <p class="small">Clique nos cartões para visualizar os detalhes da vistoria.</p>
     </div>
 
     <div class="section">
       <div class="report-box">
         <div class="report-title">
-          <span>📋 Relatório de Vistoria</span>
+          <span>📋 Relatório</span>
           <div class="report-actions">
-            <button id="btnCopy" class="btn-action">📋 Copiar</button>
-            <button id="btnDownload" class="btn-action">⬇️ Baixar .txt</button>
+            <button id="btnCopy" class="btn-action">Copiar</button>
+            <button id="btnDownload" class="btn-action">Baixar</button>
           </div>
         </div>
         <div id="relatorio" class="report-content">
-📋 RELATÓRIO DE VISTORIA — Prédio
-📍 Endereço
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📅 data
-👤 Auditor:
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ Informações do relatório
+📋 RELATÓRIO DE VISTORIA
         </div>
       </div>
     </div>
@@ -533,7 +439,7 @@
 </div>
 
 <script>
-  const STORAGE_KEY = "vistoria_icons_responsivo_v2";
+  const STORAGE_KEY = "vistoria_compact_v2";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom  = 1;
@@ -558,8 +464,8 @@
       const el = document.createElement("div");
       el.className = "icon" + (f===selectedFloor ? " is-selected" : "");
       el.textContent = pad2(f);
-      el.title = `Andar ${pad2(f)}`;
-      el.addEventListener("click", ()=>{
+      el.addEventListener("click", (e)=>{
+        e.stopPropagation();
         selectedFloor = f;
         buildFloorIcons();
         buildRoomIcons();
@@ -574,8 +480,8 @@
       const el = document.createElement("div");
       el.className = "icon" + (r===selectedRoom ? " is-selected" : "");
       el.textContent = pad2(r);
-      el.title = `Sala ${pad2(r)}`;
-      el.addEventListener("click", ()=>{
+      el.addEventListener("click", (e)=>{
+        e.stopPropagation();
         selectedRoom = r;
         buildRoomIcons();
       });
@@ -583,17 +489,21 @@
     }
   }
 
+  // Status click
   document.querySelectorAll(".status").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const status = btn.dataset.status;
       const f = selectedFloor, r = selectedRoom;
       const idx = entries.findIndex(e => e.f===f && e.r===r);
-      if(idx>=0){ entries[idx].status = status; }
-      else{ entries.push({f,r,status}); }
+      if(idx>=0){ 
+        entries[idx].status = status; 
+      } else { 
+        entries.push({f,r,status}); 
+      }
       persist();
       renderCreated();
       renderReport();
-      showToast(`Sala A${pad2(f)}-S${pad2(r)}: ${statusName(status)}`);
+      showToast(`${pad2(f)}-${pad2(r)}: ${statusName(status)}`);
     });
   });
 
@@ -602,9 +512,9 @@
     const idx = entries.findIndex(e => e.f===f && e.r===r);
     if(idx<0){ 
       entries.push({f,r,status:"other"}); 
-      showToast(`Sala A${pad2(f)}-S${pad2(r)} adicionada`);
+      showToast(`Sala ${pad2(f)}-${pad2(r)} adicionada`);
     } else {
-      showToast(`Sala já existe, use os status para alterar`);
+      showToast(`Sala já existe`);
     }
     persist();
     renderCreated();
@@ -614,12 +524,16 @@
   function renderCreated(){
     createdGrid.innerHTML = "";
     const sorted = [...entries].sort((a,b)=> a.f-b.f || a.r-b.r);
+    if(sorted.length === 0){
+      createdGrid.innerHTML = '<p class="small" style="text-align:center; grid-column:1/-1">Nenhuma sala registrada</p>';
+      return;
+    }
     sorted.forEach(item=>{
       const card = document.createElement("div");
       card.className = "room-card";
       const badge = document.createElement("div");
       badge.className = "badge";
-      badge.textContent = `A${pad2(item.f)} • S${pad2(item.r)}`;
+      badge.textContent = `${pad2(item.f)}-${pad2(item.r)}`;
       card.appendChild(badge);
       const tag = document.createElement("div");
       tag.className = `pill ${statusClass(item.status)}`;
@@ -627,14 +541,16 @@
       card.appendChild(tag);
       createdGrid.appendChild(card);
     });
+    // Atualiza contador no título
+    document.querySelector('.section h3').innerHTML = `📦 Salas (${entries.length})`;
   }
 
   function renderReport(){
-    const predio   = predioSel.value || "Prédio não selecionado";
-    const endereco = enderecoInp.value || "Endereço não informado";
+    const predio   = predioSel.value || "Não selecionado";
+    const endereco = enderecoInp.value || "Não informado";
     const auditor  = auditorInp.value || "Não informado";
     const obsGeral = (obsInp.value || "").trim();
-    const dataStr  = new Date().toLocaleString("pt-BR", { dateStyle: "full", timeStyle: "short" });
+    const dataStr  = new Date().toLocaleString("pt-BR");
 
     const stats = { valid:0, lock:0, prob:0, other:0 };
     entries.forEach(e => stats[e.status]++);
@@ -648,39 +564,39 @@
     let info = "";
     const total = entries.length;
     if(total===0){
-      info = "Nenhuma sala registrada nesta vistoria.";
+      info = "Nenhuma sala registrada.";
     } else {
-      info += `Total de salas registradas: ${total}\n`;
-      info += `✅ Validadas: ${stats.valid} | 🔒 Trancadas: ${stats.lock} | ❌ Problemas: ${stats.prob} | ◻️ Outros: ${stats.other}\n`;
+      info += `Total: ${total} salas\n`;
+      info += `✅ ${stats.valid} | 🔒 ${stats.lock} | ❌ ${stats.prob} | ◻️ ${stats.other}\n`;
       const floors = Object.keys(byFloor).map(Number).sort((a,b)=>a-b);
       if(floors.length){
-        info += `\n📊 Detalhamento por andar:\n`;
+        info += `\nPor andar:\n`;
         floors.forEach(f=>{
           const a = byFloor[f];
           const parts = [];
-          if(a.valid.length) parts.push(`✅ ${a.valid.length} (${a.valid.join(", ")})`);
-          if(a.lock.length)  parts.push(`🔒 ${a.lock.length} (${a.lock.join(", ")})`);
-          if(a.prob.length)  parts.push(`❌ ${a.prob.length} (${a.prob.join(", ")})`);
-          if(a.other.length) parts.push(`◻️ ${a.other.length} (${a.other.join(", ")})`);
-          info += `   Andar ${pad2(f)}: ${parts.join(" | ")}\n`;
+          if(a.valid.length) parts.push(`✅${a.valid.length}`);
+          if(a.lock.length)  parts.push(`🔒${a.lock.length}`);
+          if(a.prob.length)  parts.push(`❌${a.prob.length}`);
+          if(a.other.length) parts.push(`◻️${a.other.length}`);
+          info += `  A${pad2(f)}: ${parts.join(" ")}\n`;
         });
       }
     }
 
-    const blocoObs = obsGeral ? `\n📝 OBSERVAÇÕES GERAIS\n${obsGeral}\n` : "";
+    const blocoObs = obsGeral ? `\nObs: ${obsGeral}\n` : "";
     
     const text =
-`📋 RELATÓRIO DE VISTORIA
+`RELATÓRIO DE VISTORIA
+━━━━━━━━━━━━━━━━━━━━━━━━━━
 🏢 ${predio}
 📍 ${endereco}
-━━━━━━━━━━━━━━━━━━━━━━━━━━
 📅 ${dataStr}
-👤 Auditor: ${auditor}
+👤 ${auditor}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 INFORMAÇÕES DA VISTORIA
-${info}${blocoObs}
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔧 Sistema desenvolvido para vistorias técnicas`;
+📊 DADOS
+${info}
+${blocoObs}
+━━━━━━━━━━━━━━━━━━━━━━━━━━`;
 
     relatorioEl.textContent = text;
   }
@@ -691,9 +607,9 @@ ${info}${blocoObs}
   
   function copyReportToClipboard() {
     const text = getReportText();
-    if (!text.trim()) { showToast("Relatório vazio"); return; }
+    if (!text.trim()) { showToast("Vazio"); return; }
     navigator.clipboard?.writeText(text).then(
-      () => showToast("✅ Relatório copiado!"),
+      () => showToast("✓ Copiado"),
       () => fallbackCopy(text)
     );
   }
@@ -706,28 +622,28 @@ ${info}${blocoObs}
       ta.select(); 
       document.execCommand("copy");
       ta.remove();
-      showToast("✅ Relatório copiado!");
+      showToast("✓ Copiado");
     } catch {
-      showToast("❌ Não foi possível copiar");
+      showToast("Erro");
     }
   }
   
   function downloadReportTxt() {
     const text = getReportText();
-    if (!text.trim()) { showToast("Relatório vazio"); return; }
+    if (!text.trim()) { showToast("Vazio"); return; }
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const predio = (document.getElementById("predio")?.value || "Vistoria").replace(/\s+/g,'_');
+    const predio = (document.getElementById("predio")?.value || "vistoria").replace(/\s+/g,'_');
     const dt = new Date();
-    const stamp = `${dt.getFullYear()}${(dt.getMonth()+1).toString().padStart(2,'0')}${dt.getDate().toString().padStart(2,'0')}_${dt.getHours().toString().padStart(2,'0')}${dt.getMinutes().toString().padStart(2,'0')}`;
+    const stamp = `${dt.getFullYear()}${(dt.getMonth()+1).toString().padStart(2,'0')}${dt.getDate().toString().padStart(2,'0')}`;
     a.href = url;
-    a.download = `relatorio_vistoria_${predio}_${stamp}.txt`;
+    a.download = `vistoria_${predio}_${stamp}.txt`;
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-    showToast("⬇️ Download iniciado!");
+    showToast("⬇️ Download");
   }
 
   function showToast(msg) {
@@ -739,7 +655,7 @@ ${info}${blocoObs}
     }
     t.textContent = msg;
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 2000);
+    setTimeout(() => t.classList.remove("show"), 1500);
   }
 
   document.getElementById("btnCopy").addEventListener("click", copyReportToClipboard);
@@ -750,7 +666,7 @@ ${info}${blocoObs}
   }
 
   document.getElementById("btnClear").addEventListener("click", ()=>{
-    if(!confirm("⚠️ Limpar todos os registros e reiniciar vistoria?")) return;
+    if(!confirm("Limpar tudo?")) return;
     entries = [];
     auditorInp.value = "";
     predioSel.value = "";
@@ -759,15 +675,15 @@ ${info}${blocoObs}
     persist();
     renderCreated();
     renderReport();
-    showToast("🗑️ Todos os dados foram removidos");
+    showToast("Limpo");
   });
 
   predioSel.addEventListener("change", ()=>{
     const v = predioSel.value;
     if(v==="Eco Berrini"){
-      enderecoInp.value = "Av. Eng. Luís Carlos Berrini, 1376 - São Paulo/SP";
+      enderecoInp.value = "Av. Eng. L. C. Berrini, 1376";
     } else if(v==="Chucri Zaidan"){
-      enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460 - São Paulo/SP";
+      enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460";
     } else {
       enderecoInp.value = "";
     }
