@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
-<title>Vivo Infra • Auditoria Premium v19</title>
+<title>Vivo Infra • Auditoria Premium v20</title>
 <style>
  * {
     margin: 0;
@@ -15,7 +15,6 @@
  :root {
     --vivo: #6A1B9A;
     --vivo-dark: #4A0072;
-    --vivo-light: #9C4DCC;
     --valid: #27ae60;
     --occ: #f39c12;
     --lock: #7f8c8d;
@@ -24,7 +23,6 @@
     --card: #FFFFFF;
     --text: #2c3e50;
     --gold: #f1c40f;
-    --window-bg: #2c3e50;
  }
 
  body {
@@ -50,7 +48,6 @@
     }
  }
 
- /* Cards */
  .card {
     background: var(--card);
     border-radius: 24px;
@@ -58,7 +55,6 @@
     padding: 20px;
  }
 
- /* Stats Grid */
  .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -78,18 +74,9 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
  }
 
- .stat-box:active {
-    transform: scale(0.95);
- }
+ .stat-box:active { transform: scale(0.95); }
+ .stat-number { font-size: 28px; font-weight: 900; display: block; margin-bottom: 4px; }
 
- .stat-number {
-    font-size: 28px;
-    font-weight: 900;
-    display: block;
-    margin-bottom: 4px;
- }
-
- /* Form Elements */
  label {
     font-size: 11px;
     font-weight: 800;
@@ -118,12 +105,8 @@
     box-shadow: 0 0 0 3px rgba(106,27,154,0.1);
  }
 
- textarea {
-    resize: vertical;
-    min-height: 70px;
- }
+ textarea { resize: vertical; min-height: 70px; }
 
- /* Buttons */
  .btn-apply {
     background: linear-gradient(135deg, var(--vivo), var(--vivo-dark));
     color: white;
@@ -132,7 +115,6 @@
     cursor: pointer;
     font-size: 14px;
     text-transform: uppercase;
-    letter-spacing: 1px;
  }
 
  .btn-png {
@@ -144,10 +126,7 @@
     font-size: 14px;
  }
 
- .btn-png:active {
-    transform: scale(0.98);
- }
-
+ .btn-png:active { transform: scale(0.98); }
  .btn-ai {
     background: linear-gradient(135deg, #0284c7, #0369a1);
     color: white;
@@ -156,7 +135,6 @@
     cursor: pointer;
     font-size: 13px;
  }
-
  .btn-clear {
     background: #f1f5f9;
     color: #475569;
@@ -168,36 +146,23 @@
     font-weight: 600;
  }
 
- .btn-clear:active {
-    background: #e2e8f0;
- }
-
- /* Building Viewer */
  .viewer-card {
     padding: 20px;
     background: linear-gradient(135deg, #e8f0f5 0%, #dce4ec 100%);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
  }
 
- .building-container {
-    min-width: 380px;
-    max-width: 100%;
-    margin: 0 auto;
- }
+ .building-container { min-width: 380px; max-width: 100%; margin: 0 auto; }
 
- /* Prédio Realista */
  .real-building {
     position: relative;
     background: linear-gradient(180deg, #2c3e50 0%, #1a2632 100%);
     border-radius: 20px 20px 12px 12px;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.2);
  }
 
- /* Cobertura Moderna */
  .cobertura {
     position: relative;
     height: 45px;
@@ -207,22 +172,10 @@
     justify-content: center;
     align-items: center;
     gap: 15px;
-    box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 2px 5px rgba(0,0,0,0.2);
  }
 
- .cobertura::before {
-    content: "📡";
-    font-size: 20px;
-    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
-    animation: pulse 2s infinite;
- }
-
- .cobertura::after {
-    content: "📡";
-    font-size: 20px;
-    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
-    animation: pulse 2s infinite 0.5s;
- }
+ .cobertura::before { content: "📡"; font-size: 20px; animation: pulse 2s infinite; }
+ .cobertura::after { content: "📡"; font-size: 20px; animation: pulse 2s infinite 0.5s; }
 
  @keyframes pulse {
     0%, 100% { opacity: 0.5; transform: scale(0.9); }
@@ -235,51 +188,32 @@
     font-weight: bold;
     letter-spacing: 2px;
     text-transform: uppercase;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
  }
 
- /* Floors Container */
  .floors-container {
     max-height: 65vh;
     overflow-y: auto;
     padding: 12px 16px;
-    scroll-behavior: smooth;
     background: rgba(0,0,0,0.2);
  }
 
- .floors-container::-webkit-scrollbar {
-    width: 6px;
- }
+ .floors-container::-webkit-scrollbar { width: 6px; }
+ .floors-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 3px; }
+ .floors-container::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
 
- .floors-container::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.1);
-    border-radius: 3px;
- }
-
- .floors-container::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 3px;
- }
-
- /* Floor Row */
  .floor-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 6px;
-    padding: 4px 8px;
+    margin-bottom: 8px;
+    padding: 6px 8px;
     border-radius: 12px;
-    transition: background 0.2s;
     background: rgba(0,0,0,0.2);
- }
-
- .floor-row:hover {
-    background: rgba(255,255,255,0.1);
  }
 
  .floor-number {
     width: 50px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 800;
     color: #f1c40f;
     text-align: right;
@@ -290,16 +224,16 @@
 
  .rooms-grid {
     flex: 1;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    display: flex;
     gap: 6px;
+    flex-wrap: wrap;
  }
 
- /* Room Cards - Estilo Janela Realista */
  .room-card {
-    aspect-ratio: 1 / 1.2;
+    width: 55px;
+    height: 55px;
     background: linear-gradient(145deg, #2c3e50, #1e2a36);
-    border-radius: 12px 12px 8px 8px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -307,14 +241,10 @@
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
-    box-shadow: 
-        inset 0 1px 2px rgba(255,255,255,0.1),
-        0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.1), 0 2px 5px rgba(0,0,0,0.3);
     border: 1px solid rgba(255,255,255,0.15);
-    overflow: hidden;
  }
 
- /* Efeito de vidro da janela */
  .room-card::before {
     content: "";
     position: absolute;
@@ -323,11 +253,10 @@
     right: 0;
     height: 30%;
     background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
-    border-radius: 8px 8px 0 0;
+    border-radius: 10px 10px 0 0;
     pointer-events: none;
  }
 
- /* Moldura da janela */
  .room-card::after {
     content: "";
     position: absolute;
@@ -342,17 +271,18 @@
 
  .room-number {
     color: white;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 800;
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     z-index: 1;
-    background: rgba(0,0,0,0.5);
-    padding: 2px 6px;
-    border-radius: 12px;
-    backdrop-filter: blur(2px);
  }
 
- /* Status com efeito de luz na janela */
+ .room-status-icon {
+    font-size: 18px;
+    margin-top: 4px;
+    z-index: 1;
+ }
+
  .room-card.valid { 
     background: linear-gradient(145deg, #27ae60, #1e8449);
     box-shadow: 0 0 8px rgba(39,174,96,0.5);
@@ -375,11 +305,8 @@
     50% { box-shadow: 0 0 12px rgba(231,76,60,0.8); }
  }
 
- .room-card:active {
-    transform: scale(0.95);
- }
+ .room-card:active { transform: scale(0.95); }
 
- /* Hall de Entrada */
  .hall-entrada {
     background: linear-gradient(135deg, #2c3e50, #1e2a36);
     border-top: 2px solid var(--gold);
@@ -402,9 +329,7 @@
     animation: shine 4s infinite;
  }
 
- @keyframes shine {
-    100% { left: 100%; }
- }
+ @keyframes shine { 100% { left: 100%; } }
 
  .glass-panel {
     width: 45px;
@@ -413,7 +338,6 @@
     backdrop-filter: blur(4px);
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.4);
-    box-shadow: inset 0 1px 2px rgba(255,255,255,0.2);
  }
 
  .hall-text {
@@ -424,10 +348,8 @@
     letter-spacing: 1px;
     margin-top: 8px;
     padding-bottom: 8px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
  }
 
- /* Footer Note */
  .footer-note {
     background: rgba(255,255,255,0.95);
     margin-top: 16px;
@@ -438,11 +360,13 @@
     line-height: 1.5;
     color: #334155;
     white-space: pre-wrap;
-    word-break: break-word;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
  }
 
- /* Modal de Download */
+ .quick-group { display: flex; gap: 8px; }
+ .quick-group input { flex: 1; margin-bottom: 0; }
+ .quick-group button { width: 60px; margin-bottom: 0; background: #444; color: white; }
+ .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+
  .download-modal {
     position: fixed;
     top: 0;
@@ -458,92 +382,23 @@
     padding: 20px;
     animation: fadeIn 0.3s;
  }
-
- @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
- }
-
- .download-modal img {
-    max-width: 100%;
-    max-height: 70vh;
-    border-radius: 16px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
- }
-
- .download-modal p {
-    color: white;
-    margin-top: 20px;
-    font-size: 14px;
-    text-align: center;
- }
-
- .download-modal button {
-    width: auto;
-    padding: 12px 24px;
-    margin-top: 20px;
-    background: var(--vivo);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    font-weight: bold;
- }
-
- /* Quick Input Group */
- .quick-group {
-    display: flex;
-    gap: 8px;
- }
-
- .quick-group input {
-    flex: 1;
-    margin-bottom: 0;
- }
-
- .quick-group button {
-    width: 60px;
-    margin-bottom: 0;
-    background: #444;
-    color: white;
- }
-
- /* Button Group */
- .button-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 8px;
- }
+ @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+ .download-modal img { max-width: 100%; max-height: 70vh; border-radius: 16px; }
+ .download-modal p { color: white; margin-top: 20px; font-size: 14px; text-align: center; }
+ .download-modal button { width: auto; padding: 12px 24px; margin-top: 20px; background: var(--vivo); color: white; border: none; border-radius: 30px; }
 
  @media (max-width: 640px) {
-    body {
-        padding: 12px;
-    }
-    
-    .room-card {
-        aspect-ratio: 1 / 1.1;
-    }
-    
-    .room-number {
-        font-size: 9px;
-        padding: 1px 4px;
-    }
-    
-    .floor-number {
-        width: 42px;
-        font-size: 9px;
-    }
-    
-    .rooms-grid {
-        gap: 4px;
-    }
+    body { padding: 12px; }
+    .room-card { width: 45px; height: 45px; }
+    .room-number { font-size: 12px; }
+    .room-status-icon { font-size: 14px; margin-top: 2px; }
+    .floor-number { width: 42px; font-size: 10px; }
  }
 </style>
 </head>
 <body>
 
 <div class="app">
-    <!-- Painel de Controle -->
     <div class="card">
         <div class="stats-grid">
             <div class="stat-box" style="background:var(--valid)">
@@ -564,8 +419,8 @@
             </div>
         </div>
 
-        <label>👤 Responsável pela Auditoria</label>
-        <input type="text" id="inputResp" placeholder="Nome completo do auditor">
+        <label>👤 Responsável</label>
+        <input type="text" id="inputResp" placeholder="Nome completo">
 
         <label>📍 Localização</label>
         <div style="display:flex; gap:8px">
@@ -573,45 +428,42 @@
             <select id="selRoom" style="flex:1"></select>
         </div>
 
-        <label>📌 Status da Sala</label>
+        <label>📌 Status</label>
         <select id="selStatus">
-            <option value="valid">✅ Validada - OK</option>
-            <option value="occ">🟠 Ocupada - Em uso</option>
-            <option value="lock">🔒 Trancada - Sem acesso</option>
-            <option value="prob">❌ Problema - Requer ação</option>
-            <option value="none">🗑️ Remover status</option>
+            <option value="valid">✅ Validada</option>
+            <option value="occ">🟠 Ocupada</option>
+            <option value="lock">🔒 Trancada</option>
+            <option value="prob">❌ Problema</option>
+            <option value="none">🗑️ Remover</option>
         </select>
 
         <label>📝 Observações</label>
-        <textarea id="obsText" rows="2" placeholder="Registre observações importantes..."></textarea>
+        <textarea id="obsText" rows="2" placeholder="Observações..."></textarea>
 
-        <label>⚡ Atalho Rápido</label>
+        <label>⚡ Atalho</label>
         <div class="quick-group">
-            <input id="quickInput" type="text" placeholder="Ex: 32-05-v">
+            <input id="quickInput" type="text" placeholder="32-05-v">
             <button id="btnQuick">OK</button>
         </div>
-        <small style="font-size:10px; color:#666; margin-top:-8px; display:block;">Formato: Andar-Sala-status (v/o/t/p) | Sala até 50</small>
+        <small style="font-size:10px; color:#666; margin-top:-8px;">Formato: Andar-Sala-status (v/o/t/p) | Sala até 50</small>
 
-        <button id="btnApply" class="btn-apply">✓ Aplicar no Mapa</button>
-        <button id="btnAI" class="btn-ai">🤖 Gerar Relatório Inteligente</button>
+        <button id="btnApply" class="btn-apply">✓ Aplicar</button>
+        <button id="btnAI" class="btn-ai">🤖 Relatório IA</button>
         <button id="btnPNG" class="btn-png">📸 Exportar PNG</button>
         
         <div class="button-group">
-            <button id="btnClearSalas" class="btn-clear">🗑️ Limpar Todas Salas</button>
+            <button id="btnClearSalas" class="btn-clear">🗑️ Limpar Tudo</button>
             <button id="btnClearResumo" class="btn-clear">📋 Limpar Relatório</button>
         </div>
     </div>
 
-    <!-- Visualização do Prédio -->
     <div class="card viewer-card">
         <div class="building-container">
-            <div class="real-building" id="realBuilding">
+            <div class="real-building">
                 <div class="cobertura">
                     <div class="cobertura-text">ÁREA TÉCNICA • ANTENA 5G</div>
                 </div>
-                
                 <div class="floors-container" id="floorsContainer"></div>
-                
                 <div class="hall-entrada">
                     <div class="glass-panel"></div>
                     <div class="glass-panel"></div>
@@ -619,21 +471,30 @@
                 </div>
                 <div class="hall-text">VIVO INFRA • ACESSO PRINCIPAL • 24H</div>
             </div>
-            
             <div class="footer-note" id="footerNoteDisplay"></div>
         </div>
     </div>
 </div>
 
 <script>
-// ==================== CONFIGURAÇÃO INICIAL ====================
-const STORAGE_KEY = "vivo_auditoria_premium_v19";
+// ==================== CONFIGURAÇÃO ====================
+const STORAGE_KEY = "vivo_auditoria_v20";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
 
 const TOTAL_FLOORS = 32;
-const MAX_VISUAL_ROOMS = 7;
 const MAX_SALA_SELECT = 50;
+
+// ==================== FUNÇÕES ====================
+function getStatusIcon(status) {
+    const icons = {
+        valid: '✅',
+        occ: '🟠',
+        lock: '🔒',
+        prob: '❌'
+    };
+    return icons[status] || '';
+}
 
 function getStatusColor(status) {
     const colors = {
@@ -642,42 +503,65 @@ function getStatusColor(status) {
         lock: '#7f8c8d',
         prob: '#e74c3c'
     };
-    return colors[status] || '#bdc3c7';
+    return colors[status] || '#2c3e50';
 }
 
-function getStatusClass(status) {
-    return status || '';
-}
-
-// ==================== RENDERIZAÇÃO DO PRÉDIO ====================
+// ==================== RENDERIZAÇÃO DINÂMICA ====================
 function renderBuilding() {
     const container = document.getElementById("floorsContainer");
     if (!container) return;
     
+    // Agrupar salas por andar
+    const floorsMap = new Map();
+    for (let floor = 1; floor <= TOTAL_FLOORS; floor++) {
+        floorsMap.set(floor, []);
+    }
+    
+    // Organizar salas por andar
+    Object.entries(rooms).forEach(([key, status]) => {
+        const [floor, room] = key.split('-').map(Number);
+        if (floorsMap.has(floor)) {
+            floorsMap.get(floor).push({ room, status });
+        }
+    });
+    
+    // Ordenar salas por número em cada andar
+    for (let floor of floorsMap.keys()) {
+        floorsMap.get(floor).sort((a, b) => a.room - b.room);
+    }
+    
     let html = '';
     
     for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
+        const salasDoAndar = floorsMap.get(floor);
+        
         html += `
-            <div class="floor-row" data-floor="${floor}">
+            <div class="floor-row">
                 <div class="floor-number">${floor}º</div>
                 <div class="rooms-grid">
         `;
         
-        for (let room = 1; room <= MAX_VISUAL_ROOMS; room++) {
-            const roomKey = `${floor}-${room}`;
-            const status = rooms[roomKey];
-            const statusClass = getStatusClass(status);
-            const bgColor = status ? getStatusColor(status) : '#2c3e50';
-            
-            html += `
-                <div class="room-card ${statusClass}" 
-                     data-room="${roomKey}"
-                     data-floor="${floor}"
-                     data-roomnum="${room}"
-                     style="background: linear-gradient(145deg, ${bgColor}, ${this.adjustColor ? this.adjustColor(bgColor, -20) : bgColor});">
-                    <span class="room-number">${room}</span>
-                </div>
-            `;
+        if (salasDoAndar.length === 0) {
+            // Andar sem salas auditadas - mostrar vazio
+            html += `<div style="color:rgba(255,255,255,0.3); font-size:11px; padding:15px;">Nenhuma sala auditada</div>`;
+        } else {
+            // Mostrar apenas as salas que foram auditadas neste andar
+            salasDoAndar.forEach(sala => {
+                const statusClass = sala.status;
+                const bgColor = getStatusColor(sala.status);
+                const icon = getStatusIcon(sala.status);
+                
+                html += `
+                    <div class="room-card ${statusClass}" 
+                         data-room="${floor}-${sala.room}"
+                         data-floor="${floor}"
+                         data-roomnum="${sala.room}"
+                         style="background: linear-gradient(145deg, ${bgColor}, ${this.adjustColor ? this.adjustColor(bgColor, -20) : bgColor});">
+                        <span class="room-number">${sala.room}</span>
+                        <span class="room-status-icon">${icon}</span>
+                    </div>
+                `;
+            });
         }
         
         html += `</div></div>`;
@@ -687,10 +571,7 @@ function renderBuilding() {
     attachRoomEvents();
 }
 
-function adjustColor(color, percent) {
-    // Função simples para escurecer a cor
-    return color;
-}
+function adjustColor(color, percent) { return color; }
 
 function attachRoomEvents() {
     document.querySelectorAll('.room-card').forEach(card => {
@@ -702,6 +583,7 @@ function attachRoomEvents() {
 function handleRoomClick(e) {
     const card = e.currentTarget;
     const roomKey = card.dataset.room;
+    if (!roomKey) return;
     const [floor, room] = roomKey.split('-');
     
     document.getElementById("selFloor").value = floor;
@@ -711,7 +593,7 @@ function handleRoomClick(e) {
     setTimeout(() => { card.style.transform = ''; }, 150);
 }
 
-// ==================== ATUALIZAÇÕES ====================
+// ==================== ESTATÍSTICAS ====================
 function updateStats() {
     const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
     Object.values(rooms).forEach(status => {
@@ -734,7 +616,7 @@ function updateFooter() {
         📅 ${dataStr} | 👤 Auditor: ${auditor}<br>
         ──────────────────────<br>
         📝 OBS: ${obs}<br><br>
-        ${resumoIA || '🤖 Clique em "Gerar Relatório" para análise automática.'}
+        ${resumoIA || '🤖 Clique em "Relatório IA" para análise automática.'}
     `;
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
@@ -743,19 +625,17 @@ function updateFooter() {
     localStorage.setItem(STORAGE_KEY + "_ai", resumoIA);
 }
 
-// ==================== GERAR RELATÓRIO ====================
+// ==================== RELATÓRIO IA ====================
 function generateAIRelatorio() {
     const stats = updateStats();
     const totalAuditadas = Object.keys(rooms).length;
-    const totalSalas = TOTAL_FLOORS * MAX_VISUAL_ROOMS;
-    const cobertura = ((totalAuditadas / totalSalas) * 100).toFixed(1);
     
     const andaresComProblema = new Set();
     Object.entries(rooms).forEach(([key, status]) => {
         if (status === 'prob') andaresComProblema.add(key.split('-')[0]);
     });
     
-    resumoIA = `🤖 RELATÓRIO EXECUTIVO\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📊 SALAS AUDITADAS: ${totalAuditadas}/${totalSalas} (${cobertura}%)\n\n✅ VALIDADAS: ${stats.valid}\n🟠 OCUPADAS: ${stats.occ}\n🔒 TRANCADAS: ${stats.lock}\n❌ PROBLEMAS: ${stats.prob}\n\n${andaresComProblema.size > 0 ? `⚠️ Andares com falhas: ${Array.from(andaresComProblema).sort((a,b)=>b-a).join(', ')}º` : '✅ Sem falhas críticas'}`;
+    resumoIA = `🤖 RELATÓRIO EXECUTIVO\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📊 TOTAL AUDITADAS: ${totalAuditadas}\n\n✅ VALIDADAS: ${stats.valid}\n🟠 OCUPADAS: ${stats.occ}\n🔒 TRANCADAS: ${stats.lock}\n❌ PROBLEMAS: ${stats.prob}\n\n${andaresComProblema.size > 0 ? `⚠️ Andares com falhas: ${Array.from(andaresComProblema).sort((a,b)=>b-a).join(', ')}º` : '✅ Sem falhas críticas'}`;
     
     updateFooter();
     
@@ -765,7 +645,7 @@ function generateAIRelatorio() {
     setTimeout(() => { btn.textContent = originalText; }, 1500);
 }
 
-// ==================== EXPORTAR PNG (COM CORES REAIS) ====================
+// ==================== EXPORTAR PNG ====================
 function exportToPNG() {
     const btn = document.getElementById("btnPNG");
     const originalText = btn.textContent;
@@ -777,105 +657,111 @@ function exportToPNG() {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
             
-            const scale = 2.5;
-            canvas.width = 540 * scale;
-            canvas.height = 1550 * scale;
+            const scale = 2.2;
+            canvas.width = 600 * scale;
+            canvas.height = 1800 * scale;
             ctx.scale(scale, scale);
             
-            // Fundo
             ctx.fillStyle = "#e8f0f5";
-            ctx.fillRect(0, 0, 540, 1550);
+            ctx.fillRect(0, 0, 600, 1800);
             
             // Prédio
             ctx.fillStyle = "#2c3e50";
-            ctx.fillRect(25, 25, 490, 1450);
+            ctx.fillRect(20, 20, 560, 1700);
             
             // Cobertura
             ctx.fillStyle = "#7f8c8d";
-            ctx.fillRect(25, 25, 490, 45);
+            ctx.fillRect(20, 20, 560, 50);
             ctx.fillStyle = "#f1c40f";
-            ctx.font = "bold 18px sans-serif";
-            ctx.fillText("📡", 265, 52);
-            ctx.fillText("📡", 285, 52);
-            ctx.fillStyle = "white";
-            ctx.font = "bold 10px sans-serif";
-            ctx.fillText("ÁREA TÉCNICA • ANTENA 5G", 270, 60);
+            ctx.font = "bold 20px sans-serif";
+            ctx.fillText("📡", 290, 55);
+            ctx.fillText("📡", 310, 55);
             
-            // ANDARES COM CORES REAIS
-            let yOffset = 80;
-            const roomWidth = 64;
-            const roomHeight = 28;
+            // ANDARES COM SALAS REAIS
+            let yOffset = 85;
+            const roomWidth = 70;
+            const roomHeight = 65;
             
-            for (let floor = 32; floor >= 1; floor--) {
-                // Número do andar
-                ctx.fillStyle = "#f1c40f";
-                ctx.font = "bold 11px sans-serif";
-                ctx.fillText(`${floor}º`, 38, yOffset + 18);
+            // Agrupar salas por andar
+            const floorsMap = new Map();
+            for (let floor = 1; floor <= TOTAL_FLOORS; floor++) floorsMap.set(floor, []);
+            
+            Object.entries(rooms).forEach(([key, status]) => {
+                const [floor, room] = key.split('-').map(Number);
+                if (floorsMap.has(floor)) floorsMap.get(floor).push({ room, status });
+            });
+            
+            for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
+                const salas = floorsMap.get(floor);
+                salas.sort((a, b) => a.room - b.room);
                 
-                for (let room = 1; room <= MAX_VISUAL_ROOMS; room++) {
-                    const roomKey = `${floor}-${room}`;
-                    const status = rooms[roomKey];
-                    
-                    // COR REAL do status
+                ctx.fillStyle = "#f1c40f";
+                ctx.font = "bold 12px sans-serif";
+                ctx.fillText(`${floor}º`, 32, yOffset + 32);
+                
+                let xOffset = 75;
+                salas.forEach(sala => {
                     let color = "#2c3e50";
-                    if (status === 'valid') color = "#27ae60";
-                    else if (status === 'occ') color = "#f39c12";
-                    else if (status === 'lock') color = "#7f8c8d";
-                    else if (status === 'prob') color = "#e74c3c";
+                    if (sala.status === 'valid') color = "#27ae60";
+                    else if (sala.status === 'occ') color = "#f39c12";
+                    else if (sala.status === 'lock') color = "#7f8c8d";
+                    else if (sala.status === 'prob') color = "#e74c3c";
                     
-                    // Gradiente para efeito de janela
-                    const grad = ctx.createLinearGradient(70 + (room-1)*roomWidth, yOffset, 70 + (room-1)*roomWidth + roomWidth-4, yOffset + roomHeight);
-                    grad.addColorStop(0, color);
-                    grad.addColorStop(1, this.adjustColorExport ? this.adjustColorExport(color) : color);
-                    ctx.fillStyle = grad;
+                    ctx.fillStyle = color;
+                    ctx.fillRect(xOffset, yOffset, roomWidth - 4, roomHeight - 4);
                     
-                    const x = 70 + (room - 1) * roomWidth;
-                    ctx.fillRect(x, yOffset, roomWidth - 4, roomHeight);
-                    
-                    // Moldura da janela
                     ctx.strokeStyle = "rgba(255,255,255,0.3)";
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(x + 2, yOffset + 2, roomWidth - 8, roomHeight - 4);
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeRect(xOffset + 2, yOffset + 2, roomWidth - 8, roomHeight - 8);
                     
-                    // Número da sala
                     ctx.fillStyle = "#fff";
-                    ctx.font = "bold 10px sans-serif";
+                    ctx.font = "bold 14px sans-serif";
                     ctx.textAlign = "center";
-                    ctx.fillText(room.toString(), x + (roomWidth - 4) / 2, yOffset + 20);
-                }
-                yOffset += 34;
+                    ctx.fillText(sala.room, xOffset + (roomWidth - 4) / 2, yOffset + 30);
+                    
+                    ctx.font = "16px sans-serif";
+                    let icon = "";
+                    if (sala.status === 'valid') icon = "✅";
+                    else if (sala.status === 'occ') icon = "🟠";
+                    else if (sala.status === 'lock') icon = "🔒";
+                    else if (sala.status === 'prob') icon = "❌";
+                    ctx.fillText(icon, xOffset + (roomWidth - 4) / 2, yOffset + 52);
+                    
+                    xOffset += roomWidth;
+                });
+                
+                yOffset += 72;
+                if (yOffset > 1650) break;
             }
             
             // Hall
             ctx.fillStyle = "#1e2a36";
-            ctx.fillRect(25, yOffset, 490, 80);
+            ctx.fillRect(20, yOffset, 560, 85);
             ctx.fillStyle = "rgba(255,255,255,0.2)";
-            ctx.fillRect(230, yOffset + 18, 40, 50);
-            ctx.fillRect(280, yOffset + 18, 40, 50);
-            ctx.fillStyle = "#f1c40f";
-            ctx.font = "bold 9px sans-serif";
-            ctx.fillText("VIVO INFRA • ACESSO PRINCIPAL • 24H", 270, yOffset + 68);
+            ctx.fillRect(260, yOffset + 18, 45, 55);
+            ctx.fillRect(315, yOffset + 18, 45, 55);
             
-            yOffset += 90;
+            yOffset += 95;
             
             // Rodapé
             ctx.fillStyle = "#fff";
-            ctx.fillRect(25, yOffset, 490, 130);
+            ctx.fillRect(20, yOffset, 560, 140);
             ctx.fillStyle = "#334155";
             ctx.font = "11px sans-serif";
+            ctx.textAlign = "left";
             
             const dataStr = new Date().toLocaleDateString('pt-BR');
             const auditor = document.getElementById("inputResp")?.value || '---';
             const obs = document.getElementById("obsText")?.value || 'Sem notas.';
             
-            ctx.fillText(`📅 ${dataStr} | 👤 Auditor: ${auditor}`, 40, yOffset + 20);
-            ctx.fillText(`📝 OBS: ${obs.substring(0, 70)}`, 40, yOffset + 42);
+            ctx.fillText(`📅 ${dataStr} | 👤 Auditor: ${auditor}`, 35, yOffset + 22);
+            ctx.fillText(`📝 OBS: ${obs.substring(0, 80)}`, 35, yOffset + 44);
             
             ctx.font = "10px sans-serif";
             const lines = resumoIA.split('\n');
-            let textY = yOffset + 68;
+            let textY = yOffset + 70;
             for (let i = 0; i < Math.min(lines.length, 4); i++) {
-                ctx.fillText(lines[i].substring(0, 70), 40, textY);
+                ctx.fillText(lines[i].substring(0, 75), 35, textY);
                 textY += 16;
             }
             
@@ -893,10 +779,6 @@ function exportToPNG() {
     }, 100);
 }
 
-function adjustColorExport(color) {
-    return color;
-}
-
 function showDownloadModal(imageDataURL) {
     const existingModal = document.querySelector('.download-modal');
     if (existingModal) existingModal.remove();
@@ -912,7 +794,7 @@ function showDownloadModal(imageDataURL) {
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
 }
 
-// ==================== APLICAR STATUS ====================
+// ==================== AÇÕES ====================
 function applyStatus() {
     const floor = document.getElementById("selFloor")?.value;
     const room = document.getElementById("selRoom")?.value;
