@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Urban Pro v9</title>
+<title>Vivo Infra • Ultra HD v10</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -135,7 +135,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_v9_flush";
+const STORAGE_KEY = "vivo_pro_v10_download_fix";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -229,7 +229,9 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.fillText(line, x, y); return y;
 }
 
+// RESTAURAÇÃO DO SISTEMA DE DOWNLOAD DIRETO
 $("#btnPNG").onclick = async () => {
+    const btn = $("#btnPNG"); btn.textContent = "BAIXANDO...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
     canvas.width = 460 * SCALE; canvas.height = 1050 * SCALE; ctx.scale(SCALE, SCALE);
     
@@ -258,11 +260,9 @@ $("#btnPNG").onclick = async () => {
         ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
 
-    // Hall Colado no PNG
     ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 814, 340, 110, 10); ctx.fill();
     ctx.fillStyle = "#334155"; ctx.fillRect(175, 825, 50, 70); ctx.fillRect(235, 825, 50, 70);
 
-    // Footer
     ctx.fillStyle = "#334155"; ctx.textAlign = "left"; ctx.font = "bold 11px sans-serif";
     ctx.fillText(`${new Date().toLocaleDateString('pt-BR')} | Auditor: ${$("#inputResp").value}`, 80, 955);
     ctx.font = "10px sans-serif";
@@ -270,11 +270,19 @@ $("#btnPNG").onclick = async () => {
     ctx.fillStyle = "#777"; ctx.font = "italic 9px sans-serif";
     wrapText(ctx, resumoIA || "", 80, curY + 10, 300, 12);
 
-    canvas.toBlob(blob => {
-        const link = document.createElement("a"); link.download = "mapa_v9.png";
-        link.href = URL.createObjectURL(blob); link.click();
-    });
+    // MODO DOWNLOAD FORÇADO (NÃO ABRE COMPARTILHAMENTO)
+    const link = document.createElement("a");
+    link.download = "Checklist_Predio_Infra.png";
+    link.href = canvas.toDataURL("image/png");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    btn.textContent = "📸 Exportar PNG (4K)";
 };
+
+$("#btnClearSalas").onclick = () => { if(confirm("Limpar salas?")) { rooms = {}; render(); }};
+$("#btnClearResumo").onclick = () => { resumoIA = ""; render(); };
 
 init();
 </script>
