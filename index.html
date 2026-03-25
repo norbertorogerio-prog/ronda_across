@@ -28,7 +28,7 @@
     border-radius:12px;
     padding:16px;
     backdrop-filter:blur(4px);
-    overflow:hidden;               /* garante que nada “vaze” do card */
+    overflow:hidden;               /* evita overflow dos campos */
   }
 
   h2,h3{margin:0 0 10px 0;font-weight:800;letter-spacing:.4px}
@@ -40,14 +40,12 @@
     font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#e2e8f0
   }
   .form-field{
-    width:100%;
-    max-width:100%;
+    width:100%;max-width:100%;
     border:1px solid var(--border);
     border-radius:10px;
     background:#fff;color:#111;
     padding:8px 10px;              /* compacto */
-    font-size:14px;
-    line-height:1.25;
+    font-size:14px; line-height:1.25;
     outline:none;
   }
   select.form-field{
@@ -110,7 +108,7 @@
   .dot.prob{background:var(--red)}
   .dot.other{background:var(--purple)}
 
-  /* DIREITA – Itens criados + Relatório (sem andares/salas) */
+  /* DIREITA – Itens criados + Relatório */
   .viewer{display:grid;gap:16px}
   .section{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:12px}
   .small{font-size:12px;color:var(--muted)}
@@ -123,12 +121,51 @@
   .pill.lock{background:var(--yellow);color:#111}
   .pill.prob{background:var(--red)}
   .pill.other{background:var(--purple)}
-  .muted{font-size:11px;color:#dbe3ea}
 
   /* Relatório moldurado */
   .report-box{border:2px solid var(--gold);border-radius:12px;background:rgba(0,0,0,.35);padding:12px}
-  .report-title{background:linear-gradient(135deg,#2c3e50,#1a2632);color:var(--gold);font-weight:900;border:1px solid rgba(255,215,0,.5);border-radius:8px;padding:8px 12px;margin-bottom:10px;letter-spacing:.4px}
-  .report-content{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:13px;color:#e2e8f0;line-height:1.45}
+  .report-title{
+    background:linear-gradient(135deg,#2c3e50,#1a2632);
+    color:var(--gold);
+    font-weight:900;
+    border:1px solid rgba(255,215,0,.5);
+    border-radius:8px;
+    padding:8px 12px;
+    margin-bottom:10px;
+    letter-spacing:.4px;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .report-actions { display: inline-flex; gap: 8px; }
+  .btn-action {
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: #111;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .btn-action:hover { filter: brightness(0.95); }
+  .btn-action:active { transform: translateY(1px); }
+
+  .report-content{
+    white-space:pre-wrap;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* fonte amigável */
+    font-size: 14px;
+    color: #eaf2f8;
+    line-height: 1.6;
+  }
+
+  /* Toast simples (feedback) */
+  .toast {
+    position: fixed; right: 16px; bottom: 16px;
+    background: rgba(0,0,0,0.8); color: #fff;
+    padding: 10px 14px; border-radius: 8px;
+    font-size: 12px; z-index: 9999; opacity: 0; transform: translateY(8px);
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -167,7 +204,7 @@
     </div>
 
     <!-- Observações e Ações -->
-    <label style="margin-top:10px">📝 Observações (opcional)</label>
+    <label style="margin-top:10px">📝 Observações (vão para o Relatório)</label>
     <textarea id="obs" class="form-field" placeholder="Escreva detalhes relevantes..."></textarea>
 
     <div class="row row-2" style="margin-top:12px">
@@ -180,7 +217,7 @@
     </p>
   </div>
 
-  <!-- DIREITA (sem andares/salas; apenas Itens criados + Relatório) -->
+  <!-- DIREITA (somente Itens criados + Relatório) -->
   <div class="viewer">
     <div class="section">
       <h3>Itens criados</h3>
@@ -190,7 +227,13 @@
 
     <div class="section">
       <div class="report-box">
-        <div class="report-title">📋 Relatório</div>
+        <div class="report-title">
+          <span>📋 Relatório</span>
+          <div class="report-actions">
+            <button id="btnCopy" class="btn-action" title="Copiar relatório">📋 Copiar</button>
+            <button id="btnDownload" class="btn-action" title="Baixar .txt">⬇️ Baixar .txt</button>
+          </div>
+        </div>
         <div id="relatorio" class="report-content">
 📋 RELATÓRIO DE VISTORIA — Prédio
 📍 Endereço
@@ -207,8 +250,8 @@
 
 <script>
   // Estado
-  const STORAGE_KEY = "vistoria_icons_layoutA_v3";
-  let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); // [{f,r,status,note?}]
+  const STORAGE_KEY = "vistoria_icons_layoutA_v5";
+  let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); // [{f,r,status}]
   let selectedFloor = 1;
   let selectedRoom  = 1;
 
@@ -228,7 +271,7 @@
   const auditorInp   = document.getElementById("auditor");
   const obsInp       = document.getElementById("obs");
 
-  // Preenche ícones de Andar/Sala (ESQUERDA)
+  /* ----- Ícones de Andar/Sala (ESQUERDA) ----- */
   function buildFloorIcons(){
     floorsStrip.innerHTML = "";
     for(let f=1; f<=32; f++){
@@ -259,22 +302,31 @@
     }
   }
 
-  // Ações de status (criam/atualizam imediatamente o item Axx/Sxx com esse status)
+  /* ----- Status: cria/atualiza imediatamente Axx/Sxx ----- */
   document.querySelectorAll(".status").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const status = btn.dataset.status;
       const f = selectedFloor, r = selectedRoom;
       const idx = entries.findIndex(e => e.f===f && e.r===r);
-      const note = (obsInp.value || "").trim();
-      if(idx>=0){ entries[idx].status = status; entries[idx].note = note; }
-      else{ entries.push({f,r,status,note}); }
+      if(idx>=0){ entries[idx].status = status; }
+      else{ entries.push({f,r,status}); }
       persist();
       renderCreated();
-      renderReport();
+      renderReport();  // Observações são globais (não por sala)
     });
   });
 
-  // Render “Itens criados” (grade de cartões)
+  /* ----- Botão Adicionar: garante existência da sala (status default “other”) ----- */
+  document.getElementById("btnAdd").addEventListener("click", ()=>{
+    const f = selectedFloor, r = selectedRoom;
+    const idx = entries.findIndex(e => e.f===f && e.r===r);
+    if(idx<0){ entries.push({f,r,status:"other"}); }
+    persist();
+    renderCreated();
+    renderReport();
+  });
+
+  /* ----- Itens criados (grade de cartões) ----- */
   function renderCreated(){
     createdGrid.innerHTML = "";
     const sorted = [...entries].sort((a,b)=> a.f-b.f || a.r-b.r);
@@ -292,25 +344,19 @@
       tag.textContent = `${statusEmoji(item.status)} ${statusName(item.status)}`;
       card.appendChild(tag);
 
-      if(item.note){
-        const note = document.createElement("div");
-        note.className = "muted";
-        note.textContent = item.note;
-        card.appendChild(note);
-      }
-
       createdGrid.appendChild(card);
     });
   }
 
-  // Relatório moldurado
+  /* ----- Relatório (com Observações globais) ----- */
   function renderReport(){
     const predio   = predioSel.value || "Prédio";
     const endereco = enderecoInp.value || "Endereço não informado";
     const auditor  = auditorInp.value || "";
+    const obsGeral = (obsInp.value || "").trim();
     const dataStr  = new Date().toLocaleString("pt-BR");
 
-    // contagens gerais
+    // contagens
     const stats = { valid:0, lock:0, prob:0, other:0 };
     entries.forEach(e => stats[e.status]++);
 
@@ -346,6 +392,7 @@
       }
     }
 
+    const blocoObs = obsGeral ? `\n📝 Observações da vistoria\n${obsGeral}\n` : "";
     const auditorLine = auditor ? `👤 Auditor: ${auditor}` : "👤 Auditor:";
 
     const text =
@@ -356,15 +403,74 @@
 ${auditorLine}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️ Informações do relatório
-${info}`;
+${info}${blocoObs}`;
 
     relatorioEl.textContent = text;
   }
 
-  // Persistir
+  /* ===== Ações do Relatório: copiar e baixar ===== */
+  function getReportText() {
+    return document.getElementById("relatorio")?.textContent || "";
+  }
+  function copyReportToClipboard() {
+    const text = getReportText();
+    if (!text.trim()) { showToast("Relatório vazio"); return; }
+    navigator.clipboard?.writeText(text).then(
+      () => showToast("Relatório copiado ✅"),
+      () => fallbackCopy(text)
+    );
+  }
+  function fallbackCopy(text) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy");
+      ta.remove();
+      showToast("Relatório copiado ✅");
+    } catch {
+      showToast("Não foi possível copiar");
+    }
+  }
+  function downloadReportTxt() {
+    const text = getReportText();
+    if (!text.trim()) { showToast("Relatório vazio"); return; }
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const predio = (document.getElementById("predio")?.value || "Predio").replace(/\s+/g,'_');
+    const dt = new Date();
+    const stamp = `${String(dt.getFullYear())}${String(dt.getMonth()+1).padStart(2,'0')}${String(dt.getDate()).padStart(2,'0')}_${String(dt.getHours()).padStart(2,'0')}${String(dt.getMinutes()).padStart(2,'0')}`;
+    a.href = url;
+    a.download = `relatorio_vistoria_${predio}_${stamp}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast("Download iniciado ⬇️");
+  }
+
+  /* Toast simples */
+  function showToast(msg) {
+    let t = document.querySelector(".toast");
+    if (!t) {
+      t = document.createElement("div");
+      t.className = "toast";
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 1800);
+  }
+
+  /* Listeners dos botões do relatório */
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "btnCopy")     copyReportToClipboard();
+    if (e.target && e.target.id === "btnDownload") downloadReportTxt();
+  });
+
+  /* ----- Persistência e ações gerais ----- */
   function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
 
-  // Limpar tudo
   document.getElementById("btnClear").addEventListener("click", ()=>{
     if(!confirm("Limpar todos os registros e campos?")) return;
     entries = [];
@@ -372,19 +478,6 @@ ${info}`;
     predioSel.value = "";
     enderecoInp.value = "";
     obsInp.value = "";
-    persist();
-    renderCreated();
-    renderReport();
-  });
-
-  // “Adicionar” (registra observação mesmo sem clicar status novamente)
-  document.getElementById("btnAdd").addEventListener("click", ()=>{
-    const f = selectedFloor, r = selectedRoom;
-    const note = (obsInp.value || "").trim();
-    const idx  = entries.findIndex(e => e.f===f && e.r===r);
-    const status = idx>=0 ? entries[idx].status : "other";
-    if(idx>=0){ entries[idx].note = note; }
-    else{ entries.push({f,r,status,note}); }
     persist();
     renderCreated();
     renderReport();
@@ -406,14 +499,12 @@ ${info}`;
   // Campos que refletem no relatório
   auditorInp.addEventListener("input", renderReport);
   enderecoInp.addEventListener("input", renderReport);
-  obsInp.addEventListener("input", ()=>{/* nota só é aplicada quando adicionar/status */});
+  obsInp.addEventListener("input", renderReport);
 
   // Boot
   (function init(){
-    // defaults
     selectedFloor = 1;
     selectedRoom  = 1;
-
     buildFloorIcons();
     buildRoomIcons();
     renderCreated();
