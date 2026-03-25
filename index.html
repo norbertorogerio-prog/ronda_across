@@ -163,33 +163,98 @@
     border: 1px solid rgba(255,215,0,0.3);
  }
 
+ /* NOVA COBERTURA COM OUTDOOR DA VIVO */
  .cobertura {
     position: relative;
-    height: 55px;
-    background: linear-gradient(90deg, #4a5b6e, #5d6f82, #4a5b6e);
+    height: 85px;
+    background: linear-gradient(135deg, #2c3e50, #1a2632);
     border-radius: 16px 16px 0 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 3px rgba(255,255,255,0.2), 0 4px 12px rgba(0,0,0,0.4);
+    border-bottom: 2px solid var(--gold);
  }
 
- .cobertura::before { content: "📡"; font-size: 24px; filter: drop-shadow(0 2px 2px black); animation: pulse 2s infinite; }
- .cobertura::after { content: "⚡"; font-size: 24px; filter: drop-shadow(0 2px 2px black); animation: pulse 2s infinite 0.5s; }
+ .outdoor-vivo {
+    background: linear-gradient(135deg, #660099, #4A0072);
+    padding: 8px 24px;
+    border-radius: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,215,0,0.6);
+    margin-bottom: 8px;
+ }
 
- @keyframes pulse {
-    0%, 100% { opacity: 0.6; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.1); }
+ .outdoor-vivo span {
+    font-size: 24px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+ }
+
+ .outdoor-vivo small {
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: bold;
+ }
+
+ .antenas-area {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+ }
+
+ .antena-moderna {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+ }
+
+ .antena-base {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, #bdc3c7, #95a5a6);
+    border-radius: 50% 50% 30% 30%;
+    position: relative;
+    animation: pulseAntena 3s infinite;
+ }
+
+ .antena-base::before {
+    content: "📡";
+    position: absolute;
+    top: -25px;
+    left: 5px;
+    font-size: 28px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+ }
+
+ .antena-moderna span {
+    font-size: 9px;
+    color: var(--gold);
+    font-weight: bold;
+    text-transform: uppercase;
+ }
+
+ @keyframes pulseAntena {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
  }
 
  .cobertura-text {
     color: #ffd966;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     text-shadow: 0 1px 2px black;
+    margin-top: 4px;
  }
 
  .floors-container {
@@ -231,7 +296,7 @@
     letter-spacing: 1px;
  }
 
- /* Vidraça Única do Andar */
+ /* Vidraça Única do Andar - SEM "Vidraça Espelhada" */
  .glass-facade {
     flex: 1;
     background: linear-gradient(145deg, rgba(100,150,200,0.3), rgba(50,80,120,0.5));
@@ -307,34 +372,71 @@
     font-size: 14px;
  }
 
+ /* NOVO HALL DE ENTRADA - Portas do chão ao teto, apenas 2 portas */
  .hall-entrada {
     background: linear-gradient(135deg, #2c3e50, #1a2632);
     border-top: 2px solid var(--gold);
-    padding: 20px;
+    padding: 25px 20px;
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: 60px;
     position: relative;
+    min-height: 140px;
+    align-items: center;
  }
 
- .glass-door {
-    width: 55px;
-    height: 80px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-    backdrop-filter: blur(5px);
-    border-radius: 8px;
-    border: 1px solid rgba(255,215,0,0.5);
-    box-shadow: 0 0 15px rgba(255,215,0,0.3);
+ .glass-door-full {
+    width: 100px;
+    height: 100%;
+    min-height: 110px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.15));
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 2px solid rgba(255,215,0,0.7);
+    box-shadow: 0 0 20px rgba(255,215,0,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+ }
+
+ .glass-door-full:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(255,215,0,0.6);
+ }
+
+ .door-handle {
+    width: 8px;
+    height: 35px;
+    background: var(--gold);
+    border-radius: 4px;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+ }
+
+ .glass-door-full span {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(0,0,0,0.5);
+    padding: 4px 8px;
+    border-radius: 20px;
  }
 
  .hall-text {
     text-align: center;
     color: var(--gold);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: bold;
-    letter-spacing: 1px;
-    margin-top: 10px;
-    padding-bottom: 10px;
+    letter-spacing: 1.5px;
+    margin-top: 8px;
+    padding-bottom: 12px;
     text-shadow: 0 1px 2px black;
  }
 
@@ -382,6 +484,11 @@
     .room-number-tag { font-size: 11px; }
     .floor-number { width: 45px; font-size: 11px; }
     .glass-facade { min-height: 55px; }
+    .glass-door-full { width: 70px; min-height: 90px; }
+    .hall-entrada { gap: 30px; }
+    .outdoor-vivo span { font-size: 16px; }
+    .outdoor-vivo { padding: 4px 16px; }
+    .cobertura { height: 75px; }
  }
 </style>
 </head>
@@ -437,16 +544,39 @@
     <div class="card viewer-card">
         <div class="building-container">
             <div class="real-building">
+                <!-- NOVA COBERTURA COM OUTDOOR VIVO -->
                 <div class="cobertura">
-                    <div class="cobertura-text">VIVO 5G • ÁREA TÉCNICA</div>
+                    <div class="outdoor-vivo">
+                        <span>📱 VIVO 5G+</span>
+                        <small>INFRAESTRUTURA</small>
+                    </div>
+                    <div class="antenas-area">
+                        <div class="antena-moderna">
+                            <div class="antena-base"></div>
+                            <span>5G ULTRA</span>
+                        </div>
+                        <div class="antena-moderna">
+                            <div class="antena-base"></div>
+                            <span>FIBRA</span>
+                        </div>
+                    </div>
+                    <div class="cobertura-text">TELECOM • CONECTIVIDADE TOTAL</div>
                 </div>
                 <div class="floors-container" id="floorsContainer"></div>
+                <!-- NOVO HALL - APENAS 2 PORTAS DO CHÃO AO TETO -->
                 <div class="hall-entrada">
-                    <div class="glass-door"></div>
-                    <div class="glass-door"></div>
-                    <div class="glass-door"></div>
+                    <div class="glass-door-full" style="position: relative;">
+                        <span>🚪 ACESSO</span>
+                        <span style="font-size: 9px;">VIVO CORPORATIVO</span>
+                        <div class="door-handle"></div>
+                    </div>
+                    <div class="glass-door-full" style="position: relative;">
+                        <span>🚪 ACESSO</span>
+                        <span style="font-size: 9px;">ÁREA TÉCNICA</span>
+                        <div class="door-handle"></div>
+                    </div>
                 </div>
-                <div class="hall-text">VIVO INFRAESTRUTURA • ACESSO CORPORATIVO</div>
+                <div class="hall-text">VIVO INFRAESTRUTURA • ENTRADA PRINCIPAL</div>
             </div>
             <div class="footer-note" id="footerNoteDisplay"></div>
         </div>
@@ -470,7 +600,14 @@ function getStatusColor(status) {
     return colors[status] || '';
 }
 
-// ==================== RENDER PRÉDIO COM VIDRAÇA ====================
+// Função para calcular o tamanho da sala baseado no andar (diminui gradualmente)
+function getRoomSizeModifier(floor) {
+    // Andares superiores têm salas menores (mais compactas)
+    // Quanto maior o andar, menor a sala (para caber melhor)
+    return Math.max(0.7, 1 - (floor / TOTAL_FLOORS) * 0.3);
+}
+
+// ==================== RENDER PRÉDIO COM VIDRAÇA E SALAS AJUSTADAS ====================
 function renderBuilding() {
     const container = document.getElementById("floorsContainer");
     if (!container) return;
@@ -490,26 +627,35 @@ function renderBuilding() {
     let html = '';
     for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
         const salas = floorsMap.get(floor);
+        const sizeModifier = getRoomSizeModifier(floor);
         
         html += `
             <div class="floor-row">
                 <div class="floor-number">${floor}º ANDAR</div>
-                <div class="glass-facade">
+                <div class="glass-facade" style="justify-content: ${salas.length > 0 ? 'flex-start' : 'center'}">
         `;
         
         if (salas.length === 0) {
-            html += `<div style="color:rgba(255,255,255,0.4); font-size:11px; padding:8px;">—— VIDRAÇA ESPELHADA ——</div>`;
+            html += `<div style="color:rgba(255,255,255,0.5); font-size:11px; padding:8px; font-style:italic;">—— DISPONÍVEL PARA AUDITORIA ——</div>`;
         } else {
-            salas.forEach(sala => {
+            // Aplica o modificador de tamanho nas salas (quanto maior o andar, mais compactas)
+            const maxRoomsToShow = Math.max(3, Math.floor(8 * sizeModifier));
+            const salasToShow = salas.slice(0, maxRoomsToShow);
+            
+            salasToShow.forEach(sala => {
                 const statusClass = sala.status;
                 const icon = getStatusIcon(sala.status);
                 html += `
-                    <div class="room-tag ${statusClass}" data-room="${floor}-${sala.room}">
+                    <div class="room-tag ${statusClass}" data-room="${floor}-${sala.room}" style="transform: scale(${sizeModifier}); transform-origin: left center;">
                         <span class="room-number-tag">SALA ${sala.room}</span>
                         <span class="room-status-tag">${icon}</span>
                     </div>
                 `;
             });
+            
+            if (salas.length > maxRoomsToShow) {
+                html += `<div style="color:rgba(255,255,255,0.6); font-size:10px; margin-left: 4px;">+${salas.length - maxRoomsToShow} salas</div>`;
+            }
         }
         
         html += `</div></div>`;
@@ -590,60 +736,52 @@ function exportToPNG() {
             
             const scale = 2.2;
             canvas.width = 700 * scale;
-            canvas.height = 2000 * scale;
+            canvas.height = 2100 * scale;
             ctx.scale(scale, scale);
             
             // Céu e fundo
-            const gradSky = ctx.createLinearGradient(0, 0, 0, 2000);
+            const gradSky = ctx.createLinearGradient(0, 0, 0, 2100);
             gradSky.addColorStop(0, "#0a2f3a");
             gradSky.addColorStop(0.5, "#1a4a5a");
             gradSky.addColorStop(1, "#2c5e6a");
             ctx.fillStyle = gradSky;
-            ctx.fillRect(0, 0, 700, 2000);
-            
-            // Reflexo de nuvens
-            ctx.fillStyle = "rgba(255,255,255,0.03)";
-            for(let i=0;i<8;i++) {
-                ctx.beginPath();
-                ctx.ellipse(100 + i*70, 80 + i*40, 60, 35, 0, 0, Math.PI*2);
-                ctx.fill();
-            }
+            ctx.fillRect(0, 0, 700, 2100);
             
             // Prédio principal
             ctx.fillStyle = "#0f1a24";
-            ctx.fillRect(40, 35, 620, 1880);
+            ctx.fillRect(40, 35, 620, 1960);
             
-            // Estrutura metálica (pilares)
+            // Estrutura metálica
             ctx.fillStyle = "#4a5b6e";
-            ctx.fillRect(45, 35, 8, 1880);
-            ctx.fillRect(647, 35, 8, 1880);
+            ctx.fillRect(45, 35, 8, 1960);
+            ctx.fillRect(647, 35, 8, 1960);
             
-            // COBERTURA
-            const roofGrad = ctx.createLinearGradient(40, 35, 660, 35);
-            roofGrad.addColorStop(0, "#5d6f82");
-            roofGrad.addColorStop(0.5, "#7f8c9a");
-            roofGrad.addColorStop(1, "#5d6f82");
-            ctx.fillStyle = roofGrad;
-            ctx.fillRect(40, 35, 620, 65);
+            // COBERTURA COM OUTDOOR VIVO
+            ctx.fillStyle = "#2c3e50";
+            ctx.fillRect(40, 35, 620, 85);
+            ctx.fillStyle = "#4A0072";
+            ctx.fillRect(240, 48, 220, 35);
+            ctx.fillStyle = "white";
+            ctx.font = "bold 14px sans-serif";
+            ctx.fillText("VIVO 5G+", 290, 72);
+            ctx.fillStyle = "#f1c40f";
+            ctx.font = "bold 9px sans-serif";
+            ctx.fillText("INFRAESTRUTURA", 305, 88);
             
-            // Antenas
+            // Antenas modernas
             ctx.fillStyle = "#bdc3c7";
-            ctx.fillRect(330, 15, 12, 40);
-            ctx.fillRect(360, 15, 12, 40);
+            ctx.fillRect(320, 20, 12, 28);
+            ctx.fillRect(360, 20, 12, 28);
             ctx.fillStyle = "#f1c40f";
             ctx.beginPath();
-            ctx.arc(336, 15, 5, 0, Math.PI*2);
+            ctx.arc(326, 20, 5, 0, Math.PI*2);
             ctx.fill();
             ctx.beginPath();
-            ctx.arc(366, 15, 5, 0, Math.PI*2);
+            ctx.arc(366, 20, 5, 0, Math.PI*2);
             ctx.fill();
             
-            ctx.fillStyle = "#ffd966";
-            ctx.font = "bold 10px sans-serif";
-            ctx.fillText("VIVO 5G", 335, 70);
-            
-            // ANDARES COM VIDRAÇA ÚNICA
-            let yOffset = 105;
+            // ANDARES COM VIDRAÇA E SALAS AJUSTADAS
+            let yOffset = 125;
             const floorHeight = 52;
             
             const floorsMap = new Map();
@@ -656,13 +794,14 @@ function exportToPNG() {
             for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
                 const salas = floorsMap.get(floor);
                 salas.sort((a, b) => a.room - b.room);
+                const sizeModifier = getRoomSizeModifier(floor);
                 
-                // Número do andar (placa lateral)
+                // Número do andar
                 ctx.fillStyle = "#ffd966";
                 ctx.font = "bold 10px sans-serif";
                 ctx.fillText(`${floor}º`, 20, yOffset + 28);
                 
-                // VIDRAÇA ÚNICA DO ANDAR (efeito espelhado)
+                // VIDRAÇA ÚNICA DO ANDAR
                 const glassGrad = ctx.createLinearGradient(45, yOffset, 665, yOffset + floorHeight);
                 glassGrad.addColorStop(0, "rgba(100,150,200,0.25)");
                 glassGrad.addColorStop(0.5, "rgba(70,110,150,0.4)");
@@ -670,87 +809,83 @@ function exportToPNG() {
                 ctx.fillStyle = glassGrad;
                 ctx.fillRect(48, yOffset, 604, floorHeight - 2);
                 
-                // Moldura da vidraça
+                // Moldura
                 ctx.strokeStyle = "rgba(255,215,0,0.4)";
                 ctx.lineWidth = 1;
                 ctx.strokeRect(48, yOffset, 604, floorHeight - 2);
                 
-                // Reflexo na vidraça (linha brilhante)
-                ctx.beginPath();
-                ctx.moveTo(48, yOffset + 8);
-                ctx.lineTo(652, yOffset + 8);
-                ctx.strokeStyle = "rgba(255,255,255,0.3)";
-                ctx.stroke();
-                
-                // SELOS DAS SALAS SOBRE A VIDRAÇA
+                // SELOS DAS SALAS COM TAMANHO AJUSTADO
                 let xPos = 65;
-                const maxPerFloor = Math.min(salas.length, 6);
-                const tagWidth = 95;
+                const maxPerFloor = Math.min(salas.length, Math.floor(6 * sizeModifier));
+                const tagWidth = 90;
                 
-                for (let i = 0; i < Math.min(salas.length, 6); i++) {
+                for (let i = 0; i < maxPerFloor; i++) {
                     const sala = salas[i];
-                    let bgColor = "rgba(0,0,0,0.7)";
                     let borderColor = "#7f8c8d";
                     if (sala.status === 'valid') borderColor = "#27ae60";
                     else if (sala.status === 'occ') borderColor = "#f39c12";
                     else if (sala.status === 'prob') borderColor = "#e74c3c";
                     
-                    ctx.fillStyle = bgColor;
-                    ctx.shadowBlur = 4;
-                    ctx.shadowColor = "black";
+                    ctx.fillStyle = "rgba(0,0,0,0.7)";
                     ctx.fillRect(xPos, yOffset + 8, tagWidth, 36);
                     ctx.strokeStyle = borderColor;
                     ctx.lineWidth = 1.5;
                     ctx.strokeRect(xPos, yOffset + 8, tagWidth, 36);
                     
                     ctx.fillStyle = "white";
-                    ctx.font = "bold 11px sans-serif";
-                    ctx.fillText(`SALA ${sala.room}`, xPos + 8, yOffset + 28);
+                    ctx.font = `bold ${Math.max(9, Math.floor(11 * sizeModifier))}px sans-serif`;
+                    ctx.fillText(`SALA ${sala.room}`, xPos + 6, yOffset + 28);
                     
                     let icon = "";
                     if (sala.status === 'valid') icon = "✅";
                     else if (sala.status === 'occ') icon = "🟠";
                     else if (sala.status === 'lock') icon = "🔒";
                     else if (sala.status === 'prob') icon = "❌";
-                    ctx.fillText(icon, xPos + tagWidth - 18, yOffset + 28);
+                    ctx.fillText(icon, xPos + tagWidth - 16, yOffset + 28);
                     
-                    xPos += tagWidth + 8;
+                    xPos += tagWidth + 6;
                     if (xPos > 580) break;
                 }
                 
                 if (salas.length === 0) {
-                    ctx.fillStyle = "rgba(255,255,255,0.3)";
-                    ctx.font = "italic 10px sans-serif";
-                    ctx.fillText("VIDRAÇA ESPELHADA", 320, yOffset + 32);
+                    ctx.fillStyle = "rgba(255,255,255,0.4)";
+                    ctx.font = "italic 9px sans-serif";
+                    ctx.fillText("DISPONÍVEL", 330, yOffset + 32);
                 }
                 
                 yOffset += floorHeight;
-                if (yOffset > 1850) break;
+                if (yOffset > 1950) break;
             }
             
-            // HALL DE ENTRADA (VIDRO)
+            // HALL COM APENAS 2 PORTAS DO CHÃO AO TETO
             ctx.fillStyle = "#1e2a36";
-            ctx.fillRect(40, yOffset, 620, 90);
+            ctx.fillRect(40, yOffset, 620, 100);
             
-            const glassGradDoor = ctx.createLinearGradient(280, yOffset + 15, 420, yOffset + 75);
-            glassGradDoor.addColorStop(0, "rgba(255,255,255,0.3)");
-            glassGradDoor.addColorStop(1, "rgba(255,255,255,0.1)");
-            ctx.fillStyle = glassGradDoor;
-            ctx.fillRect(280, yOffset + 15, 50, 65);
-            ctx.fillRect(350, yOffset + 15, 50, 65);
-            ctx.fillRect(420, yOffset + 15, 50, 65);
+            // Portas de vidro do chão ao teto
+            const doorGrad = ctx.createLinearGradient(240, yOffset + 10, 460, yOffset + 90);
+            doorGrad.addColorStop(0, "rgba(255,255,255,0.4)");
+            doorGrad.addColorStop(1, "rgba(255,255,255,0.15)");
+            
+            ctx.fillStyle = doorGrad;
+            ctx.fillRect(240, yOffset + 8, 100, 84);
+            ctx.fillRect(400, yOffset + 8, 100, 84);
             
             ctx.strokeStyle = "#ffd966";
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(280, yOffset + 15, 50, 65);
-            ctx.strokeRect(350, yOffset + 15, 50, 65);
-            ctx.strokeRect(420, yOffset + 15, 50, 65);
+            ctx.lineWidth = 2;
+            ctx.strokeRect(240, yOffset + 8, 100, 84);
+            ctx.strokeRect(400, yOffset + 8, 100, 84);
+            
+            // Maçanetas
+            ctx.fillStyle = "#f1c40f";
+            ctx.fillRect(330, yOffset + 48, 4, 20);
+            ctx.fillRect(490, yOffset + 48, 4, 20);
             
             ctx.fillStyle = "#ffd966";
             ctx.font = "bold 9px sans-serif";
-            ctx.fillText("VIVO INFRAESTRUTURA", 280, yOffset + 95);
+            ctx.fillText("ACESSO VIVO", 265, yOffset + 65);
+            ctx.fillText("ÁREA TÉCNICA", 425, yOffset + 65);
             
-            yOffset += 105;
+            yOffset += 110;
             
             // RODAPÉ
             ctx.fillStyle = "rgba(0,0,0,0.7)";
