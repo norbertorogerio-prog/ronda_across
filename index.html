@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Dashboard Pro</title>
+<title>Vivo Infra • Dashboard Urban</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -28,13 +28,9 @@
  .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 14px; text-transform: uppercase; }
  .btn-png { background: #1A1A1A; color: #fff; font-size: 15px; border: none; margin-top: 5px; }
  .btn-ai { background: #0277BD; color: #fff !important; font-size: 12px; margin-bottom: 10px; }
- 
- .clean-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
- .btn-clear-sub { background: #fff; color: #666; border: 1px solid #ddd; font-size: 10px; padding: 8px; }
- .btn-clear-red { background: #FFF5F5; color: #C53030; border: 1px solid #FEB2B2; font-size: 11px; grid-column: span 2; }
 
  .viewer-card { display: flex; justify-content: center; background: #E2E8F0; padding: 30px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; border-radius: 20px; }
- .building-container { position: relative; display: flex; width: 400px; flex-shrink: 0; height: 1180px; }
+ .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1250px; }
  
  .floors-labels-col { display: flex; flex-direction: column; padding-top: 106px; width: 70px; flex-shrink: 0; }
  .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: #4A5568; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; }
@@ -45,18 +41,13 @@
  .overlay-badges { position: absolute; top: 110px; left: 0; width: 100%; height: 860px; pointer-events: none; }
  .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
- /* TEXTO DENTRO DA BASE DO PRÉDIO */
- #footerInfoInside {
-    position: absolute; top: 915px; left: 0; width: 100%;
-    text-align: center; color: #fff; font-size: 10px; font-weight: 700;
-    pointer-events: none; z-index: 10; letter-spacing: 0.5px;
+ /* NOVO HALL - ÁREA DE INFORMAÇÕES GRUPADAS */
+ #hallInfoArea {
+    position: absolute; top: 900px; left: -20px; width: 360px;
+    padding: 15px; color: #fff; font-size: 10px; line-height: 1.4;
+    pointer-events: none; z-index: 10; text-align: center;
  }
-
- #footerNoteDisplay {
-    position: absolute; top: 970px; left: 10px; width: 300px;
-    text-align: left; padding: 15px; font-size: 11px;
-    background: #fff; border-left: 4px solid var(--vivo); border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); line-height: 1.4; color: #334155;
- }
+ #hallInfoArea strong { color: #A5B4FC; }
 </style>
 </head>
 
@@ -116,22 +107,36 @@
     <div class="building-container">
       <div class="floors-labels-col" id="floorsCol"></div>
       <div class="facade-wrapper">
-        <svg id="facade-svg" viewBox="0 0 320 950" xmlns="http://www.w3.org/2000/svg">
+        <svg id="facade-svg" viewBox="0 0 320 1100" xmlns="http://www.w3.org/2000/svg">
           <rect x="140" y="10" width="40" height="40" fill="#94A3B8" />
           <rect x="158" y="0" width="4" height="30" fill="#4A5568" />
           <rect x="60" y="50" width="200" height="40" rx="5" fill="#CBD5E1" />
+          
           <rect x="0" y="80" width="320" height="850" rx="5" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
           <rect x="0" y="80" width="320" height="30" fill="#6A1B9A" opacity="0.9" />
           <text x="160" y="100" text-anchor="middle" font-weight="900" font-size="12" fill="#fff">VIVO - INFRAESTRUTURA</text>
+          
           <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
           
-          <rect x="-10" y="900" width="340" height="50" rx="5" fill="#2D3748" />
+          <rect x="-20" y="900" width="360" height="150" rx="10" fill="#1E293B" />
+          
+          <rect x="115" y="910" width="40" height="60" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
+          <rect x="165" y="910" width="40" height="60" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
+          
+          <circle cx="-5" cy="910" r="15" fill="#166534" />
+          <rect x="-8" cy="910" width="6" height="20" fill="#451a03" />
+          <circle cx="325" cy="910" r="15" fill="#166534" />
+          <rect x="322" cy="910" width="6" height="20" fill="#451a03" />
+
+          <g fill="#94A3B8" opacity="0.6">
+            <ellipse cx="60" cy="940" rx="3" ry="8" /> <circle cx="60" cy="930" r="3" />
+            <ellipse cx="260" cy="945" rx="3" ry="8" /> <circle cx="260" cy="935" r="3" />
+          </g>
         </svg>
 
-        <div id="footerInfoInside"></div>
+        <div id="hallInfoArea"></div>
 
         <div class="overlay-badges" id="overlay"></div>
-        <div id="footerNoteDisplay"></div>
       </div>
     </div>
   </div>
@@ -140,7 +145,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_checklist_vFINAL_2024";
+const STORAGE_KEY = "vivo_checklist_urban_v1";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -187,12 +192,21 @@ function render() {
 
   const dataStr = new Date().toLocaleDateString('pt-BR');
   const resp = $("#inputResp").value || "---";
+  const obs = $("#obsText").value || "Nenhuma observação registrada.";
+  const aiTxt = resumoIA ? resumoIA.replace(/<\/?[^>]+(>|$)/g, "") : "Aguardando geração do resumo...";
 
-  // ATUALIZA O TEXTO DENTRO DA BASE ESCURA
-  $("#footerInfoInside").textContent = `Data: ${dataStr} | Resp: ${resp}`;
-  
-  // OBSERVAÇÕES LOGO ABAIXO DO PRÉDIO
-  $("#footerNoteDisplay").innerHTML = `<strong>Observações:</strong> ${$("#obsText").value}<br><br>${resumoIA}`;
+  // ATUALIZA TUDO DENTRO DA ÁREA DO HALL
+  $("#hallInfoArea").innerHTML = `
+    <div style="margin-top:70px">
+        <strong>${dataStr} | Resp: ${resp}</strong><br>
+        <div style="margin-top:5px; border-top:1px solid #334155; padding-top:5px;">
+            <strong>OBS:</strong> ${obs}
+        </div>
+        <div style="margin-top:5px; font-style:italic; color:#CBD5E1">
+            ${aiTxt}
+        </div>
+    </div>
+  `;
   
   localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
   localStorage.setItem(STORAGE_KEY+"_resp", $("#inputResp").value);
@@ -205,7 +219,7 @@ function getHex(s) { return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='loc
 $("#btnAI").onclick = () => {
     const s = { valid: 0, occ: 0, lock: 0, prob: 0 };
     Object.values(rooms).forEach(v => s[v]++);
-    resumoIA = `<strong>RESUMO:</strong> ${s.valid} OK, ${s.occ} Ocup., ${s.lock} Tranc., ${s.prob} Prob.`;
+    resumoIA = `Checklist concluído: ${s.valid} OK, ${s.occ} em uso, ${s.lock} trancadas e ${s.prob} falhas.`;
     render();
 };
 
@@ -231,67 +245,69 @@ $("#btnClearTudo").onclick = () => { if(confirm("Reset total?")) { rooms={}; res
 $("#btnPNG").onclick = async () => {
     const btn = $("#btnPNG"); btn.textContent = "EXPORTANDO 4K...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
-    canvas.width = 450 * SCALE; canvas.height = 1200 * SCALE; ctx.scale(SCALE, SCALE);
+    canvas.width = 460 * SCALE; canvas.height = 1150 * SCALE; ctx.scale(SCALE, SCALE);
     
-    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,450,1200);
+    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1150);
     
     // Antena/Topo
-    ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+75, 10, 40, 40);
-    ctx.fillStyle = "#4A5568"; ctx.fillRect(158+75, 0, 4, 30);
-    ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+75, 50, 200, 40, 5); ctx.fill();
+    ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+70, 10, 40, 40);
+    ctx.fillStyle = "#4A5568"; ctx.fillRect(158+70, 0, 4, 30);
+    ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 50, 200, 40, 5); ctx.fill();
 
-    // Prédio Principal
-    ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(75, 80, 320, 850, 5); ctx.fill();
+    // Prédio
+    ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(70, 80, 320, 850, 5); ctx.fill();
     ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 1; ctx.stroke();
-    
-    // Topo Roxo
-    ctx.fillStyle = "#6A1B9A"; ctx.fillRect(75, 80, 320, 30);
+    ctx.fillStyle = "#6A1B9A"; ctx.fillRect(70, 80, 320, 30);
     ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText("VIVO - INFRAESTRUTURA", 235, 100);
+    ctx.fillText("VIVO - INFRAESTRUTURA", 230, 100);
 
     // Janelas e Andares
     for(let f=32; f>=1; f--) {
         const row = 32 - f; const y = 110 + row * 22;
         ctx.fillStyle = "#4A5568"; ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
-        ctx.fillText("Andar "+f, 70, y + 10);
+        ctx.fillText("Andar "+f, 65, y + 10);
         for(let c=0; c<8; c++) {
-            const winX = 75 + 22 + c * 35;
-            ctx.fillStyle = "#E2E8F0"; ctx.beginPath(); ctx.roundRect(winX, y, 24, 12, 2); ctx.fill();
+            ctx.fillStyle = "#E2E8F0"; ctx.beginPath(); ctx.roundRect(70 + 22 + c * 35, y, 24, 12, 2); ctx.fill();
         }
     }
 
     // Badges
     Object.keys(rooms).forEach(key => {
         const [f, r] = key.split('-').map(Number);
-        const x = 75 + 22 + ((r-1)%8)*35, y = 110 + (32-f)*22;
+        const x = 70 + 22 + ((r-1)%8)*35, y = 110 + (32-f)*22;
         ctx.fillStyle = getHex(rooms[key]); ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.font = "bold 9px sans-serif"; ctx.textAlign = "center";
         ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
 
-    // BASE ESCURA
-    ctx.fillStyle = "#2D3748"; ctx.beginPath(); ctx.roundRect(75-10, 930, 340, 50, 5); ctx.fill();
-
-    // DATA E RESPONSÁVEL DENTRO DA BASE (BRANCO)
-    ctx.fillStyle = "#ffffff"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center";
-    const dataStr = new Date().toLocaleDateString('pt-BR');
-    ctx.fillText(`Data: ${dataStr} | Resp: ${$("#inputResp").value || '---'}`, 235, 960);
-
-    // OBSERVAÇÕES ABAIXO
-    ctx.fillStyle = "#1e293b"; ctx.textAlign = "left"; ctx.font = "bold 11px sans-serif";
-    ctx.fillText(`Obs: ${$("#obsText").value}`, 20, 1020);
+    // HALL EXPANDIDO NO PNG
+    ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(50, 930, 360, 150, 10); ctx.fill();
     
-    if(resumoIA) {
-        ctx.fillStyle = "#0277BD"; ctx.fillText("RESUMO:", 20, 1050);
-        ctx.font = "11px sans-serif"; ctx.fillStyle = "#475569";
-        const cleanAI = resumoIA.replace(/<\/?[^>]+(>|$)/g, "");
-        ctx.fillText(cleanAI, 20, 1070);
-    }
+    // Portas
+    ctx.fillStyle = "#334155"; ctx.strokeStyle = "#94A3B8";
+    ctx.fillRect(185, 940, 40, 60); ctx.strokeRect(185, 940, 40, 60);
+    ctx.fillRect(235, 940, 40, 60); ctx.strokeRect(235, 940, 40, 60);
+
+    // Árvores
+    ctx.fillStyle = "#166534"; ctx.beginPath(); ctx.arc(65, 940, 15, 0, Math.PI*2); ctx.fill();
+    ctx.arc(395, 940, 15, 0, Math.PI*2); ctx.fill();
+
+    // Texto no Hall (PNG)
+    ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.font = "bold 11px sans-serif";
+    const dataStr = new Date().toLocaleDateString('pt-BR');
+    ctx.fillText(`${dataStr} | Resp: ${$("#inputResp").value || '---'}`, 230, 1015);
+    
+    ctx.font = "10px sans-serif";
+    ctx.fillText(`OBS: ${$("#obsText").value || "Nenhuma"}`, 230, 1035);
+    
+    ctx.fillStyle = "#CBD5E1"; ctx.font = "italic 10px sans-serif";
+    const aiTxt = resumoIA ? resumoIA.replace(/<\/?[^>]+(>|$)/g, "") : "";
+    ctx.fillText(aiTxt, 230, 1055);
 
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "checklist_vivo_4k.png", { type: "image/png" });
+        const file = new File([blob], "checklist_vivo_urban.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: "Checklist Vivo" });
+            await navigator.share({ files: [file], title: "Checklist Vivo Urban" });
         } else {
             const link = document.createElement("a"); link.download = "checklist_vivo.png";
             link.href = URL.createObjectURL(blob); link.click();
@@ -299,15 +315,6 @@ $("#btnPNG").onclick = async () => {
         btn.textContent = "📸 Exportar PNG (4K)";
     }, "image/png");
 };
-
-if (!Path2D.prototype.roundRect) {
-  CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
-    if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
-    this.beginPath(); this.moveTo(x+r,y); this.arcTo(x+w,y,x+w,y+h,r);
-    this.arcTo(x+w,y+h,x,y+h,r); this.arcTo(x,y+h,x,y,r);
-    this.arcTo(x,y,x+w,y,r); this.closePath(); return this;
-  };
-}
 
 init();
 </script>
