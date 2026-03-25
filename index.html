@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Prédio SVG • Estático 100%</title>
+<title>Prédio Vivo • Final</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -14,23 +14,12 @@
  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
  
  html, body {
-  width: 100%;
-  overflow-x: hidden; /* Proíbe scroll lateral na página toda */
-  background: var(--bg);
-  color: #2B2B2B;
+  width: 100%; overflow-x: hidden;
+  background: var(--bg); color: #2B2B2B;
   font: 500 14px/1.2 system-ui, "Segoe UI";
  }
 
- .app{ 
-  width: 100%;
-  max-width: 1100px; 
-  margin: 0 auto; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 15px;
-  padding: 10px;
- }
-
+ .app{ width: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; padding: 10px; }
  @media (min-width:900px){ .app{ display: grid; grid-template-columns: 320px 1fr; } }
 
  .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:15px; box-shadow:0 4px 10px rgba(0,0,0,0.03); }
@@ -39,71 +28,39 @@
  select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; margin-bottom: 10px; }
 
  button{ background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; }
- .btn-png { background: #27ae60; padding: 16px; font-size: 16px; margin-top: 5px; }
- .btn-clear { background: #fff; color: #e74c3c; border: 1px solid #ffcccc; }
+ .btn-png { background: #27ae60; padding: 16px; font-size: 16px; }
 
- /* CONTAINER DO PRÉDIO - TRAVADO */
  .viewer-card { 
-  display: flex; 
-  justify-content: center; 
-  background: #fff; 
-  padding: 20px 0;
-  width: 100%;
-  /* Impede qualquer movimento involuntário do toque no prédio */
-  touch-action: pan-y; 
-  overflow-x: hidden; 
+  display: flex; justify-content: center; background: #fff; padding: 20px 0;
+  width: 100%; touch-action: pan-y; overflow-x: hidden; 
  }
  
  .building-container {
-  position: relative;
-  display: flex;
-  width: 395px; /* Largura milimétrica para não sobrar espaço lateral */
-  flex-shrink: 0;
-  height: 870px;
-  user-select: none;
+  position: relative; display: flex; width: 395px; flex-shrink: 0; height: 870px; user-select: none;
  }
 
  .floors-labels-col {
-  display: flex;
-  flex-direction: column;
-  padding-top: 36px; /* Alinhamento fino */
-  width: 70px;
-  flex-shrink: 0;
+  display: flex; flex-direction: column; padding-top: 36px; width: 70px; flex-shrink: 0;
  }
 
  .f-lbl {
-  height: 22px; 
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--vivo);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 10px;
+  height: 22px; font-size: 11px; font-weight: 800; color: var(--vivo);
+  display: flex; align-items: center; justify-content: flex-end; padding-right: 10px;
  }
 
- .facade-wrapper { 
-  position: relative; 
-  width: 320px; 
-  height: 860px;
-  flex-shrink: 0; 
- }
- 
+ .facade-wrapper { position: relative; width: 320px; height: 860px; flex-shrink: 0; }
  #facade-svg { width: 320px; height: 860px; display: block; }
- 
  .overlay-badges { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
  
  .badge {
   position: absolute; width: 24px; height: 12px;
   border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: auto;
+  display: flex; align-items: center; justify-content: center; pointer-events: auto;
  }
 
  #footerNoteDisplay {
     position: absolute; bottom: 12px; left: 0; width: 100%;
     text-align: center; font-weight: 800; color: var(--vivo-dark); padding: 0 10px; font-size: 12px;
-    pointer-events: none;
  }
 </style>
 </head>
@@ -144,7 +101,7 @@
         <button id="btnSave" style="background:#f4f4f9; color:var(--vivo); font-size:12px">Salvar JSON</button>
         <button id="btnLoad" style="background:#f4f4f9; color:var(--vivo); font-size:12px">Abrir JSON</button>
     </div>
-    <button id="btnClear" class="btn-clear" style="margin-top:5px; font-size:12px">LIMPAR TUDO</button>
+    <button id="btnClear" style="background:none; color:red; font-size:11px; margin-top:5px">LIMPAR TUDO</button>
   </div>
 
   <div class="card viewer-card">
@@ -167,32 +124,21 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_v6_locked";
+const STORAGE_KEY = "predio_vFINAL_2024";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 
 function init() {
-  const fSel = $("#selFloor");
-  const rSel = $("#selRoom");
-  const fCol = $("#floorsCol");
-  const winG = $("#winGroup");
-
+  const fSel = $("#selFloor"), rSel = $("#selRoom"), fCol = $("#floorsCol"), winG = $("#winGroup");
   for (let f = 32; f >= 1; f--) {
     fSel.appendChild(new Option(`Andar ${f}`, f));
-    const lbl = document.createElement("div");
-    lbl.className = "f-lbl";
-    lbl.textContent = `Andar ${f}`;
-    fCol.appendChild(lbl);
+    const lbl = document.createElement("div"); lbl.className = "f-lbl"; lbl.textContent = `Andar ${f}`; fCol.appendChild(lbl);
   }
   for (let r = 1; r <= 50; r++) rSel.appendChild(new Option(`Sala ${String(r).padStart(2,'0')}`, r));
-
   for (let r = 0; r < 32; r++) {
     for (let c = 0; c < 8; c++) {
       const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      rect.setAttribute("x", c * 35); 
-      rect.setAttribute("y", r * 22);
-      rect.setAttribute("width", 24); 
-      rect.setAttribute("height", 12); 
-      rect.setAttribute("rx", 2);
+      rect.setAttribute("x", c * 35); rect.setAttribute("y", r * 22);
+      rect.setAttribute("width", 24); rect.setAttribute("height", 12); rect.setAttribute("rx", 2);
       winG.appendChild(rect);
     }
   }
@@ -200,39 +146,27 @@ function init() {
 }
 
 function render() {
-  const overlay = $("#overlay");
-  overlay.innerHTML = "";
+  const overlay = $("#overlay"); overlay.innerHTML = "";
   Object.keys(rooms).forEach(key => {
     const [f, r] = key.split('-').map(Number);
-    const status = rooms[key];
-    const row = 32 - f;
-    const col = (r - 1) % 8;
-
+    const row = 32 - f, col = (r - 1) % 8;
     const b = document.createElement("div");
-    b.className = `badge ${status}`;
-    b.style.backgroundColor = getHex(status);
+    b.className = `badge ${rooms[key]}`; b.style.backgroundColor = getHex(rooms[key]);
     b.textContent = String(r).padStart(2,'0');
-    b.style.top = (40 + row * 22) + "px";
-    b.style.left = (22 + col * 35) + "px";
+    b.style.top = (40 + row * 22) + "px"; b.style.left = (22 + col * 35) + "px";
     overlay.appendChild(b);
   });
-  
   const obs = localStorage.getItem(STORAGE_KEY + "_obs") || "";
-  $("#footerNoteDisplay").textContent = obs;
-  $("#obsText").value = obs;
+  $("#footerNoteDisplay").textContent = obs; $("#obsText").value = obs;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
 }
 
-function getHex(s) {
-  return s==='valid'?'#2ECC71': s==='occ'?'#FF9800': s==='lock'?'#9E9E9E':'#E53935';
-}
+function getHex(s) { return s==='valid'?'#2ECC71': s==='occ'?'#FF9800': s==='lock'?'#9E9E9E':'#E53935'; }
 
 $("#btnApply").onclick = () => {
   const f = $("#selFloor").value, r = $("#selRoom").value, s = $("#selStatus").value;
-  if(s === 'none') delete rooms[`${f}-${r}`];
-  else rooms[`${f}-${r}`] = s;
-  localStorage.setItem(STORAGE_KEY + "_obs", $("#obsText").value);
-  render();
+  if(s === 'none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`] = s;
+  localStorage.setItem(STORAGE_KEY + "_obs", $("#obsText").value); render();
 };
 
 $("#btnQuick").onclick = () => {
@@ -241,42 +175,50 @@ $("#btnQuick").onclick = () => {
   const f = parseInt(v[0]), r = parseInt(v[1]), sChar = v[2][0];
   let s = sChar==='v'?'valid': sChar==='o'?'occ': sChar==='t'?'lock': sChar==='p'?'prob':'none';
   if(s === 'none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`] = s;
-  render();
-  $("#quickInput").value = "";
+  render(); $("#quickInput").value = "";
 };
 
-$("#btnClear").onclick = () => { if(confirm("Limpar?")) { rooms={}; localStorage.clear(); render(); } };
+$("#btnClear").onclick = () => { if(confirm("Limpar?")) { rooms={}; localStorage.clear(); render(); }};
 
-$("#btnSave").onclick = () => {
-  const blob = new Blob([JSON.stringify({rooms, obs: $("#obsText").value})], {type:"application/json"});
-  const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="mapa.json"; a.click();
-};
-
-$("#btnLoad").onclick = () => {
-  const i = document.createElement("input"); i.type="file";
-  i.onchange = e => {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const d = JSON.parse(ev.target.result);
-      rooms = d.rooms; localStorage.setItem(STORAGE_KEY+"_obs", d.obs); render();
-    };
-    reader.readAsText(e.target.files[0]);
-  };
-  i.click();
-};
-
+// --- EXPORTAÇÃO CORRIGIDA ---
 $("#btnPNG").onclick = async () => {
     const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     canvas.width = 400; canvas.height = 900;
+    
+    // Fundo branco
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,400,900);
-    ctx.fillStyle = "#E6EAF0"; ctx.beginPath();
-    ctx.roundRect(75, 10, 320, 850, 10); ctx.fill();
+
+    // Corpo do Prédio
+    ctx.fillStyle = "#E6EAF0"; ctx.beginPath(); ctx.roundRect(75, 10, 320, 850, 10); ctx.fill();
+    ctx.strokeStyle = "#B9C1CE"; ctx.stroke();
+
+    // Título VIVO
     ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center";
     ctx.fillText("VIVO", 235, 32);
-    ctx.font = "bold 10px sans-serif"; ctx.textAlign = "right";
-    for(let f=32; f>=1; f--) ctx.fillText("Andar "+f, 70, 36 + (32-f)*22 + 10.5);
+
+    // Hall de Entrada (parte de baixo)
+    ctx.fillStyle = "#D6CDE7"; ctx.beginPath(); ctx.roundRect(75, 820, 320, 40, {bl:10, br:10}); ctx.fill();
+
+    // Nomes dos Andares e JANELAS
+    ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
+    for(let f=32; f>=1; f--) {
+        const row = 32 - f;
+        const y = 40 + row * 22;
+        ctx.fillStyle = "#6A1B9A";
+        ctx.fillText("Andar "+f, 70, y + 10);
+
+        // Desenhar janelas vazias
+        for(let c=0; c<8; c++) {
+            ctx.fillStyle = "#DDE8F7";
+            ctx.strokeStyle = "#BFC9D8";
+            const winX = 75 + 22 + c * 35;
+            ctx.beginPath(); ctx.roundRect(winX, y, 24, 12, 2); ctx.fill(); ctx.stroke();
+        }
+    }
+
+    // Badges preenchidos
     Object.keys(rooms).forEach(key => {
         const [f, r] = key.split('-').map(Number);
         const st = rooms[key];
@@ -284,24 +226,28 @@ $("#btnPNG").onclick = async () => {
         const x = 75 + 22 + ((r-1)%8)*35;
         const y = 40 + (32-f)*22;
         ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.font = "900 8px sans-serif";
-        ctx.textAlign = "center"; ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
+        ctx.fillStyle = "#fff"; ctx.font = "900 8px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
-    ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 12px sans-serif";
-    ctx.fillText($("#obsText").value, 200, 885);
-    const link = document.createElement("a"); link.download = "mapa.png";
-    link.href = canvas.toDataURL("image/png"); link.click();
-    btn.textContent = "📸 EXPORTAR PNG";
-};
 
-if (!Path2D.prototype.roundRect) {
-  CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
-    if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
-    this.beginPath(); this.moveTo(x+r,y); this.arcTo(x+w,y,x+w,y+h,r);
-    this.arcTo(x+w,y+h,x,y+h,r); this.arcTo(x,y+h,x,y,r);
-    this.arcTo(x,y,x+w,y,r); this.closePath(); return this;
-  };
-}
+    // Observação
+    ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText($("#obsText").value, 200, 885);
+
+    // SALVAMENTO NO CELULAR
+    canvas.toBlob(async (blob) => {
+        const file = new File([blob], "mapa_vivo.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({ files: [file], title: "Mapa Prédio" });
+            } catch (e) { console.error("Erro ao compartilhar", e); }
+        } else {
+            const link = document.createElement("a");
+            link.download = "mapa_vivo.png"; link.href = URL.createObjectURL(blob); link.click();
+        }
+        btn.textContent = "📸 EXPORTAR PNG";
+    }, "image/png");
+};
 
 init();
 </script>
