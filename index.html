@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Prédio Vivo • Edição Final Ultra</title>
+<title>Prédio Vivo • Ultra HD Pro</title>
 <style>
  :root{
   --vivo:#6A1B9A; 
-  --valid:#1B5E20; /* Contraste Alto */
+  --valid:#1B5E20; 
   --occ:#E65100;   
   --lock:#424242;  
   --prob:#B71C1C;  
@@ -25,12 +25,14 @@
  label{ font-size:11px; color:#555; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; }
  select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; margin-bottom: 8px; }
 
- /* BOTÃO APLICAR (VOLTOU!) */
- .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 15px; margin-top: 5px; }
- .btn-apply:active { background: var(--vivo-dark); transform: scale(0.98); }
+ /* BOTÃO APLICAR */
+ .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 15px; margin-top: 5px; text-transform: uppercase; }
+ .btn-apply:active { opacity: 0.9; transform: scale(0.98); }
 
  .btn-png { background: #000; color: #fff; font-size: 16px; border: 2px solid #333; }
- .btn-ai { background: #0277BD; font-size: 12px; margin-bottom: 10px; }
+ 
+ /* BOTÃO RELATÓRIO - LETRAS BRANCAS */
+ .btn-ai { background: #0277BD; color: #ffffff !important; font-size: 12px; margin-bottom: 10px; border: none; }
  
  .clean-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px; }
  .btn-clear-sub { background: #fff; color: #444; border: 1px solid #ccc; font-size: 10px; padding: 6px; }
@@ -79,9 +81,7 @@
     <label>Observações</label>
     <textarea id="obsText" rows="2" placeholder="Notas rápidas..."></textarea>
 
-    <button id="btnApply" class="btn-apply">APLICAR NO MAPA</button>
-
-    <div style="margin-top:10px; border-top: 1px solid #eee; padding-top: 10px;">
+    <div style="margin-top:5px; padding-bottom: 5px;">
         <label>Entrada Rápida (ex: 32-01-v)</label>
         <div style="display:flex">
           <input id="quickInput" type="text" placeholder="32-01-v">
@@ -89,15 +89,17 @@
         </div>
     </div>
 
-    <label style="margin-top:10px">Relatórios</label>
-    <button id="btnAI" class="btn-ai">🤖 GERAR RELATÓRIO EXECUTIVO</button>
+    <button id="btnApply" class="btn-apply">Aplicar no Mapa</button>
 
-    <button id="btnPNG" class="btn-png">📸 EXPORTAR EM 4K (ULTRA HD)</button>
+    <label style="margin-top:15px">Relatórios</label>
+    <button id="btnAI" class="btn-ai">🤖 Gerar Relatório Executivo</button>
+
+    <button id="btnPNG" class="btn-png">📸 Exportar em 4K (Ultra HD)</button>
     
     <div class="clean-bar">
         <button class="btn-clear-sub" id="btnClearSalas">Limpar Salas</button>
         <button class="btn-clear-sub" id="btnClearResumo">Limpar Resumo</button>
-        <button class="btn-clear-red" id="btnClearTudo">RESET TOTAL DO SISTEMA</button>
+        <button class="btn-clear-red" id="btnClearTudo">Reset Total do Sistema</button>
     </div>
   </div>
 
@@ -121,7 +123,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_vULTRA_FINAL_RES";
+const STORAGE_KEY = "predio_vULTRA_4K_REORD";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -168,14 +170,12 @@ function render() {
 
 function getHex(s) { return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='lock'?'#424242':'#B71C1C'; }
 
-// FUNÇÃO APLICAR
 $("#btnApply").onclick = () => {
   const f = $("#selFloor").value, r = $("#selRoom").value, s = $("#selStatus").value;
   if(s === 'none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`] = s;
   render();
 };
 
-// ENTRADA RÁPIDA
 $("#btnQuick").onclick = () => {
     const v = $("#quickInput").value.toLowerCase().split('-');
     if(v.length < 3) return;
@@ -188,17 +188,16 @@ $("#btnQuick").onclick = () => {
 $("#btnAI").onclick = () => {
     const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
     Object.values(rooms).forEach(s => stats[s]++);
-    resumoIA = `<strong>RELATÓRIO EXECUTIVO:</strong> Prédio com ${stats.valid} salas validadas e ${stats.occ} em uso. Identificadas ${stats.prob} salas com pendências.`;
+    resumoIA = `<strong>RELATÓRIO EXECUTIVO:</strong> O edifício apresenta ${stats.valid} salas validadas e ${stats.occ} ocupadas. Identificadas ${stats.prob} salas com pendências críticas.`;
     render();
 };
 
 $("#btnClearSalas").onclick = () => { if(confirm("Limpar salas?")) { rooms = {}; render(); }};
 $("#btnClearResumo").onclick = () => { resumoIA = ""; render(); };
-$("#btnClearTudo").onclick = () => { if(confirm("Resetar sistema?")) { rooms={}; resumoIA=""; $("#inputResp").value=""; $("#obsText").value=""; localStorage.clear(); render(); }};
+$("#btnClearTudo").onclick = () => { if(confirm("Resetar tudo?")) { rooms={}; resumoIA=""; $("#inputResp").value=""; $("#obsText").value=""; localStorage.clear(); render(); }};
 
-// --- EXPORTAÇÃO 4K ---
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG"); btn.textContent = "PROCESSANDO...";
+    const btn = $("#btnPNG"); btn.textContent = "GERANDO ULTRA HD...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
     canvas.width = 450 * SCALE; canvas.height = 1100 * SCALE; ctx.scale(SCALE, SCALE);
     
@@ -243,11 +242,11 @@ $("#btnPNG").onclick = async () => {
     }
 
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "mapa_infra_4K.png", { type: "image/png" });
+        const file = new File([blob], "mapa_4K.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: "Mapa 4K" });
+            await navigator.share({ files: [file], title: "Mapa Vivo 4K" });
         } else {
-            const link = document.createElement("a"); link.download = "mapa_infra_4K.png";
+            const link = document.createElement("a"); link.download = "mapa_4K.png";
             link.href = URL.createObjectURL(blob); link.click();
         }
         btn.textContent = "📸 EXPORTAR EM 4K (ULTRA HD)";
