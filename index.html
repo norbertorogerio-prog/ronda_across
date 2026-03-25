@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Ultra HD v12</title>
+<title>Vivo Infra • Ultra HD v13</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -114,10 +114,11 @@
           <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
           
           <rect x="-10" y="814" width="340" height="110" rx="10" fill="#1E293B" />
-          <rect x="105" y="825" width="50" height="70" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
-          <rect x="165" y="825" width="50" height="70" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
-          <rect x="150" y="855" width="2" height="15" fill="#94A3B8" />
-          <rect x="168" y="855" width="2" height="15" fill="#94A3B8" />
+          
+          <rect x="100" y="814" width="55" height="100" fill="#334155" stroke="#94A3B8" stroke-width="1.5"/>
+          <rect x="165" y="814" width="55" height="100" fill="#334155" stroke="#94A3B8" stroke-width="1.5"/>
+          <rect x="148" y="855" width="3" height="20" fill="#94A3B8" />
+          <rect x="169" y="855" width="3" height="20" fill="#94A3B8" />
 
           <rect x="25" y="865" width="20" height="25" fill="#451a03" />
           <path d="M20,865 Q35,830 50,865" fill="#166534" />
@@ -135,7 +136,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_v12_mobile_fix";
+const STORAGE_KEY = "vivo_pro_v13_final_doors";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -230,7 +231,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 }
 
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG"); btn.textContent = "PROCESSANDO...";
+    const btn = $("#btnPNG"); btn.textContent = "BAIXANDO...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
     canvas.width = 460 * SCALE; canvas.height = 1050 * SCALE; ctx.scale(SCALE, SCALE);
     
@@ -260,7 +261,13 @@ $("#btnPNG").onclick = async () => {
     });
 
     ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 814, 340, 110, 10); ctx.fill();
-    ctx.fillStyle = "#334155"; ctx.fillRect(175, 825, 50, 70); ctx.fillRect(235, 825, 50, 70);
+    
+    // Portas no PNG (Chão ao Teto)
+    ctx.fillStyle = "#334155"; 
+    ctx.fillRect(170, 814, 55, 100); 
+    ctx.fillRect(235, 814, 55, 100);
+    ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 1;
+    ctx.strokeRect(170, 814, 55, 100); ctx.strokeRect(235, 814, 55, 100);
 
     ctx.fillStyle = "#334155"; ctx.textAlign = "left"; ctx.font = "bold 11px sans-serif";
     ctx.fillText(`${new Date().toLocaleDateString('pt-BR')} | Auditor: ${$("#inputResp").value}`, 80, 955);
@@ -269,27 +276,13 @@ $("#btnPNG").onclick = async () => {
     ctx.fillStyle = "#777"; ctx.font = "italic 9px sans-serif";
     wrapText(ctx, resumoIA || "", 80, curY + 10, 300, 12);
 
-    // MECANISMO DE DOWNLOAD REFORÇADO PARA MOBILE
-    const dataUrl = canvas.toDataURL("image/png");
-    
-    // Tenta detectar se é mobile para comportamento de salvar imagem
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-        // No mobile, abrimos em uma nova aba com a imagem para o usuário salvar
-        // ou usamos um link que dispara o menu de compartilhamento se disponível
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = `Checklist_Vivo_${Date.now()}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } else {
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = `Checklist_Vivo_${Date.now()}.png`;
-        link.click();
-    }
+    // CORREÇÃO DE DOWNLOAD PARA CELULAR
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = `Mapa_Vivo_Infra_${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     
     btn.textContent = "📸 Exportar PNG (4K)";
 };
