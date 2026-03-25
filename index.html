@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Dashboard Urban</title>
+<title>Vivo Infra • Dashboard Urban Pro</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -22,7 +22,7 @@
  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
  .stat-box { text-align: center; padding: 8px; border-radius: 8px; color: #fff; font-size: 10px; font-weight: 800; }
 
- label{ font-size: 11px; color:#666; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+ label{ font-size: 11px; color:#666; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; }
  select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px; font:inherit; margin-bottom: 10px; }
  
  .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 14px; text-transform: uppercase; }
@@ -30,7 +30,7 @@
  .btn-ai { background: #0277BD; color: #fff !important; font-size: 12px; margin-bottom: 10px; }
 
  .viewer-card { display: flex; justify-content: center; background: #E2E8F0; padding: 30px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; border-radius: 20px; }
- .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1250px; }
+ .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1200px; }
  
  .floors-labels-col { display: flex; flex-direction: column; padding-top: 106px; width: 70px; flex-shrink: 0; }
  .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: #4A5568; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; }
@@ -41,13 +41,12 @@
  .overlay-badges { position: absolute; top: 110px; left: 0; width: 100%; height: 860px; pointer-events: none; }
  .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
- /* NOVO HALL - ÁREA DE INFORMAÇÕES GRUPADAS */
+ /* ÁREA DE INFORMAÇÕES DENTRO DO HALL */
  #hallInfoArea {
-    position: absolute; top: 900px; left: -20px; width: 360px;
-    padding: 15px; color: #fff; font-size: 10px; line-height: 1.4;
+    position: absolute; top: 935px; left: -10px; width: 340px;
+    padding: 10px; color: #fff; font-size: 10px; line-height: 1.3;
     pointer-events: none; z-index: 10; text-align: center;
  }
- #hallInfoArea strong { color: #A5B4FC; }
 </style>
 </head>
 
@@ -62,14 +61,14 @@
         <div class="stat-box" style="background:var(--prob)" id="stProb">0</div>
     </div>
 
+    <label>Responsável</label>
+    <input type="text" id="inputResp" placeholder="Nome do Auditor">
+
     <label>Localização</label>
     <div style="display:flex; gap:5px">
       <select id="selFloor"></select>
       <select id="selRoom"></select>
     </div>
-
-    <label>Responsável</label>
-    <input type="text" id="inputResp" placeholder="Nome do Auditor">
 
     <label>Status</label>
     <select id="selStatus">
@@ -85,21 +84,18 @@
 
     <label>Atalho Rápido</label>
     <div style="display:flex">
-      <input id="quickInput" type="text" placeholder="Ex: 32-01-v">
+      <input id="quickInput" type="text" placeholder="Ex: 32-05-v">
       <button id="btnQuick" style="width:50px; background:#444; color:#fff; margin-left:5px; border-radius:10px">OK</button>
     </div>
 
-    <button id="btnApply" class="btn-apply">Atualizar Checklist</button>
-
-    <label style="margin-top:15px">Relatórios</label>
-    <button id="btnAI" class="btn-ai">🤖 Gerar Resumo Executivo</button>
-
+    <button id="btnApply" class="btn-apply">Aplicar no Mapa</button>
+    <button id="btnAI" class="btn-ai" style="margin-top:10px">🤖 Gerar Resumo Executivo</button>
     <button id="btnPNG" class="btn-png">📸 Exportar PNG (4K)</button>
     
     <div class="clean-bar">
         <button class="btn-clear-sub" id="btnClearSalas">Limpar Salas</button>
         <button class="btn-clear-sub" id="btnClearResumo">Limpar Texto</button>
-        <button class="btn-clear-red" id="btnClearTudo">Reset Geral</button>
+        <button id="btnClearTudo" style="background:none; color:red; font-size:10px; grid-column: span 2; margin-top:5px">RESET TOTAL</button>
     </div>
   </div>
 
@@ -107,35 +103,27 @@
     <div class="building-container">
       <div class="floors-labels-col" id="floorsCol"></div>
       <div class="facade-wrapper">
-        <svg id="facade-svg" viewBox="0 0 320 1100" xmlns="http://www.w3.org/2000/svg">
+        <svg id="facade-svg" viewBox="0 0 320 1150" xmlns="http://www.w3.org/2000/svg">
           <rect x="140" y="10" width="40" height="40" fill="#94A3B8" />
           <rect x="158" y="0" width="4" height="30" fill="#4A5568" />
           <rect x="60" y="50" width="200" height="40" rx="5" fill="#CBD5E1" />
           
           <rect x="0" y="80" width="320" height="850" rx="5" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
-          <rect x="0" y="80" width="320" height="30" fill="#6A1B9A" opacity="0.9" />
+          <rect x="0" y="80" width="320" height="30" fill="#6A1B9A" />
           <text x="160" y="100" text-anchor="middle" font-weight="900" font-size="12" fill="#fff">VIVO - INFRAESTRUTURA</text>
           
           <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
           
-          <rect x="-20" y="900" width="360" height="150" rx="10" fill="#1E293B" />
+          <rect x="-10" y="930" width="340" height="180" rx="10" fill="#1E293B" />
           
-          <rect x="115" y="910" width="40" height="60" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
-          <rect x="165" y="910" width="40" height="60" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
+          <rect x="110" y="940" width="45" height="70" fill="#334155" stroke="#94A3B8" />
+          <rect x="165" y="940" width="45" height="70" fill="#334155" stroke="#94A3B8" />
           
-          <circle cx="-5" cy="910" r="15" fill="#166534" />
-          <rect x="-8" cy="910" width="6" height="20" fill="#451a03" />
-          <circle cx="325" cy="910" r="15" fill="#166534" />
-          <rect x="322" cy="910" width="6" height="20" fill="#451a03" />
-
-          <g fill="#94A3B8" opacity="0.6">
-            <ellipse cx="60" cy="940" rx="3" ry="8" /> <circle cx="60" cy="930" r="3" />
-            <ellipse cx="260" cy="945" rx="3" ry="8" /> <circle cx="260" cy="935" r="3" />
-          </g>
+          <circle cx="20" cy="945" r="12" fill="#166534" />
+          <circle cx="300" cy="945" r="12" fill="#166534" />
         </svg>
 
         <div id="hallInfoArea"></div>
-
         <div class="overlay-badges" id="overlay"></div>
       </div>
     </div>
@@ -145,7 +133,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_checklist_urban_v1";
+const STORAGE_KEY = "vivo_pro_vFinal_Fix";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -175,8 +163,7 @@ function render() {
 
   Object.keys(rooms).forEach(key => {
     const [f, r] = key.split('-').map(Number);
-    const status = rooms[key];
-    stats[status]++;
+    const status = rooms[key]; stats[status]++;
     const row = 32 - f, col = (r - 1) % 8;
     const b = document.createElement("div");
     b.className = `badge ${status}`; b.style.backgroundColor = getHex(status);
@@ -185,25 +172,22 @@ function render() {
     overlay.appendChild(b);
   });
   
-  $("#stValid").textContent = stats.valid;
-  $("#stOcc").textContent = stats.occ;
-  $("#stLock").textContent = stats.lock;
-  $("#stProb").textContent = stats.prob;
+  $("#stValid").textContent = stats.valid; $("#stOcc").textContent = stats.occ;
+  $("#stLock").textContent = stats.lock; $("#stProb").textContent = stats.prob;
 
   const dataStr = new Date().toLocaleDateString('pt-BR');
   const resp = $("#inputResp").value || "---";
-  const obs = $("#obsText").value || "Nenhuma observação registrada.";
-  const aiTxt = resumoIA ? resumoIA.replace(/<\/?[^>]+(>|$)/g, "") : "Aguardando geração do resumo...";
-
-  // ATUALIZA TUDO DENTRO DA ÁREA DO HALL
+  const obs = $("#obsText").value || "";
+  
+  // Organização do texto dentro do Hall
   $("#hallInfoArea").innerHTML = `
-    <div style="margin-top:70px">
-        <strong>${dataStr} | Resp: ${resp}</strong><br>
-        <div style="margin-top:5px; border-top:1px solid #334155; padding-top:5px;">
-            <strong>OBS:</strong> ${obs}
+    <div style="margin-top:80px">
+        <strong style="color:#A5B4FC">${dataStr} | Resp: ${resp}</strong><br>
+        <div style="margin:4px 0; border-top:1px solid #334155; padding-top:4px; font-weight:bold">
+            OBS: ${obs}
         </div>
-        <div style="margin-top:5px; font-style:italic; color:#CBD5E1">
-            ${aiTxt}
+        <div style="font-style:italic; color:#CBD5E1; font-size:9px">
+            ${resumoIA ? resumoIA.replace(/<\/?[^>]+(>|$)/g, "") : ""}
         </div>
     </div>
   `;
@@ -219,7 +203,7 @@ function getHex(s) { return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='loc
 $("#btnAI").onclick = () => {
     const s = { valid: 0, occ: 0, lock: 0, prob: 0 };
     Object.values(rooms).forEach(v => s[v]++);
-    resumoIA = `Checklist concluído: ${s.valid} OK, ${s.occ} em uso, ${s.lock} trancadas e ${s.prob} falhas.`;
+    resumoIA = `Relatório: ${s.valid} OK, ${s.occ} em uso, ${s.lock} trancadas e ${s.prob} problemas.`;
     render();
 };
 
@@ -243,25 +227,24 @@ $("#btnClearResumo").onclick = () => { resumoIA = ""; render(); };
 $("#btnClearTudo").onclick = () => { if(confirm("Reset total?")) { rooms={}; resumoIA=""; $("#inputResp").value=""; $("#obsText").value=""; localStorage.clear(); render(); }};
 
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG"); btn.textContent = "EXPORTANDO 4K...";
+    const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
     canvas.width = 460 * SCALE; canvas.height = 1150 * SCALE; ctx.scale(SCALE, SCALE);
     
     ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1150);
     
-    // Antena/Topo
+    // Topo
     ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+70, 10, 40, 40);
     ctx.fillStyle = "#4A5568"; ctx.fillRect(158+70, 0, 4, 30);
     ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 50, 200, 40, 5); ctx.fill();
 
     // Prédio
     ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(70, 80, 320, 850, 5); ctx.fill();
-    ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = "#94A3B8"; ctx.stroke();
     ctx.fillStyle = "#6A1B9A"; ctx.fillRect(70, 80, 320, 30);
     ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
     ctx.fillText("VIVO - INFRAESTRUTURA", 230, 100);
 
-    // Janelas e Andares
     for(let f=32; f>=1; f--) {
         const row = 32 - f; const y = 110 + row * 22;
         ctx.fillStyle = "#4A5568"; ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
@@ -271,7 +254,6 @@ $("#btnPNG").onclick = async () => {
         }
     }
 
-    // Badges
     Object.keys(rooms).forEach(key => {
         const [f, r] = key.split('-').map(Number);
         const x = 70 + 22 + ((r-1)%8)*35, y = 110 + (32-f)*22;
@@ -280,36 +262,27 @@ $("#btnPNG").onclick = async () => {
         ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
 
-    // HALL EXPANDIDO NO PNG
-    ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(50, 930, 360, 150, 10); ctx.fill();
-    
-    // Portas
-    ctx.fillStyle = "#334155"; ctx.strokeStyle = "#94A3B8";
-    ctx.fillRect(185, 940, 40, 60); ctx.strokeRect(185, 940, 40, 60);
-    ctx.fillRect(235, 940, 40, 60); ctx.strokeRect(235, 940, 40, 60);
+    // HALL PNG
+    ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 930, 340, 180, 10); ctx.fill();
+    ctx.fillStyle = "#334155"; ctx.fillRect(170, 940, 45, 70); ctx.fillRect(225, 940, 45, 70);
+    ctx.fillStyle = "#166534"; ctx.beginPath(); ctx.arc(80, 945, 12, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(360, 945, 12, 0, Math.PI*2); ctx.fill();
 
-    // Árvores
-    ctx.fillStyle = "#166534"; ctx.beginPath(); ctx.arc(65, 940, 15, 0, Math.PI*2); ctx.fill();
-    ctx.arc(395, 940, 15, 0, Math.PI*2); ctx.fill();
-
-    // Texto no Hall (PNG)
+    // Texto no Hall PNG
     ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.font = "bold 11px sans-serif";
     const dataStr = new Date().toLocaleDateString('pt-BR');
-    ctx.fillText(`${dataStr} | Resp: ${$("#inputResp").value || '---'}`, 230, 1015);
-    
-    ctx.font = "10px sans-serif";
-    ctx.fillText(`OBS: ${$("#obsText").value || "Nenhuma"}`, 230, 1035);
-    
-    ctx.fillStyle = "#CBD5E1"; ctx.font = "italic 10px sans-serif";
+    ctx.fillText(`${dataStr} | Resp: ${$("#inputResp").value || '---'}`, 230, 1025);
+    ctx.font = "10px sans-serif"; ctx.fillText(`OBS: ${$("#obsText").value || ""}`, 230, 1045);
+    ctx.fillStyle = "#CBD5E1"; ctx.font = "italic 9px sans-serif";
     const aiTxt = resumoIA ? resumoIA.replace(/<\/?[^>]+(>|$)/g, "") : "";
-    ctx.fillText(aiTxt, 230, 1055);
+    ctx.fillText(aiTxt, 230, 1065);
 
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "checklist_vivo_urban.png", { type: "image/png" });
+        const file = new File([blob], "mapa_vivo_urban.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: "Checklist Vivo Urban" });
+            await navigator.share({ files: [file], title: "Mapa" });
         } else {
-            const link = document.createElement("a"); link.download = "checklist_vivo.png";
+            const link = document.createElement("a"); link.download = "mapa.png";
             link.href = URL.createObjectURL(blob); link.click();
         }
         btn.textContent = "📸 Exportar PNG (4K)";
