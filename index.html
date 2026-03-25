@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Prédio Vivo • Pro</title>
+<title>Prédio Vivo • Gestão Total</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -12,12 +12,7 @@
  }
 
  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
- 
- html, body {
-  width: 100%; overflow-x: hidden;
-  background: var(--bg); color: #2B2B2B;
-  font: 500 14px/1.2 system-ui, "Segoe UI";
- }
+ body{ background: var(--bg); color: #2B2B2B; font: 500 14px/1.2 system-ui, "Segoe UI"; overflow-x: hidden; }
 
  .app{ width: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; padding: 10px; }
  @media (min-width:900px){ .app{ display: grid; grid-template-columns: 320px 1fr; } }
@@ -25,36 +20,30 @@
  .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:15px; box-shadow:0 4px 10px rgba(0,0,0,0.03); }
 
  label{ font-size:11px; color:#666; margin-bottom:4px; display:block; font-weight: 700; text-transform: uppercase; }
- select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; margin-bottom: 10px; }
+ select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:10px; font:inherit; margin-bottom: 8px; }
 
- button{ background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; }
- .btn-png { background: #27ae60; padding: 16px; font-size: 16px; margin-top: 10px; }
- .btn-ai { background: #3498db; margin-top: 5px; font-size: 12px; padding: 8px; }
-
- .viewer-card { 
-  display: flex; justify-content: center; background: #fff; padding: 20px 0;
-  width: 100%; touch-action: pan-y; overflow-x: hidden; 
- }
+ button{ background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; padding: 12px; }
+ .btn-png { background: #27ae60; font-size: 16px; margin-top: 5px; }
+ .btn-ai { background: #3498db; font-size: 12px; margin-bottom: 15px; }
  
- .building-container {
-  position: relative; display: flex; width: 395px; flex-shrink: 0; height: 950px; user-select: none;
- }
+ .clean-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px; }
+ .btn-clear-sub { background: #fff; color: #666; border: 1px solid #ddd; font-size: 10px; padding: 5px; }
+ .btn-clear-red { background: #fff; color: red; border: 1px solid #ffcccc; font-size: 11px; grid-column: span 2; }
 
+ .viewer-card { display: flex; justify-content: center; background: #fff; padding: 20px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; }
+ .building-container { position: relative; display: flex; width: 395px; flex-shrink: 0; height: 1000px; }
  .floors-labels-col { display: flex; flex-direction: column; padding-top: 36px; width: 70px; flex-shrink: 0; }
  .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: var(--vivo); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; }
 
- .facade-wrapper { position: relative; width: 320px; height: 940px; flex-shrink: 0; }
+ .facade-wrapper { position: relative; width: 320px; height: 860px; flex-shrink: 0; }
  #facade-svg { width: 320px; height: 860px; display: block; }
  .overlay-badges { position: absolute; top: 0; left: 0; width: 100%; height: 860px; pointer-events: none; }
- 
  .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
  #footerNoteDisplay {
-    position: absolute; bottom: 0; left: 0; width: 100%;
-    text-align: left; font-weight: 600; color: #444; padding: 10px; font-size: 11px;
-    white-space: pre-wrap; /* Mantém as quebras de linha na tela */
-    line-height: 1.4;
-    background: #f9f9f9; border-radius: 5px;
+    position: absolute; top: 870px; left: 0; width: 100%;
+    text-align: left; padding: 10px; font-size: 11px;
+    background: #f1f3f5; border-radius: 8px; line-height: 1.4; color: #444;
  }
 </style>
 </head>
@@ -70,7 +59,7 @@
     </div>
 
     <label>Responsável</label>
-    <input type="text" id="inputResp" placeholder="Nome do responsável">
+    <input type="text" id="inputResp" placeholder="Quem está operando?">
 
     <label>Status</label>
     <select id="selStatus">
@@ -82,25 +71,21 @@
     </select>
 
     <label>Observações</label>
-    <textarea id="obsText" rows="4" placeholder="Escreva aqui as observações. Use Enter para novas linhas."></textarea>
+    <textarea id="obsText" rows="2" placeholder="Notas rápidas..."></textarea>
 
-    <button id="btnAI" class="btn-ai">🤖 GERAR RESUMO EXECUTIVO</button>
+    <button id="btnApply" style="background:var(--vivo-dark)">ATUALIZAR MAPA</button>
 
-    <button id="btnApply" style="background:var(--vivo-dark); margin-top:10px">APLICAR NO MAPA</button>
-
-    <label style="margin-top:10px">Entrada Rápida</label>
-    <div style="display:flex">
-      <input id="quickInput" type="text" placeholder="32-05-v">
-      <button id="btnQuick" style="width:60px; background:#444; margin-left:5px">OK</button>
-    </div>
+    <label style="margin-top:10px">Relatórios</label>
+    <button id="btnAI" class="btn-ai">🤖 GERAR RELATÓRIO EXECUTIVO</button>
 
     <button id="btnPNG" class="btn-png">📸 EXPORTAR PNG</button>
     
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-top:10px">
-        <button id="btnSave" style="background:#f4f4f9; color:var(--vivo); font-size:11px">Salvar JSON</button>
-        <button id="btnLoad" style="background:#f4f4f9; color:var(--vivo); font-size:11px">Abrir JSON</button>
+    <label style="margin-top:15px">Limpeza Individual</label>
+    <div class="clean-bar">
+        <button class="btn-clear-sub" id="btnClearSalas">Limpar Salas</button>
+        <button class="btn-clear-sub" id="btnClearResumo">Limpar Resumo</button>
+        <button class="btn-clear-red" id="btnClearTudo">LIMPAR TUDO (RESET)</button>
     </div>
-    <button id="btnClear" style="background:none; color:red; font-size:11px; margin-top:5px">LIMPAR TUDO</button>
   </div>
 
   <div class="card viewer-card">
@@ -123,8 +108,9 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_vPRO_01";
+const STORAGE_KEY = "predio_vFINAL_FIX";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
 function init() {
   const fSel = $("#selFloor"), rSel = $("#selRoom"), fCol = $("#floorsCol"), winG = $("#winGroup");
@@ -142,6 +128,7 @@ function init() {
     }
   }
   $("#inputResp").value = localStorage.getItem(STORAGE_KEY+"_resp") || "";
+  $("#obsText").value = localStorage.getItem(STORAGE_KEY+"_obs") || "";
   render();
 }
 
@@ -158,34 +145,32 @@ function render() {
   });
   
   const dataStr = new Date().toLocaleDateString('pt-BR');
-  const resp = $("#inputResp").value ? `Resp: ${$("#inputResp").value}` : "Responsável: ---";
-  const obs = $("#obsText").value;
+  const resp = $("#inputResp").value || "---";
   
-  $("#footerNoteDisplay").textContent = `${dataStr} | ${resp}\n\n${obs}`;
+  $("#footerNoteDisplay").innerHTML = `<strong>Data:</strong> ${dataStr} | <strong>Responsável:</strong> ${resp}<br><strong>Obs:</strong> ${$("#obsText").value}<br><br>${resumoIA}`;
   
   localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
   localStorage.setItem(STORAGE_KEY+"_resp", $("#inputResp").value);
-  localStorage.setItem(STORAGE_KEY+"_obs", obs);
+  localStorage.setItem(STORAGE_KEY+"_obs", $("#obsText").value);
+  localStorage.setItem(STORAGE_KEY+"_ai", resumoIA);
 }
 
 function getHex(s) { return s==='valid'?'#2ECC71': s==='occ'?'#FF9800': s==='lock'?'#9E9E9E':'#E53935'; }
 
-// LÓGICA DO RESUMO EXECUTIVO (SIMULANDO IA)
+// IA GERAR RESUMO
 $("#btnAI").onclick = () => {
     const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
     Object.values(rooms).forEach(s => stats[s]++);
-    
-    const resp = $("#inputResp").value || "Equipe";
     const data = new Date().toLocaleDateString('pt-BR');
     
-    const resumo = `RELATÓRIO EXECUTIVO (${data}):
-Sob responsabilidade de ${resp}, o prédio apresenta ${stats.valid} salas validadas, ${stats.occ} ocupadas e ${stats.lock} trancadas. Identificamos ${stats.prob} ponto(s) de atenção com problemas. 
-
-Principais Notas: ${$("#obsText").value.replace(/\n/g, ' ')}`;
-
-    $("#obsText").value = resumo;
+    resumoIA = `<strong>RESUMO EXECUTIVO:</strong> O prédio conta com ${stats.valid} salas validadas e ${stats.occ} ocupadas. Registramos ${stats.prob} alertas críticos que exigem atenção imediata do responsável.`;
     render();
 };
+
+// BOTÕES DE LIMPEZA INDIVIDUAL
+$("#btnClearSalas").onclick = () => { if(confirm("Limpar marcações das salas?")) { rooms = {}; render(); }};
+$("#btnClearResumo").onclick = () => { resumoIA = ""; render(); };
+$("#btnClearTudo").onclick = () => { if(confirm("Resetar tudo?")) { rooms={}; resumoIA=""; $("#inputResp").value=""; $("#obsText").value=""; localStorage.clear(); render(); }};
 
 $("#btnApply").onclick = () => {
   const f = $("#selFloor").value, r = $("#selRoom").value, s = $("#selStatus").value;
@@ -193,34 +178,21 @@ $("#btnApply").onclick = () => {
   render();
 };
 
-$("#btnQuick").onclick = () => {
-  const v = $("#quickInput").value.toLowerCase().split('-');
-  if(v.length < 3) return;
-  const f = parseInt(v[0]), r = parseInt(v[1]), sChar = v[2][0];
-  let s = sChar==='v'?'valid': sChar==='o'?'occ': sChar==='t'?'lock': sChar==='p'?'prob':'none';
-  if(s === 'none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`] = s;
-  render(); $("#quickInput").value = "";
-};
-
-$("#btnClear").onclick = () => { if(confirm("Limpar?")) { rooms={}; localStorage.clear(); render(); }};
-
-// --- EXPORTAÇÃO COM MULTI-LINHA E DATA ---
 $("#btnPNG").onclick = async () => {
     const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = 400; canvas.height = 1000; // Aumentado para caber o texto multi-linha
+    canvas.width = 400; canvas.height = 1000;
     
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,400,1000);
     ctx.fillStyle = "#E6EAF0"; ctx.beginPath(); ctx.roundRect(75, 10, 320, 850, 10); ctx.fill();
     ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center";
     ctx.fillText("VIVO", 235, 32);
 
-    // Andares e Janelas
-    ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
     for(let f=32; f>=1; f--) {
         const row = 32 - f; const y = 40 + row * 22;
-        ctx.fillStyle = "#6A1B9A"; ctx.fillText("Andar "+f, 70, y + 10);
+        ctx.fillStyle = "#6A1B9A"; ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
+        ctx.fillText("Andar "+f, 70, y + 10);
         for(let c=0; c<8; c++) {
             ctx.fillStyle = "#DDE8F7"; ctx.strokeStyle = "#BFC9D8";
             const winX = 75 + 22 + c * 35;
@@ -228,7 +200,6 @@ $("#btnPNG").onclick = async () => {
         }
     }
 
-    // Badges
     Object.keys(rooms).forEach(key => {
         const [f, r] = key.split('-').map(Number);
         const x = 75 + 22 + ((r-1)%8)*35, y = 40 + (32-f)*22;
@@ -237,26 +208,36 @@ $("#btnPNG").onclick = async () => {
         ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
 
-    // RODAPÉ MULTI-LINHA
-    ctx.fillStyle = "#333"; ctx.font = "11px sans-serif"; ctx.textAlign = "left";
-    const respLine = `Data: ${new Date().toLocaleDateString('pt-BR')} | Resp: ${$("#inputResp").value || '---'}`;
-    ctx.fillText(respLine, 20, 880);
-
+    // Rodapé PNG
+    ctx.fillStyle = "#444"; ctx.textAlign = "left"; ctx.font = "11px sans-serif";
+    ctx.fillText(`Data: ${new Date().toLocaleDateString('pt-BR')} | Resp: ${$("#inputResp").value || '---'}`, 20, 885);
     ctx.font = "bold 11px sans-serif";
-    const lines = $("#obsText").value.split('\n');
-    let yOffset = 900;
-    lines.forEach(line => {
-        ctx.fillText(line, 20, yOffset);
-        yOffset += 15;
-    });
+    ctx.fillText(`Obs: ${$("#obsText").value}`, 20, 905);
+    
+    // Resumo IA no PNG (Tratando tags HTML para texto puro)
+    if(resumoIA) {
+        ctx.fillStyle = "#3498db";
+        const cleanAI = resumoIA.replace(/<\/?[^>]+(>|$)/g, "");
+        ctx.fillText("Resumo Executivo:", 20, 935);
+        ctx.font = "10px sans-serif";
+        ctx.fillStyle = "#666";
+        // Quebra automática simples para o resumo
+        const words = cleanAI.split(' ');
+        let line = '', yRel = 950;
+        words.forEach(w => {
+            if((line + w).length > 60) { ctx.fillText(line, 20, yRel); line = w + ' '; yRel += 15; }
+            else line += w + ' ';
+        });
+        ctx.fillText(line, 20, yRel);
+    }
 
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "mapa_vivo_pro.png", { type: "image/png" });
+        const file = new File([blob], "mapa_vivo.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: "Mapa" });
+            await navigator.share({ files: [file], title: "Mapa Vivo" });
         } else {
-            const link = document.createElement("a");
-            link.download = "mapa_vivo_pro.png"; link.href = URL.createObjectURL(blob); link.click();
+            const link = document.createElement("a"); link.download = "mapa_vivo.png";
+            link.href = URL.createObjectURL(blob); link.click();
         }
         btn.textContent = "📸 EXPORTAR PNG";
     }, "image/png");
