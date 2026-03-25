@@ -3,301 +3,188 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Ultra HD v12</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Vivo Infra • Ultra HD v11</title>
+
 <style>
- :root{
-  --vivo:#6A1B9A; --vivo-dark:#4A0072;
-  --valid:#1B5E20; --occ:#E65100; --lock:#424242; --prob:#B71C1C;
-  --bg:#F0F2F5; --card:#FFFFFF; --line:#D1D9E6;
- }
+:root{
+ --vivo:#6A1B9A; --vivo-dark:#4A0072;
+ --valid:#1B5E20; --occ:#E65100; --lock:#424242; --prob:#B71C1C;
+ --bg:#F0F2F5; --card:#FFFFFF; --line:#D1D9E6;
+}
 
- *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
- body{ background: var(--bg); color: #1A1A1A; font: 500 14px/1.2 system-ui, "Segoe UI"; overflow-x: hidden; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ background:var(--bg); font-family:system-ui; }
 
- .app{ width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; padding: 10px; }
- @media (min-width:900px){ .app{ display: grid; grid-template-columns: 340px 1fr; } }
+.app{ max-width:1200px; margin:auto; padding:10px; display:grid; grid-template-columns:340px 1fr; gap:15px; }
 
- .card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:0 8px 24px rgba(106,27,154,0.08); }
+.card{ background:#fff; border-radius:16px; padding:15px; box-shadow:0 8px 24px rgba(0,0,0,0.1); }
 
- .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
- .stat-box { text-align: center; padding: 8px; border-radius: 8px; color: #fff; font-size: 10px; font-weight: 800; }
+.viewer-card{ display:flex; justify-content:center; background:#E2E8F0; border-radius:20px; padding:20px; }
 
- label{ font-size: 11px; color:#666; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; }
- select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px; font:inherit; margin-bottom: 10px; }
- 
- .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 14px; text-transform: uppercase; }
- .btn-png { background: #1A1A1A; color: #fff; font-size: 15px; border: none; margin-top: 5px; cursor:pointer; }
- .btn-ai { background: #0277BD; color: #fff !important; font-size: 12px; margin-bottom: 10px; border:none; cursor:pointer; }
+.overlay-badges{ position:absolute; top:110px; left:0; width:100%; height:860px; }
 
- .viewer-card { display: flex; justify-content: center; background: #E2E8F0; padding: 30px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; border-radius: 20px; }
- .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1100px; }
- 
- .floors-labels-col { display: flex; flex-direction: column; padding-top: 106px; width: 70px; flex-shrink: 0; }
- .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: #4A5568; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; }
+.badge{
+ position:absolute;
+ width:24px;
+ height:12px;
+ font-size:9px;
+ color:#fff;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-weight:900;
+ border-radius:2px;
+}
 
- .facade-wrapper { position: relative; width: 320px; flex-shrink: 0; }
- #facade-svg { width: 320px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); }
- 
- .overlay-badges { position: absolute; top: 110px; left: 0; width: 100%; height: 860px; pointer-events: none; }
- .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
-
- #footerNoteDisplay {
-    position: absolute; top: 935px; left: 10px; width: 300px;
-    text-align: left; padding: 12px; font-size: 11px;
-    background: #fff; border-left: 4px solid var(--vivo); border-radius: 4px; line-height: 1.4; color: #334155;
- }
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
-  <div class="card">
-    <div class="stats-grid">
-        <div class="stat-box" style="background:var(--valid)" id="stValid">0</div>
-        <div class="stat-box" style="background:var(--occ)" id="stOcc">0</div>
-        <div class="stat-box" style="background:var(--lock)" id="stLock">0</div>
-        <div class="stat-box" style="background:var(--prob)" id="stProb">0</div>
-    </div>
+<div class="card">
 
-    <label>Responsável</label>
-    <input type="text" id="inputResp" placeholder="Nome do Auditor">
+<input id="inputResp" placeholder="Responsável">
 
-    <label>Localização</label>
-    <div style="display:flex; gap:5px">
-      <select id="selFloor"></select>
-      <select id="selRoom"></select>
-    </div>
+<select id="selFloor"></select>
+<select id="selRoom"></select>
 
-    <label>Status</label>
-    <select id="selStatus">
-      <option value="valid">✅ Validada</option>
-      <option value="occ">🟠 Ocupada</option>
-      <option value="lock">🔒 Trancada</option>
-      <option value="prob">❌ Problema</option>
-      <option value="none">🗑️ Remover</option>
-    </select>
+<select id="selStatus">
+<option value="valid">OK</option>
+<option value="occ">Ocupada</option>
+<option value="lock">Trancada</option>
+<option value="prob">Problema</option>
+</select>
 
-    <label>Observações</label>
-    <textarea id="obsText" rows="2" placeholder="Notas do dia..."></textarea>
+<button id="btnApply">Aplicar</button>
+<button id="btnPNG">📸 Exportar PNG (4K)</button>
 
-    <label>Atalho Rápido</label>
-    <div style="display:flex">
-      <input id="quickInput" type="text" placeholder="32-05-v">
-      <button id="btnQuick" style="width:50px; background:#444; color:#fff; margin-left:5px; border-radius:10px">OK</button>
-    </div>
+</div>
 
-    <button id="btnApply" class="btn-apply">Aplicar no Mapa</button>
-    <button id="btnAI" class="btn-ai" style="margin-top:10px">🤖 Gerar Relatório Executivo</button>
-    <button id="btnPNG" class="btn-png">📸 Exportar PNG (4K)</button>
-    
-    <div class="clean-bar" style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-top:10px">
-        <button id="btnClearSalas" style="font-size:10px; padding:5px; background:#eee; border:1px solid #ddd; border-radius:5px; cursor:pointer">Limpar Salas</button>
-        <button id="btnClearResumo" style="font-size:10px; padding:5px; background:#eee; border:1px solid #ddd; border-radius:5px; cursor:pointer">Limpar Texto</button>
-    </div>
-  </div>
+<div class="viewer-card">
+<div style="position:relative; width:320px; height:900px">
 
-  <div class="card viewer-card">
-    <div class="building-container">
-      <div class="floors-labels-col" id="floorsCol"></div>
-      <div class="facade-wrapper">
-        <svg id="facade-svg" viewBox="0 0 320 1050" xmlns="http://www.w3.org/2000/svg">
-          <rect x="140" y="5" width="40" height="40" fill="#94A3B8" />
-          <rect x="158" y="0" width="4" height="25" fill="#4A5568" />
-          <rect x="60" y="45" width="200" height="35" rx="5" fill="#CBD5E1" />
-          
-          <rect x="0" y="80" width="320" height="735" rx="5" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
-          
-          <rect x="0" y="72" width="320" height="30" fill="#6A1B9A" />
-          <text x="160" y="92" text-anchor="middle" font-weight="900" font-size="12" fill="#fff">VIVO - INFRAESTRUTURA</text>
-          
-          <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
-          
-          <rect x="-10" y="814" width="340" height="110" rx="10" fill="#1E293B" />
-          <rect x="105" y="825" width="50" height="70" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
-          <rect x="165" y="825" width="50" height="70" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
-          <rect x="150" y="855" width="2" height="15" fill="#94A3B8" />
-          <rect x="168" y="855" width="2" height="15" fill="#94A3B8" />
+<svg width="320" height="900">
+<rect x="0" y="80" width="320" height="700" fill="#fff"/>
+</svg>
 
-          <rect x="25" y="865" width="20" height="25" fill="#451a03" />
-          <path d="M20,865 Q35,830 50,865" fill="#166534" />
-          <rect x="275" y="865" width="20" height="25" fill="#451a03" />
-          <path d="M270,865 Q285,830 300,865" fill="#166534" />
-        </svg>
+<div id="overlay" class="overlay-badges"></div>
 
-        <div class="overlay-badges" id="overlay"></div>
-        <div id="footerNoteDisplay"></div>
-      </div>
-    </div>
-  </div>
+</div>
+</div>
 
 </div>
 
 <script>
+
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_v12_mobile_fix";
-let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
+let rooms = {};
 
-function init() {
-  const fSel = $("#selFloor"), rSel = $("#selRoom"), fCol = $("#floorsCol"), winG = $("#winGroup");
-  for (let f = 32; f >= 1; f--) {
-    fSel.appendChild(new Option(`Andar ${f}`, f));
-    const lbl = document.createElement("div"); lbl.className = "f-lbl"; lbl.textContent = `Andar ${f}`; fCol.appendChild(lbl);
-  }
-  for (let r = 1; r <= 50; r++) rSel.appendChild(new Option(`Sala ${String(r).padStart(2,'0')}`, r));
-  for (let r = 0; r < 32; r++) {
-    for (let c = 0; c < 8; c++) {
-      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      rect.setAttribute("x", c * 35); rect.setAttribute("y", r * 22);
-      rect.setAttribute("width", 24); rect.setAttribute("height", 12); rect.setAttribute("rx", 2);
-      winG.appendChild(rect);
-    }
-  }
-  $("#inputResp").value = localStorage.getItem(STORAGE_KEY+"_resp") || "";
-  $("#obsText").value = localStorage.getItem(STORAGE_KEY+"_obs") || "";
-  render();
+function getHex(s){
+ return s==="valid"?"#1B5E20":
+ s==="occ"?"#E65100":
+ s==="lock"?"#424242":"#B71C1C";
 }
 
-function render() {
-  const overlay = $("#overlay"); overlay.innerHTML = "";
-  const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
-  Object.keys(rooms).forEach(key => {
-    const [f, r] = key.split('-').map(Number);
-    const status = rooms[key]; stats[status]++;
-    const row = 32 - f, col = (r - 1) % 8;
-    const b = document.createElement("div");
-    b.className = `badge ${status}`; b.style.backgroundColor = getHex(status);
-    b.textContent = String(r).padStart(2,'0');
-    b.style.top = (row * 22) + "px"; b.style.left = (22 + col * 35) + "px";
-    overlay.appendChild(b);
-  });
-  $("#stValid").textContent = stats.valid; $("#stOcc").textContent = stats.occ;
-  $("#stLock").textContent = stats.lock; $("#stProb").textContent = stats.prob;
-
-  const dataStr = new Date().toLocaleDateString('pt-BR');
-  $("#footerNoteDisplay").innerHTML = `
-    <strong>${dataStr} | Auditor: ${$("#inputResp").value || '---'}</strong><br>
-    <div style="margin-top:4px; border-top:1px solid #eee; padding-top:4px;">
-        <strong>OBS:</strong> ${$("#obsText").value || "Sem notas."}
-    </div>
-    <div style="font-style:italic; color:#777; font-size:9px; margin-top:2px">
-        ${resumoIA || ""}
-    </div>
-  `;
-  
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
-  localStorage.setItem(STORAGE_KEY+"_resp", $("#inputResp").value);
-  localStorage.setItem(STORAGE_KEY+"_obs", $("#obsText").value);
-  localStorage.setItem(STORAGE_KEY+"_ai", resumoIA);
+function init(){
+ for(let f=32;f>=1;f--){
+   $("#selFloor").append(new Option("Andar "+f,f));
+ }
+ for(let r=1;r<=50;r++){
+   $("#selRoom").append(new Option("Sala "+r,r));
+ }
+ render();
 }
 
-function getHex(s) { return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='lock'?'#424242':'#B71C1C'; }
+function render(){
+ const overlay=$("#overlay");
+ overlay.innerHTML="";
 
-$("#btnAI").onclick = () => {
-    const s = { valid: 0, occ: 0, lock: 0, prob: 0 };
-    Object.values(rooms).forEach(v => s[v]++);
-    resumoIA = `Relatório: ${s.valid} OK, ${s.occ} Ocupadas, ${s.lock} Trancadas e ${s.prob} Pendentes.`;
-    render();
-};
+ Object.keys(rooms).forEach(key=>{
+   const [f,r]=key.split("-");
+   const row=32-f;
+   const col=(r-1)%8;
 
-$("#btnApply").onclick = () => {
-  const f = $("#selFloor").value, r = $("#selRoom").value, s = $("#selStatus").value;
-  if(s === 'none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`] = s;
-  render();
-};
+   const d=document.createElement("div");
+   d.className="badge";
+   d.style.background=getHex(rooms[key]);
+   d.style.top=(row*22)+"px";
+   d.style.left=(20+col*35)+"px";
+   d.innerText=r.padStart(2,"0");
 
-$("#btnQuick").onclick = () => {
-    const v = $("#quickInput").value.toLowerCase().split('-');
-    if(v.length < 3) return;
-    const f = parseInt(v[0]), r = parseInt(v[1]), sChar = v[2][0];
-    let s = sChar==='v'?'valid': sChar==='o'?'occ': sChar==='t'?'lock': sChar==='p'?'prob':'none';
-    if(s === 'none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`] = s;
-    render(); $("#quickInput").value = "";
-};
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(' ');
-    let line = '';
-    for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        if (ctx.measureText(testLine).width > maxWidth && n > 0) {
-            ctx.fillText(line, x, y);
-            line = words[n] + ' '; y += lineHeight;
-        } else { line = testLine; }
-    }
-    ctx.fillText(line, x, y); return y;
+   overlay.appendChild(d);
+ });
 }
+
+$("#btnApply").onclick=()=>{
+ let f=$("#selFloor").value;
+ let r=$("#selRoom").value;
+ let s=$("#selStatus").value;
+ rooms[f+"-"+r]=s;
+ render();
+};
+
+
+
+// ===== EXPORT CORRIGIDO =====
 
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG"); btn.textContent = "PROCESSANDO...";
-    const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
-    canvas.width = 460 * SCALE; canvas.height = 1050 * SCALE; ctx.scale(SCALE, SCALE);
-    
-    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1050);
-    ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+70, 5, 40, 40);
-    ctx.fillStyle = "#4A5568"; ctx.fillRect(158+70, 0, 4, 25);
-    ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 45, 200, 35, 5); ctx.fill();
 
-    ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(70, 80, 320, 735, 5); ctx.fill();
-    ctx.fillStyle = "#6A1B9A"; ctx.fillRect(70, 72, 320, 30);
-    ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText("VIVO - INFRAESTRUTURA", 230, 92);
+ const btn=$("#btnPNG");
+ btn.textContent="GERANDO...";
 
-    for(let f=32; f>=1; f--) {
-        const row = 32 - f; const y = 110 + row * 22;
-        ctx.fillStyle = "#4A5568"; ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
-        ctx.fillText("Andar "+f, 65, y + 10);
-        for(let c=0; c<8; c++) { ctx.fillStyle = "#E2E8F0"; ctx.beginPath(); ctx.roundRect(70+22+c*35, y, 24, 12, 2); ctx.fill(); }
-    }
+ const canvas=document.createElement("canvas");
+ const ctx=canvas.getContext("2d");
 
-    Object.keys(rooms).forEach(key => {
-        const [f, r] = key.split('-').map(Number);
-        const x = 70 + 22 + ((r-1)%8)*35, y = 110 + (32-f)*22;
-        ctx.fillStyle = getHex(rooms[key]); ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.font = "bold 9px sans-serif"; ctx.textAlign = "center";
-        ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
-    });
+ canvas.width=3840;
+ canvas.height=2160;
 
-    ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 814, 340, 110, 10); ctx.fill();
-    ctx.fillStyle = "#334155"; ctx.fillRect(175, 825, 50, 70); ctx.fillRect(235, 825, 50, 70);
+ ctx.fillStyle="#fff";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    ctx.fillStyle = "#334155"; ctx.textAlign = "left"; ctx.font = "bold 11px sans-serif";
-    ctx.fillText(`${new Date().toLocaleDateString('pt-BR')} | Auditor: ${$("#inputResp").value}`, 80, 955);
-    ctx.font = "10px sans-serif";
-    let curY = wrapText(ctx, `OBS: ${$("#obsText").value}`, 80, 975, 300, 14);
-    ctx.fillStyle = "#777"; ctx.font = "italic 9px sans-serif";
-    wrapText(ctx, resumoIA || "", 80, curY + 10, 300, 12);
+ ctx.scale(2,2);
 
-    // MECANISMO DE DOWNLOAD REFORÇADO PARA MOBILE
-    const dataUrl = canvas.toDataURL("image/png");
-    
-    // Tenta detectar se é mobile para comportamento de salvar imagem
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+ for(let f=32;f>=1;f--){
+  let y = 100 + (32-f)*22;
 
-    if (isMobile) {
-        // No mobile, abrimos em uma nova aba com a imagem para o usuário salvar
-        // ou usamos um link que dispara o menu de compartilhamento se disponível
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = `Checklist_Vivo_${Date.now()}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } else {
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = `Checklist_Vivo_${Date.now()}.png`;
-        link.click();
-    }
-    
-    btn.textContent = "📸 Exportar PNG (4K)";
+  ctx.fillStyle="#000";
+  ctx.font="12px Arial";
+  ctx.fillText("Andar "+f,20,y);
+
+  for(let r=1;r<=32;r++){
+    let col=(r-1)%8;
+    let x=120+col*35;
+
+    ctx.fillStyle=rooms[f+"-"+r]?getHex(rooms[f+"-"+r]):"#ddd";
+    ctx.fillRect(x,y-10,24,12);
+  }
+ }
+
+ canvas.toBlob((blob)=>{
+
+   const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+   const url = URL.createObjectURL(blob);
+
+   if(isIOS){
+     window.open(url,'_blank'); // abre imagem direto
+   }else{
+     const a=document.createElement("a");
+     a.href=url;
+     a.download="Checklist_Infra_4K.png";
+     a.click();
+   }
+
+ }, "image/png");
+
+ btn.textContent="📸 Exportar PNG (4K)";
 };
 
-$("#btnClearSalas").onclick = () => { if(confirm("Limpar salas?")) { rooms = {}; render(); }};
-$("#btnClearResumo").onclick = () => { resumoIA = ""; render(); };
-
 init();
+
 </script>
+
 </body>
 </html>
