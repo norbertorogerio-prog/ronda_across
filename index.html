@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Ultra HD v11</title>
+<title>Vivo Infra • Ultra HD v12</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -30,7 +30,7 @@
  .btn-ai { background: #0277BD; color: #fff !important; font-size: 12px; margin-bottom: 10px; border:none; cursor:pointer; }
 
  .viewer-card { display: flex; justify-content: center; background: #E2E8F0; padding: 30px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; border-radius: 20px; }
- .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1150px; }
+ .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1100px; }
  
  .floors-labels-col { display: flex; flex-direction: column; padding-top: 106px; width: 70px; flex-shrink: 0; }
  .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: #4A5568; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; }
@@ -42,7 +42,7 @@
  .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
  #footerNoteDisplay {
-    position: absolute; top: 940px; left: 10px; width: 300px;
+    position: absolute; top: 935px; left: 10px; width: 300px;
     text-align: left; padding: 12px; font-size: 11px;
     background: #fff; border-left: 4px solid var(--vivo); border-radius: 4px; line-height: 1.4; color: #334155;
  }
@@ -101,10 +101,10 @@
     <div class="building-container">
       <div class="floors-labels-col" id="floorsCol"></div>
       <div class="facade-wrapper">
-        <svg id="facade-svg" viewBox="0 0 320 1100" xmlns="http://www.w3.org/2000/svg">
-          <rect x="140" y="10" width="40" height="40" fill="#94A3B8" />
-          <rect x="158" y="0" width="4" height="30" fill="#4A5568" />
-          <rect x="60" y="50" width="200" height="40" rx="5" fill="#CBD5E1" />
+        <svg id="facade-svg" viewBox="0 0 320 1050" xmlns="http://www.w3.org/2000/svg">
+          <rect x="140" y="5" width="40" height="40" fill="#94A3B8" />
+          <rect x="158" y="0" width="4" height="25" fill="#4A5568" />
+          <rect x="60" y="45" width="200" height="35" rx="5" fill="#CBD5E1" />
           
           <rect x="0" y="80" width="320" height="735" rx="5" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
           
@@ -114,7 +114,6 @@
           <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
           
           <rect x="-10" y="814" width="340" height="110" rx="10" fill="#1E293B" />
-          
           <rect x="105" y="825" width="50" height="70" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
           <rect x="165" y="825" width="50" height="70" fill="#334155" stroke="#94A3B8" stroke-width="1"/>
           <rect x="150" y="855" width="2" height="15" fill="#94A3B8" />
@@ -136,7 +135,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_v11_hd_final";
+const STORAGE_KEY = "vivo_pro_v12_mobile_fix";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -230,20 +229,17 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.fillText(line, x, y); return y;
 }
 
-// DOWNLOAD DIRETO ATIVADO
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
+    const btn = $("#btnPNG"); btn.textContent = "PROCESSANDO...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
     canvas.width = 460 * SCALE; canvas.height = 1050 * SCALE; ctx.scale(SCALE, SCALE);
     
     ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1050);
-    ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+70, 10, 40, 40);
-    ctx.fillStyle = "#4A5568"; ctx.fillRect(158+70, 0, 4, 30);
-    ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 50, 200, 40, 5); ctx.fill();
+    ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+70, 5, 40, 40);
+    ctx.fillStyle = "#4A5568"; ctx.fillRect(158+70, 0, 4, 25);
+    ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 45, 200, 35, 5); ctx.fill();
 
     ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(70, 80, 320, 735, 5); ctx.fill();
-    
-    // Placa Roxa no PNG (Subida 8px na escala do canvas)
     ctx.fillStyle = "#6A1B9A"; ctx.fillRect(70, 72, 320, 30);
     ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
     ctx.fillText("VIVO - INFRAESTRUTURA", 230, 92);
@@ -273,11 +269,27 @@ $("#btnPNG").onclick = async () => {
     ctx.fillStyle = "#777"; ctx.font = "italic 9px sans-serif";
     wrapText(ctx, resumoIA || "", 80, curY + 10, 300, 12);
 
-    // MECANISMO DE DOWNLOAD DIRETO
-    const link = document.createElement("a");
-    link.download = `Checklist_Vivo_${Date.now()}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    // MECANISMO DE DOWNLOAD REFORÇADO PARA MOBILE
+    const dataUrl = canvas.toDataURL("image/png");
+    
+    // Tenta detectar se é mobile para comportamento de salvar imagem
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+        // No mobile, abrimos em uma nova aba com a imagem para o usuário salvar
+        // ou usamos um link que dispara o menu de compartilhamento se disponível
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = `Checklist_Vivo_${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else {
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = `Checklist_Vivo_${Date.now()}.png`;
+        link.click();
+    }
     
     btn.textContent = "📸 Exportar PNG (4K)";
 };
