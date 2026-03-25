@@ -3,55 +3,56 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Prédio Vivo • Ultra HD Pro</title>
+<title>Vivo Infra • Dashboard de Checklist</title>
 <style>
  :root{
-  --vivo:#6A1B9A; 
-  --valid:#1B5E20; 
-  --occ:#E65100;   
-  --lock:#424242;  
-  --prob:#B71C1C;  
+  --vivo:#6A1B9A; --vivo-dark:#4A0072;
+  --valid:#1B5E20; --occ:#E65100; --lock:#424242; --prob:#B71C1C;
   --bg:#F0F2F5; --card:#FFFFFF; --line:#D1D9E6;
  }
 
  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
  body{ background: var(--bg); color: #1A1A1A; font: 500 14px/1.2 system-ui, "Segoe UI"; overflow-x: hidden; }
 
- .app{ width: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; padding: 10px; }
- @media (min-width:900px){ .app{ display: grid; grid-template-columns: 320px 1fr; } }
+ .app{ width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; padding: 10px; }
+ @media (min-width:900px){ .app{ display: grid; grid-template-columns: 340px 1fr; } }
 
- .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:15px; box-shadow:0 6px 15px rgba(0,0,0,0.05); }
+ .card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:0 8px 24px rgba(106,27,154,0.08); }
 
- label{ font-size:11px; color:#555; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; }
- select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; margin-bottom: 8px; }
+ /* Estilo dos Contadores */
+ .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+ .stat-box { text-align: center; padding: 8px; border-radius: 8px; color: #fff; font-size: 10px; font-weight: 800; }
 
- /* BOTÃO APLICAR */
- .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 15px; margin-top: 5px; text-transform: uppercase; }
- .btn-apply:active { opacity: 0.9; transform: scale(0.98); }
-
- .btn-png { background: #000; color: #fff; font-size: 16px; border: 2px solid #333; }
+ label{ font-size: 11px; color:#666; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+ select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px; font:inherit; margin-bottom: 10px; transition: 0.3s; }
  
- /* BOTÃO RELATÓRIO - LETRAS BRANCAS */
- .btn-ai { background: #0277BD; color: #ffffff !important; font-size: 12px; margin-bottom: 10px; border: none; }
+ input:focus, select:focus { border-color: var(--vivo); outline: none; box-shadow: 0 0 0 3px rgba(106,27,154,0.1); }
+
+ .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 14px; text-transform: uppercase; box-shadow: 0 4px 12px rgba(106,27,154,0.3); }
+ .btn-png { background: #1A1A1A; color: #fff; font-size: 15px; border: none; margin-top: 5px; }
+ .btn-ai { background: #0277BD; color: #fff !important; font-size: 12px; margin-bottom: 10px; }
  
- .clean-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px; }
- .btn-clear-sub { background: #fff; color: #444; border: 1px solid #ccc; font-size: 10px; padding: 6px; }
- .btn-clear-red { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; font-size: 11px; grid-column: span 2; }
+ .clean-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+ .btn-clear-sub { background: #fff; color: #666; border: 1px solid #ddd; font-size: 10px; padding: 8px; }
+ .btn-clear-red { background: #FFF5F5; color: #C53030; border: 1px solid #FEB2B2; font-size: 11px; grid-column: span 2; }
 
- .viewer-card { display: flex; justify-content: center; background: #fff; padding: 20px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; }
- .building-container { position: relative; display: flex; width: 395px; flex-shrink: 0; height: 1050px; }
- .floors-labels-col { display: flex; flex-direction: column; padding-top: 36px; width: 70px; flex-shrink: 0; }
- .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: var(--vivo); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; }
+ /* CONTAINER DO PRÉDIO - REDESENHADO */
+ .viewer-card { display: flex; justify-content: center; background: #E2E8F0; padding: 30px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; border-radius: 20px; }
+ .building-container { position: relative; display: flex; width: 400px; flex-shrink: 0; height: 1150px; }
+ 
+ .floors-labels-col { display: flex; flex-direction: column; padding-top: 106px; width: 70px; flex-shrink: 0; }
+ .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: #4A5568; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; }
 
- .facade-wrapper { position: relative; width: 320px; height: 860px; flex-shrink: 0; }
- #facade-svg { width: 320px; height: 860px; display: block; }
- .overlay-badges { position: absolute; top: 0; left: 0; width: 100%; height: 860px; pointer-events: none; }
+ .facade-wrapper { position: relative; width: 320px; flex-shrink: 0; }
+ #facade-svg { width: 320px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); }
+ 
+ .overlay-badges { position: absolute; top: 110px; left: 0; width: 100%; height: 860px; pointer-events: none; }
  .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
  #footerNoteDisplay {
-    position: absolute; top: 875px; left: 0; width: 100%;
+    position: absolute; top: 960px; left: 10px; width: 300px;
     text-align: left; padding: 15px; font-size: 12px;
-    background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; line-height: 1.4; color: #334155;
+    background: #fff; border-left: 4px solid var(--vivo); border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); line-height: 1.4; color: #334155;
  }
 </style>
 </head>
@@ -60,6 +61,13 @@
 <div class="app">
 
   <div class="card">
+    <div class="stats-grid">
+        <div class="stat-box" style="background:var(--valid)" id="stValid">0</div>
+        <div class="stat-box" style="background:var(--occ)" id="stOcc">0</div>
+        <div class="stat-box" style="background:var(--lock)" id="stLock">0</div>
+        <div class="stat-box" style="background:var(--prob)" id="stProb">0</div>
+    </div>
+
     <label>Localização</label>
     <div style="display:flex; gap:5px">
       <select id="selFloor"></select>
@@ -67,39 +75,38 @@
     </div>
 
     <label>Responsável</label>
-    <input type="text" id="inputResp" placeholder="Ex: João Silva">
+    <input type="text" id="inputResp" placeholder="Nome do Auditor">
 
-    <label>Status</label>
+    <label>Status da Sala</label>
     <select id="selStatus">
-      <option value="valid">✅ Validada (Verde Escuro)</option>
-      <option value="occ">🟠 Ocupada (Laranja)</option>
-      <option value="lock">🔒 Trancada (Grafite)</option>
-      <option value="prob">❌ Problema (Vermelho)</option>
-      <option value="none">🗑️ Remover</option>
+      <option value="valid">✅ Validada</option>
+      <option value="occ">🟠 Ocupada</option>
+      <option value="lock">🔒 Trancada</option>
+      <option value="prob">❌ Problema</option>
+      <option value="none">🗑️ Remover Marcação</option>
     </select>
 
-    <label>Observações</label>
-    <textarea id="obsText" rows="2" placeholder="Notas rápidas..."></textarea>
+    <label>Observações do Dia</label>
+    <textarea id="obsText" rows="2" placeholder="Descreva anomalias..."></textarea>
 
-    <div style="margin-top:5px; padding-bottom: 5px;">
-        <label>Entrada Rápida (ex: 32-01-v)</label>
-        <div style="display:flex">
-          <input id="quickInput" type="text" placeholder="32-01-v">
-          <button id="btnQuick" style="width:50px; background:#444; color:#fff; margin-left:5px; border-radius:8px">OK</button>
-        </div>
+    <label>Atalho Rápido</label>
+    <div style="display:flex">
+      <input id="quickInput" type="text" placeholder="Ex: 32-01-v">
+      <button id="btnQuick" style="width:50px; background:#444; color:#fff; margin-left:5px; border-radius:10px">OK</button>
     </div>
 
-    <button id="btnApply" class="btn-apply">Aplicar no Mapa</button>
+    <button id="btnApply" class="btn-apply">Atualizar Checklist</button>
 
-    <label style="margin-top:15px">Relatórios</label>
-    <button id="btnAI" class="btn-ai">🤖 Gerar Relatório Executivo</button>
+    <label style="margin-top:15px">Ações de Relatório</label>
+    <button id="btnAI" class="btn-ai">🤖 Gerar Resumo Executivo</button>
+    <button id="btnCopy" style="background:#edf2f7; color:#2d3748; font-size:11px; margin-bottom:10px">📋 Copiar Texto do Relatório</button>
 
-    <button id="btnPNG" class="btn-png">📸 Exportar em 4K (Ultra HD)</button>
+    <button id="btnPNG" class="btn-png">📸 Exportar PNG (4K)</button>
     
     <div class="clean-bar">
         <button class="btn-clear-sub" id="btnClearSalas">Limpar Salas</button>
-        <button class="btn-clear-sub" id="btnClearResumo">Limpar Resumo</button>
-        <button class="btn-clear-red" id="btnClearTudo">Reset Total do Sistema</button>
+        <button class="btn-clear-sub" id="btnClearResumo">Limpar Texto</button>
+        <button class="btn-clear-red" id="btnClearTudo">Reset Geral</button>
     </div>
   </div>
 
@@ -107,12 +114,17 @@
     <div class="building-container">
       <div class="floors-labels-col" id="floorsCol"></div>
       <div class="facade-wrapper">
-        <svg id="facade-svg" viewBox="0 0 320 860" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="860" rx="10" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1"/>
-          <text x="160" y="22" text-anchor="middle" font-weight="900" font-size="13" fill="#6A1B9A">VIVO - INFRAESTRUTURA</text>
-          <g id="winGroup" transform="translate(22,40)" fill="#E2E8F0" stroke="#CBD5E1"></g>
-          <rect y="820" width="320" height="40" fill="#E2E8F0" rx="0 0 10 10"/>
-        </svg>
+        <svg id="facade-svg" viewBox="0 0 320 950" xmlns="http://www.w3.org/2000/svg">
+          <rect x="140" y="10" width="40" height="40" fill="#94A3B8" /> <rect x="158" y="0" width="4" height="30" fill="#4A5568" />
+          <rect x="60" y="50" width="200" height="40" rx="5" fill="#CBD5E1" /> <rect x="0" y="80" width="320" height="850" rx="5" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
+          
+          <rect x="0" y="80" width="320" height="30" fill="#6A1B9A" opacity="0.9" />
+          <text x="160" y="100" text-anchor="middle" font-weight="900" font-size="12" fill="#fff">VIVO - INFRAESTRUTURA</text>
+          
+          <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
+          
+          <rect x="-10" y="900" width="340" height="50" rx="5" fill="#4A5568" />
+          <rect x="110" y="900" width="100" height="50" fill="#2D3748" /> </svg>
         <div class="overlay-badges" id="overlay"></div>
         <div id="footerNoteDisplay"></div>
       </div>
@@ -123,7 +135,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_vULTRA_4K_REORD";
+const STORAGE_KEY = "vivo_checklist_v1";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -149,18 +161,28 @@ function init() {
 
 function render() {
   const overlay = $("#overlay"); overlay.innerHTML = "";
+  const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
+
   Object.keys(rooms).forEach(key => {
     const [f, r] = key.split('-').map(Number);
+    const status = rooms[key];
+    stats[status]++;
     const row = 32 - f, col = (r - 1) % 8;
     const b = document.createElement("div");
-    b.className = `badge ${rooms[key]}`; b.style.backgroundColor = getHex(rooms[key]);
+    b.className = `badge ${status}`; b.style.backgroundColor = getHex(status);
     b.textContent = String(r).padStart(2,'0');
-    b.style.top = (40 + row * 22) + "px"; b.style.left = (22 + col * 35) + "px";
+    b.style.top = (row * 22) + "px"; b.style.left = (22 + col * 35) + "px";
     overlay.appendChild(b);
   });
+  
+  // Atualiza Contadores
+  $("#stValid").textContent = stats.valid;
+  $("#stOcc").textContent = stats.occ;
+  $("#stLock").textContent = stats.lock;
+  $("#stProb").textContent = stats.prob;
+
   const dataStr = new Date().toLocaleDateString('pt-BR');
-  const resp = $("#inputResp").value || "---";
-  $("#footerNoteDisplay").innerHTML = `<strong>Data:</strong> ${dataStr} | <strong>Responsável:</strong> ${resp}<br><strong>Obs:</strong> ${$("#obsText").value}<br><br>${resumoIA}`;
+  $("#footerNoteDisplay").innerHTML = `<strong>Data:</strong> ${dataStr} | <strong>Resp:</strong> ${$("#inputResp").value || '---'}<br><strong>Notas:</strong> ${$("#obsText").value}<br><br>${resumoIA}`;
   
   localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
   localStorage.setItem(STORAGE_KEY+"_resp", $("#inputResp").value);
@@ -169,6 +191,19 @@ function render() {
 }
 
 function getHex(s) { return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='lock'?'#424242':'#B71C1C'; }
+
+$("#btnAI").onclick = () => {
+    const s = { valid: 0, occ: 0, lock: 0, prob: 0 };
+    Object.values(rooms).forEach(v => s[v]++);
+    resumoIA = `CHECKLIST CONCLUÍDO: ${s.valid} salas OK, ${s.occ} em uso. ATENÇÃO: ${s.prob} falhas críticas detectadas.`;
+    render();
+};
+
+$("#btnCopy").onclick = () => {
+    const cleanAI = resumoIA.replace(/<\/?[^>]+(>|$)/g, "");
+    const texto = `RELATÓRIO DE VALIDAÇÃO - VIVO\nData: ${new Date().toLocaleDateString('pt-BR')}\nResponsável: ${$("#inputResp").value}\n\n${cleanAI}\n\nObservações: ${$("#obsText").value}`;
+    navigator.clipboard.writeText(texto).then(() => alert("Copiado para a área de transferência!"));
+};
 
 $("#btnApply").onclick = () => {
   const f = $("#selFloor").value, r = $("#selRoom").value, s = $("#selStatus").value;
@@ -185,55 +220,65 @@ $("#btnQuick").onclick = () => {
     render(); $("#quickInput").value = "";
 };
 
-$("#btnAI").onclick = () => {
-    const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
-    Object.values(rooms).forEach(s => stats[s]++);
-    resumoIA = `<strong>RELATÓRIO EXECUTIVO:</strong> O edifício apresenta ${stats.valid} salas validadas e ${stats.occ} ocupadas. Identificadas ${stats.prob} salas com pendências críticas.`;
-    render();
-};
-
 $("#btnClearSalas").onclick = () => { if(confirm("Limpar salas?")) { rooms = {}; render(); }};
 $("#btnClearResumo").onclick = () => { resumoIA = ""; render(); };
-$("#btnClearTudo").onclick = () => { if(confirm("Resetar tudo?")) { rooms={}; resumoIA=""; $("#inputResp").value=""; $("#obsText").value=""; localStorage.clear(); render(); }};
+$("#btnClearTudo").onclick = () => { if(confirm("Reset total?")) { rooms={}; resumoIA=""; $("#inputResp").value=""; $("#obsText").value=""; localStorage.clear(); render(); }};
 
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG"); btn.textContent = "GERANDO ULTRA HD...";
+    const btn = $("#btnPNG"); btn.textContent = "EXPORTANDO 4K...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
-    canvas.width = 450 * SCALE; canvas.height = 1100 * SCALE; ctx.scale(SCALE, SCALE);
+    canvas.width = 450 * SCALE; canvas.height = 1150 * SCALE; ctx.scale(SCALE, SCALE);
     
-    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,450,1100);
-    ctx.fillStyle = "#F1F5F9"; ctx.beginPath(); ctx.roundRect(75, 10, 320, 850, 10); ctx.fill();
-    ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText("VIVO - INFRAESTRUTURA", 235, 32);
+    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,450,1150);
+    
+    // Antena e Topo
+    ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+75, 10, 40, 40);
+    ctx.fillStyle = "#4A5568"; ctx.fillRect(158+75, 0, 4, 30);
+    ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+75, 50, 200, 40, 5); ctx.fill();
 
+    // Prédio
+    ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(75, 80, 320, 850, 5); ctx.fill();
+    ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 1; ctx.stroke();
+    
+    // Header Roxo
+    ctx.fillStyle = "#6A1B9A"; ctx.fillRect(75, 80, 320, 30);
+    ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("VIVO - INFRAESTRUTURA", 235, 100);
+
+    // Janelas e Badges
     for(let f=32; f>=1; f--) {
-        const row = 32 - f; const y = 40 + row * 22;
-        ctx.fillStyle = "#6A1B9A"; ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
+        const row = 32 - f; const y = 110 + row * 22;
+        ctx.fillStyle = "#4A5568"; ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
         ctx.fillText("Andar "+f, 70, y + 10);
         for(let c=0; c<8; c++) {
-            ctx.fillStyle = "#E2E8F0"; ctx.strokeStyle = "#CBD5E1";
-            const winX = 75 + 22 + c * 35; ctx.beginPath(); ctx.roundRect(winX, y, 24, 12, 2); ctx.fill(); ctx.stroke();
+            const winX = 75 + 22 + c * 35;
+            ctx.fillStyle = "#E2E8F0"; ctx.beginPath(); ctx.roundRect(winX, y, 24, 12, 2); ctx.fill();
         }
     }
 
     Object.keys(rooms).forEach(key => {
         const [f, r] = key.split('-').map(Number);
-        const x = 75 + 22 + ((r-1)%8)*35, y = 40 + (32-f)*22;
+        const x = 75 + 22 + ((r-1)%8)*35, y = 110 + (32-f)*22;
         ctx.fillStyle = getHex(rooms[key]); ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.font = "bold 9px sans-serif"; ctx.textAlign = "center";
         ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
 
+    // Base
+    ctx.fillStyle = "#4A5568"; ctx.fillRect(75-10, 930, 340, 50);
+    ctx.fillStyle = "#2D3748"; ctx.fillRect(185, 930, 100, 50);
+
+    // Texto Rodapé
     ctx.fillStyle = "#1e293b"; ctx.textAlign = "left"; ctx.font = "12px sans-serif";
-    ctx.fillText(`Data: ${new Date().toLocaleDateString('pt-BR')} | Resp: ${$("#inputResp").value || '---'}`, 20, 890);
-    ctx.font = "bold 11px sans-serif"; ctx.fillText(`Obs: ${$("#obsText").value}`, 20, 910);
+    ctx.fillText(`Data: ${new Date().toLocaleDateString('pt-BR')} | Resp: ${$("#inputResp").value || '---'}`, 20, 1020);
+    ctx.font = "bold 11px sans-serif";
+    ctx.fillText(`Obs: ${$("#obsText").value}`, 20, 1040);
     
     if(resumoIA) {
-        ctx.fillStyle = "#0277BD"; const cleanAI = resumoIA.replace(/<\/?[^>]+(>|$)/g, "");
-        ctx.fillText("RELATÓRIO EXECUTIVO:", 20, 940);
+        ctx.fillStyle = "#0277BD"; ctx.fillText("RESUMO EXECUTIVO:", 20, 1070);
         ctx.font = "11px sans-serif"; ctx.fillStyle = "#475569";
-        const words = cleanAI.replace("RELATÓRIO EXECUTIVO: ", "").split(' ');
-        let line = '', yRel = 960;
+        const words = resumoIA.split(' ');
+        let line = '', yRel = 1090;
         words.forEach(w => {
             if((line + w).length > 65) { ctx.fillText(line, 20, yRel); line = w + ' '; yRel += 16; }
             else line += w + ' ';
@@ -242,16 +287,26 @@ $("#btnPNG").onclick = async () => {
     }
 
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "mapa_4K.png", { type: "image/png" });
+        const file = new File([blob], "checklist_vivo.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: "Mapa Vivo 4K" });
+            await navigator.share({ files: [file], title: "Checklist Vivo" });
         } else {
-            const link = document.createElement("a"); link.download = "mapa_4K.png";
+            const link = document.createElement("a"); link.download = "checklist.png";
             link.href = URL.createObjectURL(blob); link.click();
         }
-        btn.textContent = "📸 EXPORTAR EM 4K (ULTRA HD)";
+        btn.textContent = "📸 Exportar PNG (4K)";
     }, "image/png");
 };
+
+// Polyfill roundRect
+if (!Path2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+    if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
+    this.beginPath(); this.moveTo(x+r,y); this.arcTo(x+w,y,x+w,y+h,r);
+    this.arcTo(x+w,y+h,x,y+h,r); this.arcTo(x,y+h,x,y,r);
+    this.arcTo(x,y,x+w,y,r); this.closePath(); return this;
+  };
+}
 
 init();
 </script>
