@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Auditoria Inteligente v15</title>
+<title>Vivo Infra • Auditoria v16 Final</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -23,7 +23,7 @@
  .stat-box { text-align: center; padding: 8px; border-radius: 8px; color: #fff; font-size: 10px; font-weight: 800; }
 
  label{ font-size: 11px; color:#666; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; }
- select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px; font:inherit; margin-bottom: 10px; }
+ select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px; font:inherit; margin-bottom: 8px; }
  
  .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 14px; text-transform: uppercase; }
  .btn-png { background: #1A1A1A; color: #fff; font-size: 15px; border: none; margin-top: 5px; cursor:pointer; }
@@ -45,7 +45,7 @@
     position: absolute; top: 935px; left: 10px; width: 300px;
     text-align: left; padding: 12px; font-size: 11px;
     background: #fff; border-left: 4px solid var(--vivo); border-radius: 4px; line-height: 1.5; color: #334155;
-    white-space: pre-wrap; /* Garante que as quebras de linha apareçam no dashboard */
+    white-space: pre-wrap; 
  }
 </style>
 </head>
@@ -130,7 +130,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_v15_ai_master";
+const STORAGE_KEY = "vivo_pro_v16_final";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -184,32 +184,17 @@ function render() {
 
 function getHex(s) { return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='lock'?'#424242':'#B71C1C'; }
 
-// LÓGICA DA IA AVANÇADA COM QUEBRAS DE LINHA
 $("#btnAI").onclick = () => {
     const s = { valid: 0, occ: 0, lock: 0, prob: 0 };
     const andaresComProblema = new Set();
-    const totalSalas = 32 * 8; // Capacidade total mapeada no grid
-    
     Object.keys(rooms).forEach(key => {
         const status = rooms[key];
         s[status]++;
-        if (status === 'prob') {
-            const andar = key.split('-')[0];
-            andaresComProblema.add(andar);
-        }
+        if (status === 'prob') andaresComProblema.add(key.split('-')[0]);
     });
-
-    const salasAuditadas = Object.keys(rooms).length;
-    const taxaConclusao = ((salasAuditadas / totalSalas) * 100).toFixed(0);
-
-    resumoIA = `🤖 RESUMO EXECUTIVO:\n` +
-               `• Salas OK: ${s.valid} | Ocupadas: ${s.occ}\n` +
-               `• Trancadas: ${s.lock} | Falhas: ${s.prob}\n` +
-               `• Cobertura da Auditoria: ${taxaConclusao}%\n\n` +
-               (andaresComProblema.size > 0 
-                ? `⚠️ ATENÇÃO: Falhas nos andares: ${Array.from(andaresComProblema).sort((a,b)=>b-a).join(', ')}`
-                : `✅ Nenhuma falha crítica detectada.`);
-    
+    const taxa = ((Object.keys(rooms).length / 256) * 100).toFixed(0);
+    resumoIA = `🤖 RESUMO EXECUTIVO:\n• Salas OK: ${s.valid} | Ocupadas: ${s.occ}\n• Trancadas: ${s.lock} | Falhas: ${s.prob}\n• Cobertura: ${taxa}%\n` +
+               (andaresComProblema.size > 0 ? `⚠️ Falhas nos andares: ${Array.from(andaresComProblema).sort((a,b)=>b-a).join(', ')}` : `✅ Sem falhas críticas.`);
     render();
 };
 
@@ -228,9 +213,8 @@ $("#btnQuick").onclick = () => {
     render(); $("#quickInput").value = "";
 };
 
-// MOTOR DE TEXTO DO PNG COM SUPORTE A QUEBRA DE LINHA MANUAL (\n)
 function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
-    const sections = text.split('\n'); // Respeita as quebras de linha da IA
+    const sections = text.split('\n');
     sections.forEach(section => {
         const words = section.split(' ');
         let line = '';
@@ -240,9 +224,7 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
                 ctx.fillText(line, x, y);
                 line = words[n] + ' ';
                 y += lineHeight;
-            } else {
-                line = testLine;
-            }
+            } else { line = testLine; }
         }
         ctx.fillText(line, x, y);
         y += lineHeight;
@@ -250,12 +232,13 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
     return y;
 }
 
+// NOVO MOTOR DE EXPORTAÇÃO COMPATÍVEL COM TODOS OS CELULARES
 $("#btnPNG").onclick = async () => {
     const btn = $("#btnPNG"); btn.textContent = "BAIXANDO...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
-    canvas.width = 460 * SCALE; canvas.height = 1100 * SCALE; ctx.scale(SCALE, SCALE);
+    canvas.width = 460 * SCALE; canvas.height = 1050 * SCALE; ctx.scale(SCALE, SCALE);
     
-    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1100);
+    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1050);
     ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+70, 5, 40, 40);
     ctx.fillStyle = "#4A5568"; ctx.fillRect(158+70, 0, 4, 25);
     ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 45, 200, 35, 5); ctx.fill();
@@ -282,25 +265,37 @@ $("#btnPNG").onclick = async () => {
 
     ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 814, 340, 110, 10); ctx.fill();
     ctx.fillStyle = "#334155"; ctx.fillRect(175, 825, 50, 70); ctx.fillRect(235, 825, 50, 70);
-    
-    // Vasos no PNG
     ctx.fillStyle = "#451a03"; ctx.fillRect(95, 889, 20, 25); ctx.fillRect(345, 889, 20, 25);
 
-    // Texto do Rodapé no PNG
     ctx.fillStyle = "#334155"; ctx.textAlign = "left"; ctx.font = "bold 11px sans-serif";
     const dataStr = new Date().toLocaleDateString('pt-BR');
     const fullText = `📅 ${dataStr} | 👤 Auditor: ${$("#inputResp").value || '---'}\n──────────────────────\n📝 OBS: ${$("#obsText").value || 'Sem notas.'}\n\n${resumoIA}`;
     
     drawWrappedText(ctx, fullText, 80, 955, 300, 14);
 
-    const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = `Checklist_Vivo_AI_${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    btn.textContent = "📸 Exportar PNG (4K)";
+    try {
+        // Conversão para Blob para melhor suporte em downloads de arquivos grandes (4K)
+        canvas.toBlob((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            // Nome simples sem caracteres especiais para evitar erros no Android
+            a.download = `Checklist_Vivo_${Date.now()}.png`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            btn.textContent = "📸 Exportar PNG (4K)";
+        }, 'image/png');
+    } catch (e) {
+        // Fallback para DataURL caso Blob falhe
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = `Checklist_Vivo.png`;
+        link.click();
+        btn.textContent = "📸 Exportar PNG (4K)";
+    }
 };
 
 $("#btnClearSalas").onclick = () => { if(confirm("Limpar salas?")) { rooms = {}; render(); }};
