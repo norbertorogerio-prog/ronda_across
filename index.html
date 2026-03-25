@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Prédio Vivo • Final</title>
+<title>Prédio Vivo • Pro</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -28,7 +28,8 @@
  select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; margin-bottom: 10px; }
 
  button{ background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; }
- .btn-png { background: #27ae60; padding: 16px; font-size: 16px; }
+ .btn-png { background: #27ae60; padding: 16px; font-size: 16px; margin-top: 10px; }
+ .btn-ai { background: #3498db; margin-top: 5px; font-size: 12px; padding: 8px; }
 
  .viewer-card { 
   display: flex; justify-content: center; background: #fff; padding: 20px 0;
@@ -36,31 +37,24 @@
  }
  
  .building-container {
-  position: relative; display: flex; width: 395px; flex-shrink: 0; height: 870px; user-select: none;
+  position: relative; display: flex; width: 395px; flex-shrink: 0; height: 950px; user-select: none;
  }
 
- .floors-labels-col {
-  display: flex; flex-direction: column; padding-top: 36px; width: 70px; flex-shrink: 0;
- }
+ .floors-labels-col { display: flex; flex-direction: column; padding-top: 36px; width: 70px; flex-shrink: 0; }
+ .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: var(--vivo); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; }
 
- .f-lbl {
-  height: 22px; font-size: 11px; font-weight: 800; color: var(--vivo);
-  display: flex; align-items: center; justify-content: flex-end; padding-right: 10px;
- }
-
- .facade-wrapper { position: relative; width: 320px; height: 860px; flex-shrink: 0; }
+ .facade-wrapper { position: relative; width: 320px; height: 940px; flex-shrink: 0; }
  #facade-svg { width: 320px; height: 860px; display: block; }
- .overlay-badges { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+ .overlay-badges { position: absolute; top: 0; left: 0; width: 100%; height: 860px; pointer-events: none; }
  
- .badge {
-  position: absolute; width: 24px; height: 12px;
-  border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center; pointer-events: auto;
- }
+ .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
  #footerNoteDisplay {
-    position: absolute; bottom: 12px; left: 0; width: 100%;
-    text-align: center; font-weight: 800; color: var(--vivo-dark); padding: 0 10px; font-size: 12px;
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    text-align: left; font-weight: 600; color: #444; padding: 10px; font-size: 11px;
+    white-space: pre-wrap; /* Mantém as quebras de linha na tela */
+    line-height: 1.4;
+    background: #f9f9f9; border-radius: 5px;
  }
 </style>
 </head>
@@ -75,6 +69,9 @@
       <select id="selRoom"></select>
     </div>
 
+    <label>Responsável</label>
+    <input type="text" id="inputResp" placeholder="Nome do responsável">
+
     <label>Status</label>
     <select id="selStatus">
       <option value="valid">✅ Validada</option>
@@ -85,11 +82,13 @@
     </select>
 
     <label>Observações</label>
-    <textarea id="obsText" rows="2" placeholder="Notas do rodapé..."></textarea>
+    <textarea id="obsText" rows="4" placeholder="Escreva aqui as observações. Use Enter para novas linhas."></textarea>
 
-    <button id="btnApply" style="background:var(--vivo-dark)">APLICAR NO MAPA</button>
+    <button id="btnAI" class="btn-ai">🤖 GERAR RESUMO EXECUTIVO</button>
 
-    <label style="margin-top:5px">Entrada Rápida</label>
+    <button id="btnApply" style="background:var(--vivo-dark); margin-top:10px">APLICAR NO MAPA</button>
+
+    <label style="margin-top:10px">Entrada Rápida</label>
     <div style="display:flex">
       <input id="quickInput" type="text" placeholder="32-05-v">
       <button id="btnQuick" style="width:60px; background:#444; margin-left:5px">OK</button>
@@ -98,8 +97,8 @@
     <button id="btnPNG" class="btn-png">📸 EXPORTAR PNG</button>
     
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-top:10px">
-        <button id="btnSave" style="background:#f4f4f9; color:var(--vivo); font-size:12px">Salvar JSON</button>
-        <button id="btnLoad" style="background:#f4f4f9; color:var(--vivo); font-size:12px">Abrir JSON</button>
+        <button id="btnSave" style="background:#f4f4f9; color:var(--vivo); font-size:11px">Salvar JSON</button>
+        <button id="btnLoad" style="background:#f4f4f9; color:var(--vivo); font-size:11px">Abrir JSON</button>
     </div>
     <button id="btnClear" style="background:none; color:red; font-size:11px; margin-top:5px">LIMPAR TUDO</button>
   </div>
@@ -124,7 +123,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_vFINAL_2024";
+const STORAGE_KEY = "predio_vPRO_01";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 
 function init() {
@@ -142,6 +141,7 @@ function init() {
       winG.appendChild(rect);
     }
   }
+  $("#inputResp").value = localStorage.getItem(STORAGE_KEY+"_resp") || "";
   render();
 }
 
@@ -156,17 +156,41 @@ function render() {
     b.style.top = (40 + row * 22) + "px"; b.style.left = (22 + col * 35) + "px";
     overlay.appendChild(b);
   });
-  const obs = localStorage.getItem(STORAGE_KEY + "_obs") || "";
-  $("#footerNoteDisplay").textContent = obs; $("#obsText").value = obs;
+  
+  const dataStr = new Date().toLocaleDateString('pt-BR');
+  const resp = $("#inputResp").value ? `Resp: ${$("#inputResp").value}` : "Responsável: ---";
+  const obs = $("#obsText").value;
+  
+  $("#footerNoteDisplay").textContent = `${dataStr} | ${resp}\n\n${obs}`;
+  
   localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
+  localStorage.setItem(STORAGE_KEY+"_resp", $("#inputResp").value);
+  localStorage.setItem(STORAGE_KEY+"_obs", obs);
 }
 
 function getHex(s) { return s==='valid'?'#2ECC71': s==='occ'?'#FF9800': s==='lock'?'#9E9E9E':'#E53935'; }
 
+// LÓGICA DO RESUMO EXECUTIVO (SIMULANDO IA)
+$("#btnAI").onclick = () => {
+    const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
+    Object.values(rooms).forEach(s => stats[s]++);
+    
+    const resp = $("#inputResp").value || "Equipe";
+    const data = new Date().toLocaleDateString('pt-BR');
+    
+    const resumo = `RELATÓRIO EXECUTIVO (${data}):
+Sob responsabilidade de ${resp}, o prédio apresenta ${stats.valid} salas validadas, ${stats.occ} ocupadas e ${stats.lock} trancadas. Identificamos ${stats.prob} ponto(s) de atenção com problemas. 
+
+Principais Notas: ${$("#obsText").value.replace(/\n/g, ' ')}`;
+
+    $("#obsText").value = resumo;
+    render();
+};
+
 $("#btnApply").onclick = () => {
   const f = $("#selFloor").value, r = $("#selRoom").value, s = $("#selStatus").value;
   if(s === 'none') delete rooms[`${f}-${r}`]; else rooms[`${f}-${r}`] = s;
-  localStorage.setItem(STORAGE_KEY + "_obs", $("#obsText").value); render();
+  render();
 };
 
 $("#btnQuick").onclick = () => {
@@ -180,70 +204,59 @@ $("#btnQuick").onclick = () => {
 
 $("#btnClear").onclick = () => { if(confirm("Limpar?")) { rooms={}; localStorage.clear(); render(); }};
 
-// --- EXPORTAÇÃO CORRIGIDA ---
+// --- EXPORTAÇÃO COM MULTI-LINHA E DATA ---
 $("#btnPNG").onclick = async () => {
     const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = 400; canvas.height = 900;
+    canvas.width = 400; canvas.height = 1000; // Aumentado para caber o texto multi-linha
     
-    // Fundo branco
-    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,400,900);
-
-    // Corpo do Prédio
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,400,1000);
     ctx.fillStyle = "#E6EAF0"; ctx.beginPath(); ctx.roundRect(75, 10, 320, 850, 10); ctx.fill();
-    ctx.strokeStyle = "#B9C1CE"; ctx.stroke();
-
-    // Título VIVO
     ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center";
     ctx.fillText("VIVO", 235, 32);
 
-    // Hall de Entrada (parte de baixo)
-    ctx.fillStyle = "#D6CDE7"; ctx.beginPath(); ctx.roundRect(75, 820, 320, 40, {bl:10, br:10}); ctx.fill();
-
-    // Nomes dos Andares e JANELAS
+    // Andares e Janelas
     ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
     for(let f=32; f>=1; f--) {
-        const row = 32 - f;
-        const y = 40 + row * 22;
-        ctx.fillStyle = "#6A1B9A";
-        ctx.fillText("Andar "+f, 70, y + 10);
-
-        // Desenhar janelas vazias
+        const row = 32 - f; const y = 40 + row * 22;
+        ctx.fillStyle = "#6A1B9A"; ctx.fillText("Andar "+f, 70, y + 10);
         for(let c=0; c<8; c++) {
-            ctx.fillStyle = "#DDE8F7";
-            ctx.strokeStyle = "#BFC9D8";
+            ctx.fillStyle = "#DDE8F7"; ctx.strokeStyle = "#BFC9D8";
             const winX = 75 + 22 + c * 35;
             ctx.beginPath(); ctx.roundRect(winX, y, 24, 12, 2); ctx.fill(); ctx.stroke();
         }
     }
 
-    // Badges preenchidos
+    // Badges
     Object.keys(rooms).forEach(key => {
         const [f, r] = key.split('-').map(Number);
-        const st = rooms[key];
-        ctx.fillStyle = getHex(st);
-        const x = 75 + 22 + ((r-1)%8)*35;
-        const y = 40 + (32-f)*22;
-        ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
+        const x = 75 + 22 + ((r-1)%8)*35, y = 40 + (32-f)*22;
+        ctx.fillStyle = getHex(rooms[key]); ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.font = "900 8px sans-serif"; ctx.textAlign = "center";
         ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
 
-    // Observação
-    ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText($("#obsText").value, 200, 885);
+    // RODAPÉ MULTI-LINHA
+    ctx.fillStyle = "#333"; ctx.font = "11px sans-serif"; ctx.textAlign = "left";
+    const respLine = `Data: ${new Date().toLocaleDateString('pt-BR')} | Resp: ${$("#inputResp").value || '---'}`;
+    ctx.fillText(respLine, 20, 880);
 
-    // SALVAMENTO NO CELULAR
+    ctx.font = "bold 11px sans-serif";
+    const lines = $("#obsText").value.split('\n');
+    let yOffset = 900;
+    lines.forEach(line => {
+        ctx.fillText(line, 20, yOffset);
+        yOffset += 15;
+    });
+
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "mapa_vivo.png", { type: "image/png" });
+        const file = new File([blob], "mapa_vivo_pro.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-                await navigator.share({ files: [file], title: "Mapa Prédio" });
-            } catch (e) { console.error("Erro ao compartilhar", e); }
+            await navigator.share({ files: [file], title: "Mapa" });
         } else {
             const link = document.createElement("a");
-            link.download = "mapa_vivo.png"; link.href = URL.createObjectURL(blob); link.click();
+            link.download = "mapa_vivo_pro.png"; link.href = URL.createObjectURL(blob); link.click();
         }
         btn.textContent = "📸 EXPORTAR PNG";
     }, "image/png");
