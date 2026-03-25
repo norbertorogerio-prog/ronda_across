@@ -28,7 +28,7 @@
     border-radius:12px;
     padding:16px;
     backdrop-filter:blur(4px);
-    overflow: hidden;           /* evita overflow visual */
+    overflow:hidden;               /* garante que nada “vaze” do card */
   }
 
   h2,h3{margin:0 0 10px 0;font-weight:800;letter-spacing:.4px}
@@ -39,24 +39,19 @@
     display:block;margin:10px 0 6px 0;
     font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#e2e8f0
   }
-
   .form-field{
     width:100%;
     max-width:100%;
     border:1px solid var(--border);
     border-radius:10px;
     background:#fff;color:#111;
-    padding:8px 10px;           /* compacto */
+    padding:8px 10px;              /* compacto */
     font-size:14px;
-    line-height:1.2;
+    line-height:1.25;
     outline:none;
   }
-
-  /* controla aparência de selects em mobile para não “estourar” */
   select.form-field{
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+    -webkit-appearance:none; -moz-appearance:none; appearance:none;
     background-image:
       linear-gradient(45deg, transparent 50%, #6A1B9A 50%),
       linear-gradient(135deg, #6A1B9A 50%, transparent 50%),
@@ -68,14 +63,11 @@
     background-size:6px 6px,6px 6px,1px 60%;
     background-repeat:no-repeat;
   }
-
   textarea.form-field{min-height:70px;resize:vertical}
 
   .row{display:grid;gap:8px}
-  @media(min-width:520px){
-    .row-2{grid-template-columns:1fr 1fr}
-    .row-3{grid-template-columns:1fr 1fr 1fr}
-  }
+  @media(min-width:520px){.row-2{grid-template-columns:1fr 1fr}}
+  @media(min-width:820px){.row-3{grid-template-columns:1fr 1fr 1fr}}
 
   .btn{
     width:100%;
@@ -86,7 +78,7 @@
   }
   .btn:active{transform:translateY(1px)}
 
-  /* STRIPS DE ÍCONES (andares/salas) – ESQUERDA */
+  /* ÍCONES DE ANDAR/SALA (lado esquerdo) */
   .icon-strip{display:grid;gap:6px}
   .floors-strip{grid-template-columns:repeat(8,auto)}
   .rooms-strip{grid-template-columns:repeat(10,auto)}
@@ -101,8 +93,11 @@
   .icon:hover{outline:1px dashed rgba(255,255,255,.25)}
   .icon.is-selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,217,102,.25)}
 
-  /* STATUS (cliques) */
-  .status-strip{display:flex;gap:8px;flex-wrap:wrap}
+  /* STATUS (logo abaixo de Andar/Sala – Opção A) */
+  .status-strip{
+    display:flex;gap:8px;flex-wrap:wrap;
+    margin-top:6px;
+  }
   .status{
     display:inline-flex;align-items:center;gap:8px;
     padding:8px 10px;border-radius:999px;
@@ -138,7 +133,7 @@
 </head>
 <body>
 <div class="app">
-  <!-- ESQUERDA (compacta e sem overflow) -->
+  <!-- ESQUERDA (compacta) -->
   <div class="card">
     <h2>Entrada de dados</h2>
 
@@ -155,27 +150,24 @@
     <label>📍 Endereço</label>
     <input id="endereco" class="form-field" placeholder="Será preenchido ao escolher o prédio"/>
 
-    <div class="row row-3">
-      <div>
-        <label>🏬 Andar (01–32)</label>
-        <div id="floorsStrip" class="icon-strip floors-strip"></div>
-      </div>
-      <div>
-        <label>🚪 Sala (01–50)</label>
-        <div id="roomsStrip" class="icon-strip rooms-strip"></div>
-      </div>
-      <div>
-        <label>📌 Status</label>
-        <div class="status-strip">
-          <button class="status" data-status="valid" title="Sala Validada"><span class="dot valid"></span>Validada</button>
-          <button class="status" data-status="lock"  title="Sala Trancada"><span class="dot lock"></span>Trancada</button>
-          <button class="status" data-status="prob"  title="Sala com Problemas"><span class="dot prob"></span>Problemas</button>
-          <button class="status" data-status="other" title="Outros"><span class="dot other"></span>Outros</button>
-        </div>
-      </div>
+    <!-- Andares e Salas -->
+    <label>🏬 Andares (01–32)</label>
+    <div id="floorsStrip" class="icon-strip floors-strip"></div>
+
+    <label>🚪 Salas (01–50)</label>
+    <div id="roomsStrip" class="icon-strip rooms-strip"></div>
+
+    <!-- STATUS (Opção A: logo abaixo de Andar/Sala) -->
+    <label>📌 Status</label>
+    <div class="status-strip">
+      <button class="status" data-status="valid" title="Sala Validada"><span class="dot valid"></span>Validada</button>
+      <button class="status" data-status="lock"  title="Sala Trancada"><span class="dot lock"></span>Trancada</button>
+      <button class="status" data-status="prob"  title="Sala com Problemas"><span class="dot prob"></span>Problemas</button>
+      <button class="status" data-status="other" title="Outros"><span class="dot other"></span>Outros</button>
     </div>
 
-    <label>📝 Observações (opcional)</label>
+    <!-- Observações e Ações -->
+    <label style="margin-top:10px">📝 Observações (opcional)</label>
     <textarea id="obs" class="form-field" placeholder="Escreva detalhes relevantes..."></textarea>
 
     <div class="row row-2" style="margin-top:12px">
@@ -184,7 +176,7 @@
     </div>
 
     <p class="small" style="margin-top:8px">
-      Dica: clique no <b>andar</b>, depois na <b>sala</b> e por fim no <b>status</b> para criar o registro.
+      Fluxo: selecione <b>Prédio</b> (preenche endereço) → clique em <b>Andar</b> → <b>Sala</b> → <b>Status</b> para criar o item.
     </p>
   </div>
 
@@ -193,7 +185,7 @@
     <div class="section">
       <h3>Itens criados</h3>
       <div id="createdGrid" class="created-grid"></div>
-      <p class="small">Clique em um cartão para selecioná-lo e use “Limpar Tudo” para recomeçar.</p>
+      <p class="small">Clique em um cartão para ver os detalhes. Use “Limpar Tudo” para recomeçar.</p>
     </div>
 
     <div class="section">
@@ -215,7 +207,7 @@
 
 <script>
   // Estado
-  const STORAGE_KEY = "vistoria_icons_compacto_v2";
+  const STORAGE_KEY = "vistoria_icons_layoutA_v3";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); // [{f,r,status,note?}]
   let selectedFloor = 1;
   let selectedRoom  = 1;
@@ -267,13 +259,6 @@
     }
   }
 
-  // Adicionar registro
-  document.getElementById("btnAdd").addEventListener("click", ()=>{
-    // status vem do último clique de status? Vamos usar o texto do botão ativo via atributo temporal
-    // Mais simples: mostrar um prompt rápido se usuário não clicou status ainda
-    // Para manter click-to-add fluido, vamos pegar um "data-last-status" em body
-  });
-
   // Ações de status (criam/atualizam imediatamente o item Axx/Sxx com esse status)
   document.querySelectorAll(".status").forEach(btn=>{
     btn.addEventListener("click", ()=>{
@@ -289,7 +274,7 @@
     });
   });
 
-  // Render “Itens criados” (somente grade de cartões)
+  // Render “Itens criados” (grade de cartões)
   function renderCreated(){
     createdGrid.innerHTML = "";
     const sorted = [...entries].sort((a,b)=> a.f-b.f || a.r-b.r);
@@ -379,7 +364,7 @@ ${info}`;
   // Persistir
   function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
 
-  // Limpar
+  // Limpar tudo
   document.getElementById("btnClear").addEventListener("click", ()=>{
     if(!confirm("Limpar todos os registros e campos?")) return;
     entries = [];
@@ -392,13 +377,14 @@ ${info}`;
     renderReport();
   });
 
-  // “Adicionar” (opcional: duplica a ação do status atual com “Outros” se nada foi clicado)
+  // “Adicionar” (registra observação mesmo sem clicar status novamente)
   document.getElementById("btnAdd").addEventListener("click", ()=>{
-    const note   = (obsInp.value || "").trim();
-    const idx    = entries.findIndex(e => e.f===selectedFloor && e.r===selectedRoom);
+    const f = selectedFloor, r = selectedRoom;
+    const note = (obsInp.value || "").trim();
+    const idx  = entries.findIndex(e => e.f===f && e.r===r);
     const status = idx>=0 ? entries[idx].status : "other";
     if(idx>=0){ entries[idx].note = note; }
-    else{ entries.push({f:selectedFloor, r:selectedRoom, status, note}); }
+    else{ entries.push({f,r,status,note}); }
     persist();
     renderCreated();
     renderReport();
@@ -420,13 +406,14 @@ ${info}`;
   // Campos que refletem no relatório
   auditorInp.addEventListener("input", renderReport);
   enderecoInp.addEventListener("input", renderReport);
-  obsInp.addEventListener("input", ()=>{/* só anota na criação/atualização */});
+  obsInp.addEventListener("input", ()=>{/* nota só é aplicada quando adicionar/status */});
 
   // Boot
   (function init(){
-    // Andar/Sala padrão
+    // defaults
     selectedFloor = 1;
     selectedRoom  = 1;
+
     buildFloorIcons();
     buildRoomIcons();
     renderCreated();
