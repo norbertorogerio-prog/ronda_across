@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Dashboard Urban Final</title>
+<title>Vivo Infra • Urban Dashboard Final</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -26,11 +26,11 @@
  select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px; font:inherit; margin-bottom: 8px; }
  
  .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 14px; text-transform: uppercase; }
- .btn-png { background: #1A1A1A; color: #fff; font-size: 15px; border: none; margin-top: 5px; }
+ .btn-png { background: #1A1A1A; color: #fff; font-size: 15px; border: none; margin-top: 5px; cursor:pointer; }
  .btn-ai { background: #0277BD; color: #fff !important; font-size: 12px; margin-bottom: 10px; border:none; cursor:pointer; }
 
  .viewer-card { display: flex; justify-content: center; background: #E2E8F0; padding: 30px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; border-radius: 20px; }
- .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1180px; }
+ .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1220px; }
  
  .floors-labels-col { display: flex; flex-direction: column; padding-top: 106px; width: 70px; flex-shrink: 0; }
  .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: #4A5568; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; }
@@ -41,9 +41,8 @@
  .overlay-badges { position: absolute; top: 110px; left: 0; width: 100%; height: 860px; pointer-events: none; }
  .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
- /* ÁREA DE INFORMAÇÕES DENTRO DO HALL */
  #hallInfoArea {
-    position: absolute; top: 1000px; left: -10px; width: 340px;
+    position: absolute; top: 1010px; left: -10px; width: 340px;
     padding: 10px; color: #fff; font-size: 10px; line-height: 1.4;
     pointer-events: none; z-index: 10; text-align: center;
  }
@@ -88,7 +87,7 @@
       <button id="btnQuick" style="width:50px; background:#444; color:#fff; margin-left:5px; border-radius:10px">OK</button>
     </div>
 
-    <button id="btnApply" class="btn-apply">Atualizar Checklist</button>
+    <button id="btnApply" class="btn-apply">Aplicar no Mapa</button>
     <button id="btnAI" class="btn-ai" style="margin-top:10px">🤖 Gerar Relatório Executivo</button>
     <button id="btnPNG" class="btn-png">📸 Exportar PNG (4K)</button>
     
@@ -103,9 +102,8 @@
     <div class="building-container">
       <div class="floors-labels-col" id="floorsCol"></div>
       <div class="facade-wrapper">
-        <svg id="facade-svg" viewBox="0 0 320 1180" xmlns="http://www.w3.org/2000/svg">
+        <svg id="facade-svg" viewBox="0 0 320 1200" xmlns="http://www.w3.org/2000/svg">
           <rect x="140" y="10" width="40" height="40" fill="#94A3B8" />
-          <rect x="158" y="0" width="4" height="30" fill="#4A5568" />
           <rect x="60" y="50" width="200" height="40" rx="5" fill="#CBD5E1" />
           
           <rect x="0" y="80" width="320" height="850" rx="5" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
@@ -114,17 +112,19 @@
           
           <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
           
-          <rect x="-10" y="930" width="340" height="230" rx="12" fill="#1E293B" />
+          <rect x="-15" y="930" width="350" height="250" rx="12" fill="#1E293B" />
           
-          <rect x="100" y="940" width="55" height="75" fill="#334155" stroke="#475569" stroke-width="1"/>
-          <rect x="165" y="940" width="55" height="75" fill="#334155" stroke="#475569" stroke-width="1"/>
-          <line x1="110" y1="950" x2="140" y2="1000" stroke="white" stroke-width="0.5" opacity="0.3"/>
-          <line x1="175" y1="950" x2="205" y2="1000" stroke="white" stroke-width="0.5" opacity="0.3"/>
-          
-          <circle cx="30" cy="955" r="15" fill="#166534" />
-          <circle cx="20" cy="965" r="12" fill="#14532D" />
-          <circle cx="290" cy="955" r="15" fill="#166534" />
-          <circle cx="300" cy="965" r="12" fill="#14532D" />
+          <rect x="80" y="930" width="160" height="5" fill="#475569" />
+
+          <rect x="105" y="940" width="50" height="80" fill="#334155" stroke="#475569" />
+          <rect x="165" y="940" width="50" height="80" fill="#334155" stroke="#475569" />
+          <rect x="150" y="970" width="2" height="15" fill="#94A3B8" />
+          <rect x="168" y="970" width="2" height="15" fill="#94A3B8" />
+
+          <rect x="25" y="985" width="20" height="25" fill="#451a03" />
+          <path d="M20,985 Q35,950 50,985" fill="#166534" />
+          <rect x="275" y="985" width="20" height="25" fill="#451a03" />
+          <path d="M270,985 Q285,950 300,985" fill="#166534" />
         </svg>
 
         <div id="hallInfoArea"></div>
@@ -137,7 +137,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_vUltimate_2024";
+const STORAGE_KEY = "vivo_pro_vFinal_Wrap";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -164,7 +164,6 @@ function init() {
 function render() {
   const overlay = $("#overlay"); overlay.innerHTML = "";
   const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
-
   Object.keys(rooms).forEach(key => {
     const [f, r] = key.split('-').map(Number);
     const status = rooms[key]; stats[status]++;
@@ -175,22 +174,20 @@ function render() {
     b.style.top = (row * 22) + "px"; b.style.left = (22 + col * 35) + "px";
     overlay.appendChild(b);
   });
-  
   $("#stValid").textContent = stats.valid; $("#stOcc").textContent = stats.occ;
   $("#stLock").textContent = stats.lock; $("#stProb").textContent = stats.prob;
 
   const dataStr = new Date().toLocaleDateString('pt-BR');
   const resp = $("#inputResp").value || "---";
-  const obs = $("#obsText").value || "Sem observações.";
+  const obs = $("#obsText").value || "Nenhuma observação.";
   
-  // Renderização do texto no Hall (Ajustada para os 1180px de altura)
   $("#hallInfoArea").innerHTML = `
-    <div style="margin-top:20px">
+    <div style="margin-top:100px">
         <strong style="color:#A5B4FC">${dataStr} | Responsável: ${resp}</strong>
-        <div style="margin:6px 0; border-top:1px solid #334155; padding-top:6px; font-weight:bold">
+        <div style="margin:8px 0; border-top:1px solid #334155; padding-top:8px; font-weight:bold">
             OBSERVAÇÕES: ${obs}
         </div>
-        <div style="font-style:italic; color:#CBD5E1; margin-top:5px; padding:0 10px">
+        <div style="font-style:italic; color:#CBD5E1; margin-top:5px; padding:0 15px">
             ${resumoIA || ""}
         </div>
     </div>
@@ -204,11 +201,10 @@ function render() {
 
 function getHex(s) { return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='lock'?'#424242':'#B71C1C'; }
 
-// FUNÇÃO GERAR RELATÓRIO CORRIGIDA
 $("#btnAI").onclick = () => {
     const s = { valid: 0, occ: 0, lock: 0, prob: 0 };
     Object.values(rooms).forEach(v => s[v]++);
-    resumoIA = `RELATÓRIO: Foram verificadas salas com ${s.valid} OK, ${s.occ} Ocupadas e ${s.lock} Trancadas. Registramos ${s.prob} Problemas críticos.`;
+    resumoIA = `Foram verificadas salas com ${s.valid} OK, ${s.occ} Ocupadas e ${s.lock} Trancadas. Registramos ${s.prob} Problemas críticos.`;
     render();
 };
 
@@ -231,14 +227,31 @@ $("#btnClearSalas").onclick = () => { if(confirm("Limpar salas?")) { rooms = {};
 $("#btnClearResumo").onclick = () => { resumoIA = ""; render(); };
 $("#btnClearTudo").onclick = () => { if(confirm("Reset total?")) { rooms={}; resumoIA=""; $("#inputResp").value=""; $("#obsText").value=""; localStorage.clear(); render(); }};
 
+// FUNÇÃO PARA QUEBRA DE LINHA NO CANVAS
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(' ');
+    let line = '';
+    for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+        } else {
+            line = testLine;
+        }
+    }
+    ctx.fillText(line, x, y);
+    return y;
+}
+
 $("#btnPNG").onclick = async () => {
     const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
-    canvas.width = 460 * SCALE; canvas.height = 1180 * SCALE; ctx.scale(SCALE, SCALE);
+    canvas.width = 460 * SCALE; canvas.height = 1220 * SCALE; ctx.scale(SCALE, SCALE);
     
-    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1180);
-    
-    // Topo e Prédio
+    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1220);
     ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+70, 10, 40, 40);
     ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 50, 200, 40, 5); ctx.fill();
     ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(70, 80, 320, 850, 5); ctx.fill();
@@ -264,21 +277,27 @@ $("#btnPNG").onclick = async () => {
     });
 
     // HALL PNG
-    ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 930, 340, 230, 12); ctx.fill();
-    ctx.fillStyle = "#334155"; ctx.fillRect(160, 940, 55, 75); ctx.fillRect(225, 940, 55, 75);
-    ctx.fillStyle = "#166534"; ctx.beginPath(); ctx.arc(90, 955, 15, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(370, 955, 15, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(55, 930, 350, 250, 12); ctx.fill();
+    // Portas
+    ctx.fillStyle = "#334155"; ctx.fillRect(175, 940, 50, 80); ctx.fillRect(235, 940, 50, 80);
+    // Plantas
+    ctx.fillStyle = "#451a03"; ctx.fillRect(95, 985, 20, 25); ctx.fillRect(345, 985, 20, 25);
+    ctx.fillStyle = "#166534"; ctx.beginPath(); ctx.arc(105, 980, 15, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(355, 980, 15, 0, Math.PI*2); ctx.fill();
 
-    // Texto no Hall PNG
+    // Texto com Quebra Automática
     ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.font = "bold 11px sans-serif";
     const dataStr = new Date().toLocaleDateString('pt-BR');
-    ctx.fillText(`${dataStr} | Responsável: ${$("#inputResp").value || '---'}`, 230, 1035);
-    ctx.font = "10px sans-serif"; ctx.fillText(`OBSERVAÇÕES: ${$("#obsText").value || ""}`, 230, 1055);
+    ctx.fillText(`${dataStr} | Responsável: ${$("#inputResp").value || '---'}`, 230, 1055);
+    
+    ctx.font = "10px sans-serif";
+    let curY = wrapText(ctx, `OBSERVAÇÕES: ${$("#obsText").value || ""}`, 230, 1075, 300, 14);
+    
     ctx.fillStyle = "#CBD5E1"; ctx.font = "italic 9px sans-serif";
-    ctx.fillText(resumoIA || "", 230, 1075);
+    wrapText(ctx, resumoIA || "", 230, curY + 10, 300, 12);
 
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "mapa_vivo_final.png", { type: "image/png" });
+        const file = new File([blob], "mapa_vivo_pro.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
             await navigator.share({ files: [file], title: "Mapa" });
         } else {
