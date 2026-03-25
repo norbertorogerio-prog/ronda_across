@@ -299,10 +299,7 @@
     animation: shine 8s infinite;
     pointer-events: none;
  }
-
- @keyframes shine {
-    100% { left: 100%; }
- }
+ @keyframes shine { 100% { left: 100%; } }
 
  .room-tag {
     background: rgba(0,0,0,0.75);
@@ -321,10 +318,7 @@
     white-space: nowrap;
     flex-shrink: 0;
  }
-
- .room-tag:active {
-    transform: scale(0.96);
- }
+ .room-tag:active { transform: scale(0.96); }
 
  .glass-facade .room-tag {
     flex-shrink: 1;
@@ -335,23 +329,32 @@
  }
 
  .room-tag.valid { border-left: 2px solid #27ae60; background: rgba(39,174,96,0.3); }
- .room-tag.occ { border-left: 2px solid #f39c12; background: rgba(243,156,18,0.3); }
- .room-tag.lock { border-left: 2px solid #7f8c8d; background: rgba(127,140,141,0.3); }
- .room-tag.prob { border-left: 2px solid #e74c3c; background: rgba(231,76,60,0.3); animation: tagPulse 1s infinite; }
-
+ .room-tag.occ   { border-left: 2px solid #f39c12; background: rgba(243,156,18,0.3); }
+ .room-tag.lock  { border-left: 2px solid #7f8c8d; background: rgba(127,140,141,0.3); }
+ .room-tag.prob  { border-left: 2px solid #e74c3c; background: rgba(231,76,60,0.3); animation: tagPulse 1s infinite; }
  @keyframes tagPulse {
     0%, 100% { box-shadow: 0 0 1px rgba(231,76,60,0.5); }
     50% { box-shadow: 0 0 5px rgba(231,76,60,0.8); }
  }
 
- .room-number-tag {
-    font-weight: 800;
-    color: white;
-    font-size: clamp(9px, 1.8vw, 11px);
- }
+ .room-number-tag { font-weight: 800; color: white; font-size: clamp(9px, 1.8vw, 11px); }
+ .room-status-tag { font-size: clamp(10px, 2vw, 12px); }
 
- .room-status-tag {
-    font-size: clamp(10px, 2vw, 12px);
+ /* FAIXA DO ENDEREÇO (placa frontal do prédio) */
+ .marquee-address {
+    background: linear-gradient(135deg, #1f2d3a, #14202b);
+    border-top: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+    padding: 8px 12px;
+    text-align: center;
+ }
+ .marquee-address span {
+    color: #ffd966;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 11px;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.7);
  }
 
  .hall-entrada {
@@ -362,14 +365,14 @@
     justify-content: center;
     gap: 40px;
     position: relative;
-    min-height: 90px;
+    min-height: 110px;
     align-items: center;
     flex-wrap: wrap;
  }
 
  .glass-door-full {
-    width: 100px;
-    min-height: 100px;
+    width: 120px;
+    min-height: 110px;
     background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.15));
     backdrop-filter: blur(8px);
     border-radius: 12px;
@@ -383,7 +386,6 @@
     position: relative;
     padding: 15px 8px;
  }
-
  .door-handle {
     width: 6px;
     height: 30px;
@@ -394,10 +396,9 @@
     top: 50%;
     transform: translateY(-50%);
  }
-
  .glass-door-full span {
     color: var(--gold);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
@@ -406,9 +407,7 @@
     border-radius: 15px;
  }
 
- .hall-text {
-    display: none;
- }
+ .hall-text { display: none; }
 
  .footer-note {
     background: rgba(0,0,0,0.85);
@@ -424,29 +423,10 @@
     word-break: break-word;
  }
 
- .quick-group { 
-    display: flex; 
-    gap: 8px; 
- }
- .quick-group input { 
-    flex: 1; 
-    margin-bottom: 0; 
-    font-size: 13px;
- }
- .quick-group button { 
-    width: 55px; 
-    margin-bottom: 0; 
-    background: #444; 
-    color: white;
-    font-size: 12px;
-    padding: 10px;
- }
- .button-group { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 8px; 
-    margin-top: 8px; 
- }
+ .quick-group { display: flex; gap: 8px; }
+ .quick-group input { flex: 1; margin-bottom: 0; font-size: 13px; }
+ .quick-group button { width: 55px; margin-bottom: 0; background: #444; color: white; font-size: 12px; padding: 10px; }
+ .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 
  .download-modal {
     position: fixed;
@@ -464,27 +444,16 @@
     animation: fadeIn 0.3s;
  }
  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
- .download-modal img { 
-    max-width: 95%; 
-    max-height: 70vh; 
-    border-radius: 12px; 
-    box-shadow: 0 10px 25px black; 
+ .download-modal img {
+    max-width: 95%;
+    max-height: 70vh;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px black;
  }
- .download-modal p { 
-    color: white; 
-    margin-top: 16px; 
-    font-size: 12px; 
-    text-align: center; 
- }
- .download-modal button { 
-    width: auto; 
-    padding: 10px 20px; 
-    margin-top: 16px; 
-    background: var(--vivo); 
-    color: white; 
-    border: none; 
-    border-radius: 25px; 
-    font-size: 14px;
+ .download-modal p { color: white; margin-top: 16px; font-size: 12px; text-align: center; }
+ .download-modal button {
+    width: auto; padding: 10px 20px; margin-top: 16px;
+    background: var(--vivo); color: white; border: none; border-radius: 25px; font-size: 14px;
  }
 
  @media (max-width: 640px) {
@@ -496,7 +465,7 @@
     .floor-number { width: 45px; font-size: 10px; }
     .glass-facade { padding: 6px; }
     .room-tag { padding: 3px 5px; min-width: 48px; }
-    .glass-door-full { width: 80px; min-height: 85px; padding: 12px 6px; }
+    .glass-door-full { width: 95px; min-height: 95px; padding: 12px 6px; }
     .glass-door-full span { font-size: 9px; }
     .outdoor-vivo span { font-size: 16px; }
     .outdoor-vivo { padding: 5px 16px; }
@@ -510,7 +479,7 @@
     .floor-number { width: auto; text-align: left; padding-left: 8px; }
     .glass-facade { width: 100%; }
     .hall-entrada { flex-direction: column; gap: 15px; }
-    .glass-door-full { width: 85%; max-width: 200px; }
+    .glass-door-full { width: 85%; max-width: 220px; }
  }
 </style>
 </head>
@@ -527,6 +496,9 @@
 
         <label>👤 RESPONSÁVEL</label>
         <input type="text" id="inputResp" placeholder="Nome completo">
+
+        <label>🏢 ENDEREÇO/PRÉDIO</label>
+        <input type="text" id="inputAddr" placeholder="Eco Berrini — informe o endereço (ex.: Av. ...)" />
 
         <label>📍 LOCALIZAÇÃO</label>
         <div style="display:flex; gap:8px; flex-wrap: wrap;">
@@ -573,14 +545,19 @@
                     </div>
                     <div class="cobertura-text">TELECOM • CONECTIVIDADE TOTAL</div>
                 </div>
+
                 <div class="floors-container" id="floorsContainer"></div>
+
+                <!-- Placa de Endereço / Fachada -->
+                <div class="marquee-address"><span id="addrText">Eco Berrini — informe o endereço</span></div>
+
                 <div class="hall-entrada">
                     <div class="glass-door-full" style="position: relative;">
-                        <span>🚪 ENTRADA</span>
+                        <span>🚪 HALL A</span>
                         <div class="door-handle"></div>
                     </div>
                     <div class="glass-door-full" style="position: relative;">
-                        <span>🚪 ENTRADA</span>
+                        <span>🚪 HALL B</span>
                         <div class="door-handle"></div>
                     </div>
                 </div>
@@ -591,17 +568,17 @@
 </div>
 
 <script>
-const STORAGE_KEY = "vivo_predio_v26";
+const STORAGE_KEY = "vivo_predio_v27"; // v27 (nova versão)
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
 const TOTAL_FLOORS = 32;
 const MAX_SALA = 50;
+const DEFAULT_ADDR = "Eco Berrini — informe o endereço";
 
 function getStatusIcon(status) {
     const icons = { valid: '✅', occ: '🟠', lock: '🔒', prob: '❌' };
     return icons[status] || '';
 }
-
 function getStatusText(status) {
     const texts = { valid: 'Validada', occ: 'Ocupada', lock: 'Trancada', prob: 'Problema' };
     return texts[status] || '';
@@ -610,29 +587,23 @@ function getStatusText(status) {
 function renderBuilding() {
     const container = document.getElementById("floorsContainer");
     if (!container) return;
-    
     const floorsMap = new Map();
     for (let f = 1; f <= TOTAL_FLOORS; f++) floorsMap.set(f, []);
-    
     Object.entries(rooms).forEach(([key, status]) => {
         const [floor, room] = key.split('-').map(Number);
         if (floorsMap.has(floor)) floorsMap.get(floor).push({ room, status });
     });
-    
     for (let floor of floorsMap.keys()) {
         floorsMap.get(floor).sort((a, b) => a.room - b.room);
     }
-    
     let html = '';
     for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
         const salas = floorsMap.get(floor);
-        
         html += `
             <div class="floor-row">
                 <div class="floor-number">${floor}º ANDAR</div>
                 <div class="glass-facade" style="justify-content: ${salas.length > 0 ? 'flex-start' : 'center'}">
         `;
-        
         if (salas.length === 0) {
             html += `<div style="color:rgba(255,255,255,0.5); font-size:10px; padding:5px; font-style:italic;">—— DISPONÍVEL ——</div>`;
         } else {
@@ -647,10 +618,8 @@ function renderBuilding() {
                 `;
             });
         }
-        
         html += `</div></div>`;
     }
-    
     container.innerHTML = html;
     attachRoomEvents();
 }
@@ -661,7 +630,6 @@ function attachRoomEvents() {
         tag.addEventListener('click', handleRoomClick);
     });
 }
-
 function handleRoomClick(e) {
     const tag = e.currentTarget;
     const roomKey = tag.dataset.room;
@@ -686,141 +654,229 @@ function updateStats() {
 function updateFooter() {
     const dataStr = new Date().toLocaleDateString('pt-BR');
     const auditor = document.getElementById("inputResp")?.value || 'Não informado';
-    
+    const addr = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
+
+    // Exibe o relatório (ou instrução) no rodapé
     document.getElementById("footerNoteDisplay").innerHTML = resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.';
-    
+
+    // Atualiza placa de endereço
+    const addrTextEl = document.getElementById("addrText");
+    if (addrTextEl) addrTextEl.textContent = addr;
+
+    // Persistência
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
     localStorage.setItem(STORAGE_KEY + "_resp", auditor);
     localStorage.setItem(STORAGE_KEY + "_obs", document.getElementById("obsText")?.value || '');
+    localStorage.setItem(STORAGE_KEY + "_addr", addr);
     localStorage.setItem(STORAGE_KEY + "_ai", resumoIA);
 }
 
-// RELATÓRIO IA COMPACTO
+/** —— NOVO: Relatório IA narrativo e completo —— */
 function generateAIRelatorio() {
     const stats = updateStats();
     const total = Object.keys(rooms).length;
     const agora = new Date();
     const periodo = agora.getHours() < 12 ? 'manhã' : (agora.getHours() < 18 ? 'tarde' : 'noite');
     const dataHora = agora.toLocaleString('pt-BR');
-    
+
     const auditor = document.getElementById("inputResp")?.value || 'Não informado';
-    const obs = document.getElementById("obsText")?.value || '';
-    
-    const andaresProb = [];
+    const obs = (document.getElementById("obsText")?.value || '').trim();
+    const addrFull = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
+
+    // Agrupamentos por andar e problemas
+    const byFloor = {};            // { '32': {total: x, valid: y, occ: z, lock: w, prob: k, roomsProb: [5, 8] } }
     Object.entries(rooms).forEach(([key, status]) => {
-        if (status === 'prob') {
-            const floor = key.split('-')[0];
-            if (!andaresProb.includes(floor)) andaresProb.push(floor);
-        }
+        const [floorStr, roomStr] = key.split('-');
+        const floor = Number(floorStr);
+        const room = Number(roomStr);
+        if (!byFloor[floor]) byFloor[floor] = { total: 0, valid: 0, occ: 0, lock: 0, prob: 0, roomsProb: [] };
+        byFloor[floor].total++;
+        byFloor[floor][status]++;
+        if (status === 'prob') byFloor[floor].roomsProb.push(room);
     });
-    
-    let relatorio = `📋 RELATÓRIO VIVO INFRA\n`;
+
+    const andaresComProblema = Object.keys(byFloor)
+        .map(n => Number(n))
+        .filter(f => byFloor[f].prob > 0)
+        .sort((a,b) => byFloor[b].prob - byFloor[a].prob);
+
+    // Percentuais globais
+    const pct = (n) => total ? Math.round((n * 100) / total) : 0;
+
+    // Destaques (regras simples)
+    const destaques = [];
+    if (total === 0) {
+        destaques.push("Nenhuma sala foi auditada nesta rodada.");
+    } else {
+        if (stats.valid >= Math.max(6, Math.round(total * 0.8))) destaques.push("Alto nível de conformidade (salas validadas ≥ 80%).");
+        if (stats.lock > Math.round(total * 0.2)) destaques.push("Muitas salas trancadas; pode haver restrição de acesso ao período.");
+        if (stats.occ > Math.round(total * 0.3)) destaques.push("Alta ocupação; considere vistoria em outro horário para maior cobertura.");
+        if (stats.prob === 0) destaques.push("Nenhum problema identificado nas salas verificadas.");
+        if (stats.prob > 0 && andaresComProblema.length > 0) {
+            const top = andaresComProblema.slice(0,3).map(f => `${f}º (${byFloor[f].prob})`).join(', ');
+            destaques.push(`Incidência concentrada em andares: ${top}.`);
+        }
+    }
+
+    // Recomendações
+    const recomend = [];
+    if (stats.prob > 0) {
+        const foco = andaresComProblema.slice(0,3).map(f => `${f}º`).join(', ');
+        recomend.push(`Abrir chamados e priorizar correções nos andares ${foco || 'com problemas'}.`);
+    }
+    if (stats.lock > 0) recomend.push("Solicitar liberação de acesso às salas trancadas para nova vistoria.");
+    if (stats.occ > 0)  recomend.push("Agendar rechecagem em janela de baixa ocupação.");
+    if (total > 0 && stats.valid / total < 0.7) recomend.push("Executar nova rodada de validação para elevar a conformidade.");
+    if (recomend.length === 0) recomend.push("Sem ações críticas no momento.");
+
+    // Lista de salas com problema por andar (ordenadas)
+    let problemasPorAndar = '';
+    if (andaresComProblema.length > 0) {
+        problemasPorAndar = andaresComProblema.map(f => {
+            const salas = byFloor[f].roomsProb.sort((a,b) => a-b).map(n => n.toString().padStart(2,'0')).join(', ');
+            return `${f}º: ${salas}`;
+        }).join('\n');
+    }
+
+    // Quebra de endereço para título
+    const addrParts = addrFull.split('—');
+    const nomePredio = (addrParts[0] || 'Eco Berrini').trim();
+    const linhaEndereco = (addrParts[1] || '').trim();
+
+    // Montagem do relatório narrativo
+    let relatorio = `📋 RELATÓRIO DE VISTORIA — ${nomePredio}\n`;
+    if (linhaEndereco) relatorio += `📍 ${linhaEndereco}\n`;
     relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
     relatorio += `📅 ${dataHora} (${periodo})\n`;
-    relatorio += `👤 ${auditor}\n`;
+    relatorio += `👤 Auditor: ${auditor}\n`;
     relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    relatorio += `📊 TOTAL: ${total} salas\n`;
-    relatorio += `✅ ${stats.valid} | 🟠 ${stats.occ} | 🔒 ${stats.lock} | ❌ ${stats.prob}\n`;
-    
-    if (stats.prob > 0) {
-        relatorio += `\n⚠️ PROBLEMAS: ${stats.prob} sala(s)\n`;
-        relatorio += `📍 Andares: ${andaresProb.join(', ')}º\n`;
-    } else if (total > 0) {
-        relatorio += `\n✅ NENHUM PROBLEMA IDENTIFICADO\n`;
+
+    if (total === 0) {
+        relatorio += `⚠️ Nenhuma sala vistoriada até o momento.\n`;
+    } else {
+        relatorio += `🧭 Na ${periodo}, o auditor verificou ${total} sala(s) no prédio.\n`;
+        relatorio += `📊 Resultados globais:\n`;
+        relatorio += `   ✅ Validadas: ${stats.valid} (${pct(stats.valid)}%)\n`;
+        relatorio += `   🟠 Ocupadas: ${stats.occ} (${pct(stats.occ)}%)\n`;
+        relatorio += `   🔒 Trancadas: ${stats.lock} (${pct(stats.lock)}%)\n`;
+        relatorio += `   ❌ Problemas: ${stats.prob} (${pct(stats.prob)}%)\n`;
+
+        if (andaresComProblema.length > 0) {
+            relatorio += `\n⚠️ Salas com problema por andar:\n${problemasPorAndar}\n`;
+        } else {
+            relatorio += `\n✅ Sem registros de problema nesta rodada.\n`;
+        }
+
+        // Destaques
+        relatorio += `\n✨ Destaques:\n`;
+        destaques.forEach(d => { relatorio += `• ${d}\n`; });
+
+        // Recomendações
+        relatorio += `\n🛠️ Recomendações:\n`;
+        recomend.forEach(r => { relatorio += `• ${r}\n`; });
     }
-    
-    if (obs && obs.trim() !== '') {
-        relatorio += `\n📝 ${obs.substring(0, 120)}${obs.length > 120 ? '...' : ''}\n`;
+
+    if (obs) {
+        relatorio += `\n📝 Observações do auditor:\n${obs}\n`;
     }
-    
+
     relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
     if (total === 0) {
-        relatorio += `⚠️ NENHUMA SALA AUDITADA`;
+        relatorio += `⚠️ Nenhuma sala auditada`;
     } else if (stats.prob === 0) {
-        relatorio += `✅ VISTORIA CONCLUÍDA - TUDO OK`;
+        relatorio += `✅ Vistoria concluída - sem pendências críticas`;
     } else {
-        relatorio += `🔧 MANUTENÇÃO NECESSÁRIA - AGENDAR CORREÇÃO`;
+        relatorio += `🔧 Manutenção necessária - programar correções`;
     }
-    
+
     resumoIA = relatorio;
     updateFooter();
-    
+
+    // Feedback botão
     const btn = document.getElementById("btnAI");
     const orig = btn.textContent;
     btn.textContent = "✓ RELATÓRIO OK!";
     setTimeout(() => { btn.textContent = orig; }, 1500);
 }
 
-// EXPORTAÇÃO COM RELATÓRIO IA INCLUÍDO
+// EXPORTAÇÃO COM RELATÓRIO IA INCLUÍDO + OUTDOOR + ENDEREÇO + PORTAS
 function exportToPNG() {
     const btn = document.getElementById("btnPNG");
     const originalText = btn.textContent;
     btn.textContent = "🏢 GERANDO...";
     btn.disabled = true;
-    
+
     if (resumoIA === "" || resumoIA === '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
         generateAIRelatorio();
     }
-    
+
     setTimeout(() => {
         try {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
-            
+
             const activeFloors = Object.keys(rooms).length > 0 ? TOTAL_FLOORS : 10;
             const relatorioLines = resumoIA ? resumoIA.split('\n').length : 5;
-            const relatorioHeight = Math.min(relatorioLines * 12 + 50, 180);
-            const canvasHeight = 340 + (activeFloors * 44) + relatorioHeight;
-            
+            const relatorioHeight = Math.min(relatorioLines * 12 + 60, 240); // +60 e teto maior
+            const canvasHeight = 380 + (activeFloors * 44) + relatorioHeight;
+
             const scale = 1.6;
-            canvas.width = 650 * scale;
-            canvas.height = Math.min(2400, canvasHeight) * scale;
+            canvas.width = 680 * scale;
+            canvas.height = Math.min(2600, canvasHeight) * scale;
             ctx.scale(scale, scale);
-            
+
+            // Fundo
             ctx.fillStyle = "#0a2f3a";
-            ctx.fillRect(0, 0, 650, Math.min(2400, canvasHeight));
-            
+            ctx.fillRect(0, 0, 680, Math.min(2600, canvasHeight));
+
+            // Corpo do prédio
             ctx.fillStyle = "#0f1a24";
-            ctx.fillRect(25, 25, 600, Math.min(2400, canvasHeight) - 50);
-            
+            ctx.fillRect(25, 25, 630, Math.min(2600, canvasHeight) - 50);
+
+            // Outdoor / Cobertura
             ctx.fillStyle = "#2c3e50";
-            ctx.fillRect(25, 25, 600, 55);
+            ctx.fillRect(25, 25, 630, 60);
+            // Outdoor roxo
             ctx.fillStyle = "#4A0072";
-            ctx.fillRect(225, 35, 200, 28);
+            ctx.fillRect(240, 35, 200, 30);
             ctx.fillStyle = "white";
-            ctx.font = "bold 11px sans-serif";
-            ctx.fillText("VIVO 5G+", 275, 54);
-            
-            let yOffset = 85;
+            ctx.font = "bold 12px sans-serif";
+            ctx.fillText("VIVO 5G+", 290, 54);
+            ctx.fillStyle = "#ffd966";
+            ctx.font = "bold 9px sans-serif";
+            ctx.fillText("INFRAESTRUTURA", 270, 68);
+
+            let yOffset = 95;
             const floorHeight = 42;
-            
+
+            // Distribuição de salas por andar
             const floorsMap = new Map();
             for (let f = 1; f <= TOTAL_FLOORS; f++) floorsMap.set(f, []);
             Object.entries(rooms).forEach(([key, status]) => {
                 const [floor, room] = key.split('-').map(Number);
                 if (floorsMap.has(floor)) floorsMap.get(floor).push({ room, status });
             });
-            
+
             for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
                 const salas = floorsMap.get(floor);
                 salas.sort((a, b) => a.room - b.room);
-                
+
                 ctx.fillStyle = "#ffd966";
-                ctx.font = "bold 8px sans-serif";
+                ctx.font = "bold 9px sans-serif";
                 ctx.fillText(`${floor}º`, 8, yOffset + 20);
-                
-                const glassGrad = ctx.createLinearGradient(33, yOffset, 617, yOffset + floorHeight);
+
+                const glassGrad = ctx.createLinearGradient(33, yOffset, 640, yOffset + floorHeight);
                 glassGrad.addColorStop(0, "rgba(100,150,200,0.25)");
                 glassGrad.addColorStop(1, "rgba(50,80,120,0.35)");
                 ctx.fillStyle = glassGrad;
-                ctx.fillRect(33, yOffset, 584, floorHeight - 2);
-                
+                ctx.fillRect(33, yOffset, 610, floorHeight - 2);
+
                 ctx.strokeStyle = "rgba(255,215,0,0.4)";
-                ctx.strokeRect(33, yOffset, 584, floorHeight - 2);
-                
+                ctx.strokeRect(33, yOffset, 610, floorHeight - 2);
+
                 if (salas.length > 0) {
                     let xPos = 40;
-                    const tagWidth = Math.max(48, Math.min(70, 560 / Math.min(salas.length, 14)));
+                    const tagWidth = Math.max(48, Math.min(70, 586 / Math.min(salas.length, 14)));
                     for (let i = 0; i < Math.min(salas.length, 14); i++) {
                         const sala = salas[i];
                         ctx.fillStyle = "rgba(0,0,0,0.7)";
@@ -828,12 +884,12 @@ function exportToPNG() {
                         ctx.fillStyle = "white";
                         ctx.font = `bold ${Math.max(7, Math.min(9, tagWidth / 9))}px sans-serif`;
                         ctx.fillText(`${sala.room}`, xPos + 3, yOffset + 22);
-                        
+
                         let icon = sala.status === 'valid' ? "✅" : sala.status === 'occ' ? "🟠" : sala.status === 'lock' ? "🔒" : "❌";
                         ctx.fillStyle = "#fff";
-                        ctx.fillText(icon, xPos + tagWidth - 12, yOffset + 22);
+                        ctx.fillText(icon, xPos + tagWidth - 14, yOffset + 22);
                         xPos += tagWidth + 3;
-                        if (xPos > 610) break;
+                        if (xPos > 635) break;
                     }
                     if (salas.length > 14) {
                         ctx.fillStyle = "rgba(255,255,255,0.5)";
@@ -841,62 +897,83 @@ function exportToPNG() {
                         ctx.fillText(`+${salas.length - 14}`, xPos - 18, yOffset + 22);
                     }
                 } else {
-                    ctx.fillStyle = "rgba(255,255,255,0.4)";
-                    ctx.font = "italic 7px sans-serif";
-                    ctx.fillText("DISPONÍVEL", 320, yOffset + 22);
+                    ctx.fillStyle = "rgba(255,255,255,0.5)";
+                    ctx.font = "italic 8px sans-serif";
+                    ctx.fillText("DISPONÍVEL", 325, yOffset + 22);
                 }
-                
+
                 yOffset += floorHeight;
-                if (yOffset > Math.min(2400, canvasHeight) - 140) break;
+                if (yOffset > Math.min(2600, canvasHeight) - 180) break;
             }
-            
+
+            // Placa do endereço (faixa dourada)
+            const addr = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
+            ctx.fillStyle = "#1f2d3a";
+            ctx.fillRect(25, yOffset, 630, 38);
+            ctx.strokeStyle = "#f1c40f";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(25, yOffset, 630, 38);
+            ctx.fillStyle = "#ffd966";
+            ctx.font = "bold 10px sans-serif";
+            const addrText = addr.length > 72 ? addr.substring(0, 72) + "…" : addr;
+            ctx.fillText(addrText, 40, yOffset + 24);
+
+            // Hall com duas portas grandes
+            yOffset += 46;
             ctx.fillStyle = "#1e2a36";
-            ctx.fillRect(25, yOffset, 600, 50);
+            ctx.fillRect(25, yOffset, 630, 58);
+            // Portas
             ctx.fillStyle = "rgba(255,255,255,0.3)";
-            ctx.fillRect(240, yOffset + 7, 70, 36);
-            ctx.fillRect(340, yOffset + 7, 70, 36);
+            ctx.fillRect(260, yOffset + 10, 80, 38);
+            ctx.fillRect(360, yOffset + 10, 80, 38);
             ctx.strokeStyle = "#ffd966";
-            ctx.strokeRect(240, yOffset + 7, 70, 36);
-            ctx.strokeRect(340, yOffset + 7, 70, 36);
-            
-            yOffset += 58;
-            
+            ctx.strokeRect(260, yOffset + 10, 80, 38);
+            ctx.strokeRect(360, yOffset + 10, 80, 38);
+            ctx.fillStyle = "#ffd966";
+            ctx.font = "bold 9px sans-serif";
+            ctx.fillText("HALL A", 276, yOffset + 34);
+            ctx.fillText("HALL B", 376, yOffset + 34);
+
+            yOffset += 70;
+
+            // Quadro do relatório
             ctx.fillStyle = "rgba(0,0,0,0.85)";
-            ctx.fillRect(25, yOffset, 600, relatorioHeight);
+            ctx.fillRect(25, yOffset, 630, relatorioHeight);
             ctx.fillStyle = "#e2e8f0";
-            ctx.font = "8px monospace";
-            
+            ctx.font = "9px monospace";
+
             const dataStr = new Date().toLocaleString('pt-BR');
             const auditor = document.getElementById("inputResp")?.value || '---';
             const stats = updateStats();
-            
-            ctx.fillText(`📅 ${dataStr} | 👤 ${auditor}`, 35, yOffset + 12);
-            ctx.fillText(`📊 Total: ${Object.keys(rooms).length} | ✅ ${stats.valid} | 🟠 ${stats.occ} | 🔒 ${stats.lock} | ❌ ${stats.prob}`, 35, yOffset + 24);
-            
+
+            ctx.fillText(`📅 ${dataStr} | 👤 ${auditor}`, 35, yOffset + 14);
+            ctx.fillText(`📊 Total: ${Object.keys(rooms).length} | ✅ ${stats.valid} | 🟠 ${stats.occ} | 🔒 ${stats.lock} | ❌ ${stats.prob}`, 35, yOffset + 28);
+
             if (resumoIA && resumoIA !== '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
                 ctx.fillStyle = "#ffd966";
-                ctx.font = "bold 8px monospace";
-                ctx.fillText("📋 RELATÓRIO DE VISTORIA:", 35, yOffset + 38);
+                ctx.font = "bold 9px monospace";
+                ctx.fillText("📋 RELATÓRIO DE VISTORIA:", 35, yOffset + 44);
                 ctx.fillStyle = "#e2e8f0";
-                ctx.font = "7px monospace";
-                
+                ctx.font = "8px monospace";
+
                 const lines = resumoIA.split('\n');
-                let textY = yOffset + 50;
-                for (let i = 0; i < Math.min(lines.length, 10); i++) {
+                let textY = yOffset + 60;
+                const maxLines = Math.floor((relatorioHeight - 60) / 12);
+                for (let i = 0; i < Math.min(lines.length, maxLines); i++) {
                     let line = lines[i];
-                    if (line.includes('━━')) line = '────────────────────';
-                    ctx.fillText(line.substring(0, 68), 35, textY);
-                    textY += 11;
+                    if (line.includes('━━')) line = '────────────────────────────────';
+                    ctx.fillText(line.substring(0, 88), 35, textY);
+                    textY += 12;
                 }
             } else {
                 ctx.fillStyle = "#888";
-                ctx.font = "italic 7px monospace";
-                ctx.fillText("Nenhum relatório gerado. Clique em 'GERAR RELATÓRIO' primeiro.", 35, yOffset + 40);
+                ctx.font = "italic 8px monospace";
+                ctx.fillText("Nenhum relatório gerado. Clique em 'GERAR RELATÓRIO' primeiro.", 35, yOffset + 46);
             }
-            
+
             const dataURL = canvas.toDataURL("image/png");
             showDownloadModal(dataURL);
-            
+
             btn.textContent = originalText;
             btn.disabled = false;
         } catch (error) {
@@ -905,7 +982,7 @@ function exportToPNG() {
             btn.textContent = originalText;
             btn.disabled = false;
         }
-    }, 100);
+    }, 120);
 }
 
 function showDownloadModal(imageDataURL) {
@@ -962,23 +1039,20 @@ function quickApply() {
     document.getElementById("quickInput").value = "";
 }
 
-// FUNÇÃO LIMPAR TUDO - AGORA LIMPA TAMBÉM O AUDITOR E OBSERVAÇÕES
-function clearAll() { 
-    if(confirm("Apagar todas as salas, limpar responsável e observações?")) { 
-        rooms = {}; 
+// Limpar tudo (inclui responsável, endereço e observações)
+function clearAll() {
+    if(confirm("Apagar todas as salas, limpar responsável, endereço e observações?")) {
+        rooms = {};
         document.getElementById("inputResp").value = "";
+        document.getElementById("inputAddr").value = "";
         document.getElementById("obsText").value = "";
         resumoIA = "";
-        renderBuilding(); 
-        updateStats(); 
-        updateFooter(); 
-    } 
+        renderBuilding();
+        updateStats();
+        updateFooter();
+    }
 }
-
-function clearResumo() { 
-    resumoIA = ""; 
-    updateFooter(); 
-}
+function clearResumo() { resumoIA = ""; updateFooter(); }
 
 function init() {
     const floorSel = document.getElementById("selFloor");
@@ -991,13 +1065,21 @@ function init() {
         roomSel.innerHTML = '';
         for (let r=1; r<=MAX_SALA; r++) roomSel.appendChild(new Option(`Sala ${r.toString().padStart(2,'0')}`, r));
     }
+
+    // Restaurar persistência
     const savedResp = localStorage.getItem(STORAGE_KEY + "_resp");
-    const savedObs = localStorage.getItem(STORAGE_KEY + "_obs");
+    const savedObs  = localStorage.getItem(STORAGE_KEY + "_obs");
+    const savedAddr = localStorage.getItem(STORAGE_KEY + "_addr");
+
     if (savedResp) document.getElementById("inputResp").value = savedResp;
-    if (savedObs) document.getElementById("obsText").value = savedObs;
+    if (savedObs)  document.getElementById("obsText").value = savedObs;
+    document.getElementById("inputAddr").value = savedAddr || DEFAULT_ADDR;
+
     renderBuilding();
     updateStats();
     updateFooter();
+
+    // Listeners
     document.getElementById("btnApply")?.addEventListener("click", applyStatus);
     document.getElementById("btnAI")?.addEventListener("click", generateAIRelatorio);
     document.getElementById("btnPNG")?.addEventListener("click", exportToPNG);
@@ -1006,6 +1088,7 @@ function init() {
     document.getElementById("btnClearResumo")?.addEventListener("click", clearResumo);
     document.getElementById("inputResp")?.addEventListener("input", updateFooter);
     document.getElementById("obsText")?.addEventListener("input", updateFooter);
+    document.getElementById("inputAddr")?.addEventListener("input", updateFooter);
     document.getElementById("quickInput")?.addEventListener("keypress", (e) => { if(e.key === "Enter") quickApply(); });
 }
 
