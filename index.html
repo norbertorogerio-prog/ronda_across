@@ -591,7 +591,7 @@
 </div>
 
 <script>
-const STORAGE_KEY = "vivo_predio_v24";
+const STORAGE_KEY = "vivo_predio_v25";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
 const TOTAL_FLOORS = 32;
@@ -686,19 +686,17 @@ function updateStats() {
 function updateFooter() {
     const dataStr = new Date().toLocaleDateString('pt-BR');
     const auditor = document.getElementById("inputResp")?.value || 'Não informado';
-    const obs = document.getElementById("obsText")?.value || 'Sem observações.';
-    document.getElementById("footerNoteDisplay").innerHTML = `
-🏢 ${dataStr} | 👤 ${auditor}<br>
-📝 ${obs}<br><br>
-${resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.'}
-    `;
+    
+    // Mostra apenas o relatório IA, sem duplicar observações
+    document.getElementById("footerNoteDisplay").innerHTML = resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.';
+    
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
     localStorage.setItem(STORAGE_KEY + "_resp", auditor);
-    localStorage.setItem(STORAGE_KEY + "_obs", obs);
+    localStorage.setItem(STORAGE_KEY + "_obs", document.getElementById("obsText")?.value || '');
     localStorage.setItem(STORAGE_KEY + "_ai", resumoIA);
 }
 
-// RELATÓRIO IA COMPACTO E RESUMIDO
+// RELATÓRIO IA COMPACTO
 function generateAIRelatorio() {
     const stats = updateStats();
     const total = Object.keys(rooms).length;
@@ -707,7 +705,7 @@ function generateAIRelatorio() {
     const dataHora = agora.toLocaleString('pt-BR');
     
     const auditor = document.getElementById("inputResp")?.value || 'Não informado';
-    const obs = document.getElementById("obsText")?.value || '---';
+    const obs = document.getElementById("obsText")?.value || '';
     
     // Identifica andares com problemas
     const andaresProb = [];
@@ -730,16 +728,22 @@ function generateAIRelatorio() {
     if (stats.prob > 0) {
         relatorio += `\n⚠️ PROBLEMAS: ${stats.prob} sala(s)\n`;
         relatorio += `📍 Andares: ${andaresProb.join(', ')}º\n`;
-    } else {
+    } else if (total > 0) {
         relatorio += `\n✅ NENHUM PROBLEMA IDENTIFICADO\n`;
     }
     
-    if (obs !== '---' && obs !== 'Sem observações.') {
-        relatorio += `\n📝 ${obs.substring(0, 100)}${obs.length > 100 ? '...' : ''}\n`;
+    if (obs && obs.trim() !== '') {
+        relatorio += `\n📝 ${obs.substring(0, 120)}${obs.length > 120 ? '...' : ''}\n`;
     }
     
     relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    relatorio += `${stats.prob === 0 ? '✅ TUDO OK' : '🔧 MANUTENÇÃO NECESSÁRIA'}\n`;
+    if (total === 0) {
+        relatorio += `⚠️ NENHUMA SALA AUDITADA`;
+    } else if (stats.prob === 0) {
+        relatorio += `✅ VISTORIA CONCLUÍDA - TUDO OK`;
+    } else {
+        relatorio += `🔧 MANUTENÇÃO NECESSÁRIA - AGENDAR CORREÇÃO`;
+    }
     
     resumoIA = relatorio;
     updateFooter();
@@ -757,14 +761,21 @@ function exportToPNG() {
     btn.textContent = "🏢 GERANDO...";
     btn.disabled = true;
     
+    // Garante que o relatório atual está no resumoIA antes de exportar
+    if (resumoIA === "" || resumoIA === '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
+        // Se não tem relatório, gera automaticamente antes de exportar
+        generateAIRelatorio();
+    }
+    
     setTimeout(() => {
         try {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
             
             const activeFloors = Object.keys(rooms).length > 0 ? TOTAL_FLOORS : 10;
-            const relatorioHeight = resumoIA ? 150 : 70;
-            const canvasHeight = 350 + (activeFloors * 48) + relatorioHeight;
+            const relatorioLines = resumoIA ? resumoIA.split('\n').length : 5;
+            const relatorioHeight = Math.min(relatorioLines * 12 + 50, 180);
+            const canvasHeight = 340 + (activeFloors * 44) + relatorioHeight;
             
             const scale = 1.6;
             canvas.width = 650 * scale;
@@ -787,7 +798,7 @@ function exportToPNG() {
             ctx.fillText("VIVO 5G+", 275, 54);
             
             let yOffset = 85;
-            const floorHeight = 45;
+            const floorHeight = 42;
             
             const floorsMap = new Map();
             for (let f = 1; f <= TOTAL_FLOORS; f++) floorsMap.set(f, []);
@@ -802,7 +813,7 @@ function exportToPNG() {
                 
                 ctx.fillStyle = "#ffd966";
                 ctx.font = "bold 8px sans-serif";
-                ctx.fillText(`${floor}º`, 8, yOffset + 22);
+                ctx.fillText(`${floor}º`, 8, yOffset + 20);
                 
                 const glassGrad = ctx.createLinearGradient(33, yOffset, 617, yOffset + floorHeight);
                 glassGrad.addColorStop(0, "rgba(100,150,200,0.25)");
@@ -815,51 +826,51 @@ function exportToPNG() {
                 
                 if (salas.length > 0) {
                     let xPos = 40;
-                    const tagWidth = Math.max(50, Math.min(75, 560 / Math.min(salas.length, 12)));
-                    for (let i = 0; i < Math.min(salas.length, 12); i++) {
+                    const tagWidth = Math.max(48, Math.min(70, 560 / Math.min(salas.length, 14)));
+                    for (let i = 0; i < Math.min(salas.length, 14); i++) {
                         const sala = salas[i];
                         ctx.fillStyle = "rgba(0,0,0,0.7)";
-                        ctx.fillRect(xPos, yOffset + 5, tagWidth, 30);
+                        ctx.fillRect(xPos, yOffset + 4, tagWidth, 28);
                         ctx.fillStyle = "white";
-                        ctx.font = `bold ${Math.max(7, Math.min(9, tagWidth / 8))}px sans-serif`;
-                        ctx.fillText(`${sala.room}`, xPos + 3, yOffset + 24);
+                        ctx.font = `bold ${Math.max(7, Math.min(9, tagWidth / 9))}px sans-serif`;
+                        ctx.fillText(`${sala.room}`, xPos + 3, yOffset + 22);
                         
                         let icon = sala.status === 'valid' ? "✅" : sala.status === 'occ' ? "🟠" : sala.status === 'lock' ? "🔒" : "❌";
                         ctx.fillStyle = "#fff";
-                        ctx.fillText(icon, xPos + tagWidth - 14, yOffset + 24);
+                        ctx.fillText(icon, xPos + tagWidth - 12, yOffset + 22);
                         xPos += tagWidth + 3;
                         if (xPos > 610) break;
                     }
-                    if (salas.length > 12) {
+                    if (salas.length > 14) {
                         ctx.fillStyle = "rgba(255,255,255,0.5)";
                         ctx.font = "7px sans-serif";
-                        ctx.fillText(`+${salas.length - 12}`, xPos - 20, yOffset + 24);
+                        ctx.fillText(`+${salas.length - 14}`, xPos - 18, yOffset + 22);
                     }
                 } else {
                     ctx.fillStyle = "rgba(255,255,255,0.4)";
                     ctx.font = "italic 7px sans-serif";
-                    ctx.fillText("DISPONÍVEL", 320, yOffset + 25);
+                    ctx.fillText("DISPONÍVEL", 320, yOffset + 22);
                 }
                 
                 yOffset += floorHeight;
-                if (yOffset > Math.min(2400, canvasHeight) - 150) break;
+                if (yOffset > Math.min(2400, canvasHeight) - 140) break;
             }
             
             // Hall
             ctx.fillStyle = "#1e2a36";
-            ctx.fillRect(25, yOffset, 600, 55);
+            ctx.fillRect(25, yOffset, 600, 50);
             ctx.fillStyle = "rgba(255,255,255,0.3)";
-            ctx.fillRect(235, yOffset + 8, 75, 40);
-            ctx.fillRect(340, yOffset + 8, 75, 40);
+            ctx.fillRect(240, yOffset + 7, 70, 36);
+            ctx.fillRect(340, yOffset + 7, 70, 36);
             ctx.strokeStyle = "#ffd966";
-            ctx.strokeRect(235, yOffset + 8, 75, 40);
-            ctx.strokeRect(340, yOffset + 8, 75, 40);
+            ctx.strokeRect(240, yOffset + 7, 70, 36);
+            ctx.strokeRect(340, yOffset + 7, 70, 36);
             
-            yOffset += 65;
+            yOffset += 58;
             
-            // Rodapé com RELATÓRIO IA (agora incluso)
+            // Rodapé com RELATÓRIO IA
             ctx.fillStyle = "rgba(0,0,0,0.85)";
-            ctx.fillRect(25, yOffset, 600, resumoIA ? 140 : 60);
+            ctx.fillRect(25, yOffset, 600, relatorioHeight);
             ctx.fillStyle = "#e2e8f0";
             ctx.font = "8px monospace";
             
@@ -870,17 +881,17 @@ function exportToPNG() {
             ctx.fillText(`📅 ${dataStr} | 👤 ${auditor}`, 35, yOffset + 12);
             ctx.fillText(`📊 Total: ${Object.keys(rooms).length} | ✅ ${stats.valid} | 🟠 ${stats.occ} | 🔒 ${stats.lock} | ❌ ${stats.prob}`, 35, yOffset + 24);
             
-            // RELATÓRIO IA - SEMPRE INCLUÍDO NA EXPORTAÇÃO
-            if (resumoIA) {
+            // RELATÓRIO IA
+            if (resumoIA && resumoIA !== '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
                 ctx.fillStyle = "#ffd966";
                 ctx.font = "bold 8px monospace";
-                ctx.fillText("📋 RELATÓRIO DE VISTORIA:", 35, yOffset + 40);
+                ctx.fillText("📋 RELATÓRIO DE VISTORIA:", 35, yOffset + 38);
                 ctx.fillStyle = "#e2e8f0";
                 ctx.font = "7px monospace";
                 
                 const lines = resumoIA.split('\n');
-                let textY = yOffset + 52;
-                for (let i = 0; i < Math.min(lines.length, 8); i++) {
+                let textY = yOffset + 50;
+                for (let i = 0; i < Math.min(lines.length, 10); i++) {
                     let line = lines[i];
                     if (line.includes('━━')) line = '────────────────────';
                     ctx.fillText(line.substring(0, 68), 35, textY);
