@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
-<title>Vivo • Prédio Corporativo</title>
+<title>Vivo Infra • Prédio Corporativo</title>
 <style>
  * {
     margin: 0;
@@ -591,7 +591,7 @@
 </div>
 
 <script>
-const STORAGE_KEY = "vivo_predio_v25";
+const STORAGE_KEY = "vivo_predio_v26";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
 const TOTAL_FLOORS = 32;
@@ -687,7 +687,6 @@ function updateFooter() {
     const dataStr = new Date().toLocaleDateString('pt-BR');
     const auditor = document.getElementById("inputResp")?.value || 'Não informado';
     
-    // Mostra apenas o relatório IA, sem duplicar observações
     document.getElementById("footerNoteDisplay").innerHTML = resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.';
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
@@ -707,7 +706,6 @@ function generateAIRelatorio() {
     const auditor = document.getElementById("inputResp")?.value || 'Não informado';
     const obs = document.getElementById("obsText")?.value || '';
     
-    // Identifica andares com problemas
     const andaresProb = [];
     Object.entries(rooms).forEach(([key, status]) => {
         if (status === 'prob') {
@@ -716,7 +714,6 @@ function generateAIRelatorio() {
         }
     });
     
-    // Relatório compacto
     let relatorio = `📋 RELATÓRIO VIVO INFRA\n`;
     relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
     relatorio += `📅 ${dataHora} (${periodo})\n`;
@@ -761,9 +758,7 @@ function exportToPNG() {
     btn.textContent = "🏢 GERANDO...";
     btn.disabled = true;
     
-    // Garante que o relatório atual está no resumoIA antes de exportar
     if (resumoIA === "" || resumoIA === '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
-        // Se não tem relatório, gera automaticamente antes de exportar
         generateAIRelatorio();
     }
     
@@ -788,7 +783,6 @@ function exportToPNG() {
             ctx.fillStyle = "#0f1a24";
             ctx.fillRect(25, 25, 600, Math.min(2400, canvasHeight) - 50);
             
-            // Cobertura
             ctx.fillStyle = "#2c3e50";
             ctx.fillRect(25, 25, 600, 55);
             ctx.fillStyle = "#4A0072";
@@ -856,7 +850,6 @@ function exportToPNG() {
                 if (yOffset > Math.min(2400, canvasHeight) - 140) break;
             }
             
-            // Hall
             ctx.fillStyle = "#1e2a36";
             ctx.fillRect(25, yOffset, 600, 50);
             ctx.fillStyle = "rgba(255,255,255,0.3)";
@@ -868,7 +861,6 @@ function exportToPNG() {
             
             yOffset += 58;
             
-            // Rodapé com RELATÓRIO IA
             ctx.fillStyle = "rgba(0,0,0,0.85)";
             ctx.fillRect(25, yOffset, 600, relatorioHeight);
             ctx.fillStyle = "#e2e8f0";
@@ -881,7 +873,6 @@ function exportToPNG() {
             ctx.fillText(`📅 ${dataStr} | 👤 ${auditor}`, 35, yOffset + 12);
             ctx.fillText(`📊 Total: ${Object.keys(rooms).length} | ✅ ${stats.valid} | 🟠 ${stats.occ} | 🔒 ${stats.lock} | ❌ ${stats.prob}`, 35, yOffset + 24);
             
-            // RELATÓRIO IA
             if (resumoIA && resumoIA !== '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
                 ctx.fillStyle = "#ffd966";
                 ctx.font = "bold 8px monospace";
@@ -971,8 +962,23 @@ function quickApply() {
     document.getElementById("quickInput").value = "";
 }
 
-function clearAll() { if(confirm("Apagar todas as salas?")) { rooms = {}; renderBuilding(); updateStats(); updateFooter(); } }
-function clearResumo() { resumoIA = ""; updateFooter(); }
+// FUNÇÃO LIMPAR TUDO - AGORA LIMPA TAMBÉM O AUDITOR E OBSERVAÇÕES
+function clearAll() { 
+    if(confirm("Apagar todas as salas, limpar responsável e observações?")) { 
+        rooms = {}; 
+        document.getElementById("inputResp").value = "";
+        document.getElementById("obsText").value = "";
+        resumoIA = "";
+        renderBuilding(); 
+        updateStats(); 
+        updateFooter(); 
+    } 
+}
+
+function clearResumo() { 
+    resumoIA = ""; 
+    updateFooter(); 
+}
 
 function init() {
     const floorSel = document.getElementById("selFloor");
