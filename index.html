@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes, viewport-fit=cover"/>
 
-<title>Relatório de Vistoria</title>
+<title>Relatório de Vistoria | Responsivo</title>
 
 <style>
   :root{
@@ -16,40 +16,100 @@
     --purple:#6A1B9A;  /* outros */
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
 
-  /* GRID */
-  .app{max-width:1200px;margin:0 auto;padding:16px;display:grid;gap:16px}
-  @media(min-width:980px){.app{grid-template-columns:360px 1fr}}
+  /* GRID RESPONSIVA - mobile first */
+  .app{
+    max-width:1400px;
+    margin:0 auto;
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  
+  /* Tablet e desktop */
+  @media(min-width:768px){
+    .app{
+      padding:20px;
+      gap:24px;
+    }
+  }
+  
+  @media(min-width:1024px){
+    .app{
+      display:grid;
+      grid-template-columns:400px 1fr;
+      gap:24px;
+      align-items:start;
+    }
+  }
 
   .card{
     background:var(--card);
     border:1px solid var(--border);
-    border-radius:12px;
-    padding:16px;
+    border-radius:16px;
+    padding:18px;
     backdrop-filter:blur(4px);
-    overflow:hidden;               /* evita overflow dos campos */
+    overflow:hidden;
+  }
+  
+  @media(min-width:768px){
+    .card{
+      padding:24px;
+    }
   }
 
-  h2,h3{margin:0 0 10px 0;font-weight:800;letter-spacing:.4px}
-  h2{font-size:16px} h3{font-size:14px;color:var(--muted)}
+  h2{
+    margin:0 0 12px 0;
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:.4px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  
+  h3{
+    margin:0 0 12px 0;
+    font-size:16px;
+    color:var(--muted);
+    font-weight:700;
+  }
 
-  /* FORM COMPACTO (Opção B) */
+  /* FORMULÁRIO */
   label{
-    display:block;margin:10px 0 6px 0;
-    font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#e2e8f0
+    display:block;
+    margin:14px 0 6px 0;
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color:#e2e8f0;
   }
+  
   .form-field{
-    width:100%;max-width:100%;
+    width:100%;
     border:1px solid var(--border);
-    border-radius:10px;
-    background:#fff;color:#111;
-    padding:8px 10px;              /* compacto */
-    font-size:14px; line-height:1.25;
+    border-radius:12px;
+    background:#fff;
+    color:#111;
+    padding:10px 12px;
+    font-size:15px;
+    line-height:1.4;
     outline:none;
+    transition: all 0.2s ease;
   }
+  
+  .form-field:focus{
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(255,217,102,0.2);
+  }
+  
   select.form-field{
-    -webkit-appearance:none; -moz-appearance:none; appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
     background-image:
       linear-gradient(45deg, transparent 50%, #6A1B9A 50%),
       linear-gradient(135deg, #6A1B9A 50%, transparent 50%),
@@ -61,131 +121,356 @@
     background-size:6px 6px,6px 6px,1px 60%;
     background-repeat:no-repeat;
   }
-  textarea.form-field{min-height:70px;resize:vertical}
-
-  .row{display:grid;gap:8px}
-  @media(min-width:520px){.row-2{grid-template-columns:1fr 1fr}}
-  @media(min-width:820px){.row-3{grid-template-columns:1fr 1fr 1fr}}
-
-  .btn{
-    width:100%;
-    border:none;border-radius:10px;
-    background:linear-gradient(135deg,#6A1B9A,#4A0072);
-    color:#fff;font-weight:800;padding:10px 12px;cursor:pointer;
-    text-transform:uppercase;font-size:13px
+  
+  textarea.form-field{
+    min-height:80px;
+    resize:vertical;
   }
-  .btn:active{transform:translateY(1px)}
 
-  /* ÍCONES DE ANDAR/SALA (lado esquerdo) */
-  .icon-strip{display:grid;gap:6px}
-  .floors-strip{grid-template-columns:repeat(8,auto)}
-  .rooms-strip{grid-template-columns:repeat(10,auto)}
+  /* GRIDS DE ÍCONES - responsivo */
+  .icon-strip{
+    display:grid;
+    gap:8px;
+    margin-top:8px;
+  }
+  
+  .floors-strip{
+    grid-template-columns:repeat(auto-fill, minmax(44px, 1fr));
+  }
+  
+  .rooms-strip{
+    grid-template-columns:repeat(auto-fill, minmax(44px, 1fr));
+  }
+  
+  @media(min-width:480px){
+    .floors-strip{
+      grid-template-columns:repeat(8, 1fr);
+    }
+    .rooms-strip{
+      grid-template-columns:repeat(10, 1fr);
+    }
+  }
+  
   .icon{
-    width:32px;height:32px;border-radius:8px;
+    width:100%;
+    aspect-ratio:1;
+    border-radius:10px;
     border:1px solid var(--border);
     background:rgba(255,255,255,.08);
-    color:var(--text);font-size:12px;
-    display:grid;place-items:center;
-    cursor:pointer;user-select:none
+    color:var(--text);
+    font-size:13px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    user-select:none;
+    transition: all 0.2s ease;
   }
-  .icon:hover{outline:1px dashed rgba(255,255,255,.25)}
-  .icon.is-selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,217,102,.25)}
+  
+  .icon:active{
+    transform:scale(0.95);
+  }
+  
+  .icon:hover{
+    background:rgba(255,255,255,.15);
+  }
+  
+  .icon.is-selected{
+    border-color:var(--gold);
+    background:rgba(255,217,102,0.2);
+    box-shadow:0 0 0 2px rgba(255,217,102,.3);
+  }
 
-  /* STATUS (logo abaixo de Andar/Sala – Opção A) */
+  /* STATUS STRIP */
   .status-strip{
-    display:flex;gap:8px;flex-wrap:wrap;
-    margin-top:6px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
+    gap:10px;
+    margin:10px 0 5px;
   }
+  
+  @media(min-width:480px){
+    .status-strip{
+      grid-template-columns:repeat(4, 1fr);
+    }
+  }
+  
   .status{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:8px 10px;border-radius:999px;
-    color:#111;background:#fff;border:1px solid var(--border);
-    cursor:pointer;font-size:13px;font-weight:700
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:10px 8px;
+    border-radius:40px;
+    color:#111;
+    background:#fff;
+    border:1px solid var(--border);
+    cursor:pointer;
+    font-size:13px;
+    font-weight:700;
+    transition: all 0.2s ease;
+    width:100%;
   }
-  .dot{width:12px;height:12px;border-radius:50%}
+  
+  .status:active{
+    transform:scale(0.96);
+  }
+  
+  .dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
   .dot.valid{background:var(--green)}
   .dot.lock{background:var(--yellow)}
   .dot.prob{background:var(--red)}
   .dot.other{background:var(--purple)}
 
-  /* DIREITA – Itens criados + Relatório */
-  .viewer{display:grid;gap:16px}
-  .section{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:12px}
-  .small{font-size:12px;color:var(--muted)}
+  /* BOTÕES */
+  .btn{
+    width:100%;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#6A1B9A,#4A0072);
+    color:#fff;
+    font-weight:800;
+    padding:12px;
+    cursor:pointer;
+    text-transform:uppercase;
+    font-size:14px;
+    transition: all 0.2s ease;
+  }
+  
+  .btn:active{
+    transform:translateY(1px);
+  }
+  
+  .row{
+    display:grid;
+    gap:12px;
+    margin-top:8px;
+  }
+  
+  @media(min-width:520px){
+    .row-2{
+      grid-template-columns:1fr 1fr;
+    }
+  }
 
-  .created-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-  .room-card{display:grid;gap:6px;padding:8px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.06)}
-  .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#111;background:#fff;border-radius:8px;padding:4px 8px;width:max-content}
-  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#fff;border-radius:999px;padding:2px 8px;width:max-content}
+  /* VIEWER */
+  .viewer{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  
+  .section{
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px;
+  }
+  
+  @media(min-width:768px){
+    .section{
+      padding:24px;
+    }
+  }
+  
+  .small{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:12px;
+  }
+
+  /* GRADE DE ITENS */
+  .created-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+    gap:12px;
+    margin-bottom:8px;
+  }
+  
+  .room-card{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.08);
+    transition: all 0.2s ease;
+  }
+  
+  .room-card:active{
+    transform:scale(0.98);
+  }
+  
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    font-weight:800;
+    color:#111;
+    background:#fff;
+    border-radius:10px;
+    padding:6px 10px;
+    width:fit-content;
+  }
+  
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-weight:600;
+    color:#fff;
+    border-radius:40px;
+    padding:4px 12px;
+    width:fit-content;
+  }
+  
   .pill.valid{background:var(--green)}
   .pill.lock{background:var(--yellow);color:#111}
   .pill.prob{background:var(--red)}
   .pill.other{background:var(--purple)}
 
-  /* Relatório moldurado */
-  .report-box{border:2px solid var(--gold);border-radius:12px;background:rgba(0,0,0,.35);padding:12px}
+  /* RELATÓRIO */
+  .report-box{
+    border:2px solid var(--gold);
+    border-radius:16px;
+    background:rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+  
   .report-title{
     background:linear-gradient(135deg,#2c3e50,#1a2632);
     color:var(--gold);
     font-weight:900;
-    border:1px solid rgba(255,215,0,.5);
-    border-radius:8px;
-    padding:8px 12px;
-    margin-bottom:10px;
-    letter-spacing:.4px;
-    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    border-bottom:1px solid rgba(255,215,0,.3);
   }
-  .report-actions { display: inline-flex; gap: 8px; }
-  .btn-action {
-    border: 1px solid var(--border);
-    background: #ffffff;
-    color: #111;
-    font-weight: 800;
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 8px;
-    cursor: pointer;
+  
+  .report-title span{
+    font-size:15px;
   }
-  .btn-action:hover { filter: brightness(0.95); }
-  .btn-action:active { transform: translateY(1px); }
-
+  
+  .report-actions{
+    display:inline-flex;
+    gap:8px;
+  }
+  
+  .btn-action{
+    border:1px solid var(--border);
+    background:#ffffff;
+    color:#111;
+    font-weight:800;
+    font-size:12px;
+    padding:6px 12px;
+    border-radius:10px;
+    cursor:pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-action:active{
+    transform:translateY(1px);
+  }
+  
   .report-content{
     white-space:pre-wrap;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* fonte amigável */
-    font-size: 14px;
-    color: #eaf2f8;
-    line-height: 1.6;
+    font-family:system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size:13px;
+    color:#eaf2f8;
+    line-height:1.6;
+    padding:16px;
+    max-height:500px;
+    overflow-y:auto;
+  }
+  
+  @media(min-width:768px){
+    .report-content{
+      font-size:14px;
+      padding:20px;
+      max-height:600px;
+    }
   }
 
-  /* Toast simples (feedback) */
-  .toast {
-    position: fixed; right: 16px; bottom: 16px;
-    background: rgba(0,0,0,0.8); color: #fff;
-    padding: 10px 14px; border-radius: 8px;
-    font-size: 12px; z-index: 9999; opacity: 0; transform: translateY(8px);
-    transition: opacity .2s ease, transform .2s ease;
+  /* TOAST */
+  .toast{
+    position:fixed;
+    right:16px;
+    bottom:20px;
+    left:16px;
+    background:rgba(0,0,0,0.9);
+    color:#fff;
+    padding:12px 16px;
+    border-radius:12px;
+    font-size:13px;
+    z-index:9999;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .2s ease, transform .2s ease;
+    text-align:center;
+    pointer-events:none;
   }
-  .toast.show { opacity: 1; transform: translateY(0); }
+  
+  @media(min-width:480px){
+    .toast{
+      left:auto;
+      right:20px;
+      bottom:20px;
+      min-width:200px;
+      text-align:left;
+    }
+  }
+  
+  .toast.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+  
+  /* SCROLL RESPONSIVO */
+  .report-content::-webkit-scrollbar{
+    width:6px;
+  }
+  
+  .report-content::-webkit-scrollbar-track{
+    background:rgba(255,255,255,0.1);
+    border-radius:10px;
+  }
+  
+  .report-content::-webkit-scrollbar-thumb{
+    background:var(--gold);
+    border-radius:10px;
+  }
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- ESQUERDA (compacta) -->
+  <!-- ESQUERDA -->
   <div class="card">
-    <h2>Entrada de dados</h2>
+    <h2>📋 Entrada de dados</h2>
 
     <label>👤 Auditor</label>
-    <input id="auditor" class="form-field" placeholder="Nome completo"/>
+    <input id="auditor" class="form-field" placeholder="Nome completo do responsável"/>
 
     <label>🏢 Prédio</label>
     <select id="predio" class="form-field">
-      <option value="">Selecione...</option>
+      <option value="">Selecione o prédio...</option>
       <option value="Eco Berrini">Eco Berrini</option>
       <option value="Chucri Zaidan">Chucri Zaidan</option>
     </select>
 
     <label>📍 Endereço</label>
-    <input id="endereco" class="form-field" placeholder="Será preenchido ao escolher o prédio"/>
+    <input id="endereco" class="form-field" placeholder="Endereço completo"/>
 
     <!-- Andares e Salas -->
     <label>🏬 Andares (01–32)</label>
@@ -194,44 +479,43 @@
     <label>🚪 Salas (01–50)</label>
     <div id="roomsStrip" class="icon-strip rooms-strip"></div>
 
-    <!-- STATUS (Opção A: logo abaixo de Andar/Sala) -->
-    <label>📌 Status</label>
+    <!-- Status -->
+    <label>📌 Status da sala</label>
     <div class="status-strip">
-      <button class="status" data-status="valid" title="Sala Validada"><span class="dot valid"></span>Validada</button>
-      <button class="status" data-status="lock"  title="Sala Trancada"><span class="dot lock"></span>Trancada</button>
-      <button class="status" data-status="prob"  title="Sala com Problemas"><span class="dot prob"></span>Problemas</button>
-      <button class="status" data-status="other" title="Outros"><span class="dot other"></span>Outros</button>
+      <button class="status" data-status="valid"><span class="dot valid"></span>Validada</button>
+      <button class="status" data-status="lock"><span class="dot lock"></span>Trancada</button>
+      <button class="status" data-status="prob"><span class="dot prob"></span>Problemas</button>
+      <button class="status" data-status="other"><span class="dot other"></span>Outros</button>
     </div>
 
-    <!-- Observações e Ações -->
-    <label style="margin-top:10px">📝 Observações (vão para o Relatório)</label>
-    <textarea id="obs" class="form-field" placeholder="Escreva detalhes relevantes..."></textarea>
+    <label>📝 Observações</label>
+    <textarea id="obs" class="form-field" placeholder="Registre observações relevantes para o relatório..."></textarea>
 
-    <div class="row row-2" style="margin-top:12px">
-      <button id="btnAdd" class="btn">Adicionar</button>
-      <button id="btnClear" class="btn">Limpar Tudo</button>
+    <div class="row row-2">
+      <button id="btnAdd" class="btn">➕ Adicionar</button>
+      <button id="btnClear" class="btn">🗑️ Limpar Tudo</button>
     </div>
 
-    <p class="small" style="margin-top:8px">
-      Fluxo: selecione <b>Prédio</b> (preenche endereço) → clique em <b>Andar</b> → <b>Sala</b> → <b>Status</b> para criar o item.
+    <p class="small">
+      💡 Selecione <strong>Prédio</strong> → clique no <strong>Andar</strong> e <strong>Sala</strong> → escolha o <strong>Status</strong> para registrar.
     </p>
   </div>
 
-  <!-- DIREITA (somente Itens criados + Relatório) -->
+  <!-- DIREITA -->
   <div class="viewer">
     <div class="section">
-      <h3>Itens criados</h3>
+      <h3>📦 Salas vistoriadas</h3>
       <div id="createdGrid" class="created-grid"></div>
-      <p class="small">Clique em um cartão para ver os detalhes. Use “Limpar Tudo” para recomeçar.</p>
+      <p class="small">Clique nos cartões para visualizar os detalhes da vistoria.</p>
     </div>
 
     <div class="section">
       <div class="report-box">
         <div class="report-title">
-          <span>📋 Relatório</span>
+          <span>📋 Relatório de Vistoria</span>
           <div class="report-actions">
-            <button id="btnCopy" class="btn-action" title="Copiar relatório">📋 Copiar</button>
-            <button id="btnDownload" class="btn-action" title="Baixar .txt">⬇️ Baixar .txt</button>
+            <button id="btnCopy" class="btn-action">📋 Copiar</button>
+            <button id="btnDownload" class="btn-action">⬇️ Baixar .txt</button>
           </div>
         </div>
         <div id="relatorio" class="report-content">
@@ -249,19 +533,16 @@
 </div>
 
 <script>
-  // Estado
-  const STORAGE_KEY = "vistoria_icons_layoutA_v5";
-  let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); // [{f,r,status}]
+  const STORAGE_KEY = "vistoria_icons_responsivo_v2";
+  let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom  = 1;
 
-  // Helpers
   const pad2 = n => String(n).padStart(2,"0");
   const statusName  = s => s==="valid"?"Validada":s==="lock"?"Trancada":s==="prob"?"Problemas":"Outros";
   const statusClass = s => s==="valid"?"valid":s==="lock"?"lock":s==="prob"?"prob":"other";
   const statusEmoji = s => s==="valid"?"✅":s==="lock"?"🔒":s==="prob"?"❌":"◻️";
 
-  // DOM
   const floorsStrip  = document.getElementById("floorsStrip");
   const roomsStrip   = document.getElementById("roomsStrip");
   const createdGrid  = document.getElementById("createdGrid");
@@ -271,12 +552,11 @@
   const auditorInp   = document.getElementById("auditor");
   const obsInp       = document.getElementById("obs");
 
-  /* ----- Ícones de Andar/Sala (ESQUERDA) ----- */
   function buildFloorIcons(){
     floorsStrip.innerHTML = "";
     for(let f=1; f<=32; f++){
       const el = document.createElement("div");
-      el.className = "icon floor" + (f===selectedFloor ? " is-selected" : "");
+      el.className = "icon" + (f===selectedFloor ? " is-selected" : "");
       el.textContent = pad2(f);
       el.title = `Andar ${pad2(f)}`;
       el.addEventListener("click", ()=>{
@@ -287,11 +567,12 @@
       floorsStrip.appendChild(el);
     }
   }
+  
   function buildRoomIcons(){
     roomsStrip.innerHTML = "";
     for(let r=1; r<=50; r++){
       const el = document.createElement("div");
-      el.className = "icon room" + (r===selectedRoom ? " is-selected" : "");
+      el.className = "icon" + (r===selectedRoom ? " is-selected" : "");
       el.textContent = pad2(r);
       el.title = `Sala ${pad2(r)}`;
       el.addEventListener("click", ()=>{
@@ -302,7 +583,6 @@
     }
   }
 
-  /* ----- Status: cria/atualiza imediatamente Axx/Sxx ----- */
   document.querySelectorAll(".status").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const status = btn.dataset.status;
@@ -312,55 +592,53 @@
       else{ entries.push({f,r,status}); }
       persist();
       renderCreated();
-      renderReport();  // Observações são globais (não por sala)
+      renderReport();
+      showToast(`Sala A${pad2(f)}-S${pad2(r)}: ${statusName(status)}`);
     });
   });
 
-  /* ----- Botão Adicionar: garante existência da sala (status default “other”) ----- */
   document.getElementById("btnAdd").addEventListener("click", ()=>{
     const f = selectedFloor, r = selectedRoom;
     const idx = entries.findIndex(e => e.f===f && e.r===r);
-    if(idx<0){ entries.push({f,r,status:"other"}); }
+    if(idx<0){ 
+      entries.push({f,r,status:"other"}); 
+      showToast(`Sala A${pad2(f)}-S${pad2(r)} adicionada`);
+    } else {
+      showToast(`Sala já existe, use os status para alterar`);
+    }
     persist();
     renderCreated();
     renderReport();
   });
 
-  /* ----- Itens criados (grade de cartões) ----- */
   function renderCreated(){
     createdGrid.innerHTML = "";
     const sorted = [...entries].sort((a,b)=> a.f-b.f || a.r-b.r);
     sorted.forEach(item=>{
       const card = document.createElement("div");
       card.className = "room-card";
-
       const badge = document.createElement("div");
       badge.className = "badge";
       badge.textContent = `A${pad2(item.f)} • S${pad2(item.r)}`;
       card.appendChild(badge);
-
       const tag = document.createElement("div");
       tag.className = `pill ${statusClass(item.status)}`;
       tag.textContent = `${statusEmoji(item.status)} ${statusName(item.status)}`;
       card.appendChild(tag);
-
       createdGrid.appendChild(card);
     });
   }
 
-  /* ----- Relatório (com Observações globais) ----- */
   function renderReport(){
-    const predio   = predioSel.value || "Prédio";
+    const predio   = predioSel.value || "Prédio não selecionado";
     const endereco = enderecoInp.value || "Endereço não informado";
-    const auditor  = auditorInp.value || "";
+    const auditor  = auditorInp.value || "Não informado";
     const obsGeral = (obsInp.value || "").trim();
-    const dataStr  = new Date().toLocaleString("pt-BR");
+    const dataStr  = new Date().toLocaleString("pt-BR", { dateStyle: "full", timeStyle: "short" });
 
-    // contagens
     const stats = { valid:0, lock:0, prob:0, other:0 };
     entries.forEach(e => stats[e.status]++);
 
-    // agrupado por andar
     const byFloor = {};
     entries.forEach(e=>{
       if(!byFloor[e.f]) byFloor[e.f] = { valid:[], lock:[], prob:[], other:[] };
@@ -373,13 +651,10 @@
       info = "Nenhuma sala registrada nesta vistoria.";
     } else {
       info += `Total de salas registradas: ${total}\n`;
-      info += `• ✅ Validadas: ${stats.valid}\n`;
-      info += `• 🔒 Trancadas: ${stats.lock}\n`;
-      info += `• ❌ Problemas: ${stats.prob}\n`;
-      info += `• ◻️ Outros: ${stats.other}\n`;
+      info += `✅ Validadas: ${stats.valid} | 🔒 Trancadas: ${stats.lock} | ❌ Problemas: ${stats.prob} | ◻️ Outros: ${stats.other}\n`;
       const floors = Object.keys(byFloor).map(Number).sort((a,b)=>a-b);
       if(floors.length){
-        info += `\nDetalhe por andar:\n`;
+        info += `\n📊 Detalhamento por andar:\n`;
         floors.forEach(f=>{
           const a = byFloor[f];
           const parts = [];
@@ -387,69 +662,74 @@
           if(a.lock.length)  parts.push(`🔒 ${a.lock.length} (${a.lock.join(", ")})`);
           if(a.prob.length)  parts.push(`❌ ${a.prob.length} (${a.prob.join(", ")})`);
           if(a.other.length) parts.push(`◻️ ${a.other.length} (${a.other.join(", ")})`);
-          info += `• Andar ${pad2(f)}: ${parts.join(" | ")}\n`;
+          info += `   Andar ${pad2(f)}: ${parts.join(" | ")}\n`;
         });
       }
     }
 
-    const blocoObs = obsGeral ? `\n📝 Observações da vistoria\n${obsGeral}\n` : "";
-    const auditorLine = auditor ? `👤 Auditor: ${auditor}` : "👤 Auditor:";
-
+    const blocoObs = obsGeral ? `\n📝 OBSERVAÇÕES GERAIS\n${obsGeral}\n` : "";
+    
     const text =
-`📋 RELATÓRIO DE VISTORIA — ${predio}
+`📋 RELATÓRIO DE VISTORIA
+🏢 ${predio}
 📍 ${endereco}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📅 ${dataStr}
-${auditorLine}
+👤 Auditor: ${auditor}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ Informações do relatório
-${info}${blocoObs}`;
+📊 INFORMAÇÕES DA VISTORIA
+${info}${blocoObs}
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 Sistema desenvolvido para vistorias técnicas`;
 
     relatorioEl.textContent = text;
   }
 
-  /* ===== Ações do Relatório: copiar e baixar ===== */
   function getReportText() {
     return document.getElementById("relatorio")?.textContent || "";
   }
+  
   function copyReportToClipboard() {
     const text = getReportText();
     if (!text.trim()) { showToast("Relatório vazio"); return; }
     navigator.clipboard?.writeText(text).then(
-      () => showToast("Relatório copiado ✅"),
+      () => showToast("✅ Relatório copiado!"),
       () => fallbackCopy(text)
     );
   }
+  
   function fallbackCopy(text) {
     try {
       const ta = document.createElement("textarea");
-      ta.value = text; document.body.appendChild(ta);
-      ta.select(); document.execCommand("copy");
+      ta.value = text; 
+      document.body.appendChild(ta);
+      ta.select(); 
+      document.execCommand("copy");
       ta.remove();
-      showToast("Relatório copiado ✅");
+      showToast("✅ Relatório copiado!");
     } catch {
-      showToast("Não foi possível copiar");
+      showToast("❌ Não foi possível copiar");
     }
   }
+  
   function downloadReportTxt() {
     const text = getReportText();
     if (!text.trim()) { showToast("Relatório vazio"); return; }
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const predio = (document.getElementById("predio")?.value || "Predio").replace(/\s+/g,'_');
+    const predio = (document.getElementById("predio")?.value || "Vistoria").replace(/\s+/g,'_');
     const dt = new Date();
-    const stamp = `${String(dt.getFullYear())}${String(dt.getMonth()+1).padStart(2,'0')}${String(dt.getDate()).padStart(2,'0')}_${String(dt.getHours()).padStart(2,'0')}${String(dt.getMinutes()).padStart(2,'0')}`;
+    const stamp = `${dt.getFullYear()}${(dt.getMonth()+1).toString().padStart(2,'0')}${dt.getDate().toString().padStart(2,'0')}_${dt.getHours().toString().padStart(2,'0')}${dt.getMinutes().toString().padStart(2,'0')}`;
     a.href = url;
     a.download = `relatorio_vistoria_${predio}_${stamp}.txt`;
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-    showToast("Download iniciado ⬇️");
+    showToast("⬇️ Download iniciado!");
   }
 
-  /* Toast simples */
   function showToast(msg) {
     let t = document.querySelector(".toast");
     if (!t) {
@@ -459,20 +739,18 @@ ${info}${blocoObs}`;
     }
     t.textContent = msg;
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 1800);
+    setTimeout(() => t.classList.remove("show"), 2000);
   }
 
-  /* Listeners dos botões do relatório */
-  document.addEventListener("click", (e) => {
-    if (e.target && e.target.id === "btnCopy")     copyReportToClipboard();
-    if (e.target && e.target.id === "btnDownload") downloadReportTxt();
-  });
+  document.getElementById("btnCopy").addEventListener("click", copyReportToClipboard);
+  document.getElementById("btnDownload").addEventListener("click", downloadReportTxt);
 
-  /* ----- Persistência e ações gerais ----- */
-  function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+  function persist(){ 
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); 
+  }
 
   document.getElementById("btnClear").addEventListener("click", ()=>{
-    if(!confirm("Limpar todos os registros e campos?")) return;
+    if(!confirm("⚠️ Limpar todos os registros e reiniciar vistoria?")) return;
     entries = [];
     auditorInp.value = "";
     predioSel.value = "";
@@ -481,27 +759,25 @@ ${info}${blocoObs}`;
     persist();
     renderCreated();
     renderReport();
+    showToast("🗑️ Todos os dados foram removidos");
   });
 
-  // Auto-endereço por prédio
   predioSel.addEventListener("change", ()=>{
     const v = predioSel.value;
     if(v==="Eco Berrini"){
-      enderecoInp.value = "Avenida Eng. Luís Carlos Berrini, 1376";
+      enderecoInp.value = "Av. Eng. Luís Carlos Berrini, 1376 - São Paulo/SP";
     } else if(v==="Chucri Zaidan"){
-      enderecoInp.value = "Avenida Dr. Chucri Zaidan, 2460";
+      enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460 - São Paulo/SP";
     } else {
       enderecoInp.value = "";
     }
     renderReport();
   });
 
-  // Campos que refletem no relatório
   auditorInp.addEventListener("input", renderReport);
   enderecoInp.addEventListener("input", renderReport);
   obsInp.addEventListener("input", renderReport);
 
-  // Boot
   (function init(){
     selectedFloor = 1;
     selectedRoom  = 1;
