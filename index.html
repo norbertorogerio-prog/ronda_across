@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Ultra HD v10</title>
+<title>Vivo Infra • Ultra HD v11</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -107,8 +107,9 @@
           <rect x="60" y="50" width="200" height="40" rx="5" fill="#CBD5E1" />
           
           <rect x="0" y="80" width="320" height="735" rx="5" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
-          <rect x="0" y="80" width="320" height="30" fill="#6A1B9A" />
-          <text x="160" y="100" text-anchor="middle" font-weight="900" font-size="12" fill="#fff">VIVO - INFRAESTRUTURA</text>
+          
+          <rect x="0" y="72" width="320" height="30" fill="#6A1B9A" />
+          <text x="160" y="92" text-anchor="middle" font-weight="900" font-size="12" fill="#fff">VIVO - INFRAESTRUTURA</text>
           
           <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
           
@@ -135,7 +136,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_v10_download_fix";
+const STORAGE_KEY = "vivo_pro_v11_hd_final";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -229,9 +230,9 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.fillText(line, x, y); return y;
 }
 
-// RESTAURAÇÃO DO SISTEMA DE DOWNLOAD DIRETO
+// DOWNLOAD DIRETO ATIVADO
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG"); btn.textContent = "BAIXANDO...";
+    const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
     canvas.width = 460 * SCALE; canvas.height = 1050 * SCALE; ctx.scale(SCALE, SCALE);
     
@@ -241,9 +242,11 @@ $("#btnPNG").onclick = async () => {
     ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 50, 200, 40, 5); ctx.fill();
 
     ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(70, 80, 320, 735, 5); ctx.fill();
-    ctx.fillStyle = "#6A1B9A"; ctx.fillRect(70, 80, 320, 30);
+    
+    // Placa Roxa no PNG (Subida 8px na escala do canvas)
+    ctx.fillStyle = "#6A1B9A"; ctx.fillRect(70, 72, 320, 30);
     ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText("VIVO - INFRAESTRUTURA", 230, 100);
+    ctx.fillText("VIVO - INFRAESTRUTURA", 230, 92);
 
     for(let f=32; f>=1; f--) {
         const row = 32 - f; const y = 110 + row * 22;
@@ -270,13 +273,11 @@ $("#btnPNG").onclick = async () => {
     ctx.fillStyle = "#777"; ctx.font = "italic 9px sans-serif";
     wrapText(ctx, resumoIA || "", 80, curY + 10, 300, 12);
 
-    // MODO DOWNLOAD FORÇADO (NÃO ABRE COMPARTILHAMENTO)
+    // MECANISMO DE DOWNLOAD DIRETO
     const link = document.createElement("a");
-    link.download = "Checklist_Predio_Infra.png";
+    link.download = `Checklist_Vivo_${Date.now()}.png`;
     link.href = canvas.toDataURL("image/png");
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
     
     btn.textContent = "📸 Exportar PNG (4K)";
 };
