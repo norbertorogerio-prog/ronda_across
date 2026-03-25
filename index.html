@@ -3,35 +3,39 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Prédio Vivo • Gestão Total</title>
+<title>Prédio Vivo • Ultra HD</title>
 <style>
  :root{
-  --vivo:#6A1B9A; --vivo-dark:#4A0072;
-  --valid:#2ECC71; --occ:#FF9800; --lock:#9E9E9E; --prob:#E53935;
-  --bg:#F6F3F9; --card:#FFFFFF; --line:#E6E1EF;
+  /* PALETA DE ALTO CONTRASTE */
+  --vivo:#6A1B9A; 
+  --valid:#1B5E20; /* Verde Floresta (Melhor contraste com branco) */
+  --occ:#E65100;   /* Laranja Queimado */
+  --lock:#424242;  /* Grafite Escuro */
+  --prob:#B71C1C;  /* Vermelho Sangue */
+  --bg:#F0F2F5; --card:#FFFFFF; --line:#D1D9E6;
  }
 
  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
- body{ background: var(--bg); color: #2B2B2B; font: 500 14px/1.2 system-ui, "Segoe UI"; overflow-x: hidden; }
+ body{ background: var(--bg); color: #1A1A1A; font: 500 14px/1.2 system-ui, "Segoe UI"; overflow-x: hidden; }
 
  .app{ width: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; padding: 10px; }
  @media (min-width:900px){ .app{ display: grid; grid-template-columns: 320px 1fr; } }
 
- .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:15px; box-shadow:0 4px 10px rgba(0,0,0,0.03); }
+ .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:15px; box-shadow:0 6px 15px rgba(0,0,0,0.05); }
 
- label{ font-size:11px; color:#666; margin-bottom:4px; display:block; font-weight: 700; text-transform: uppercase; }
- select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:10px; font:inherit; margin-bottom: 8px; }
+ label{ font-size:11px; color:#555; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; }
+ select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; margin-bottom: 8px; }
 
- button{ background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; padding: 12px; }
- .btn-png { background: #27ae60; font-size: 16px; margin-top: 5px; }
- .btn-ai { background: #3498db; font-size: 12px; margin-bottom: 15px; }
+ button{ background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; }
+ .btn-png { background: #000; color: #fff; font-size: 16px; border: 2px solid #333; } /* Botão de destaque para exportar */
+ .btn-ai { background: #0277BD; font-size: 12px; margin-bottom: 10px; }
  
  .clean-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px; }
- .btn-clear-sub { background: #fff; color: #666; border: 1px solid #ddd; font-size: 10px; padding: 5px; }
- .btn-clear-red { background: #fff; color: red; border: 1px solid #ffcccc; font-size: 11px; grid-column: span 2; }
+ .btn-clear-sub { background: #fff; color: #444; border: 1px solid #ccc; font-size: 10px; padding: 6px; }
+ .btn-clear-red { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; font-size: 11px; grid-column: span 2; }
 
  .viewer-card { display: flex; justify-content: center; background: #fff; padding: 20px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; }
- .building-container { position: relative; display: flex; width: 395px; flex-shrink: 0; height: 1000px; }
+ .building-container { position: relative; display: flex; width: 395px; flex-shrink: 0; height: 1050px; }
  .floors-labels-col { display: flex; flex-direction: column; padding-top: 36px; width: 70px; flex-shrink: 0; }
  .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: var(--vivo); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; }
 
@@ -41,9 +45,9 @@
  .badge { position: absolute; width: 24px; height: 12px; border-radius: 2px; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
  #footerNoteDisplay {
-    position: absolute; top: 870px; left: 0; width: 100%;
-    text-align: left; padding: 10px; font-size: 11px;
-    background: #f1f3f5; border-radius: 8px; line-height: 1.4; color: #444;
+    position: absolute; top: 875px; left: 0; width: 100%;
+    text-align: left; padding: 15px; font-size: 12px;
+    background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; line-height: 1.4; color: #334155;
  }
 </style>
 </head>
@@ -59,32 +63,32 @@
     </div>
 
     <label>Responsável</label>
-    <input type="text" id="inputResp" placeholder="Quem está operando?">
+    <input type="text" id="inputResp" placeholder="Ex: João Silva">
 
     <label>Status</label>
     <select id="selStatus">
-      <option value="valid">✅ Validada</option>
-      <option value="occ">🟠 Ocupada</option>
-      <option value="lock">🔒 Trancada</option>
-      <option value="prob">❌ Problema</option>
+      <option value="valid">✅ Validada (Verde Escuro)</option>
+      <option value="occ">🟠 Ocupada (Laranja Vivo)</option>
+      <option value="lock">🔒 Trancada (Grafite)</option>
+      <option value="prob">❌ Problema (Vermelho Alerta)</option>
       <option value="none">🗑️ Remover</option>
     </select>
 
     <label>Observações</label>
-    <textarea id="obsText" rows="2" placeholder="Notas rápidas..."></textarea>
+    <textarea id="obsText" rows="2" placeholder="Notas do dia..."></textarea>
 
     <button id="btnApply" style="background:var(--vivo-dark)">ATUALIZAR MAPA</button>
 
     <label style="margin-top:10px">Relatórios</label>
     <button id="btnAI" class="btn-ai">🤖 GERAR RELATÓRIO EXECUTIVO</button>
 
-    <button id="btnPNG" class="btn-png">📸 EXPORTAR PNG</button>
+    <button id="btnPNG" class="btn-png">📸 EXPORTAR EM 4K (ULTRA HD)</button>
     
-    <label style="margin-top:15px">Limpeza Individual</label>
+    <label style="margin-top:15px">Ferramentas de Limpeza</label>
     <div class="clean-bar">
         <button class="btn-clear-sub" id="btnClearSalas">Limpar Salas</button>
         <button class="btn-clear-sub" id="btnClearResumo">Limpar Resumo</button>
-        <button class="btn-clear-red" id="btnClearTudo">LIMPAR TUDO (RESET)</button>
+        <button class="btn-clear-red" id="btnClearTudo">RESET TOTAL DO SISTEMA</button>
     </div>
   </div>
 
@@ -93,10 +97,10 @@
       <div class="floors-labels-col" id="floorsCol"></div>
       <div class="facade-wrapper">
         <svg id="facade-svg" viewBox="0 0 320 860" xmlns="http://www.w3.org/2000/svg">
-          <rect width="320" height="860" rx="10" fill="#E6EAF0" stroke="#B9C1CE" stroke-width="1"/>
-          <text x="160" y="22" text-anchor="middle" font-weight="900" font-size="13" fill="#6A1B9A">VIVO</text>
-          <g id="winGroup" transform="translate(22,40)" fill="#DDE8F7" stroke="#BFC9D8"></g>
-          <rect y="820" width="320" height="40" fill="#D6CDE7" rx="0 0 10 10"/>
+          <rect width="320" height="860" rx="10" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1"/>
+          <text x="160" y="22" text-anchor="middle" font-weight="900" font-size="13" fill="#6A1B9A">VIVO - INFRAESTRUTURA</text>
+          <g id="winGroup" transform="translate(22,40)" fill="#E2E8F0" stroke="#CBD5E1"></g>
+          <rect y="820" width="320" height="40" fill="#E2E8F0" rx="0 0 10 10"/>
         </svg>
         <div class="overlay-badges" id="overlay"></div>
         <div id="footerNoteDisplay"></div>
@@ -108,7 +112,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "predio_vFINAL_FIX";
+const STORAGE_KEY = "predio_vULTRA_4K";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -143,32 +147,27 @@ function render() {
     b.style.top = (40 + row * 22) + "px"; b.style.left = (22 + col * 35) + "px";
     overlay.appendChild(b);
   });
-  
   const dataStr = new Date().toLocaleDateString('pt-BR');
   const resp = $("#inputResp").value || "---";
-  
-  $("#footerNoteDisplay").innerHTML = `<strong>Data:</strong> ${dataStr} | <strong>Responsável:</strong> ${resp}<br><strong>Obs:</strong> ${$("#obsText").value}<br><br>${resumoIA}`;
-  
+  $("#footerNoteDisplay").innerHTML = `<strong>Data:</strong> ${dataStr} | <strong>Responsável:</strong> ${resp}<br><strong>Observações:</strong> ${$("#obsText").value}<br><br>${resumoIA}`;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
   localStorage.setItem(STORAGE_KEY+"_resp", $("#inputResp").value);
   localStorage.setItem(STORAGE_KEY+"_obs", $("#obsText").value);
   localStorage.setItem(STORAGE_KEY+"_ai", resumoIA);
 }
 
-function getHex(s) { return s==='valid'?'#2ECC71': s==='occ'?'#FF9800': s==='lock'?'#9E9E9E':'#E53935'; }
+function getHex(s) { 
+    return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='lock'?'#424242':'#B71C1C'; 
+}
 
-// IA GERAR RESUMO
 $("#btnAI").onclick = () => {
     const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
     Object.values(rooms).forEach(s => stats[s]++);
-    const data = new Date().toLocaleDateString('pt-BR');
-    
-    resumoIA = `<strong>RESUMO EXECUTIVO:</strong> O prédio conta com ${stats.valid} salas validadas e ${stats.occ} ocupadas. Registramos ${stats.prob} alertas críticos que exigem atenção imediata do responsável.`;
+    resumoIA = `<strong>RELATÓRIO EXECUTIVO:</strong> Atualmente o edifício possui ${stats.valid} salas em conformidade (Verde) e ${stats.occ} em uso. Existem ${stats.prob} salas com pendências críticas.`;
     render();
 };
 
-// BOTÕES DE LIMPEZA INDIVIDUAL
-$("#btnClearSalas").onclick = () => { if(confirm("Limpar marcações das salas?")) { rooms = {}; render(); }};
+$("#btnClearSalas").onclick = () => { if(confirm("Limpar salas?")) { rooms = {}; render(); }};
 $("#btnClearResumo").onclick = () => { resumoIA = ""; render(); };
 $("#btnClearTudo").onclick = () => { if(confirm("Resetar tudo?")) { rooms={}; resumoIA=""; $("#inputResp").value=""; $("#obsText").value=""; localStorage.clear(); render(); }};
 
@@ -178,23 +177,33 @@ $("#btnApply").onclick = () => {
   render();
 };
 
+// --- EXPORTAÇÃO EM ULTRA RESOLUÇÃO (4K) ---
 $("#btnPNG").onclick = async () => {
-    const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
+    const btn = $("#btnPNG"); btn.textContent = "PROCESSANDO 4K...";
+    
+    // Multiplicador de escala: 4x para atingir qualidade ultra nítida
+    const SCALE = 4; 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = 400; canvas.height = 1000;
     
-    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,400,1000);
-    ctx.fillStyle = "#E6EAF0"; ctx.beginPath(); ctx.roundRect(75, 10, 320, 850, 10); ctx.fill();
+    canvas.width = 450 * SCALE; 
+    canvas.height = 1100 * SCALE;
+    ctx.scale(SCALE, SCALE);
+    
+    // Desenho com escala ajustada
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,450,1100);
+    ctx.fillStyle = "#F1F5F9"; ctx.beginPath(); ctx.roundRect(75, 10, 320, 850, 10); ctx.fill();
+    ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 0.5; ctx.stroke();
+
     ctx.fillStyle = "#6A1B9A"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText("VIVO", 235, 32);
+    ctx.fillText("VIVO - INFRAESTRUTURA", 235, 32);
 
     for(let f=32; f>=1; f--) {
         const row = 32 - f; const y = 40 + row * 22;
         ctx.fillStyle = "#6A1B9A"; ctx.textAlign = "right"; ctx.font = "bold 10px sans-serif";
         ctx.fillText("Andar "+f, 70, y + 10);
         for(let c=0; c<8; c++) {
-            ctx.fillStyle = "#DDE8F7"; ctx.strokeStyle = "#BFC9D8";
+            ctx.fillStyle = "#E2E8F0"; ctx.strokeStyle = "#CBD5E1";
             const winX = 75 + 22 + c * 35;
             ctx.beginPath(); ctx.roundRect(winX, y, 24, 12, 2); ctx.fill(); ctx.stroke();
         }
@@ -204,42 +213,41 @@ $("#btnPNG").onclick = async () => {
         const [f, r] = key.split('-').map(Number);
         const x = 75 + 22 + ((r-1)%8)*35, y = 40 + (32-f)*22;
         ctx.fillStyle = getHex(rooms[key]); ctx.beginPath(); ctx.roundRect(x, y, 24, 12, 2); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.font = "900 8px sans-serif"; ctx.textAlign = "center";
+        ctx.fillStyle = "#fff"; ctx.font = "bold 9px sans-serif"; ctx.textAlign = "center";
         ctx.fillText(String(r).padStart(2,'0'), x+12, y+9);
     });
 
-    // Rodapé PNG
-    ctx.fillStyle = "#444"; ctx.textAlign = "left"; ctx.font = "11px sans-serif";
-    ctx.fillText(`Data: ${new Date().toLocaleDateString('pt-BR')} | Resp: ${$("#inputResp").value || '---'}`, 20, 885);
-    ctx.font = "bold 11px sans-serif";
-    ctx.fillText(`Obs: ${$("#obsText").value}`, 20, 905);
+    // Rodapé em Alta Definição
+    ctx.fillStyle = "#1e293b"; ctx.textAlign = "left"; ctx.font = "12px sans-serif";
+    ctx.fillText(`Data: ${new Date().toLocaleDateString('pt-BR')} | Responsável: ${$("#inputResp").value || '---'}`, 20, 890);
     
-    // Resumo IA no PNG (Tratando tags HTML para texto puro)
+    ctx.font = "bold 11px sans-serif";
+    ctx.fillText(`Observações: ${$("#obsText").value}`, 20, 910);
+    
     if(resumoIA) {
-        ctx.fillStyle = "#3498db";
+        ctx.fillStyle = "#0277BD";
         const cleanAI = resumoIA.replace(/<\/?[^>]+(>|$)/g, "");
-        ctx.fillText("Resumo Executivo:", 20, 935);
-        ctx.font = "10px sans-serif";
-        ctx.fillStyle = "#666";
-        // Quebra automática simples para o resumo
-        const words = cleanAI.split(' ');
-        let line = '', yRel = 950;
+        ctx.fillText("RELATÓRIO EXECUTIVO:", 20, 940);
+        ctx.font = "11px sans-serif"; ctx.fillStyle = "#475569";
+        // Quebra de texto inteligente
+        const words = cleanAI.replace("RELATÓRIO EXECUTIVO: ", "").split(' ');
+        let line = '', yRel = 960;
         words.forEach(w => {
-            if((line + w).length > 60) { ctx.fillText(line, 20, yRel); line = w + ' '; yRel += 15; }
+            if((line + w).length > 65) { ctx.fillText(line, 20, yRel); line = w + ' '; yRel += 16; }
             else line += w + ' ';
         });
         ctx.fillText(line, 20, yRel);
     }
 
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "mapa_vivo.png", { type: "image/png" });
+        const file = new File([blob], "mapa_infra_4K.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: "Mapa Vivo" });
+            await navigator.share({ files: [file], title: "Mapa 4K" });
         } else {
-            const link = document.createElement("a"); link.download = "mapa_vivo.png";
+            const link = document.createElement("a"); link.download = "mapa_infra_4K.png";
             link.href = URL.createObjectURL(blob); link.click();
         }
-        btn.textContent = "📸 EXPORTAR PNG";
+        btn.textContent = "📸 EXPORTAR EM 4K (ULTRA HD)";
     }, "image/png");
 };
 
