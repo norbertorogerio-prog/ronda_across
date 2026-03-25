@@ -25,8 +25,9 @@
  body {
     background: linear-gradient(135deg, #0a2f1a 0%, #1a4a2a 100%);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    padding: 16px;
+    padding: 12px;
     min-height: 100vh;
+    overflow-x: hidden;
  }
 
  .app {
@@ -34,9 +35,10 @@
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
  }
 
+ /* Layout responsivo */
  @media (min-width: 1024px) {
     .app {
         display: grid;
@@ -47,40 +49,43 @@
 
  .card {
     background: rgba(255,255,255,0.95);
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    padding: 16px;
     backdrop-filter: blur(2px);
+    overflow-x: hidden;
  }
 
+ /* Stats grid responsivo */
  .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 8px;
+    margin-bottom: 20px;
  }
 
  .stat-box {
     text-align: center;
-    padding: 12px 8px;
-    border-radius: 16px;
+    padding: 10px 4px;
+    border-radius: 14px;
     color: #fff;
-    font-weight: 800;
-    font-size: 12px;
+    font-weight: 700;
+    font-size: 11px;
     transition: transform 0.2s;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
  }
 
- .stat-box:active { transform: scale(0.95); }
- .stat-number { font-size: 28px; font-weight: 900; display: block; margin-bottom: 4px; }
+ .stat-box:active { transform: scale(0.96); }
+ .stat-number { font-size: 22px; font-weight: 900; display: block; margin-bottom: 2px; }
 
+ /* Formulários responsivos */
  label {
     font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
     color: #2c3e50;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     display: block;
     letter-spacing: 0.5px;
  }
@@ -88,11 +93,11 @@
  select, input, textarea, button {
     width: 100%;
     border: 2px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 12px 14px;
+    border-radius: 12px;
+    padding: 10px 12px;
     font-size: 14px;
     font-family: inherit;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     transition: all 0.2s;
     background: white;
  }
@@ -103,7 +108,7 @@
     box-shadow: 0 0 0 3px rgba(106,27,154,0.1);
  }
 
- textarea { resize: vertical; min-height: 70px; }
+ textarea { resize: vertical; min-height: 60px; }
 
  .btn-apply {
     background: linear-gradient(135deg, var(--vivo), var(--vivo-dark));
@@ -140,72 +145,76 @@
     cursor: pointer;
     font-size: 12px;
     padding: 8px;
-    border-radius: 12px;
+    border-radius: 10px;
     font-weight: 600;
  }
 
  .viewer-card {
-    padding: 20px;
+    padding: 16px;
     background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    max-width: 100%;
  }
 
- .building-container { min-width: 380px; max-width: 100%; margin: 0 auto; }
+ .building-container {
+    min-width: 320px;
+    max-width: 100%;
+    margin: 0 auto;
+ }
 
- /* Prédio Realista com Vidraça */
+ /* Prédio Realista */
  .real-building {
     position: relative;
     background: linear-gradient(180deg, #1a2a3a 0%, #0f1a24 100%);
-    border-radius: 20px 20px 12px 12px;
+    border-radius: 16px 16px 12px 12px;
     overflow: hidden;
-    box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
     border: 1px solid rgba(255,215,0,0.3);
  }
 
- /* NOVA COBERTURA COM OUTDOOR DA VIVO */
+ /* Cobertura com Outdoor */
  .cobertura {
     position: relative;
-    height: 85px;
+    padding: 12px 8px;
     background: linear-gradient(135deg, #2c3e50, #1a2632);
     border-radius: 16px 16px 0 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-shadow: inset 0 1px 3px rgba(255,255,255,0.2), 0 4px 12px rgba(0,0,0,0.4);
+    gap: 8px;
+    box-shadow: inset 0 1px 3px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.3);
     border-bottom: 2px solid var(--gold);
  }
 
  .outdoor-vivo {
     background: linear-gradient(135deg, #660099, #4A0072);
-    padding: 8px 24px;
-    border-radius: 40px;
+    padding: 6px 16px;
+    border-radius: 30px;
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,215,0,0.6);
-    margin-bottom: 8px;
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,215,0,0.5);
  }
 
  .outdoor-vivo span {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 900;
     color: white;
-    letter-spacing: 2px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 1px;
  }
 
  .outdoor-vivo small {
-    font-size: 12px;
+    font-size: 9px;
     color: var(--gold);
     font-weight: bold;
  }
 
  .antenas-area {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     justify-content: center;
     align-items: center;
  }
@@ -214,32 +223,30 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
  }
 
  .antena-base {
-    width: 35px;
-    height: 35px;
+    width: 28px;
+    height: 28px;
     background: linear-gradient(135deg, #bdc3c7, #95a5a6);
     border-radius: 50% 50% 30% 30%;
     position: relative;
-    animation: pulseAntena 3s infinite;
+    animation: pulseAntena 2s infinite;
  }
 
  .antena-base::before {
     content: "📡";
     position: absolute;
-    top: -25px;
-    left: 5px;
-    font-size: 28px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    top: -20px;
+    left: 2px;
+    font-size: 22px;
  }
 
  .antena-moderna span {
-    font-size: 9px;
+    font-size: 8px;
     color: var(--gold);
     font-weight: bold;
-    text-transform: uppercase;
  }
 
  @keyframes pulseAntena {
@@ -249,73 +256,74 @@
 
  .cobertura-text {
     color: #ffd966;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
-    text-shadow: 0 1px 2px black;
-    margin-top: 4px;
  }
 
+ /* Container dos andares - scroll suave */
  .floors-container {
-    max-height: 65vh;
+    max-height: 55vh;
     overflow-y: auto;
-    padding: 8px;
+    padding: 6px;
     background: rgba(0,0,0,0.3);
  }
 
- .floors-container::-webkit-scrollbar { width: 6px; }
- .floors-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); border-radius: 3px; }
- .floors-container::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+ .floors-container::-webkit-scrollbar {
+    width: 4px;
+ }
+ .floors-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.5);
+    border-radius: 2px;
+ }
+ .floors-container::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 2px;
+ }
 
- /* Fachada de Vidro por Andar */
+ /* Linha de cada andar */
  .floor-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-    padding: 6px 12px;
-    border-radius: 12px;
+    gap: 8px;
+    margin-bottom: 6px;
+    padding: 4px 8px;
+    border-radius: 10px;
     background: linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
     transition: all 0.2s;
  }
 
- .floor-row:hover {
-    background: linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.3));
- }
-
  .floor-number {
-    width: 55px;
-    font-size: 13px;
+    width: 50px;
+    font-size: 11px;
     font-weight: 800;
     color: #ffd966;
     text-align: right;
-    padding-right: 10px;
+    padding-right: 6px;
     flex-shrink: 0;
-    text-shadow: 0 1px 2px black;
-    letter-spacing: 1px;
+    text-shadow: 0 1px 1px black;
  }
 
- /* Vidraça Única do Andar - SEM "Vidraça Espelhada" */
+ /* Vidraça */
  .glass-facade {
     flex: 1;
     background: linear-gradient(145deg, rgba(100,150,200,0.3), rgba(50,80,120,0.5));
     backdrop-filter: blur(2px);
-    border-radius: 12px;
-    padding: 8px 12px;
-    min-height: 65px;
+    border-radius: 10px;
+    padding: 6px 8px;
+    min-height: 52px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    gap: 8px;
+    gap: 6px;
     border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
     position: relative;
     overflow: hidden;
  }
 
- /* Efeito de reflexo na vidraça */
  .glass-facade::before {
     content: "";
     position: absolute;
@@ -323,7 +331,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
     animation: shine 8s infinite;
  }
 
@@ -331,133 +339,150 @@
     100% { left: 100%; }
  }
 
- /* Selos das Salas sobre o vidro */
+ /* Tags das salas */
  .room-tag {
     background: rgba(0,0,0,0.75);
     backdrop-filter: blur(4px);
-    border-radius: 20px;
-    padding: 6px 12px;
+    border-radius: 16px;
+    padding: 4px 8px;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 12px;
+    gap: 4px;
+    font-size: 10px;
     font-weight: bold;
     border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     transition: transform 0.2s;
     cursor: pointer;
  }
 
  .room-tag:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
  }
 
- .room-tag.valid { border-left: 3px solid #27ae60; background: rgba(39,174,96,0.3); }
- .room-tag.occ { border-left: 3px solid #f39c12; background: rgba(243,156,18,0.3); }
- .room-tag.lock { border-left: 3px solid #7f8c8d; background: rgba(127,140,141,0.3); }
- .room-tag.prob { border-left: 3px solid #e74c3c; background: rgba(231,76,60,0.3); animation: tagPulse 1s infinite; }
+ .room-tag.valid { border-left: 2px solid #27ae60; background: rgba(39,174,96,0.3); }
+ .room-tag.occ { border-left: 2px solid #f39c12; background: rgba(243,156,18,0.3); }
+ .room-tag.lock { border-left: 2px solid #7f8c8d; background: rgba(127,140,141,0.3); }
+ .room-tag.prob { border-left: 2px solid #e74c3c; background: rgba(231,76,60,0.3); animation: tagPulse 1s infinite; }
 
  @keyframes tagPulse {
-    0%, 100% { box-shadow: 0 0 2px rgba(231,76,60,0.5); }
-    50% { box-shadow: 0 0 8px rgba(231,76,60,0.8); }
+    0%, 100% { box-shadow: 0 0 1px rgba(231,76,60,0.5); }
+    50% { box-shadow: 0 0 5px rgba(231,76,60,0.8); }
  }
 
  .room-number-tag {
     font-weight: 800;
     color: white;
-    font-size: 13px;
+    font-size: 10px;
  }
 
  .room-status-tag {
-    font-size: 14px;
+    font-size: 11px;
  }
 
- /* NOVO HALL DE ENTRADA - Portas do chão ao teto, apenas 2 portas */
+ /* Hall com 2 portas */
  .hall-entrada {
     background: linear-gradient(135deg, #2c3e50, #1a2632);
     border-top: 2px solid var(--gold);
-    padding: 25px 20px;
+    padding: 16px 12px;
     display: flex;
     justify-content: center;
-    gap: 60px;
+    gap: 30px;
     position: relative;
-    min-height: 140px;
+    min-height: 100px;
     align-items: center;
+    flex-wrap: wrap;
  }
 
  .glass-door-full {
-    width: 100px;
-    height: 100%;
-    min-height: 110px;
+    width: 85px;
+    min-height: 85px;
     background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.15));
     backdrop-filter: blur(8px);
-    border-radius: 12px;
-    border: 2px solid rgba(255,215,0,0.7);
-    box-shadow: 0 0 20px rgba(255,215,0,0.4);
+    border-radius: 10px;
+    border: 2px solid rgba(255,215,0,0.6);
+    box-shadow: 0 0 12px rgba(255,215,0,0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    transition: all 0.3s;
- }
-
- .glass-door-full:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 30px rgba(255,215,0,0.6);
+    gap: 4px;
+    position: relative;
+    padding: 12px 8px;
  }
 
  .door-handle {
-    width: 8px;
-    height: 35px;
+    width: 6px;
+    height: 25px;
     background: var(--gold);
-    border-radius: 4px;
+    border-radius: 3px;
     position: absolute;
-    right: 15px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
  }
 
  .glass-door-full span {
     color: var(--gold);
-    font-size: 11px;
+    font-size: 9px;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    text-align: center;
     background: rgba(0,0,0,0.5);
-    padding: 4px 8px;
-    border-radius: 20px;
+    padding: 3px 6px;
+    border-radius: 12px;
  }
 
  .hall-text {
     text-align: center;
     color: var(--gold);
-    font-size: 11px;
+    font-size: 9px;
     font-weight: bold;
-    letter-spacing: 1.5px;
-    margin-top: 8px;
-    padding-bottom: 12px;
-    text-shadow: 0 1px 2px black;
+    letter-spacing: 1px;
+    margin-top: 4px;
+    padding-bottom: 8px;
+    text-shadow: 0 1px 1px black;
  }
 
  .footer-note {
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     backdrop-filter: blur(10px);
-    margin-top: 16px;
-    padding: 14px;
-    border-radius: 12px;
-    border-left: 4px solid var(--gold);
-    font-size: 11px;
-    line-height: 1.5;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    border-left: 3px solid var(--gold);
+    font-size: 10px;
+    line-height: 1.4;
     color: #e2e8f0;
     white-space: pre-wrap;
+    word-break: break-word;
  }
 
- .quick-group { display: flex; gap: 8px; }
- .quick-group input { flex: 1; margin-bottom: 0; }
- .quick-group button { width: 60px; margin-bottom: 0; background: #444; color: white; }
- .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+ .quick-group { 
+    display: flex; 
+    gap: 8px; 
+ }
+ .quick-group input { 
+    flex: 1; 
+    margin-bottom: 0; 
+    font-size: 13px;
+ }
+ .quick-group button { 
+    width: 55px; 
+    margin-bottom: 0; 
+    background: #444; 
+    color: white;
+    font-size: 12px;
+    padding: 10px;
+ }
+ .button-group { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 8px; 
+    margin-top: 8px; 
+ }
 
+ /* Modal de download */
  .download-modal {
     position: fixed;
     top: 0;
@@ -470,25 +495,159 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 16px;
     animation: fadeIn 0.3s;
  }
  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
- .download-modal img { max-width: 100%; max-height: 70vh; border-radius: 16px; box-shadow: 0 20px 40px black; }
- .download-modal p { color: white; margin-top: 20px; font-size: 14px; text-align: center; }
- .download-modal button { width: auto; padding: 12px 24px; margin-top: 20px; background: var(--vivo); color: white; border: none; border-radius: 30px; }
+ .download-modal img { 
+    max-width: 95%; 
+    max-height: 70vh; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 25px black; 
+ }
+ .download-modal p { 
+    color: white; 
+    margin-top: 16px; 
+    font-size: 12px; 
+    text-align: center; 
+ }
+ .download-modal button { 
+    width: auto; 
+    padding: 10px 20px; 
+    margin-top: 16px; 
+    background: var(--vivo); 
+    color: white; 
+    border: none; 
+    border-radius: 25px; 
+    font-size: 14px;
+ }
 
+ /* Ajustes específicos para mobile */
  @media (max-width: 640px) {
-    body { padding: 12px; }
-    .room-tag { padding: 4px 8px; font-size: 10px; }
-    .room-number-tag { font-size: 11px; }
-    .floor-number { width: 45px; font-size: 11px; }
-    .glass-facade { min-height: 55px; }
-    .glass-door-full { width: 70px; min-height: 90px; }
-    .hall-entrada { gap: 30px; }
-    .outdoor-vivo span { font-size: 16px; }
-    .outdoor-vivo { padding: 4px 16px; }
-    .cobertura { height: 75px; }
+    body { 
+        padding: 8px; 
+    }
+    
+    .card { 
+        padding: 12px; 
+        border-radius: 16px;
+    }
+    
+    .stats-grid {
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+    
+    .stat-box {
+        padding: 8px 2px;
+        font-size: 10px;
+    }
+    
+    .stat-number {
+        font-size: 18px;
+    }
+    
+    .floor-number {
+        width: 45px;
+        font-size: 10px;
+    }
+    
+    .glass-facade {
+        padding: 5px 6px;
+        min-height: 48px;
+    }
+    
+    .room-tag {
+        padding: 3px 6px;
+        font-size: 9px;
+    }
+    
+    .room-number-tag {
+        font-size: 9px;
+    }
+    
+    .glass-door-full {
+        width: 70px;
+        min-height: 75px;
+        padding: 8px 4px;
+    }
+    
+    .glass-door-full span {
+        font-size: 8px;
+    }
+    
+    .door-handle {
+        right: 5px;
+        width: 4px;
+        height: 20px;
+    }
+    
+    .hall-entrada {
+        gap: 20px;
+        padding: 12px 8px;
+    }
+    
+    .outdoor-vivo span {
+        font-size: 14px;
+    }
+    
+    .outdoor-vivo {
+        padding: 4px 12px;
+    }
+    
+    .antena-base {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .antena-base::before {
+        font-size: 18px;
+        top: -16px;
+        left: 0px;
+    }
+    
+    .cobertura {
+        padding: 10px 6px;
+        gap: 6px;
+    }
+    
+    .floors-container {
+        max-height: 50vh;
+    }
+ }
+
+ /* Ajustes para telas muito pequenas */
+ @media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .floor-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .floor-number {
+        width: auto;
+        text-align: left;
+        padding-left: 8px;
+    }
+    
+    .glass-facade {
+        width: 100%;
+    }
+    
+    .hall-entrada {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .glass-door-full {
+        width: 80%;
+        max-width: 200px;
+    }
  }
 </style>
 </head>
@@ -503,16 +662,16 @@
             <div class="stat-box" style="background:#e74c3c"><span class="stat-number" id="stProb">0</span><span>PROBLEMAS</span></div>
         </div>
 
-        <label>👤 Responsável</label>
+        <label>👤 RESPONSÁVEL</label>
         <input type="text" id="inputResp" placeholder="Nome completo">
 
-        <label>📍 Localização</label>
-        <div style="display:flex; gap:8px">
-            <select id="selFloor" style="flex:1"></select>
-            <select id="selRoom" style="flex:1"></select>
+        <label>📍 LOCALIZAÇÃO</label>
+        <div style="display:flex; gap:8px; flex-wrap: wrap;">
+            <select id="selFloor" style="flex:1; min-width: 100px;"></select>
+            <select id="selRoom" style="flex:1; min-width: 100px;"></select>
         </div>
 
-        <label>📌 Status</label>
+        <label>📌 STATUS</label>
         <select id="selStatus">
             <option value="valid">✅ Validada</option>
             <option value="occ">🟠 Ocupada</option>
@@ -521,30 +680,29 @@
             <option value="none">🗑️ Remover</option>
         </select>
 
-        <label>📝 Observações</label>
-        <textarea id="obsText" rows="2" placeholder="Observações..."></textarea>
+        <label>📝 OBSERVAÇÕES</label>
+        <textarea id="obsText" rows="2" placeholder="Sem observações."></textarea>
 
-        <label>⚡ Atalho</label>
+        <label>⚡ ATALHO</label>
         <div class="quick-group">
             <input id="quickInput" type="text" placeholder="32-05-v">
             <button id="btnQuick">OK</button>
         </div>
-        <small style="font-size:10px; color:#666; margin-top:-8px;">Formato: Andar-Sala-status (v/o/t/p) | Sala 1-50</small>
+        <small style="font-size:9px; color:#666; margin-top:-6px;">Formato: Andar-Sala-status (v/o/t/p) | Sala 1-50</small>
 
-        <button id="btnApply" class="btn-apply">✓ Aplicar</button>
-        <button id="btnAI" class="btn-ai">🤖 Relatório IA</button>
-        <button id="btnPNG" class="btn-png">📸 Exportar Prédio</button>
+        <button id="btnApply" class="btn-apply">✓ APLICAR</button>
+        <button id="btnAI" class="btn-ai">🤖 RELATÓRIO IA</button>
+        <button id="btnPNG" class="btn-png">📸 EXPORTAR PRÉDIO</button>
         
         <div class="button-group">
-            <button id="btnClearSalas" class="btn-clear">🗑️ Limpar Tudo</button>
-            <button id="btnClearResumo" class="btn-clear">📋 Limpar Relatório</button>
+            <button id="btnClearSalas" class="btn-clear">🗑️ LIMPAR TUDO</button>
+            <button id="btnClearResumo" class="btn-clear">📋 LIMPAR RELATÓRIO</button>
         </div>
     </div>
 
     <div class="card viewer-card">
         <div class="building-container">
             <div class="real-building">
-                <!-- NOVA COBERTURA COM OUTDOOR VIVO -->
                 <div class="cobertura">
                     <div class="outdoor-vivo">
                         <span>📱 VIVO 5G+</span>
@@ -563,16 +721,15 @@
                     <div class="cobertura-text">TELECOM • CONECTIVIDADE TOTAL</div>
                 </div>
                 <div class="floors-container" id="floorsContainer"></div>
-                <!-- NOVO HALL - APENAS 2 PORTAS DO CHÃO AO TETO -->
                 <div class="hall-entrada">
                     <div class="glass-door-full" style="position: relative;">
                         <span>🚪 ACESSO</span>
-                        <span style="font-size: 9px;">VIVO CORPORATIVO</span>
+                        <span style="font-size: 8px;">VIVO CORPORATIVO</span>
                         <div class="door-handle"></div>
                     </div>
                     <div class="glass-door-full" style="position: relative;">
                         <span>🚪 ACESSO</span>
-                        <span style="font-size: 9px;">ÁREA TÉCNICA</span>
+                        <span style="font-size: 8px;">ÁREA TÉCNICA</span>
                         <div class="door-handle"></div>
                     </div>
                 </div>
@@ -584,7 +741,7 @@
 </div>
 
 <script>
-const STORAGE_KEY = "vivo_predio_v20";
+const STORAGE_KEY = "vivo_predio_v21";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
 const TOTAL_FLOORS = 32;
@@ -595,19 +752,12 @@ function getStatusIcon(status) {
     return icons[status] || '';
 }
 
-function getStatusColor(status) {
-    const colors = { valid: '#27ae60', occ: '#f39c12', lock: '#7f8c8d', prob: '#e74c3c' };
-    return colors[status] || '';
-}
-
-// Função para calcular o tamanho da sala baseado no andar (diminui gradualmente)
+// Função para ajustar tamanho das salas por andar
 function getRoomSizeModifier(floor) {
-    // Andares superiores têm salas menores (mais compactas)
-    // Quanto maior o andar, menor a sala (para caber melhor)
     return Math.max(0.7, 1 - (floor / TOTAL_FLOORS) * 0.3);
 }
 
-// ==================== RENDER PRÉDIO COM VIDRAÇA E SALAS AJUSTADAS ====================
+// Renderização do prédio
 function renderBuilding() {
     const container = document.getElementById("floorsContainer");
     if (!container) return;
@@ -636,9 +786,8 @@ function renderBuilding() {
         `;
         
         if (salas.length === 0) {
-            html += `<div style="color:rgba(255,255,255,0.5); font-size:11px; padding:8px; font-style:italic;">—— DISPONÍVEL PARA AUDITORIA ——</div>`;
+            html += `<div style="color:rgba(255,255,255,0.5); font-size:10px; padding:5px; font-style:italic;">—— DISPONÍVEL ——</div>`;
         } else {
-            // Aplica o modificador de tamanho nas salas (quanto maior o andar, mais compactas)
             const maxRoomsToShow = Math.max(3, Math.floor(8 * sizeModifier));
             const salasToShow = salas.slice(0, maxRoomsToShow);
             
@@ -654,7 +803,7 @@ function renderBuilding() {
             });
             
             if (salas.length > maxRoomsToShow) {
-                html += `<div style="color:rgba(255,255,255,0.6); font-size:10px; margin-left: 4px;">+${salas.length - maxRoomsToShow} salas</div>`;
+                html += `<div style="color:rgba(255,255,255,0.6); font-size:9px;">+${salas.length - maxRoomsToShow}</div>`;
             }
         }
         
@@ -679,7 +828,7 @@ function handleRoomClick(e) {
     const [floor, room] = roomKey.split('-');
     document.getElementById("selFloor").value = floor;
     document.getElementById("selRoom").value = room;
-    tag.style.transform = 'scale(0.95)';
+    tag.style.transform = 'scale(0.96)';
     setTimeout(() => { tag.style.transform = ''; }, 150);
 }
 
@@ -698,10 +847,9 @@ function updateFooter() {
     const auditor = document.getElementById("inputResp")?.value || 'Não informado';
     const obs = document.getElementById("obsText")?.value || 'Sem observações.';
     document.getElementById("footerNoteDisplay").innerHTML = `
-        🏢 ${dataStr} | 👤 Auditor: ${auditor}<br>
-        ─────────────────────────────────<br>
-        📝 OBS: ${obs}<br><br>
-        ${resumoIA || '🤖 Clique em "Relatório IA" para análise automática.'}
+🏢 ${dataStr} | 👤 Auditor: ${auditor}<br>
+📝 OBS: ${obs}<br><br>
+${resumoIA || '🤖 Clique em "Relatório IA" para análise automática.'}
     `;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
     localStorage.setItem(STORAGE_KEY + "_resp", auditor);
@@ -714,7 +862,7 @@ function generateAIRelatorio() {
     const total = Object.keys(rooms).length;
     const andaresProb = new Set();
     Object.entries(rooms).forEach(([k, s]) => { if (s === 'prob') andaresProb.add(k.split('-')[0]); });
-    resumoIA = `🏢 RELATÓRIO EXECUTIVO\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📊 TOTAL AUDITADAS: ${total}\n✅ VALIDADAS: ${stats.valid}\n🟠 OCUPADAS: ${stats.occ}\n🔒 TRANCADAS: ${stats.lock}\n❌ PROBLEMAS: ${stats.prob}\n\n${andaresProb.size > 0 ? `⚠️ Andares com falhas: ${Array.from(andaresProb).sort((a,b)=>b-a).join(', ')}º` : '✅ SEM FALHAS CRÍTICAS'}`;
+    resumoIA = `🏢 RELATÓRIO EXECUTIVO\n━━━━━━━━━━━━━━━━━━━━━━\n📊 TOTAL: ${total}\n✅ VALIDADAS: ${stats.valid}\n🟠 OCUPADAS: ${stats.occ}\n🔒 TRANCADAS: ${stats.lock}\n❌ PROBLEMAS: ${stats.prob}\n\n${andaresProb.size > 0 ? `⚠️ Andares com falhas: ${Array.from(andaresProb).sort((a,b)=>b-a).join(', ')}º` : '✅ SEM FALHAS CRÍTICAS'}`;
     updateFooter();
     const btn = document.getElementById("btnAI");
     const orig = btn.textContent;
@@ -722,11 +870,10 @@ function generateAIRelatorio() {
     setTimeout(() => { btn.textContent = orig; }, 1500);
 }
 
-// ==================== EXPORT PRÉDIO REALISTA ====================
 function exportToPNG() {
     const btn = document.getElementById("btnPNG");
     const originalText = btn.textContent;
-    btn.textContent = "🏢 GERANDO PRÉDIO...";
+    btn.textContent = "🏢 GERANDO...";
     btn.disabled = true;
     
     setTimeout(() => {
@@ -734,55 +881,28 @@ function exportToPNG() {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
             
-            const scale = 2.2;
-            canvas.width = 700 * scale;
-            canvas.height = 2100 * scale;
+            const scale = 1.8;
+            canvas.width = 600 * scale;
+            canvas.height = 1900 * scale;
             ctx.scale(scale, scale);
             
-            // Céu e fundo
-            const gradSky = ctx.createLinearGradient(0, 0, 0, 2100);
-            gradSky.addColorStop(0, "#0a2f3a");
-            gradSky.addColorStop(0.5, "#1a4a5a");
-            gradSky.addColorStop(1, "#2c5e6a");
-            ctx.fillStyle = gradSky;
-            ctx.fillRect(0, 0, 700, 2100);
+            ctx.fillStyle = "#0a2f3a";
+            ctx.fillRect(0, 0, 600, 1900);
             
-            // Prédio principal
             ctx.fillStyle = "#0f1a24";
-            ctx.fillRect(40, 35, 620, 1960);
+            ctx.fillRect(30, 30, 540, 1750);
             
-            // Estrutura metálica
-            ctx.fillStyle = "#4a5b6e";
-            ctx.fillRect(45, 35, 8, 1960);
-            ctx.fillRect(647, 35, 8, 1960);
-            
-            // COBERTURA COM OUTDOOR VIVO
+            // Cobertura
             ctx.fillStyle = "#2c3e50";
-            ctx.fillRect(40, 35, 620, 85);
+            ctx.fillRect(30, 30, 540, 70);
             ctx.fillStyle = "#4A0072";
-            ctx.fillRect(240, 48, 220, 35);
+            ctx.fillRect(200, 42, 200, 28);
             ctx.fillStyle = "white";
-            ctx.font = "bold 14px sans-serif";
-            ctx.fillText("VIVO 5G+", 290, 72);
-            ctx.fillStyle = "#f1c40f";
-            ctx.font = "bold 9px sans-serif";
-            ctx.fillText("INFRAESTRUTURA", 305, 88);
+            ctx.font = "bold 12px sans-serif";
+            ctx.fillText("VIVO 5G+", 250, 62);
             
-            // Antenas modernas
-            ctx.fillStyle = "#bdc3c7";
-            ctx.fillRect(320, 20, 12, 28);
-            ctx.fillRect(360, 20, 12, 28);
-            ctx.fillStyle = "#f1c40f";
-            ctx.beginPath();
-            ctx.arc(326, 20, 5, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(366, 20, 5, 0, Math.PI*2);
-            ctx.fill();
-            
-            // ANDARES COM VIDRAÇA E SALAS AJUSTADAS
-            let yOffset = 125;
-            const floorHeight = 52;
+            let yOffset = 110;
+            const floorHeight = 48;
             
             const floorsMap = new Map();
             for (let f = 1; f <= TOTAL_FLOORS; f++) floorsMap.set(f, []);
@@ -794,119 +914,55 @@ function exportToPNG() {
             for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
                 const salas = floorsMap.get(floor);
                 salas.sort((a, b) => a.room - b.room);
-                const sizeModifier = getRoomSizeModifier(floor);
                 
-                // Número do andar
                 ctx.fillStyle = "#ffd966";
-                ctx.font = "bold 10px sans-serif";
-                ctx.fillText(`${floor}º`, 20, yOffset + 28);
+                ctx.font = "bold 9px sans-serif";
+                ctx.fillText(`${floor}º`, 10, yOffset + 25);
                 
-                // VIDRAÇA ÚNICA DO ANDAR
-                const glassGrad = ctx.createLinearGradient(45, yOffset, 665, yOffset + floorHeight);
+                const glassGrad = ctx.createLinearGradient(35, yOffset, 595, yOffset + floorHeight);
                 glassGrad.addColorStop(0, "rgba(100,150,200,0.25)");
-                glassGrad.addColorStop(0.5, "rgba(70,110,150,0.4)");
                 glassGrad.addColorStop(1, "rgba(50,80,120,0.35)");
                 ctx.fillStyle = glassGrad;
-                ctx.fillRect(48, yOffset, 604, floorHeight - 2);
+                ctx.fillRect(38, yOffset, 524, floorHeight - 2);
                 
-                // Moldura
                 ctx.strokeStyle = "rgba(255,215,0,0.4)";
-                ctx.lineWidth = 1;
-                ctx.strokeRect(48, yOffset, 604, floorHeight - 2);
+                ctx.strokeRect(38, yOffset, 524, floorHeight - 2);
                 
-                // SELOS DAS SALAS COM TAMANHO AJUSTADO
-                let xPos = 65;
-                const maxPerFloor = Math.min(salas.length, Math.floor(6 * sizeModifier));
-                const tagWidth = 90;
-                
-                for (let i = 0; i < maxPerFloor; i++) {
-                    const sala = salas[i];
-                    let borderColor = "#7f8c8d";
-                    if (sala.status === 'valid') borderColor = "#27ae60";
-                    else if (sala.status === 'occ') borderColor = "#f39c12";
-                    else if (sala.status === 'prob') borderColor = "#e74c3c";
-                    
-                    ctx.fillStyle = "rgba(0,0,0,0.7)";
-                    ctx.fillRect(xPos, yOffset + 8, tagWidth, 36);
-                    ctx.strokeStyle = borderColor;
-                    ctx.lineWidth = 1.5;
-                    ctx.strokeRect(xPos, yOffset + 8, tagWidth, 36);
-                    
-                    ctx.fillStyle = "white";
-                    ctx.font = `bold ${Math.max(9, Math.floor(11 * sizeModifier))}px sans-serif`;
-                    ctx.fillText(`SALA ${sala.room}`, xPos + 6, yOffset + 28);
-                    
-                    let icon = "";
-                    if (sala.status === 'valid') icon = "✅";
-                    else if (sala.status === 'occ') icon = "🟠";
-                    else if (sala.status === 'lock') icon = "🔒";
-                    else if (sala.status === 'prob') icon = "❌";
-                    ctx.fillText(icon, xPos + tagWidth - 16, yOffset + 28);
-                    
-                    xPos += tagWidth + 6;
-                    if (xPos > 580) break;
-                }
-                
-                if (salas.length === 0) {
+                if (salas.length > 0) {
+                    let xPos = 50;
+                    const maxShow = Math.min(salas.length, 5);
+                    for (let i = 0; i < maxShow; i++) {
+                        const sala = salas[i];
+                        ctx.fillStyle = "rgba(0,0,0,0.7)";
+                        ctx.fillRect(xPos, yOffset + 6, 80, 32);
+                        ctx.fillStyle = "white";
+                        ctx.font = "bold 8px sans-serif";
+                        ctx.fillText(`SALA ${sala.room}`, xPos + 5, yOffset + 25);
+                        
+                        let icon = sala.status === 'valid' ? "✅" : sala.status === 'occ' ? "🟠" : sala.status === 'lock' ? "🔒" : "❌";
+                        ctx.fillText(icon, xPos + 68, yOffset + 25);
+                        xPos += 88;
+                        if (xPos > 540) break;
+                    }
+                } else {
                     ctx.fillStyle = "rgba(255,255,255,0.4)";
-                    ctx.font = "italic 9px sans-serif";
-                    ctx.fillText("DISPONÍVEL", 330, yOffset + 32);
+                    ctx.font = "italic 8px sans-serif";
+                    ctx.fillText("DISPONÍVEL", 280, yOffset + 28);
                 }
                 
                 yOffset += floorHeight;
-                if (yOffset > 1950) break;
+                if (yOffset > 1720) break;
             }
             
-            // HALL COM APENAS 2 PORTAS DO CHÃO AO TETO
+            // Hall
             ctx.fillStyle = "#1e2a36";
-            ctx.fillRect(40, yOffset, 620, 100);
-            
-            // Portas de vidro do chão ao teto
-            const doorGrad = ctx.createLinearGradient(240, yOffset + 10, 460, yOffset + 90);
-            doorGrad.addColorStop(0, "rgba(255,255,255,0.4)");
-            doorGrad.addColorStop(1, "rgba(255,255,255,0.15)");
-            
-            ctx.fillStyle = doorGrad;
-            ctx.fillRect(240, yOffset + 8, 100, 84);
-            ctx.fillRect(400, yOffset + 8, 100, 84);
-            
+            ctx.fillRect(30, yOffset, 540, 85);
+            ctx.fillStyle = "rgba(255,255,255,0.3)";
+            ctx.fillRect(210, yOffset + 10, 85, 65);
+            ctx.fillRect(320, yOffset + 10, 85, 65);
             ctx.strokeStyle = "#ffd966";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(240, yOffset + 8, 100, 84);
-            ctx.strokeRect(400, yOffset + 8, 100, 84);
-            
-            // Maçanetas
-            ctx.fillStyle = "#f1c40f";
-            ctx.fillRect(330, yOffset + 48, 4, 20);
-            ctx.fillRect(490, yOffset + 48, 4, 20);
-            
-            ctx.fillStyle = "#ffd966";
-            ctx.font = "bold 9px sans-serif";
-            ctx.fillText("ACESSO VIVO", 265, yOffset + 65);
-            ctx.fillText("ÁREA TÉCNICA", 425, yOffset + 65);
-            
-            yOffset += 110;
-            
-            // RODAPÉ
-            ctx.fillStyle = "rgba(0,0,0,0.7)";
-            ctx.fillRect(40, yOffset, 620, 115);
-            ctx.fillStyle = "#e2e8f0";
-            ctx.font = "10px sans-serif";
-            
-            const dataStr = new Date().toLocaleDateString('pt-BR');
-            const auditor = document.getElementById("inputResp")?.value || '---';
-            const obs = document.getElementById("obsText")?.value || 'Sem notas.';
-            
-            ctx.fillText(`📅 ${dataStr} | 👤 Auditor: ${auditor}`, 55, yOffset + 18);
-            ctx.fillText(`📝 OBS: ${obs.substring(0, 85)}`, 55, yOffset + 38);
-            
-            ctx.font = "9px sans-serif";
-            const lines = resumoIA.split('\n');
-            let textY = yOffset + 62;
-            for (let i = 0; i < Math.min(lines.length, 4); i++) {
-                ctx.fillText(lines[i].substring(0, 85), 55, textY);
-                textY += 15;
-            }
+            ctx.strokeRect(210, yOffset + 10, 85, 65);
+            ctx.strokeRect(320, yOffset + 10, 85, 65);
             
             const dataURL = canvas.toDataURL("image/png");
             showDownloadModal(dataURL);
@@ -914,8 +970,7 @@ function exportToPNG() {
             btn.textContent = originalText;
             btn.disabled = false;
         } catch (error) {
-            console.error("Erro:", error);
-            alert("Toque e segure na tela para salvar a imagem do prédio");
+            alert("Toque e segure na tela para salvar a imagem");
             btn.textContent = originalText;
             btn.disabled = false;
         }
@@ -929,8 +984,8 @@ function showDownloadModal(imageDataURL) {
     modal.className = 'download-modal';
     modal.innerHTML = `
         <img src="${imageDataURL}" alt="Prédio Vivo" />
-        <p>🏢 <strong>Toque e segure</strong> na imagem<br>para salvar o prédio no celular</p>
-        <button onclick="this.parentElement.remove()">✕ Fechar</button>
+        <p>📱 <strong>Toque e segure</strong> na imagem<br>para salvar no celular</p>
+        <button onclick="this.parentElement.remove()">✕ FECHAR</button>
     `;
     document.body.appendChild(modal);
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
@@ -947,10 +1002,6 @@ function applyStatus() {
     renderBuilding();
     updateStats();
     updateFooter();
-    const btn = document.getElementById("btnApply");
-    const orig = btn.textContent;
-    btn.textContent = "✓ Aplicado!";
-    setTimeout(() => { btn.textContent = orig; }, 1000);
 }
 
 function quickApply() {
