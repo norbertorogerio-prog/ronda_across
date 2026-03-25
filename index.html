@@ -169,7 +169,6 @@
     border: 1px solid rgba(255,215,0,0.3);
  }
 
- /* Cobertura sem antenas - apenas outdoor */
  .cobertura {
     position: relative;
     padding: 16px 8px;
@@ -273,7 +272,20 @@
     border: 1px solid rgba(255,255,255,0.3);
     box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
     position: relative;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+ }
+
+ .glass-facade::-webkit-scrollbar {
+    height: 3px;
+ }
+ .glass-facade::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.3);
+    border-radius: 3px;
+ }
+ .glass-facade::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 3px;
  }
 
  .glass-facade::before {
@@ -285,30 +297,47 @@
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
     animation: shine 8s infinite;
+    pointer-events: none;
  }
 
  @keyframes shine {
     100% { left: 100%; }
  }
 
+ /* SALAS COM TAMANHO DINÂMICO - se adaptam automaticamente */
  .room-tag {
     background: rgba(0,0,0,0.75);
     backdrop-filter: blur(4px);
     border-radius: 16px;
-    padding: 5px 10px;
+    padding: 4px 8px;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     font-size: 11px;
     font-weight: bold;
     border: 1px solid rgba(255,255,255,0.3);
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    transition: transform 0.2s;
+    transition: all 0.2s;
     cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
  }
 
  .room-tag:active {
     transform: scale(0.96);
+ }
+
+ /* Quando muitas salas, elas diminuem de tamanho via flex */
+ .glass-facade:has(.room-tag) {
+    gap: 4px;
+ }
+
+ .glass-facade .room-tag {
+    flex-shrink: 1;
+    min-width: 55px;
+    max-width: 85px;
+    font-size: clamp(8px, 2vw, 11px);
+    padding: 3px 5px;
  }
 
  .room-tag.valid { border-left: 2px solid #27ae60; background: rgba(39,174,96,0.3); }
@@ -324,14 +353,13 @@
  .room-number-tag {
     font-weight: 800;
     color: white;
-    font-size: 11px;
+    font-size: clamp(9px, 1.8vw, 11px);
  }
 
  .room-status-tag {
-    font-size: 12px;
+    font-size: clamp(10px, 2vw, 12px);
  }
 
- /* Hall simplificado - sem texto "acesso corporativo" */
  .hall-entrada {
     background: linear-gradient(135deg, #2c3e50, #1a2632);
     border-top: 2px solid var(--gold);
@@ -384,7 +412,6 @@
     border-radius: 15px;
  }
 
- /* Remove o texto inferior do hall */
  .hall-text {
     display: none;
  }
@@ -474,8 +501,7 @@
     .stat-number { font-size: 18px; }
     .floor-number { width: 45px; font-size: 10px; }
     .glass-facade { padding: 6px; }
-    .room-tag { padding: 4px 8px; font-size: 10px; }
-    .room-number-tag { font-size: 10px; }
+    .room-tag { padding: 3px 5px; min-width: 48px; }
     .glass-door-full { width: 80px; min-height: 85px; padding: 12px 6px; }
     .glass-door-full span { font-size: 9px; }
     .outdoor-vivo span { font-size: 16px; }
@@ -524,7 +550,7 @@
         </select>
 
         <label>📝 OBSERVAÇÕES</label>
-        <textarea id="obsText" rows="2" placeholder="Sem observações."></textarea>
+        <textarea id="obsText" rows="2" placeholder="Descreva as observações da vistoria..."></textarea>
 
         <label>⚡ ATALHO</label>
         <div class="quick-group">
@@ -534,7 +560,7 @@
         <small style="font-size:9px; color:#666; margin-top:-6px;">Formato: Andar-Sala-status (v/o/t/p) | Sala 1-50</small>
 
         <button id="btnApply" class="btn-apply">✓ APLICAR</button>
-        <button id="btnAI" class="btn-ai">🤖 RELATÓRIO IA</button>
+        <button id="btnAI" class="btn-ai">🤖 GERAR RELATÓRIO COMPLETO</button>
         <button id="btnPNG" class="btn-png">📸 EXPORTAR PRÉDIO</button>
         
         <div class="button-group">
@@ -571,7 +597,7 @@
 </div>
 
 <script>
-const STORAGE_KEY = "vivo_predio_v22";
+const STORAGE_KEY = "vivo_predio_v23";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
 const TOTAL_FLOORS = 32;
@@ -582,7 +608,12 @@ function getStatusIcon(status) {
     return icons[status] || '';
 }
 
-// Renderização do prédio - MOSTRA TODAS AS SALAS SEM LIMITE
+function getStatusText(status) {
+    const texts = { valid: 'Validada', occ: 'Ocupada', lock: 'Trancada', prob: 'Com Problema' };
+    return texts[status] || '';
+}
+
+// Renderização com tamanho dinâmico - sem limites
 function renderBuilding() {
     const container = document.getElementById("floorsContainer");
     if (!container) return;
@@ -612,12 +643,12 @@ function renderBuilding() {
         if (salas.length === 0) {
             html += `<div style="color:rgba(255,255,255,0.5); font-size:10px; padding:5px; font-style:italic;">—— DISPONÍVEL ——</div>`;
         } else {
-            // MOSTRA TODAS AS SALAS SEM NENHUM LIMITE
+            // TODAS as salas, sem limite - elas se ajustam via CSS
             salas.forEach(sala => {
                 const statusClass = sala.status;
                 const icon = getStatusIcon(sala.status);
                 html += `
-                    <div class="room-tag ${statusClass}" data-room="${floor}-${sala.room}">
+                    <div class="room-tag ${statusClass}" data-room="${floor}-${sala.room}" title="SALA ${sala.room} - ${getStatusText(sala.status)}">
                         <span class="room-number-tag">SALA ${sala.room}</span>
                         <span class="room-status-tag">${icon}</span>
                     </div>
@@ -667,7 +698,7 @@ function updateFooter() {
     document.getElementById("footerNoteDisplay").innerHTML = `
 🏢 ${dataStr} | 👤 Auditor: ${auditor}<br>
 📝 OBS: ${obs}<br><br>
-${resumoIA || '🤖 Clique em "Relatório IA" para análise automática.'}
+${resumoIA || '🤖 Clique em "GERAR RELATÓRIO COMPLETO" para análise automática.'}
     `;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
     localStorage.setItem(STORAGE_KEY + "_resp", auditor);
@@ -675,41 +706,123 @@ ${resumoIA || '🤖 Clique em "Relatório IA" para análise automática.'}
     localStorage.setItem(STORAGE_KEY + "_ai", resumoIA);
 }
 
+// RELATÓRIO IA COMPLETO E NARRATIVO
 function generateAIRelatorio() {
     const stats = updateStats();
     const total = Object.keys(rooms).length;
-    const andaresProb = new Set();
-    const obs = document.getElementById("obsText")?.value || 'Sem observações.';
-    const auditor = document.getElementById("inputResp")?.value || 'Não informado';
-    
-    Object.entries(rooms).forEach(([k, s]) => { 
-        if (s === 'prob') andaresProb.add(k.split('-')[0]); 
+    const agora = new Date();
+    const horaAtual = agora.getHours();
+    const periodo = horaAtual < 12 ? 'manhã' : (horaAtual < 18 ? 'tarde' : 'noite');
+    const dataCompleta = agora.toLocaleString('pt-BR', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
     });
     
-    resumoIA = `🏢 RELATÓRIO EXECUTIVO
-━━━━━━━━━━━━━━━━━━━━━━
-📅 Data: ${new Date().toLocaleString('pt-BR')}
-👤 Responsável: ${auditor}
-━━━━━━━━━━━━━━━━━━━━━━
-📊 TOTAL AUDITADAS: ${total}
-✅ VALIDADAS: ${stats.valid}
-🟠 OCUPADAS: ${stats.occ}
-🔒 TRANCADAS: ${stats.lock}
-❌ PROBLEMAS: ${stats.prob}
-━━━━━━━━━━━━━━━━━━━━━━
-📝 OBSERVAÇÕES:
-${obs}
-━━━━━━━━━━━━━━━━━━━━━━
-${andaresProb.size > 0 ? `⚠️ Andares com falhas: ${Array.from(andaresProb).sort((a,b)=>b-a).join(', ')}º` : '✅ SEM FALHAS CRÍTICAS'}`;
+    const auditor = document.getElementById("inputResp")?.value || 'Profissional não identificado';
+    const obs = document.getElementById("obsText")?.value || 'Nenhuma observação registrada.';
     
+    // Analisa andares com problemas
+    const andaresComProblema = new Map();
+    const andaresComOcupacao = new Map();
+    const salasPorAndar = new Map();
+    
+    Object.entries(rooms).forEach(([key, status]) => {
+        const [floor, room] = key.split('-').map(Number);
+        if (!salasPorAndar.has(floor)) salasPorAndar.set(floor, []);
+        salasPorAndar.get(floor).push({ room, status });
+        
+        if (status === 'prob') {
+            if (!andaresComProblema.has(floor)) andaresComProblema.set(floor, []);
+            andaresComProblema.get(floor).push(room);
+        }
+        if (status === 'occ') {
+            if (!andaresComOcupacao.has(floor)) andaresComOcupacao.set(floor, []);
+            andaresComOcupacao.get(floor).push(room);
+        }
+    });
+    
+    // Construção do relatório narrativo
+    let relatorio = `📋 RELATÓRIO DE VISTORIA - VIVO INFRAESTRUTURA\n`;
+    relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    relatorio += `📅 Data e Hora: ${dataCompleta}\n`;
+    relatorio += `👤 Responsável: ${auditor}\n`;
+    relatorio += `🕐 Período: ${periodo.toUpperCase()}\n`;
+    relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+    
+    relatorio += `🔍 **RESUMO DA VISTORIA**\n`;
+    relatorio += `Durante a ronda realizada no período da ${periodo}, foram vistoriadas ${total} salas no total.\n\n`;
+    
+    relatorio += `📊 **ESTATÍSTICAS GERAIS**\n`;
+    relatorio += `┌─────────────────────────────────────────┐\n`;
+    relatorio += `│ ✅ SALAS VALIDADAS: ${stats.valid.toString().padStart(3)} (${stats.valid > 0 ? Math.round((stats.valid/total)*100) : 0}% do total) │\n`;
+    relatorio += `│ 🟠 SALAS OCUPADAS:  ${stats.occ.toString().padStart(3)} (${stats.occ > 0 ? Math.round((stats.occ/total)*100) : 0}% do total) │\n`;
+    relatorio += `│ 🔒 SALAS TRANCADAS: ${stats.lock.toString().padStart(3)} (${stats.lock > 0 ? Math.round((stats.lock/total)*100) : 0}% do total) │\n`;
+    relatorio += `│ ❌ SALAS COM PROBLEMA: ${stats.prob.toString().padStart(3)} (${stats.prob > 0 ? Math.round((stats.prob/total)*100) : 0}% do total) │\n`;
+    relatorio += `└─────────────────────────────────────────┘\n\n`;
+    
+    // Análise por andar
+    if (andaresComProblema.size > 0) {
+        relatorio += `⚠️ **PONTOS CRÍTICOS IDENTIFICADOS**\n`;
+        for (let [andar, salas] of andaresComProblema) {
+            relatorio += `   • ${andar}º ANDAR: ${salas.length} sala(s) com problema (Sala(s): ${salas.join(', ')})\n`;
+        }
+        relatorio += `\n🔧 Recomenda-se priorizar a manutenção das salas listadas acima.\n\n`;
+    } else {
+        relatorio += `✅ **ÓTIMO!** Nenhuma sala com problema foi identificada durante a vistoria.\n\n`;
+    }
+    
+    if (andaresComOcupacao.size > 0) {
+        relatorio += `👥 **SALAS OCUPADAS**\n`;
+        for (let [andar, salas] of andaresComOcupacao) {
+            relatorio += `   • ${andar}º ANDAR: ${salas.length} sala(s) ocupada(s)\n`;
+        }
+        relatorio += `\n`;
+    }
+    
+    // Observações
+    relatorio += `📝 **OBSERVAÇÕES DO AUDITOR**\n`;
+    relatorio += `${obs}\n\n`;
+    
+    // Avaliação final
+    relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    relatorio += `🏢 **AVALIAÇÃO FINAL**\n`;
+    
+    let avaliacao = '';
+    let recomendacao = '';
+    
+    if (stats.prob === 0) {
+        avaliacao = '✅ SITUAÇÃO REGULAR - Todas as salas vistoriadas estão em conformidade.';
+        recomendacao = 'Manter rotina de manutenção preventiva.';
+    } else if (stats.prob <= 3) {
+        avaliacao = '⚠️ ATENÇÃO MODERADA - Pequenas não conformidades identificadas.';
+        recomendacao = 'Realizar correções nas salas apontadas e revalidar em até 7 dias.';
+    } else {
+        avaliacao = '🔴 CRÍTICO - Múltiplas não conformidades detectadas.';
+        recomendacao = 'Ação imediata necessária. Agendar manutenção corretiva com urgência.';
+    }
+    
+    relatorio += `${avaliacao}\n`;
+    relatorio += `📌 RECOMENDAÇÃO: ${recomendacao}\n`;
+    relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    relatorio += `📱 Relatório gerado automaticamente pelo sistema Vivo Infra\n`;
+    
+    resumoIA = relatorio;
     updateFooter();
+    
     const btn = document.getElementById("btnAI");
     const orig = btn.textContent;
-    btn.textContent = "✓ Gerado!";
-    setTimeout(() => { btn.textContent = orig; }, 1500);
+    btn.textContent = "✓ RELATÓRIO GERADO!";
+    btn.style.background = "linear-gradient(135deg, #27ae60, #1e8449)";
+    setTimeout(() => { 
+        btn.textContent = orig;
+        btn.style.background = "linear-gradient(135deg, #0284c7, #0369a1)";
+    }, 2000);
 }
 
-// Exportação com todas as informações
 function exportToPNG() {
     const btn = document.getElementById("btnPNG");
     const originalText = btn.textContent;
@@ -721,33 +834,30 @@ function exportToPNG() {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
             
-            // Calcula altura baseada na quantidade de andares com salas
             const activeFloors = Object.keys(rooms).length > 0 ? TOTAL_FLOORS : 10;
-            const canvasHeight = 300 + (activeFloors * 52);
+            const canvasHeight = 380 + (activeFloors * 52) + (resumoIA ? 200 : 100);
             
-            const scale = 1.8;
-            canvas.width = 600 * scale;
-            canvas.height = Math.min(2200, canvasHeight) * scale;
+            const scale = 1.6;
+            canvas.width = 650 * scale;
+            canvas.height = Math.min(2400, canvasHeight) * scale;
             ctx.scale(scale, scale);
             
-            // Fundo
             ctx.fillStyle = "#0a2f3a";
-            ctx.fillRect(0, 0, 600, Math.min(2200, canvasHeight));
+            ctx.fillRect(0, 0, 650, Math.min(2400, canvasHeight));
             
-            // Prédio
             ctx.fillStyle = "#0f1a24";
-            ctx.fillRect(30, 30, 540, Math.min(2200, canvasHeight) - 60);
+            ctx.fillRect(25, 25, 600, Math.min(2400, canvasHeight) - 50);
             
             // Cobertura
             ctx.fillStyle = "#2c3e50";
-            ctx.fillRect(30, 30, 540, 65);
+            ctx.fillRect(25, 25, 600, 60);
             ctx.fillStyle = "#4A0072";
-            ctx.fillRect(200, 42, 200, 28);
+            ctx.fillRect(225, 38, 200, 28);
             ctx.fillStyle = "white";
             ctx.font = "bold 12px sans-serif";
-            ctx.fillText("VIVO 5G+", 250, 62);
+            ctx.fillText("VIVO 5G+", 275, 58);
             
-            let yOffset = 100;
+            let yOffset = 90;
             const floorHeight = 48;
             
             const floorsMap = new Map();
@@ -757,104 +867,82 @@ function exportToPNG() {
                 if (floorsMap.has(floor)) floorsMap.get(floor).push({ room, status });
             });
             
-            // Renderiza todos os andares
             for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
                 const salas = floorsMap.get(floor);
                 salas.sort((a, b) => a.room - b.room);
                 
                 ctx.fillStyle = "#ffd966";
                 ctx.font = "bold 9px sans-serif";
-                ctx.fillText(`${floor}º`, 10, yOffset + 25);
+                ctx.fillText(`${floor}º`, 8, yOffset + 25);
                 
-                const glassGrad = ctx.createLinearGradient(35, yOffset, 595, yOffset + floorHeight);
+                const glassGrad = ctx.createLinearGradient(33, yOffset, 617, yOffset + floorHeight);
                 glassGrad.addColorStop(0, "rgba(100,150,200,0.25)");
                 glassGrad.addColorStop(1, "rgba(50,80,120,0.35)");
                 ctx.fillStyle = glassGrad;
-                ctx.fillRect(38, yOffset, 524, floorHeight - 2);
+                ctx.fillRect(33, yOffset, 584, floorHeight - 2);
                 
                 ctx.strokeStyle = "rgba(255,215,0,0.4)";
-                ctx.strokeRect(38, yOffset, 524, floorHeight - 2);
+                ctx.strokeRect(33, yOffset, 584, floorHeight - 2);
                 
-                // Mostra TODAS as salas no export também
                 if (salas.length > 0) {
-                    let xPos = 45;
+                    let xPos = 40;
                     for (let i = 0; i < salas.length; i++) {
                         const sala = salas[i];
+                        const tagWidth = Math.max(55, Math.min(80, 520 / salas.length));
                         ctx.fillStyle = "rgba(0,0,0,0.7)";
-                        ctx.fillRect(xPos, yOffset + 6, 75, 32);
+                        ctx.fillRect(xPos, yOffset + 6, tagWidth, 32);
                         ctx.fillStyle = "white";
-                        ctx.font = "bold 8px sans-serif";
-                        ctx.fillText(`SALA ${sala.room}`, xPos + 4, yOffset + 25);
+                        ctx.font = `bold ${Math.max(7, Math.min(9, 80 / salas.length))}px sans-serif`;
+                        ctx.fillText(`SALA ${sala.room}`, xPos + 3, yOffset + 26);
                         
                         let icon = sala.status === 'valid' ? "✅" : sala.status === 'occ' ? "🟠" : sala.status === 'lock' ? "🔒" : "❌";
-                        ctx.fillText(icon, xPos + 62, yOffset + 25);
-                        xPos += 82;
-                        if (xPos > 540) {
-                            ctx.fillStyle = "rgba(255,255,255,0.6)";
-                            ctx.font = "italic 7px sans-serif";
-                            ctx.fillText(`+${salas.length - i - 1}`, xPos - 70, yOffset + 32);
-                            break;
-                        }
+                        ctx.fillStyle = "#fff";
+                        ctx.fillText(icon, xPos + tagWidth - 14, yOffset + 26);
+                        xPos += tagWidth + 4;
+                        if (xPos > 610) break;
                     }
                 } else {
                     ctx.fillStyle = "rgba(255,255,255,0.4)";
                     ctx.font = "italic 8px sans-serif";
-                    ctx.fillText("DISPONÍVEL", 280, yOffset + 28);
+                    ctx.fillText("DISPONÍVEL", 320, yOffset + 28);
                 }
                 
                 yOffset += floorHeight;
-                if (yOffset > Math.min(2200, canvasHeight) - 100) break;
+                if (yOffset > Math.min(2400, canvasHeight) - 180) break;
             }
             
             // Hall
             ctx.fillStyle = "#1e2a36";
-            ctx.fillRect(30, yOffset, 540, 70);
+            ctx.fillRect(25, yOffset, 600, 65);
             ctx.fillStyle = "rgba(255,255,255,0.3)";
-            ctx.fillRect(210, yOffset + 12, 80, 48);
-            ctx.fillRect(320, yOffset + 12, 80, 48);
+            ctx.fillRect(235, yOffset + 10, 80, 45);
+            ctx.fillRect(345, yOffset + 10, 80, 45);
             ctx.strokeStyle = "#ffd966";
-            ctx.strokeRect(210, yOffset + 12, 80, 48);
-            ctx.strokeRect(320, yOffset + 12, 80, 48);
+            ctx.strokeRect(235, yOffset + 10, 80, 45);
+            ctx.strokeRect(345, yOffset + 10, 80, 45);
             
-            yOffset += 80;
+            yOffset += 75;
             
-            // Rodapé com relatório completo
-            ctx.fillStyle = "rgba(0,0,0,0.85)";
-            ctx.fillRect(30, yOffset, 540, 140);
+            // Rodapé com relatório IA
+            ctx.fillStyle = "rgba(0,0,0,0.9)";
+            ctx.fillRect(25, yOffset, 600, resumoIA ? 220 : 100);
             ctx.fillStyle = "#e2e8f0";
-            ctx.font = "9px monospace";
+            ctx.font = "8px monospace";
             
             const dataStr = new Date().toLocaleString('pt-BR');
             const auditor = document.getElementById("inputResp")?.value || '---';
-            const obs = document.getElementById("obsText")?.value || 'Sem observações.';
             const stats = updateStats();
-            const total = Object.keys(rooms).length;
             
-            ctx.fillText(`📅 ${dataStr}`, 45, yOffset + 15);
-            ctx.fillText(`👤 Responsável: ${auditor}`, 45, yOffset + 28);
-            ctx.fillText(`📊 Total: ${total} | ✅ ${stats.valid} | 🟠 ${stats.occ} | 🔒 ${stats.lock} | ❌ ${stats.prob}`, 45, yOffset + 45);
+            ctx.fillText(`📅 ${dataStr} | 👤 ${auditor}`, 35, yOffset + 12);
+            ctx.fillText(`📊 Total: ${Object.keys(rooms).length} | ✅ ${stats.valid} | 🟠 ${stats.occ} | 🔒 ${stats.lock} | ❌ ${stats.prob}`, 35, yOffset + 24);
             
-            // Observações
-            ctx.fillStyle = "#ffd966";
-            ctx.fillText(`📝 OBS:`, 45, yOffset + 62);
-            ctx.fillStyle = "#e2e8f0";
-            const obsLines = obs.split('\n');
-            let obsY = yOffset + 75;
-            for (let i = 0; i < Math.min(obsLines.length, 2); i++) {
-                ctx.fillText(obsLines[i].substring(0, 65), 45, obsY);
-                obsY += 14;
-            }
-            
-            // Relatório IA
             if (resumoIA) {
-                ctx.fillStyle = "#ffd966";
-                ctx.fillText(`📋 RELATÓRIO:`, 45, obsY + 5);
-                ctx.fillStyle = "#e2e8f0";
-                const reportLines = resumoIA.split('\n');
-                let reportY = obsY + 18;
-                for (let i = 0; i < Math.min(reportLines.length, 3); i++) {
-                    ctx.fillText(reportLines[i].substring(0, 65), 45, reportY);
-                    reportY += 13;
+                const lines = resumoIA.split('\n');
+                let textY = yOffset + 42;
+                for (let i = 0; i < Math.min(lines.length, 12); i++) {
+                    ctx.fillStyle = i === 0 ? "#ffd966" : "#e2e8f0";
+                    ctx.fillText(lines[i].substring(0, 70), 35, textY);
+                    textY += 12;
                 }
             }
             
@@ -926,7 +1014,7 @@ function quickApply() {
     document.getElementById("quickInput").value = "";
 }
 
-function clearAll() { if(confirm("Apagar tudo?")) { rooms = {}; renderBuilding(); updateStats(); updateFooter(); } }
+function clearAll() { if(confirm("Apagar todas as salas?")) { rooms = {}; renderBuilding(); updateStats(); updateFooter(); } }
 function clearResumo() { resumoIA = ""; updateFooter(); }
 
 function init() {
