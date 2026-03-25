@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
-<title>Vivo Infra • Auditoria Premium v17</title>
+<title>Vivo Infra • Auditoria Premium v18</title>
 <style>
  * {
     margin: 0;
@@ -285,16 +285,14 @@
 
  .rooms-grid {
     flex: 1;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
     gap: 4px;
-    flex-wrap: wrap;
  }
 
  /* Room Cards */
  .room-card {
-    flex: 1;
-    min-width: 32px;
-    height: 32px;
+    aspect-ratio: 1;
     background: #bdc3c7;
     border-radius: 8px;
     display: flex;
@@ -304,6 +302,7 @@
     transition: all 0.15s;
     position: relative;
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    min-width: 0;
  }
 
  .room-card:active {
@@ -475,8 +474,11 @@
     }
     
     .room-card {
-        min-width: 28px;
-        height: 28px;
+        min-width: 0;
+    }
+    
+    .room-number {
+        font-size: 8px;
     }
     
     .floor-number {
@@ -536,7 +538,7 @@
             <input id="quickInput" type="text" placeholder="Ex: 32-05-v">
             <button id="btnQuick">OK</button>
         </div>
-        <small style="font-size:10px; color:#666; margin-top:-8px; display:block;">Formato: Andar-Sala-status (v/o/t/p)</small>
+        <small style="font-size:10px; color:#666; margin-top:-8px; display:block;">Formato: Andar-Sala-status (v/o/t/p) | Sala até 50</small>
 
         <button id="btnApply" class="btn-apply">✓ Aplicar no Mapa</button>
         <button id="btnAI" class="btn-ai">🤖 Gerar Relatório Inteligente</button>
@@ -577,13 +579,14 @@
 
 <script>
 // ==================== CONFIGURAÇÃO INICIAL ====================
-const STORAGE_KEY = "vivo_auditoria_premium_v17";
+const STORAGE_KEY = "vivo_auditoria_premium_v18";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
 
 // Constantes
 const TOTAL_FLOORS = 32;
-const MAX_ROOMS_PER_FLOOR = 7;
+const MAX_VISUAL_ROOMS = 7; // 7 colunas no visual
+const MAX_SALA_SELECT = 50; // Até sala 50 nas opções
 
 // ==================== FUNÇÕES AUXILIARES ====================
 function getStatusColor(status) {
@@ -621,15 +624,15 @@ function renderBuilding() {
                 <div class="rooms-grid" data-floor="${floor}">
         `;
         
-        // Gerar salas (máximo 7 por andar)
-        for (let room = 1; room <= MAX_ROOMS_PER_FLOOR; room++) {
+        // Gerar 7 salas visuais (colunas)
+        for (let room = 1; room <= MAX_VISUAL_ROOMS; room++) {
             const roomKey = `${floor}-${room}`;
             const status = rooms[roomKey];
-            const statusClass = status || 'none';
+            const statusClass = status || '';
             const bgColor = status ? getStatusColor(status) : '#bdc3c7';
             
             html += `
-                <div class="room-card ${status || ''}" 
+                <div class="room-card ${statusClass}" 
                      data-room="${roomKey}"
                      data-floor="${floor}"
                      data-roomnum="${room}"
@@ -725,7 +728,7 @@ function updateFooter() {
 function generateAIRelatorio() {
     const stats = updateStats();
     const totalAuditadas = Object.keys(rooms).length;
-    const totalSalas = TOTAL_FLOORS * MAX_ROOMS_PER_FLOOR;
+    const totalSalas = TOTAL_FLOORS * MAX_VISUAL_ROOMS;
     const cobertura = ((totalAuditadas / totalSalas) * 100).toFixed(1);
     
     // Identificar andares com problemas
@@ -771,7 +774,7 @@ function generateAIRelatorio() {
     setTimeout(() => { btn.textContent = originalText; }, 2000);
 }
 
-// ==================== EXPORTAR PNG (OTIMIZADO PARA CELULAR) ====================
+// ==================== EXPORTAR PNG (COM STATUS DAS SALAS) ====================
 async function exportToPNG() {
     const btn = document.getElementById("btnPNG");
     const originalText = btn.textContent;
@@ -779,87 +782,108 @@ async function exportToPNG() {
     btn.disabled = true;
     
     try {
-        const buildingElement = document.querySelector(".real-building");
-        const footerElement = document.getElementById("footerNoteDisplay");
-        
-        // Clonar elementos para evitar interferências
-        const cloneBuilding = buildingElement.cloneNode(true);
-        const cloneFooter = footerElement.cloneNode(true);
-        
-        // Criar canvas para captura
+        // Criar canvas
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         
-        // Configurar dimensões (qualidade otimizada para mobile)
+        // Configurar dimensões (qualidade otimizada)
         const scale = 2.5;
-        canvas.width = 460 * scale;
-        canvas.height = 1250 * scale;
+        canvas.width = 520 * scale;
+        canvas.height = 1450 * scale;
         ctx.scale(scale, scale);
         
         // Fundo
         ctx.fillStyle = "#f1f5f9";
-        ctx.fillRect(0, 0, 460, 1250);
+        ctx.fillRect(0, 0, 520, 1450);
         
-        // Desenhar o prédio manualmente (mais confiável que html2canvas)
+        // Fundo do prédio
         ctx.fillStyle = "#2c3e50";
-        ctx.fillRect(20, 30, 420, 1080);
+        ctx.fillRect(30, 30, 460, 1320);
         
-        // Cobertura
+        // ========== COBERTURA ==========
         ctx.fillStyle = "#95a5a6";
-        ctx.fillRect(20, 30, 420, 35);
+        ctx.fillRect(30, 30, 460, 38);
         ctx.fillStyle = "#f1c40f";
-        ctx.font = "bold 14px sans-serif";
-        ctx.fillText("★", 230, 52);
-        ctx.fillText("★", 250, 52);
+        ctx.font = "bold 16px sans-serif";
+        ctx.fillText("★", 255, 52);
+        ctx.fillText("★", 275, 52);
+        ctx.fillStyle = "white";
+        ctx.font = "bold 10px sans-serif";
+        ctx.fillText("ÁREA TÉCNICA • ANTENA 5G", 230, 58);
         
-        // Andares
-        let yOffset = 75;
+        // ========== ANDARES COM STATUS DAS SALAS ==========
+        let yOffset = 78;
+        const roomWidth = 62;
+        const roomHeight = 24;
+        
         for (let floor = 32; floor >= 1; floor--) {
+            // Número do andar
             ctx.fillStyle = "#ecf0f1";
-            ctx.font = "bold 10px sans-serif";
-            ctx.fillText(`${floor}º`, 28, yOffset + 14);
+            ctx.font = "bold 11px sans-serif";
+            ctx.fillText(`${floor}º`, 38, yOffset + 16);
             
-            for (let room = 1; room <= 7; room++) {
+            // Desenhar 7 salas por andar
+            for (let room = 1; room <= MAX_VISUAL_ROOMS; room++) {
                 const roomKey = `${floor}-${room}`;
                 const status = rooms[roomKey];
                 const color = status ? getStatusColor(status) : "#bdc3c7";
                 
+                // Desenhar retângulo da sala
                 ctx.fillStyle = color;
-                const x = 70 + (room - 1) * 52;
-                ctx.fillRect(x, yOffset, 45, 22);
+                const x = 78 + (room - 1) * roomWidth;
+                ctx.fillRect(x, yOffset, roomWidth - 4, roomHeight);
                 
+                // Desenhar número da sala
                 ctx.fillStyle = "#fff";
-                ctx.font = "bold 9px sans-serif";
-                ctx.fillText(room.toString(), x + 22, yOffset + 15);
+                ctx.font = "bold 10px sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText(room.toString(), x + (roomWidth - 4) / 2, yOffset + 17);
+                ctx.textAlign = "left";
             }
-            yOffset += 28;
+            
+            yOffset += 32;
         }
         
-        // Hall
+        // ========== HALL DE ENTRADA ==========
         ctx.fillStyle = "#34495e";
-        ctx.fillRect(20, yOffset, 420, 70);
-        ctx.fillStyle = "rgba(255,255,255,0.2)";
-        ctx.fillRect(180, yOffset + 15, 35, 45);
-        ctx.fillRect(230, yOffset + 15, 35, 45);
+        ctx.fillRect(30, yOffset, 460, 75);
         
-        // Footer
+        // Vidros do hall
+        ctx.fillStyle = "rgba(255,255,255,0.2)";
+        ctx.fillRect(210, yOffset + 18, 40, 48);
+        ctx.fillRect(270, yOffset + 18, 40, 48);
+        
+        ctx.fillStyle = "#f1c40f";
+        ctx.font = "bold 9px sans-serif";
+        ctx.fillText("VIVO INFRA • ACESSO PRINCIPAL • 24H", 260, yOffset + 62);
+        
+        yOffset += 85;
+        
+        // ========== RODAPÉ COM INFORMAÇÕES ==========
         ctx.fillStyle = "#fff";
-        ctx.fillRect(20, yOffset + 75, 420, 80);
+        ctx.fillRect(30, yOffset, 460, 110);
+        
         ctx.fillStyle = "#334155";
-        ctx.font = "10px sans-serif";
+        ctx.font = "11px sans-serif";
         
         const dataStr = new Date().toLocaleDateString('pt-BR');
         const auditor = document.getElementById("inputResp")?.value || '---';
         const obs = document.getElementById("obsText")?.value || 'Sem notas.';
         
-        ctx.fillText(`📅 ${dataStr} | 👤 Auditor: ${auditor}`, 35, yOffset + 95);
-        ctx.fillText(`📝 OBS: ${obs.substring(0, 50)}`, 35, yOffset + 110);
-        ctx.fillText(resumoIA.substring(0, 80), 35, yOffset + 125);
+        ctx.fillText(`📅 ${dataStr} | 👤 Auditor: ${auditor}`, 45, yOffset + 18);
+        ctx.fillText(`📝 OBS: ${obs.substring(0, 70)}`, 45, yOffset + 38);
         
-        // Forçar download via modal (melhor para mobile)
+        // Resumo
+        ctx.font = "10px sans-serif";
+        const lines = resumoIA.split('\n');
+        let textY = yOffset + 58;
+        for (let i = 0; i < Math.min(lines.length, 5); i++) {
+            ctx.fillText(lines[i].substring(0, 65), 45, textY);
+            textY += 16;
+        }
+        
+        // ========== GERAR DOWNLOAD ==========
         const dataURL = canvas.toDataURL("image/png");
-        
-        // Abrir modal para o usuário salvar manualmente
         showDownloadModal(dataURL);
         
         btn.textContent = originalText;
@@ -936,8 +960,8 @@ function quickApply() {
     const room = parseInt(parts[1]);
     const statusChar = parts[2][0];
     
-    if (isNaN(floor) || isNaN(room) || floor < 1 || floor > 32 || room < 1 || room > 7) {
-        alert("Andar (1-32) ou Sala (1-7) inválido");
+    if (isNaN(floor) || isNaN(room) || floor < 1 || floor > 32 || room < 1 || room > MAX_SALA_SELECT) {
+        alert(`Andar (1-32) ou Sala (1-${MAX_SALA_SELECT}) inválido`);
         return;
     }
     
@@ -993,7 +1017,8 @@ function init() {
     
     if (roomSelect) {
         roomSelect.innerHTML = '';
-        for (let r = 1; r <= MAX_ROOMS_PER_FLOOR; r++) {
+        // Sala até 50 nas opções
+        for (let r = 1; r <= MAX_SALA_SELECT; r++) {
             roomSelect.appendChild(new Option(`Sala ${String(r).padStart(2, '0')}`, r));
         }
     }
