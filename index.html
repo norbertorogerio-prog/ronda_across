@@ -7,111 +7,496 @@
 <title>Relatório de Vistoria</title>
 
 <style>
-body {
-  background: #0b3d2e;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  color: #fff;
-}
-.app {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  gap: 20px;
-}
-@media (min-width: 900px){
-  .app { grid-template-columns: 350px 1fr; }
-}
-.card {
-  background: rgba(255,255,255,0.1);
-  padding: 16px;
-  border-radius: 12px;
-  backdrop-filter: blur(4px);
-}
-label {
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  display: block;
-}
-input, textarea, select, button {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  margin-bottom: 14px;
-  font-size: 14px;
-}
-textarea { min-height: 80px; resize: vertical; }
-button {
-  background: #6A1B9A;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-}
-button:hover { opacity: 0.9; }
+  :root {
+    --bg: #0b3d2e;
+    --card: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.18);
+    --text: #ffffff;
+    --muted: #cbd5e1;
+    --gold: #ffd966;
+    --valid: #27ae60;
+    --lock: #7f8c8d;
+    --prob: #e74c3c;
+    --other: #f39c12;
+    --chip: rgba(255,255,255,0.08);
+  }
 
-#relatorioBox {
-  white-space: pre-wrap;
-  font-family: "Courier New", monospace;
-  font-size: 14px;
-  line-height: 1.4;
-}
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }
+
+  .app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 980px) {
+    .app { grid-template-columns: 360px 1fr; }
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    backdrop-filter: blur(4px);
+  }
+
+  h2, h3 {
+    margin: 0 0 10px 0;
+    font-weight: 800;
+    letter-spacing: .5px;
+  }
+  h2 { font-size: 16px; }
+  h3 { font-size: 14px; color: var(--muted); }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin: 8px 0 6px 0;
+    color: #e2e8f0;
+  }
+
+  input, select, textarea, button {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    background: rgba(255,255,255,0.95);
+    color: #111;
+    outline: none;
+  }
+  textarea { min-height: 72px; resize: vertical; }
+
+  .row {
+    display: grid;
+    gap: 8px;
+  }
+  @media (min-width: 480px) {
+    .row-2 { grid-template-columns: 1fr 1fr; }
+    .row-3 { grid-template-columns: 1fr 1fr 1fr; }
+  }
+
+  .btn {
+    background: linear-gradient(135deg, #6A1B9A, #4A0072);
+    color: #fff;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .btn:active { transform: translateY(1px); }
+
+  /* Painel direito */
+  .viewer {
+    display: grid;
+    gap: 16px;
+  }
+
+  .section {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .legend .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 16px;
+    background: var(--chip);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text);
+  }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot.valid { background: var(--valid); }
+  .dot.lock  { background: var(--lock); }
+  .dot.prob  { background: var(--prob); }
+  .dot.other { background: var(--other); }
+
+  /* Ícones numéricos (andares e salas) */
+  .icon-strip {
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    gap: 6px;
+  }
+  @media (min-width: 680px) {
+    .icon-strip.rooms { grid-template-columns: repeat(10, auto); }
+  }
+  .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    font-size: 12px;
+    display: grid;
+    place-items: center;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+  }
+  .icon:hover { outline: 1px dashed rgba(255,255,255,0.25); }
+
+  /* Estado visual dos ícones */
+  .icon.floor.is-selected {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(255,217,102,0.25);
+  }
+  .icon.room.valid  { background: rgba(39,174,96,0.18);  border-color: rgba(39,174,96,0.7); }
+  .icon.room.lock   { background: rgba(127,140,141,0.18); border-color: rgba(127,140,141,0.7); }
+  .icon.room.prob   { background: rgba(231,76,60,0.18);  border-color: rgba(231,76,60,0.7); }
+  .icon.room.other  { background: rgba(243,156,18,0.18); border-color: rgba(243,156,18,0.7); }
+
+  /* Moldura do relatório */
+  .report-box {
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    background: rgba(0,0,0,0.35);
+    padding: 12px;
+  }
+  .report-title {
+    background: linear-gradient(135deg, #2c3e50, #1a2632);
+    color: var(--gold);
+    font-weight: 900;
+    border: 1px solid rgba(255,215,0,0.5);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    letter-spacing: .5px;
+  }
+  .report-content {
+    white-space: pre-wrap;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 13px;
+    color: #e2e8f0;
+    line-height: 1.45;
+  }
+
+  /* Mini estatísticas */
+  .mini-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    margin-top: 8px;
+  }
+  .mini-stats .s {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 12px;
+    display: grid;
+    gap: 2px;
+    color: var(--muted);
+  }
+  .mini-stats .n { font-weight: 900; color: #fff; }
 </style>
 </head>
 
 <body>
+  <div class="app">
+    <!-- ESQUERDA: FORM -->
+    <div class="card">
+      <h2>Entrada de dados</h2>
 
-<div class="app">
+      <label>👤 Auditor</label>
+      <input id="auditor" placeholder="Nome completo">
 
-  <!-- FORM -->
-  <div class="card">
-    <label>👤 Auditor</label>
-    <input id="auditor" placeholder="Nome completo"/>
+      <label>🏢 Prédio</label>
+      <input id="predio" placeholder="Ex.: ECO Berrini">
 
-    <label>🏢 Prédio</label>
-    <input id="predio" placeholder="Ex: ECO Berrini"/>
+      <label>📍 Endereço</label>
+      <input id="endereco" placeholder="Ex.: Av. Eng. Luís Carlos Berrini, 1376">
 
-    <label>📍 Endereço</label>
-    <input id="endereco" placeholder="Ex: Av. Eng. Luis Carlos Berrini, 1376"/>
+      <div class="row row-3">
+        <div>
+          <label>🏬 Andar (01–32)</label>
+          <select id="selFloor"></select>
+        </div>
+        <div>
+          <label>🚪 Sala (01–50)</label>
+          <select id="selRoom"></select>
+        </div>
+        <div>
+          <label>📌 Status</label>
+          <select id="selStatus">
+            <option value="valid">✅ Sala Validada</option>
+            <option value="lock">🔒 Sala Trancada</option>
+            <option value="prob">❌ Sala com Problemas</option>
+            <option value="other" selected>◻️ Outros</option>
+          </select>
+        </div>
+      </div>
 
-    <label>📝 Informações do relatório</label>
-    <textarea id="info" placeholder="Descreva detalhes da vistoria..."></textarea>
+      <label>📝 Observações (opcional)</label>
+      <textarea id="obs" placeholder="Escreva detalhes relevantes..."></textarea>
 
-    <button onclick="gerarRelatorio()">Gerar Relatório</button>
+      <div class="row row-2">
+        <button class="btn" id="btnAdd">Adicionar</button>
+        <button class="btn" id="btnClear">Limpar Tudo</button>
+      </div>
+    </div>
+
+    <!-- DIREITA: VISÃO + RELATÓRIO -->
+    <div class="viewer">
+      <!-- Legenda -->
+      <div class="section">
+        <h3>Legenda</h3>
+        <div class="legend">
+          <span class="pill"><span class="dot valid"></span> Validada</span>
+          <span class="pill"><span class="dot lock"></span> Trancada</span>
+          <span class="pill"><span class="dot prob"></span> Problemas</span>
+          <span class="pill"><span class="dot other"></span> Outros</span>
+        </div>
+        <div class="mini-stats" id="miniStats">
+          <div class="s"><span>✅ Validadas</span><span class="n" id="stValid">0</span></div>
+          <div class="s"><span>🔒 Trancadas</span><span class="n" id="stLock">0</span></div>
+          <div class="s"><span>❌ Problemas</span><span class="n" id="stProb">0</span></div>
+          <div class="s"><span>◻️ Outros</span><span class="n" id="stOther">0</span></div>
+        </div>
+      </div>
+
+      <!-- Ícones de Andares -->
+      <div class="section">
+        <h3>Andares (01–32)</h3>
+        <div class="icon-strip floors" id="floorsStrip"></div>
+      </div>
+
+      <!-- Ícones de Salas -->
+      <div class="section">
+        <h3>Salas do andar <span id="curFloorText">01</span> (01–50)</h3>
+        <div class="icon-strip rooms" id="roomsStrip"></div>
+      </div>
+
+      <!-- Relatório moldurado -->
+      <div class="section">
+        <div class="report-box">
+          <div class="report-title">📋 Relatório</div>
+          <div id="report" class="report-content">
+📋 RELATÓRIO DE VISTORIA — Prédio
+📍 Endereço
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 data
+👤 Auditor:
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ Informações do relatório
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- RELATÓRIO -->
-  <div class="card">
-    <h3>RELATÓRIO</h3>
-    <div id="relatorioBox">Preencha os dados ao lado e clique em **Gerar Relatório**.</div>
-  </div>
-
-</div>
 
 <script>
-function gerarRelatorio() {
-  const auditor  = document.getElementById("auditor").value || "Não informado";
-  const predio   = document.getElementById("predio").value || "Prédio";
-  const endereco = document.getElementById("endereco").value || "Endereço não informado";
-  const info     = document.getElementById("info").value || "Nenhuma informação registrada.";
+  // Estado
+  const STORAGE_KEY = "vistoria_minimal_v1";
+  let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); // { "floor-room": {status, note} }
+  let currentFloor = 1;
 
-  const data = new Date().toLocaleString("pt-BR");
+  // Init selects
+  const selFloor = document.getElementById("selFloor");
+  const selRoom  = document.getElementById("selRoom");
+  for (let f = 1; f <= 32; f++) {
+    selFloor.appendChild(new Option(String(f).padStart(2,"0"), f));
+  }
+  for (let r = 1; r <= 50; r++) {
+    selRoom.appendChild(new Option(String(r).padStart(2,"0"), r));
+  }
 
-  const texto = 
+  // Monta ícones de andares
+  const floorsStrip = document.getElementById("floorsStrip");
+  function buildFloors() {
+    floorsStrip.innerHTML = "";
+    for (let f = 1; f <= 32; f++) {
+      const icon = document.createElement("div");
+      icon.className = "icon floor" + (f === currentFloor ? " is-selected" : "");
+      icon.textContent = String(f).padStart(2,"0");
+      icon.title = `Andar ${String(f).padStart(2,"0")}`;
+      icon.addEventListener("click", () => {
+        currentFloor = f;
+        selFloor.value = f;
+        document.getElementById("curFloorText").textContent = String(f).padStart(2,"0");
+        highlightFloors();
+        renderRooms();
+        updateReport();
+      });
+      floorsStrip.appendChild(icon);
+    }
+  }
+  function highlightFloors() {
+    [...floorsStrip.children].forEach((el, idx) => {
+      if (idx+1 === currentFloor) el.classList.add("is-selected");
+      else el.classList.remove("is-selected");
+    });
+  }
+
+  // Monta ícones de salas do andar atual
+  const roomsStrip = document.getElementById("roomsStrip");
+  function renderRooms() {
+    roomsStrip.innerHTML = "";
+    for (let r = 1; r <= 50; r++) {
+      const key = `${currentFloor}-${r}`;
+      const cell = document.createElement("div");
+      cell.className = "icon room";
+      const reg = data[key];
+      if (reg) cell.classList.add(reg.status);
+      cell.textContent = String(r).padStart(2,"0");
+      cell.title = `Sala ${String(r).padStart(2,"0")} — ${reg ? mapStatusText(reg.status) : "sem status"}`;
+      cell.addEventListener("click", () => {
+        selFloor.value = currentFloor;
+        selRoom.value = r;
+      });
+      roomsStrip.appendChild(cell);
+    }
+    updateMiniStats();
+  }
+
+  // Mapas auxiliares
+  function mapStatusText(s) {
+    return s==="valid" ? "Validada" : s==="lock" ? "Trancada" : s==="prob" ? "Com Problemas" : "Outros";
+  }
+
+  function updateMiniStats() {
+    const stats = { valid:0, lock:0, prob:0, other:0 };
+    Object.values(data).forEach(v => { if (stats[v.status] !== undefined) stats[v.status]++; });
+    document.getElementById("stValid").textContent = stats.valid;
+    document.getElementById("stLock").textContent  = stats.lock;
+    document.getElementById("stProb").textContent  = stats.prob;
+    document.getElementById("stOther").textContent = stats.other;
+  }
+
+  // Aplicar inclusão/alteração
+  document.getElementById("btnAdd").addEventListener("click", () => {
+    const f = parseInt(selFloor.value || "1", 10);
+    const r = parseInt(selRoom.value  || "1", 10);
+    const status = (document.getElementById("selStatus").value || "other");
+    const note = (document.getElementById("obs").value || "").trim();
+    const key = `${f}-${r}`;
+    data[key] = { status, note };
+    currentFloor = f;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    document.getElementById("curFloorText").textContent = String(f).padStart(2,"0");
+    buildFloors();
+    renderRooms();
+    updateReport();
+  });
+
+  document.getElementById("btnClear").addEventListener("click", () => {
+    if (!confirm("Limpar todas as salas e campos?")) return;
+    data = {};
+    localStorage.removeItem(STORAGE_KEY);
+    document.getElementById("auditor").value = "";
+    document.getElementById("predio").value = "";
+    document.getElementById("endereco").value = "";
+    document.getElementById("obs").value = "";
+    currentFloor = 1;
+    selFloor.value = 1;
+    selRoom.value = 1;
+    buildFloors();
+    renderRooms();
+    updateReport(true);
+  });
+
+  // Atualiza relatório
+  function updateReport(clearInfo) {
+    const auditor  = document.getElementById("auditor").value || "";
+    const predio   = document.getElementById("predio").value  || "Prédio";
+    const endereco = document.getElementById("endereco").value|| "Endereço não informado";
+    const dataHora = new Date().toLocaleString("pt-BR");
+
+    // Coleta informações
+    const stats = { valid:0, lock:0, prob:0, other:0 };
+    const porAndar = {}; // { floor: {valid,lock,prob,other, rooms: {status:[nums]} } }
+    Object.entries(data).forEach(([key, reg]) => {
+      const [fStr, rStr] = key.split("-");
+      const f = parseInt(fStr,10), r = parseInt(rStr,10);
+      stats[reg.status] = (stats[reg.status] || 0) + 1;
+      if (!porAndar[f]) porAndar[f] = { valid:0, lock:0, prob:0, other:0, rooms: { valid:[], lock:[], prob:[], other:[] } };
+      porAndar[f][reg.status]++;
+      porAndar[f].rooms[reg.status].push(String(r).padStart(2,"0"));
+    });
+
+    // Monta bloco ⚠️ Informações do relatório
+    let info = "";
+    const total = stats.valid + stats.lock + stats.prob + stats.other;
+    if (total === 0 || clearInfo) {
+      info = "Nenhuma sala registrada nesta vistoria.";
+    } else {
+      info += `Total de salas registradas: ${total}\n`;
+      info += `• ✅ Validadas: ${stats.valid}\n`;
+      info += `• 🔒 Trancadas: ${stats.lock}\n`;
+      info += `• ❌ Problemas: ${stats.prob}\n`;
+      info += `• ◻️ Outros: ${stats.other}\n`;
+      // Detalhe por andar (somente os que têm algo)
+      const andares = Object.keys(porAndar).map(n => parseInt(n,10)).sort((a,b)=>a-b);
+      if (andares.length) {
+        info += `\nDetalhe por andar:\n`;
+        andares.forEach(f => {
+          const a = porAndar[f];
+          const line = [];
+          if (a.valid) line.push(`✅ ${a.valid} (${a.rooms.valid.join(", ")})`);
+          if (a.lock)  line.push(`🔒 ${a.lock} (${a.rooms.lock.join(", ")})`);
+          if (a.prob)  line.push(`❌ ${a.prob} (${a.rooms.prob.join(", ")})`);
+          if (a.other) line.push(`◻️ ${a.other} (${a.rooms.other.join(", ")})`);
+          info += `• Andar ${String(f).padStart(2,"0")}: ${line.join(" | ")}\n`;
+        });
+      }
+    }
+
+    const auditorLine = auditor ? `👤 Auditor: ${auditor}` : "👤 Auditor:";
+
+    const texto =
 `📋 RELATÓRIO DE VISTORIA — ${predio}
 📍 ${endereco}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-📅 ${data}
-👤 Auditor: ${auditor}
+📅 ${dataHora}
+${auditorLine}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ Informações do relatório:
-${info}
-`;
+⚠️ Informações do relatório
+${info}`;
 
-  document.getElementById("relatorioBox").textContent = texto;
-}
+    document.getElementById("report").textContent = texto;
+  }
+
+  // Mudanças de campos re-geram relatório
+  ["auditor","predio","endereco","obs","selFloor","selRoom","selStatus"].forEach(id => {
+    document.getElementById(id).addEventListener("input", () => {
+      if (id === "selFloor") {
+        currentFloor = parseInt(selFloor.value || "1", 10);
+        document.getElementById("curFloorText").textContent = String(currentFloor).padStart(2,"0");
+        highlightFloors();
+        renderRooms();
+      }
+      updateReport();
+    });
+  });
+
+  // Inicialização
+  (function init(){
+    selFloor.value = "1";
+    selRoom.value  = "1";
+    buildFloors();
+    renderRooms();
+    updateReport();
+  })();
 </script>
 
 </body>
