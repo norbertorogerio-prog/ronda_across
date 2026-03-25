@@ -5,379 +5,121 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
 <title>Vivo Infra • Prédio Corporativo</title>
 <style>
- * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
- }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --vivo:#6A1B9A;--vivo-dark:#4A0072;--gold:#f1c40f;
+    --valid:#27ae60;--occ:#f39c12;--lock:#7f8c8d;--prob:#e74c3c;
+  }
+  body{
+    background:linear-gradient(135deg,#0a2f1a 0%,#1a4a2a 100%);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    padding:12px;min-height:100vh;overflow-x:hidden;color:#111;
+  }
+  .app{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+  @media(min-width:1024px){.app{display:grid;grid-template-columns:360px 1fr;gap:24px}}
+  .card{
+    background:rgba(255,255,255,0.96);border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    padding:16px;backdrop-filter:blur(2px);overflow-x:hidden
+  }
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+  .stat-box{text-align:center;padding:10px 4px;border-radius:14px;color:#fff;font-weight:700;font-size:11px;transition:transform .2s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+  .stat-box:active{transform:scale(.96)} .stat-number{font-size:22px;font-weight:900;display:block;margin-bottom:2px}
+  label{font-size:11px;font-weight:800;text-transform:uppercase;color:#2c3e50;margin-bottom:4px;display:block;letter-spacing:.5px}
+  select,input,textarea,button{
+    width:100%;border:2px solid #e2e8f0;border-radius:12px;padding:10px 12px;font-size:14px;font-family:inherit;margin-bottom:10px;transition:all .2s;background:white
+  }
+  select:focus,input:focus,textarea:focus{outline:none;border-color:var(--vivo);box-shadow:0 0 0 3px rgba(106,27,154,.1)}
+  textarea{resize:vertical;min-height:60px}
+  .btn-apply{background:linear-gradient(135deg,var(--vivo),var(--vivo-dark));color:#fff;font-weight:800;border:none;cursor:pointer;font-size:14px;text-transform:uppercase}
+  .btn-png{background:linear-gradient(135deg,#2c3e50,#1a2632);color:#fff;font-weight:800;border:none;cursor:pointer;font-size:14px}
+  .btn-ai{background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;font-weight:700;border:none;cursor:pointer;font-size:13px}
+  .btn-clear{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;cursor:pointer;font-size:12px;padding:8px;border-radius:10px;font-weight:600}
+  .viewer-card{padding:16px;background:linear-gradient(135deg,#cbd5e1 0%,#94a3b8 100%);overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+  .building-container{min-width:320px;max-width:100%;margin:0 auto}
+  .real-building{position:relative;background:linear-gradient(180deg,#1a2a3a 0%,#0f1a24 100%);border-radius:16px 16px 12px 12px;overflow:hidden;box-shadow:0 15px 30px rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.3)}
+  .cobertura{
+    position:relative;padding:16px 8px;background:linear-gradient(135deg,#2c3e50,#1a2632);border-radius:16px 16px 0 0;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;box-shadow:inset 0 1px 3px rgba(255,255,255,.2),0 4px 10px rgba(0,0,0,.3);border-bottom:2px solid var(--gold)
+  }
+  .outdoor-vivo{background:linear-gradient(135deg,#660099,#4A0072);padding:8px 24px;border-radius:40px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 4px 15px rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.5)}
+  .outdoor-vivo span{font-size:20px;font-weight:900;color:#fff;letter-spacing:2px}
+  .outdoor-vivo small{font-size:10px;color:var(--gold);font-weight:bold}
+  .cobertura-text{color:#ffd966;font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase}
+  .floors-container{max-height:55vh;overflow-y:auto;padding:6px;background:rgba(0,0,0,.3)}
+  .floors-container::-webkit-scrollbar{width:4px}
+  .floors-container::-webkit-scrollbar-track{background:rgba(0,0,0,.5);border-radius:2px}
+  .floors-container::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+  .floor-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;padding:4px 8px;border-radius:10px;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(0,0,0,.2));transition:all .2s}
+  .floor-number{width:50px;font-size:11px;font-weight:800;color:#ffd966;text-align:right;padding-right:6px;flex-shrink:0;text-shadow:0 1px 1px #000;padding-top:4px}
+  .glass-facade{
+    flex:1;background:linear-gradient(145deg,rgba(100,150,200,.3),rgba(50,80,120,.5));backdrop-filter:blur(2px);border-radius:10px;padding:8px;min-height:52px;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:6px;border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 0 15px rgba(0,0,0,.2);
+    position:relative;overflow-x:auto;overflow-y:hidden
+  }
+  .glass-facade::-webkit-scrollbar{height:3px}
+  .glass-facade::-webkit-scrollbar-track{background:rgba(0,0,0,.3);border-radius:3px}
+  .glass-facade::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+  .glass-facade::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shine 8s infinite;pointer-events:none}
+  @keyframes shine{100%{left:100%}}
+  .room-tag{background:rgba(0,0,0,.75);backdrop-filter:blur(4px);border-radius:16px;padding:4px 8px;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:bold;border:1px solid rgba(255,255,255,.3);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.2s;cursor:pointer;white-space:nowrap;flex-shrink:0}
+  .room-tag:active{transform:scale(.96)}
+  .glass-facade .room-tag{flex-shrink:1;min-width:55px;max-width:85px;font-size:clamp(8px,2vw,11px);padding:3px 5px}
+  .room-tag.valid{border-left:2px solid var(--valid);background:rgba(39,174,96,.30)}
+  .room-tag.occ{border-left:2px solid var(--occ);background:rgba(243,156,18,.30)}
+  .room-tag.lock{border-left:2px solid var(--lock);background:rgba(127,140,141,.30)}
+  .room-tag.prob{border-left:2px solid var(--prob);background:rgba(231,76,60,.30);animation:tagPulse 1s infinite}
+  @keyframes tagPulse{0%,100%{box-shadow:0 0 1px rgba(231,76,60,.5)}50%{box-shadow:0 0 5px rgba(231,76,60,.8)}}
+  .room-number-tag{font-weight:800;color:#fff;font-size:clamp(9px,1.8vw,11px)}
+  .room-status-tag{font-size:clamp(10px,2vw,12px)}
 
- :root {
-    --vivo: #6A1B9A;
-    --vivo-dark: #4A0072;
-    --valid: #27ae60;
-    --occ: #f39c12;
-    --lock: #7f8c8d;
-    --prob: #e74c3c;
-    --gold: #f1c40f;
- }
+  .marquee-address{background:linear-gradient(135deg,#1f2d3a,#14202b);border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);padding:8px 12px;text-align:center}
+  .marquee-address span{color:#ffd966;font-weight:900;letter-spacing:1px;text-transform:uppercase;font-size:11px;text-shadow:0 1px 1px rgba(0,0,0,.7)}
 
- body {
-    background: linear-gradient(135deg, #0a2f1a 0%, #1a4a2a 100%);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    padding: 12px;
-    min-height: 100vh;
-    overflow-x: hidden;
- }
+  .hall-entrada{background:linear-gradient(135deg,#2c3e50,#1a2632);border-top:2px solid var(--gold);padding:20px 12px;display:flex;justify-content:center;gap:40px;min-height:110px;align-items:center;flex-wrap:wrap}
+  .glass-door-full{width:120px;min-height:110px;background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,.15));backdrop-filter:blur(8px);border-radius:12px;border:2px solid rgba(255,215,0,.6);box-shadow:0 0 15px rgba(255,215,0,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative;padding:15px 8px}
+  .door-handle{width:6px;height:30px;background:var(--gold);border-radius:3px;position:absolute;right:10px;top:50%;transform:translateY(-50%)}
+  .glass-door-full span{color:var(--gold);font-size:11px;font-weight:bold;text-transform:uppercase;text-align:center;background:rgba(0,0,0,.5);padding:4px 8px;border-radius:15px}
 
- .app {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
- }
+  .footer-note{background:rgba(0,0,0,.85);backdrop-filter:blur(10px);margin-top:12px;padding:12px;border-radius:10px;border-left:3px solid var(--gold);font-size:11px;line-height:1.5;color:#e2e8f0;white-space:pre-wrap;word-break:break-word}
 
- @media (min-width: 1024px) {
-    .app {
-        display: grid;
-        grid-template-columns: 360px 1fr;
-        gap: 24px;
-    }
- }
+  .download-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:10000;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:16px;animation:fadeIn .3s}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .download-modal img{max-width:95%;max-height:70vh;border-radius:12px;box-shadow:0 10px 25px #000}
+  .download-modal p{color:#fff;margin-top:16px;font-size:12px;text-align:center}
+  .download-modal button{width:auto;padding:10px 20px;margin-top:16px;background:var(--vivo);color:#fff;border:none;border-radius:25px;font-size:14px}
 
- .card {
-    background: rgba(255,255,255,0.95);
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    padding: 16px;
-    backdrop-filter: blur(2px);
-    overflow-x: hidden;
- }
+  /* Banner de erro JS */
+  #errbar{display:none;position:fixed;left:10px;right:10px;top:10px;z-index:99999;background:#b91c1c;color:#fff;padding:10px 14px;border-radius:10px;font-size:12px;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+  #errbar strong{font-weight:900}
 
- .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
- }
-
- .stat-box {
-    text-align: center;
-    padding: 10px 4px;
-    border-radius: 14px;
-    color: #fff;
-    font-weight: 700;
-    font-size: 11px;
-    transition: transform 0.2s;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
- }
- .stat-box:active { transform: scale(0.96); }
- .stat-number { font-size: 22px; font-weight: 900; display: block; margin-bottom: 2px; }
-
- label {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: #2c3e50;
-    margin-bottom: 4px;
-    display: block;
-    letter-spacing: 0.5px;
- }
-
- select, input, textarea, button {
-    width: 100%;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: inherit;
-    margin-bottom: 10px;
-    transition: all 0.2s;
-    background: white;
- }
- select:focus, input:focus, textarea:focus {
-    outline: none;
-    border-color: var(--vivo);
-    box-shadow: 0 0 0 3px rgba(106,27,154,0.1);
- }
- textarea { resize: vertical; min-height: 60px; }
-
- .btn-apply {
-    background: linear-gradient(135deg, var(--vivo), var(--vivo-dark));
-    color: white;
-    font-weight: 800;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    text-transform: uppercase;
- }
- .btn-png {
-    background: linear-gradient(135deg, #2c3e50, #1a2632);
-    color: white;
-    font-weight: 800;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
- }
- .btn-ai {
-    background: linear-gradient(135deg, #0284c7, #0369a1);
-    color: white;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    font-size: 13px;
- }
- .btn-clear {
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 8px;
-    border-radius: 10px;
-    font-weight: 600;
- }
-
- .viewer-card {
-    padding: 16px;
-    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    max-width: 100%;
- }
-
- .building-container {
-    min-width: 320px;
-    max-width: 100%;
-    margin: 0 auto;
- }
-
- .real-building {
-    position: relative;
-    background: linear-gradient(180deg, #1a2a3a 0%, #0f1a24 100%);
-    border-radius: 16px 16px 12px 12px;
-    overflow: hidden;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,215,0,0.3);
- }
- .cobertura {
-    position: relative;
-    padding: 16px 8px;
-    background: linear-gradient(135deg, #2c3e50, #1a2632);
-    border-radius: 16px 16px 0 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    box-shadow: inset 0 1px 3px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.3);
-    border-bottom: 2px solid var(--gold);
- }
- .outdoor-vivo {
-    background: linear-gradient(135deg, #660099, #4A0072);
-    padding: 8px 24px;
-    border-radius: 40px;
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,215,0,0.5);
- }
- .outdoor-vivo span { font-size: 20px; font-weight: 900; color: white; letter-spacing: 2px; }
- .outdoor-vivo small { font-size: 10px; color: var(--gold); font-weight: bold; }
- .cobertura-text { color: #ffd966; font-size: 10px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
-
- .floors-container {
-    max-height: 55vh;
-    overflow-y: auto;
-    padding: 6px;
-    background: rgba(0,0,0,0.3);
- }
- .floors-container::-webkit-scrollbar { width: 4px; }
- .floors-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); border-radius: 2px; }
- .floors-container::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
-
- .floor-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 6px;
-    padding: 4px 8px;
-    border-radius: 10px;
-    background: linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
-    transition: all 0.2s;
- }
- .floor-number {
-    width: 50px;
-    font-size: 11px;
-    font-weight: 800;
-    color: #ffd966;
-    text-align: right;
-    padding-right: 6px;
-    flex-shrink: 0;
-    text-shadow: 0 1px 1px black;
-    padding-top: 4px;
- }
-
- .glass-facade {
-    flex: 1;
-    background: linear-gradient(145deg, rgba(100,150,200,0.3), rgba(50,80,120,0.5));
-    backdrop-filter: blur(2px);
-    border-radius: 10px;
-    padding: 8px;
-    min-height: 52px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 6px;
-    border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
-    position: relative;
-    overflow-x: auto;
-    overflow-y: hidden;
- }
- .glass-facade::-webkit-scrollbar { height: 3px; }
- .glass-facade::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 3px; }
- .glass-facade::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
- .glass-facade::before {
-    content: "";
-    position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-    animation: shine 8s infinite; pointer-events: none;
- }
- @keyframes shine { 100% { left: 100%; } }
-
- .room-tag {
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(4px);
-    border-radius: 16px;
-    padding: 4px 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    font-weight: bold;
-    border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    transition: all 0.2s;
-    cursor: pointer;
-    white-space: nowrap;
-    flex-shrink: 0;
- }
- .room-tag:active { transform: scale(0.96); }
- .glass-facade .room-tag { flex-shrink: 1; min-width: 55px; max-width: 85px; font-size: clamp(8px, 2vw, 11px); padding: 3px 5px; }
- .room-tag.valid { border-left: 2px solid #27ae60; background: rgba(39,174,96,0.3); }
- .room-tag.occ   { border-left: 2px solid #f39c12; background: rgba(243,156,18,0.3); }
- .room-tag.lock  { border-left: 2px solid #7f8c8d; background: rgba(127,140,141,0.3); }
- .room-tag.prob  { border-left: 2px solid #e74c3c; background: rgba(231,76,60,0.3); animation: tagPulse 1s infinite; }
- @keyframes tagPulse { 0%, 100% { box-shadow: 0 0 1px rgba(231,76,60,0.5); } 50% { box-shadow: 0 0 5px rgba(231,76,60,0.8); } }
-
- .room-number-tag { font-weight: 800; color: white; font-size: clamp(9px, 1.8vw, 11px); }
- .room-status-tag { font-size: clamp(10px, 2vw, 12px); }
-
- /* Placa de Endereço */
- .marquee-address {
-    background: linear-gradient(135deg, #1f2d3a, #14202b);
-    border-top: 2px solid var(--gold);
-    border-bottom: 2px solid var(--gold);
-    padding: 8px 12px;
-    text-align: center;
- }
- .marquee-address span {
-    color: #ffd966;
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 11px;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.7);
- }
-
- .hall-entrada {
-    background: linear-gradient(135deg, #2c3e50, #1a2632);
-    border-top: 2px solid var(--gold);
-    padding: 20px 12px;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    position: relative;
-    min-height: 110px;
-    align-items: center;
-    flex-wrap: wrap;
- }
- .glass-door-full {
-    width: 120px;
-    min-height: 110px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.15));
-    backdrop-filter: blur(8px);
-    border-radius: 12px;
-    border: 2px solid rgba(255,215,0,0.6);
-    box-shadow: 0 0 15px rgba(255,215,0,0.3);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-    position: relative; padding: 15px 8px;
- }
- .door-handle { width: 6px; height: 30px; background: var(--gold); border-radius: 3px; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); }
- .glass-door-full span { color: var(--gold); font-size: 11px; font-weight: bold; text-transform: uppercase; text-align: center; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 15px; }
-
- .hall-text { display: none; }
-
- .footer-note {
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(10px);
-    margin-top: 12px;
-    padding: 12px;
-    border-radius: 10px;
-    border-left: 3px solid var(--gold);
-    font-size: 11px;
-    line-height: 1.5;
-    color: #e2e8f0;
-    white-space: pre-wrap;
-    word-break: break-word;
- }
-
- .download-modal {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95);
-    z-index: 10000;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    padding: 16px; animation: fadeIn 0.3s;
- }
- @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
- .download-modal img { max-width: 95%; max-height: 70vh; border-radius: 12px; box-shadow: 0 10px 25px black; }
- .download-modal p { color: white; margin-top: 16px; font-size: 12px; text-align: center; }
- .download-modal button { width: auto; padding: 10px 20px; margin-top: 16px; background: var(--vivo); color: white; border: none; border-radius: 25px; font-size: 14px; }
-
- @media (max-width: 640px) {
-    body { padding: 8px; }
-    .card { padding: 12px; border-radius: 16px; }
-    .stats-grid { gap: 6px; margin-bottom: 16px; }
-    .stat-box { padding: 8px 2px; font-size: 10px; }
-    .stat-number { font-size: 18px; }
-    .floor-number { width: 45px; font-size: 10px; }
-    .glass-facade { padding: 6px; }
-    .room-tag { padding: 3px 5px; min-width: 48px; }
-    .glass-door-full { width: 95px; min-height: 95px; padding: 12px 6px; }
-    .glass-door-full span { font-size: 9px; }
-    .outdoor-vivo span { font-size: 16px; }
-    .outdoor-vivo { padding: 5px 16px; }
-    .cobertura { padding: 12px 6px; }
-    .floors-container { max-height: 50vh; }
- }
-
- @media (max-width: 480px) {
-    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .floor-row { flex-direction: column; align-items: flex-start; gap: 4px; }
-    .floor-number { width: auto; text-align: left; padding-left: 8px; }
-    .glass-facade { width: 100%; }
-    .hall-entrada { flex-direction: column; gap: 15px; }
-    .glass-door-full { width: 85%; max-width: 220px; }
- }
+  @media(max-width:640px){
+    body{padding:8px}
+    .card{padding:12px;border-radius:16px}
+    .stats-grid{gap:6px;margin-bottom:16px}
+    .stat-box{padding:8px 2px;font-size:10px}
+    .stat-number{font-size:18px}
+    .floor-number{width:45px;font-size:10px}
+    .glass-facade{padding:6px}
+    .room-tag{padding:3px 5px;min-width:48px}
+    .glass-door-full{width:95px;min-height:95px;padding:12px 6px}
+    .glass-door-full span{font-size:9px}
+    .outdoor-vivo span{font-size:16px}
+    .outdoor-vivo{padding:5px 16px}
+    .cobertura{padding:12px 6px}
+    .floors-container{max-height:50vh}
+  }
+  @media(max-width:480px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+    .floor-row{flex-direction:column;align-items:flex-start;gap:4px}
+    .floor-number{width:auto;text-align:left;padding-left:8px}
+    .glass-facade{width:100%}
+    .hall-entrada{flex-direction:column;gap:15px}
+    .glass-door-full{width:85%;max-width:220px}
+  }
 </style>
 </head>
 <body>
+<div id="errbar"><strong>Erro de script:</strong> <span id="errmsg"></span></div>
 
 <div class="app">
   <!-- CONTROLES -->
@@ -390,7 +132,7 @@
     </div>
 
     <label>👤 RESPONSÁVEL</label>
-    <input type="text" id="inputResp" placeholder="Nome completo">
+    <input type="text" id="inputResp" placeholder="Nome completo"/>
 
     <label>🏢 ENDEREÇO/PRÉDIO</label>
     <input type="text" id="inputAddr" placeholder="Eco Berrini — informe o endereço (ex.: Av. ...)" />
@@ -404,9 +146,9 @@
     </select>
 
     <label>📍 LOCALIZAÇÃO</label>
-    <div style="display:flex; gap:8px; flex-wrap: wrap;">
-      <select id="selFloor" style="flex:1; min-width: 100px;"></select>
-      <select id="selRoom" style="flex:1; min-width: 100px;"></select>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <select id="selFloor" style="flex:1;min-width:100px"></select>
+      <select id="selRoom" style="flex:1;min-width:100px"></select>
     </div>
 
     <label>📌 STATUS</label>
@@ -422,17 +164,17 @@
     <textarea id="obsText" rows="2" placeholder="Descreva as observações da vistoria..."></textarea>
 
     <label>⚡ ATALHO</label>
-    <div style="display:flex; gap:8px;">
-      <input id="quickInput" type="text" placeholder="32-05-v">
-      <button id="btnQuick" style="width:72px;background:#444;color:#fff;border-radius:12px;border:none;">OK</button>
+    <div style="display:flex;gap:8px">
+      <input id="quickInput" type="text" placeholder="32-05-v"/>
+      <button id="btnQuick" style="width:72px;background:#444;color:#fff;border-radius:12px;border:none">OK</button>
     </div>
-    <small style="font-size:9px; color:#666; margin-top:-6px;">Formato: Andar-Sala-status (v/o/t/p) | Sala 1-50</small>
+    <small style="font-size:9px;color:#666;margin-top:-6px;display:block">Formato: Andar-Sala-status (v/o/t/p) | Sala 1-50</small>
 
     <button id="btnApply" class="btn-apply">✓ APLICAR</button>
     <button id="btnAI" class="btn-ai">🤖 GERAR RELATÓRIO</button>
     <button id="btnPNG" class="btn-png">📸 EXPORTAR PRÉDIO</button>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
       <button id="btnClearSalas" class="btn-clear">🗑️ LIMPAR TUDO</button>
       <button id="btnClearResumo" class="btn-clear">📋 LIMPAR RELATÓRIO</button>
     </div>
@@ -452,569 +194,397 @@
 
         <div class="floors-container" id="floorsContainer"></div>
 
-        <!-- Placa de Endereço -->
         <div class="marquee-address"><span id="addrText">Eco Berrini — informe o endereço</span></div>
 
-        <!-- Hall -->
         <div class="hall-entrada">
-          <div class="glass-door-full" style="position: relative;">
-            <span>🚪 HALL A</span>
-            <div class="door-handle"></div>
-          </div>
-          <div class="glass-door-full" style="position: relative;">
-            <span>🚪 HALL B</span>
-            <div class="door-handle"></div>
-          </div>
+          <div class="glass-door-full"><span>🚪 HALL A</span><div class="door-handle"></div></div>
+          <div class="glass-door-full"><span>🚪 HALL B</span><div class="door-handle"></div></div>
         </div>
       </div>
-
       <div class="footer-note" id="footerNoteDisplay"></div>
     </div>
   </div>
 </div>
 
 <script>
-/* ========= Persistência ========= */
-const STORAGE_KEY = "vivo_predio_v28";
-let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
+/* ===== Banner de erro para debug em produção ===== */
+window.onerror = function(msg, src, line, col, err){
+  const bar = document.getElementById('errbar');
+  const span = document.getElementById('errmsg');
+  if(bar && span){
+    span.textContent = (msg||'') + (line?` (linha ${line})`: '');
+    bar.style.display = 'block';
+  }
+};
+
+/* ===== Persistência ===== */
+const STORAGE_KEY = "vivo_predio_v29";
+let rooms = {};
+let resumoIA = "";
 const TOTAL_FLOORS = 32;
 const MAX_SALA = 50;
 const DEFAULT_ADDR = "Eco Berrini — informe o endereço";
 
-/* ========= Utilidades ========= */
-function getStatusIcon(status) {
-  const icons = { valid: '✅', occ: '🟠', lock: '🔒', prob: '❌' };
-  return icons[status] || '';
-}
-function getStatusText(status) {
-  const texts = { valid: 'Validada', occ: 'Ocupada', lock: 'Trancada', prob: 'Problema' };
-  return texts[status] || '';
-}
+/* ===== Utils ===== */
+function getStatusIcon(status){return ({valid:'✅',occ:'🟠',lock:'🔒',prob:'❌'})[status]||''}
+function getStatusText(status){return ({valid:'Validada',occ:'Ocupada',lock:'Trancada',prob:'Problema'})[status]||''}
 
-/* ========= Render da prévia do prédio (DOM) ========= */
-function renderBuilding() {
-  const container = document.getElementById("floorsContainer");
-  if (!container) return;
+/* ===== Render prévia ===== */
+function renderBuilding(){
+  const container = document.getElementById("floorsContainer"); if(!container) return;
 
-  const floorsMap = new Map();
-  for (let f = 1; f <= TOTAL_FLOORS; f++) floorsMap.set(f, []);
-
-  Object.entries(rooms).forEach(([key, status]) => {
-    const [floor, room] = key.split('-').map(Number);
-    if (floorsMap.has(floor)) floorsMap.get(floor).push({ room, status });
+  const floorsMap = new Map(); for(let f=1; f<=TOTAL_FLOORS; f++) floorsMap.set(f,[]);
+  Object.entries(rooms).forEach(([key,status])=>{
+    const [floor,room]=key.split('-').map(Number);
+    if(floorsMap.has(floor)) floorsMap.get(floor).push({room,status});
   });
+  for(const f of floorsMap.keys()) floorsMap.get(f).sort((a,b)=>a.room-b.room);
 
-  for (let floor of floorsMap.keys()) floorsMap.get(floor).sort((a, b) => a.room - b.room);
-
-  let html = '';
-  for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
+  let html = "";
+  for(let floor=TOTAL_FLOORS; floor>=1; floor--){
     const salas = floorsMap.get(floor);
     html += `
       <div class="floor-row">
         <div class="floor-number">${floor}º ANDAR</div>
-        <div class="glass-facade" style="justify-content: ${salas.length > 0 ? 'flex-start' : 'center'}">
+        <div class="glass-facade" style="justify-content:${salas.length>0?'flex-start':'center'}">
     `;
-    if (salas.length === 0) {
-      html += `<div style="color:rgba(255,255,255,0.5); font-size:10px; padding:5px; font-style:italic;">—— DISPONÍVEL ——</div>`;
-    } else {
-      salas.forEach(sala => {
-        const icon = getStatusIcon(sala.status);
+    if(salas.length===0){
+      html += `<div style="color:rgba(255,255,255,.6);font-size:10px;padding:5px;font-style:italic">—— DISPONÍVEL ——</div>`;
+    }else{
+      for(const s of salas){
         html += `
-          <div class="room-tag ${sala.status}" data-room="${floor}-${sala.room}" title="SALA ${sala.room} - ${getStatusText(sala.status)}">
-            <span class="room-number-tag">SALA ${sala.room}</span>
-            <span class="room-status-tag">${icon}</span>
+          <div class="room-tag ${s.status}" data-room="${floor}-${s.room}" title="SALA ${s.room} - ${getStatusText(s.status)}">
+            <span class="room-number-tag">SALA ${s.room}</span>
+            <span class="room-status-tag">${getStatusIcon(s.status)}</span>
           </div>
         `;
-      });
+      }
     }
     html += `</div></div>`;
   }
-
   container.innerHTML = html;
-  attachRoomEvents();
-}
-function attachRoomEvents() {
-  document.querySelectorAll('.room-tag').forEach(tag => {
-    tag.removeEventListener('click', handleRoomClick);
-    tag.addEventListener('click', handleRoomClick);
+
+  document.querySelectorAll('.room-tag').forEach(el=>{
+    el.onclick = (e)=>{
+      const key = e.currentTarget.dataset.room; if(!key) return;
+      const [f,r] = key.split('-');
+      document.getElementById("selFloor").value = f;
+      document.getElementById("selRoom").value = r;
+    };
   });
 }
-function handleRoomClick(e) {
-  const tag = e.currentTarget;
-  const roomKey = tag.dataset.room;
-  if (!roomKey) return;
-  const [floor, room] = roomKey.split('-');
-  document.getElementById("selFloor").value = floor;
-  document.getElementById("selRoom").value = room;
-  tag.style.transform = 'scale(0.96)';
-  setTimeout(() => { tag.style.transform = ''; }, 150);
-}
 
-/* ========= Stats + rodapé ========= */
-function updateStats() {
-  const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
-  Object.values(rooms).forEach(s => { if (stats[s] !== undefined) stats[s]++; });
-  document.getElementById("stValid").textContent = stats.valid;
-  document.getElementById("stOcc").textContent = stats.occ;
-  document.getElementById("stLock").textContent = stats.lock;
-  document.getElementById("stProb").textContent = stats.prob;
+/* ===== Stats + rodapé ===== */
+function updateStats(){
+  const stats={valid:0,occ:0,lock:0,prob:0};
+  Object.values(rooms).forEach(s=>{if(stats[s]!=null) stats[s]++});
+  ["stValid","stOcc","stLock","stProb"].forEach(id=>{
+    const el=document.getElementById(id); if(el){
+      const key = id==="stValid"?"valid":id==="stOcc"?"occ":id==="stLock"?"lock":"prob";
+      el.textContent = stats[key];
+    }
+  });
   return stats;
 }
-
-function updateFooter() {
-  const auditor = document.getElementById("inputResp")?.value || 'Não informado';
+function updateFooter(){
+  const aud = document.getElementById("inputResp")?.value || 'Não informado';
   const addr = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
-  const model = document.getElementById("selTemplate")?.value || "glass";
+  const tpl  = document.getElementById("selTemplate")?.value || "glass";
 
-  // Exibe relatório ou instrução
-  document.getElementById("footerNoteDisplay").innerHTML = resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.';
-  // Atualiza placa
-  const addrTextEl = document.getElementById("addrText");
-  if (addrTextEl) addrTextEl.textContent = addr;
+  const addrEl = document.getElementById("addrText"); if(addrEl) addrEl.textContent = addr;
+  const note = document.getElementById("footerNoteDisplay");
+  if(note) note.innerHTML = resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.';
 
-  // Persistência
+  // persistência
   localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
-  localStorage.setItem(STORAGE_KEY + "_resp", auditor);
-  localStorage.setItem(STORAGE_KEY + "_obs", document.getElementById("obsText")?.value || '');
-  localStorage.setItem(STORAGE_KEY + "_addr", addr);
-  localStorage.setItem(STORAGE_KEY + "_tpl", model);
-  localStorage.setItem(STORAGE_KEY + "_ai", resumoIA);
+  localStorage.setItem(STORAGE_KEY+"_resp", aud);
+  localStorage.setItem(STORAGE_KEY+"_obs", document.getElementById("obsText")?.value || '');
+  localStorage.setItem(STORAGE_KEY+"_addr", addr);
+  localStorage.setItem(STORAGE_KEY+"_tpl", tpl);
+  localStorage.setItem(STORAGE_KEY+"_ai", resumoIA);
 }
 
-/* ========= RELATÓRIO IA narrativo ========= */
-function generateAIRelatorio() {
+/* ===== Relatório IA narrativo ===== */
+function generateAIRelatorio(){
   const stats = updateStats();
   const total = Object.keys(rooms).length;
   const agora = new Date();
-  const periodo = agora.getHours() < 12 ? 'manhã' : (agora.getHours() < 18 ? 'tarde' : 'noite');
+  const periodo = agora.getHours()<12?'manhã':(agora.getHours()<18?'tarde':'noite');
   const dataHora = agora.toLocaleString('pt-BR');
-
   const auditor = document.getElementById("inputResp")?.value || 'Não informado';
   const obs = (document.getElementById("obsText")?.value || '').trim();
   const addrFull = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
 
-  // Agrupamento por andar
-  const byFloor = {};
-  Object.entries(rooms).forEach(([key, status]) => {
-    const [floorStr, roomStr] = key.split('-');
-    const floor = Number(floorStr), room = Number(roomStr);
-    if (!byFloor[floor]) byFloor[floor] = { total: 0, valid: 0, occ: 0, lock: 0, prob: 0, roomsProb: [] };
-    byFloor[floor].total++;
-    byFloor[floor][status]++;
-    if (status === 'prob') byFloor[floor].roomsProb.push(room);
+  const byFloor={};
+  Object.entries(rooms).forEach(([key,status])=>{
+    const [fStr,rStr]=key.split('-'); const f=Number(fStr), r=Number(rStr);
+    if(!byFloor[f]) byFloor[f]={total:0,valid:0,occ:0,lock:0,prob:0,roomsProb:[]};
+    byFloor[f].total++; byFloor[f][status]++; if(status==='prob') byFloor[f].roomsProb.push(r);
   });
+  const andaresProb = Object.keys(byFloor).map(n=>Number(n)).filter(f=>byFloor[f].prob>0).sort((a,b)=>byFloor[b].prob-byFloor[a].prob);
+  const pct = (n)=> total? Math.round(n*100/total):0;
 
-  const andaresComProblema = Object.keys(byFloor).map(n => Number(n)).filter(f => byFloor[f].prob > 0)
-    .sort((a,b) => byFloor[b].prob - byFloor[a].prob);
-
-  const pct = (n) => total ? Math.round((n * 100) / total) : 0;
-
-  const destaques = [];
-  if (total === 0) {
-    destaques.push("Nenhuma sala foi auditada nesta rodada.");
-  } else {
-    if (stats.valid >= Math.max(6, Math.round(total * 0.8))) destaques.push("Alto nível de conformidade (salas validadas ≥ 80%).");
-    if (stats.lock > Math.round(total * 0.2)) destaques.push("Muitas salas trancadas; pode haver restrição de acesso ao período.");
-    if (stats.occ > Math.round(total * 0.3))  destaques.push("Alta ocupação; considerar vistoria em outro horário.");
-    if (stats.prob === 0)                     destaques.push("Nenhum problema identificado nas salas verificadas.");
-    if (stats.prob > 0 && andaresComProblema.length > 0) {
-      const top = andaresComProblema.slice(0,3).map(f => `${f}º (${byFloor[f].prob})`).join(', ');
-      destaques.push(`Incidência concentrada em andares: ${top}.`);
+  const destaques=[];
+  if(total===0){destaques.push("Nenhuma sala foi auditada nesta rodada.");}
+  else{
+    if(stats.valid>=Math.max(6,Math.round(total*0.8))) destaques.push("Alto nível de conformidade (salas validadas ≥ 80%).");
+    if(stats.lock>Math.round(total*0.2))          destaques.push("Muitas salas trancadas; possível restrição de acesso no período.");
+    if(stats.occ>Math.round(total*0.3))           destaques.push("Alta ocupação; considerar vistoria em outro horário.");
+    if(stats.prob===0)                             destaques.push("Nenhum problema identificado nas salas verificadas.");
+    if(stats.prob>0 && andaresProb.length>0){
+      const top = andaresProb.slice(0,3).map(f=>`${f}º (${byFloor[f].prob})`).join(', ');
+      destaques.push(`Incidência concentrada nos andares: ${top}.`);
     }
   }
+  const recomend=[];
+  if(stats.prob>0){const foco=andaresProb.slice(0,3).map(f=>`${f}º`).join(', '); recomend.push(`Abrir chamados e priorizar correções nos andares ${foco||'com problemas'}.`);}
+  if(stats.lock>0) recomend.push("Solicitar liberação de acesso às salas trancadas para nova vistoria.");
+  if(stats.occ>0)  recomend.push("Agendar rechecagem em janela de baixa ocupação.");
+  if(total>0 && stats.valid/total<0.7) recomend.push("Executar nova rodada de validação para elevar a conformidade.");
+  if(recomend.length===0) recomend.push("Sem ações críticas no momento.");
 
-  const recomend = [];
-  if (stats.prob > 0) {
-    const foco = andaresComProblema.slice(0,3).map(f => `${f}º`).join(', ');
-    recomend.push(`Abrir chamados e priorizar correções nos andares ${foco || 'com problemas'}.`);
-  }
-  if (stats.lock > 0) recomend.push("Solicitar liberação de acesso às salas trancadas para nova vistoria.");
-  if (stats.occ > 0)  recomend.push("Agendar rechecagem em janela de baixa ocupação.");
-  if (total > 0 && stats.valid / total < 0.7) recomend.push("Executar nova rodada de validação para elevar a conformidade.");
-  if (recomend.length === 0) recomend.push("Sem ações críticas no momento.");
-
-  let problemasPorAndar = '';
-  if (andaresComProblema.length > 0) {
-    problemasPorAndar = andaresComProblema.map(f => {
-      const salas = byFloor[f].roomsProb.sort((a,b) => a-b).map(n => n.toString().padStart(2,'0')).join(', ');
-      return `${f}º: ${salas}`;
+  let probList = '';
+  if(andaresProb.length>0){
+    probList = andaresProb.map(f=>{
+      const s = byFloor[f].roomsProb.sort((a,b)=>a-b).map(n=>n.toString().padStart(2,'0')).join(', ');
+      return `${f}º: ${s}`;
     }).join('\n');
   }
 
-  const addrParts = addrFull.split('—');
-  const nomePredio = (addrParts[0] || 'Eco Berrini').trim();
-  const linhaEndereco = (addrParts[1] || '').trim();
-
-  let relatorio = `📋 RELATÓRIO DE VISTORIA — ${nomePredio}\n`;
-  if (linhaEndereco) relatorio += `📍 ${linhaEndereco}\n`;
-  relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  relatorio += `📅 ${dataHora} (${periodo})\n`;
-  relatorio += `👤 Auditor: ${auditor}\n`;
-  relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-
-  if (total === 0) {
-    relatorio += `⚠️ Nenhuma sala vistoriada até o momento.\n`;
-  } else {
-    relatorio += `🧭 Na ${periodo}, o auditor verificou ${total} sala(s) no prédio.\n`;
-    relatorio += `📊 Resultados globais:\n`;
-    relatorio += `   ✅ Validadas: ${stats.valid} (${pct(stats.valid)}%)\n`;
-    relatorio += `   🟠 Ocupadas: ${stats.occ} (${pct(stats.occ)}%)\n`;
-    relatorio += `   🔒 Trancadas: ${stats.lock} (${pct(stats.lock)}%)\n`;
-    relatorio += `   ❌ Problemas: ${stats.prob} (${pct(stats.prob)}%)\n`;
-
-    if (andaresComProblema.length > 0) {
-      relatorio += `\n⚠️ Salas com problema por andar:\n${problemasPorAndar}\n`;
-    } else {
-      relatorio += `\n✅ Sem registros de problema nesta rodada.\n`;
-    }
-
-    relatorio += `\n✨ Destaques:\n`;
-    destaques.forEach(d => relatorio += `• ${d}\n`);
-
-    relatorio += `\n🛠️ Recomendações:\n`;
-    recomend.forEach(r => relatorio += `• ${r}\n`);
+  const [predio, endParte] = (addrFull.includes('—')? addrFull.split('—'): [addrFull,'']).map(s=>s.trim());
+  let rel = `📋 RELATÓRIO DE VISTORIA — ${predio||'Eco Berrini'}\n`;
+  if(endParte) rel += `📍 ${endParte}\n`;
+  rel += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  rel += `📅 ${dataHora} (${periodo})\n`;
+  rel += `👤 Auditor: ${auditor}\n`;
+  rel += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  if(total===0){
+    rel += `⚠️ Nenhuma sala vistoriada até o momento.\n`;
+  }else{
+    rel += `🧭 Na ${periodo}, o auditor verificou ${total} sala(s) no prédio.\n`;
+    rel += `📊 Resultados globais:\n`;
+    rel += `   ✅ Validadas: ${stats.valid} (${pct(stats.valid)}%)\n`;
+    rel += `   🟠 Ocupadas: ${stats.occ} (${pct(stats.occ)}%)\n`;
+    rel += `   🔒 Trancadas: ${stats.lock} (${pct(stats.lock)}%)\n`;
+    rel += `   ❌ Problemas: ${stats.prob} (${pct(stats.prob)}%)\n`;
+    rel += (andaresProb.length>0)? `\n⚠️ Salas com problema por andar:\n${probList}\n` : `\n✅ Sem registros de problema nesta rodada.\n`;
+    rel += `\n✨ Destaques:\n` + destaques.map(d=>'• '+d).join('\n') + '\n';
+    rel += `\n🛠️ Recomendações:\n` + recomend.map(r=>'• '+r).join('\n') + '\n';
   }
+  if(obs){ rel += `\n📝 Observações do auditor:\n${obs}\n`; }
+  rel += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  rel += (total===0)? `⚠️ Nenhuma sala auditada` : (stats.prob===0? `✅ Vistoria concluída - sem pendências críticas`:`🔧 Manutenção necessária - programar correções`);
 
-  if (obs) {
-    relatorio += `\n📝 Observações do auditor:\n${obs}\n`;
-  }
-
-  relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  if (total === 0)         relatorio += `⚠️ Nenhuma sala auditada`;
-  else if (stats.prob === 0) relatorio += `✅ Vistoria concluída - sem pendências críticas`;
-  else                       relatorio += `🔧 Manutenção necessária - programar correções`;
-
-  resumoIA = relatorio;
+  resumoIA = rel;
   updateFooter();
 
   const btn = document.getElementById("btnAI");
-  const orig = btn.textContent;
-  btn.textContent = "✓ RELATÓRIO OK!";
-  setTimeout(() => { btn.textContent = orig; }, 1500);
+  const orig = btn.textContent; btn.textContent = "✓ RELATÓRIO OK!"; setTimeout(()=>btn.textContent=orig,1500);
 }
 
-/* ========= EXPORT EM ALTA LEGIBILIDADE + MODELOS (shapes) ========= */
+/* ===== Export alta legibilidade + modelos (shapes) ===== */
 const EXPORT_CFG = {
-  width: 1100,
-  maxHeight: 4000,
-  scale: 2.0,
-  padding: 30,
-  bodyBg: "#0a2f3a",
-  buildingBg: "#0f1a24",
-  lineColor: "rgba(255,215,0,0.45)",
-  titleFont: "bold 16px sans-serif",
-  subtitleFont: "bold 12px sans-serif",
-  floorNumberFont: "bold 12px sans-serif",
-  tagRoomFont: "bold 12px sans-serif",
-  tagIconFont: "16px sans-serif",
-  addrFont: "bold 14px sans-serif",
-  hdrInfoFont: "12px monospace",
-  hdrInfo2Font: "12px monospace",
-  reportTitleFont: "bold 13px monospace",
-  reportBodyFont: "11px monospace",
-  reportBodyLineH: 16,
-  floorHeight: 54,
-  tagMinWidth: 62,
-  tagMaxWidth: 95
+  width:1100,maxHeight:4000,scale:2.0,padding:30,
+  bodyBg:"#0a2f3a",buildingBg:"#0f1a24",lineColor:"rgba(255,215,0,0.45)",
+  titleFont:"bold 16px sans-serif",subtitleFont:"bold 12px sans-serif",
+  floorNumberFont:"bold 12px sans-serif",
+  tagRoomFont:"bold 12px sans-serif",tagIconFont:"16px sans-serif",
+  addrFont:"bold 14px sans-serif",hdrInfoFont:"12px monospace",hdrInfo2Font:"12px monospace",
+  reportTitleFont:"bold 13px monospace",reportBodyFont:"11px monospace",reportBodyLineH:16,
+  floorHeight:54,tagMinWidth:62,tagMaxWidth:95
 };
-
 function roundedRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
 function drawShine(ctx,x,y,w,h){const g=ctx.createLinearGradient(x,y,x+w,y);g.addColorStop(0,"rgba(255,255,255,0.08)");g.addColorStop(0.5,"rgba(255,255,255,0.18)");g.addColorStop(1,"rgba(255,255,255,0.08)");ctx.fillStyle=g;ctx.fillRect(x,y,w,h);}
-
-function drawFacadeBand(ctx, model, x, y, w, h) {
-  if (model === "glass") {
-    const g = ctx.createLinearGradient(x, y, x+w, y+h);
-    g.addColorStop(0, "rgba(110,160,210,0.28)");
-    g.addColorStop(1, "rgba(60,90,130,0.4)");
-    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = EXPORT_CFG.lineColor; ctx.strokeRect(x, y, w, h);
-  } else if (model === "classic") {
-    ctx.fillStyle = "#243444";
-    roundedRect(ctx, x, y, w, h, 8); ctx.fill();
-    ctx.strokeStyle = EXPORT_CFG.lineColor; ctx.stroke();
-    ctx.fillStyle = "rgba(250, 210, 100, 0.08)";
-    ctx.fillRect(x, y, 8, h); ctx.fillRect(x+w-8, y, 8, h);
-  } else if (model === "grid") {
-    ctx.fillStyle = "#223445"; ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = EXPORT_CFG.lineColor; ctx.strokeRect(x, y, w, h);
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
-    for (let gx = x+50; gx < x+w; gx += 50) { ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx, y+h); ctx.stroke(); }
-  } else { // blue
-    const g = ctx.createLinearGradient(x, y, x, y+h);
-    g.addColorStop(0, "rgba(30,70,110,0.55)");
-    g.addColorStop(1, "rgba(20,55,90,0.55)");
-    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = "rgba(90,160,220,0.35)"; ctx.strokeRect(x, y, w, h);
-    ctx.fillStyle = "rgba(90,160,220,0.15)";
-    for (let cx = x+25; cx < x+w; cx += 80) ctx.fillRect(cx, y, 14, h);
+function drawFacadeBand(ctx,model,x,y,w,h){
+  if(model==="glass"){
+    const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,"rgba(110,160,210,0.28)");g.addColorStop(1,"rgba(60,90,130,0.4)");
+    ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.strokeRect(x,y,w,h);
+  }else if(model==="classic"){
+    ctx.fillStyle="#243444";roundedRect(ctx,x,y,w,h,8);ctx.fill();ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.stroke();
+    ctx.fillStyle="rgba(250,210,100,0.08)";ctx.fillRect(x,y,8,h);ctx.fillRect(x+w-8,y,8,h);
+  }else if(model==="grid"){
+    ctx.fillStyle="#223445";ctx.fillRect(x,y,w,h);ctx.strokeStyle=EXPORT_CFG.lineColor;ctx.strokeRect(x,y,w,h);
+    ctx.strokeStyle="rgba(255,255,255,0.08)";for(let gx=x+50;gx<x+w;gx+=50){ctx.beginPath();ctx.moveTo(gx,y);ctx.lineTo(gx,y+h);ctx.stroke();}
+  }else{ // blue
+    const g=ctx.createLinearGradient(x,y,x,y+h);g.addColorStop(0,"rgba(30,70,110,0.55)");g.addColorStop(1,"rgba(20,55,90,0.55)");
+    ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.strokeStyle="rgba(90,160,220,0.35)";ctx.strokeRect(x,y,w,h);
+    ctx.fillStyle="rgba(90,160,220,0.15)";for(let cx=x+25;cx<x+w;cx+=80) ctx.fillRect(cx,y,14,h);
   }
 }
-
-function drawTag(ctx, x, y, w, h, room, status) {
-  ctx.fillStyle = "rgba(0,0,0,0.74)";
-  roundedRect(ctx, x, y, w, h, 10); ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.22)"; ctx.stroke();
-  const color = status==='valid'?'#27ae60':status==='occ'?'#f39c12':status==='lock'?'#7f8c8d':'#e74c3c';
-  ctx.fillStyle = color; ctx.fillRect(x-2, y, 4, h);
-  ctx.fillStyle = "#fff";
-  ctx.font = EXPORT_CFG.tagRoomFont;
-  ctx.fillText(String(room), x + 8, y + h - 10);
-  ctx.font = EXPORT_CFG.tagIconFont;
-  const icon = status==='valid'?'✅':status==='occ'?'🟠':status==='lock'?'🔒':'❌';
-  ctx.fillText(icon, x + w - 20, y + h - 12);
+function drawTag(ctx,x,y,w,h,room,status){
+  ctx.fillStyle="rgba(0,0,0,0.74)";roundedRect(ctx,x,y,w,h,10);ctx.fill();
+  ctx.strokeStyle="rgba(255,255,255,0.22)";ctx.stroke();
+  const color=status==='valid'?'#27ae60':status==='occ'?'#f39c12':status==='lock'?'#7f8c8d':'#e74c3c';
+  ctx.fillStyle=color;ctx.fillRect(x-2,y,4,h);
+  ctx.fillStyle="#fff";ctx.font=EXPORT_CFG.tagRoomFont;ctx.fillText(String(room),x+8,y+h-10);
+  ctx.font=EXPORT_CFG.tagIconFont;const icon=status==='valid'?'✅':status==='occ'?'🟠':status==='lock'?'🔒':'❌';ctx.fillText(icon,x+w-20,y+h-12);
 }
 
-function exportToPNG() {
-  const btn = document.getElementById("btnPNG");
-  const originalText = btn.textContent;
-  btn.textContent = "🏢 GERANDO...";
-  btn.disabled = true;
+function exportToPNG(){
+  const btn=document.getElementById("btnPNG");const orig=btn.textContent;btn.textContent="🏢 GERANDO...";btn.disabled=true;
+  if(!resumoIA || resumoIA==='🤖 Clique em "GERAR RELATÓRIO" para análise automática.') generateAIRelatorio();
 
-  if (resumoIA === "" || resumoIA === '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
-    generateAIRelatorio();
-  }
-
-  setTimeout(() => {
-    try {
+  setTimeout(()=>{
+    try{
       const model = (document.getElementById("selTemplate")?.value || "glass");
-      const { width, maxHeight, scale, padding, bodyBg, buildingBg } = EXPORT_CFG;
+      const {width,maxHeight,scale,padding,bodyBg,buildingBg} = EXPORT_CFG;
 
-      const floorsMap = new Map();
-      for (let f = 1; f <= TOTAL_FLOORS; f++) floorsMap.set(f, []);
-      Object.entries(rooms).forEach(([key, status]) => {
-        const [floor, room] = key.split('-').map(Number);
-        floorsMap.get(floor).push({ room, status });
-      });
-      for (const f of floorsMap.keys()) floorsMap.get(f).sort((a,b)=>a.room-b.room);
+      const floorsMap = new Map();for(let f=1;f<=TOTAL_FLOORS;f++) floorsMap.set(f,[]);
+      Object.entries(rooms).forEach(([key,status])=>{const [floor,room]=key.split('-').map(Number);floorsMap.get(floor).push({room,status});});
+      for(const f of floorsMap.keys()) floorsMap.get(f).sort((a,b)=>a.room-b.room);
 
-      const activeFloors = TOTAL_FLOORS;
-      const relLines = (resumoIA ? resumoIA.split('\n').length : 6);
-      const reportHeight = Math.min(60 + relLines * EXPORT_CFG.reportBodyLineH, 380);
+      const relLines = (resumoIA?resumoIA.split('\n').length:6);
+      const reportHeight = Math.min(60 + relLines*EXPORT_CFG.reportBodyLineH, 380);
 
-      const headH = 80;
-      const floorsBlockH = activeFloors * EXPORT_CFG.floorHeight;
-      const addrH = 50;
-      const hallH = 80;
+      const headH=80,floorsBlockH=TOTAL_FLOORS*EXPORT_CFG.floorHeight,addrH=50,hallH=80;
       const contentH = headH + floorsBlockH + addrH + hallH + reportHeight + padding*2;
 
-      const canvas = document.createElement("canvas");
-      canvas.width  = Math.round(width * scale);
-      canvas.height = Math.min(Math.round(contentH * scale), Math.round(maxHeight * scale));
-      const ctx = canvas.getContext("2d");
-      ctx.scale(scale, scale);
+      const canvas=document.createElement("canvas");
+      canvas.width=Math.round(width*scale);canvas.height=Math.min(Math.round(contentH*scale),Math.round(maxHeight*scale));
+      const ctx=canvas.getContext("2d");ctx.scale(scale,scale);
 
-      // Fundo e corpo
-      ctx.fillStyle = bodyBg; ctx.fillRect(0, 0, width, Math.min(contentH, maxHeight));
-      const bx = padding, by = padding, bw = width - padding*2, bh = Math.min(contentH, maxHeight) - padding*2;
-      ctx.fillStyle = buildingBg; roundedRect(ctx, bx, by, bw, bh, 12); ctx.fill();
+      ctx.fillStyle=bodyBg;ctx.fillRect(0,0,width,Math.min(contentH,maxHeight));
+      const bx=padding,by=padding,bw=width-padding*2,bh=Math.min(contentH,maxHeight)-padding*2;
+      ctx.fillStyle=buildingBg;roundedRect(ctx,bx,by,bw,bh,12);ctx.fill();
 
-      // Outdoor
-      ctx.fillStyle = "#2c3e50"; roundedRect(ctx, bx, by, bw, 64, 12); ctx.fill();
-      ctx.fillStyle = "#4A0072"; roundedRect(ctx, bx + bw/2 - 180, by + 12, 360, 34, 18); ctx.fill();
-      ctx.fillStyle = "#fff"; ctx.font = EXPORT_CFG.titleFont; ctx.fillText("VIVO 5G+", bx + bw/2 - 58, by + 36);
-      ctx.fillStyle = "#ffd966"; ctx.font = EXPORT_CFG.subtitleFont; ctx.fillText("INFRAESTRUTURA", bx + bw/2 - 86, by + 56);
+      ctx.fillStyle="#2c3e50";roundedRect(ctx,bx,by,bw,64,12);ctx.fill();
+      ctx.fillStyle="#4A0072";roundedRect(ctx,bx+bw/2-180,by+12,360,34,18);ctx.fill();
+      ctx.fillStyle="#fff";ctx.font=EXPORT_CFG.titleFont;ctx.fillText("VIVO 5G+",bx+bw/2-58,by+36);
+      ctx.fillStyle="#ffd966";ctx.font=EXPORT_CFG.subtitleFont;ctx.fillText("INFRAESTRUTURA",bx+bw/2-86,by+56);
 
-      // Andares
-      let yOffset = by + headH;
-      const fx = bx + 10, fw = bw - 20;
-      for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
-        const salas = floorsMap.get(floor);
+      let y=by+headH; const fx=bx+10, fw=bw-20;
+      for(let floor=TOTAL_FLOORS; floor>=1; floor--){
+        const salas=floorsMap.get(floor);
+        ctx.fillStyle="#ffd966";ctx.font=EXPORT_CFG.floorNumberFont;ctx.fillText(`${floor}º`,bx-4,y+28);
+        drawFacadeBand(ctx,model,fx,y,fw,EXPORT_CFG.floorHeight-6);drawShine(ctx,fx,y,fw,EXPORT_CFG.floorHeight-6);
 
-        ctx.fillStyle = "#ffd966";
-        ctx.font = EXPORT_CFG.floorNumberFont;
-        ctx.fillText(`${floor}º`, bx - 4, yOffset + 28);
-
-        drawFacadeBand(ctx, model, fx, yOffset, fw, EXPORT_CFG.floorHeight - 6);
-        drawShine(ctx, fx, yOffset, fw, EXPORT_CFG.floorHeight - 6);
-
-        if (salas.length > 0) {
-          const maxPerLine = 14;
-          let xPos = fx + 8;
-          const tagW = Math.max(EXPORT_CFG.tagMinWidth, Math.min(EXPORT_CFG.tagMaxWidth, (fw - 30) / Math.min(maxPerLine, salas.length)));
-          const tagH = 34;
-          for (let i = 0; i < Math.min(salas.length, maxPerLine); i++) {
-            const s = salas[i];
-            drawTag(ctx, xPos, yOffset + 8, tagW, tagH, s.room, s.status);
-            xPos += tagW + 6;
-            if (xPos > fx + fw - tagW) break;
+        if(salas.length>0){
+          const maxPerLine=14; let x=fx+8;
+          const tagW=Math.max(EXPORT_CFG.tagMinWidth,Math.min(EXPORT_CFG.tagMaxWidth,(fw-30)/Math.min(maxPerLine,salas.length)));
+          const tagH=34;
+          for(let i=0;i<Math.min(salas.length,maxPerLine);i++){
+            const s=salas[i]; drawTag(ctx,x,y+8,tagW,tagH,s.room,s.status);
+            x+=tagW+6; if(x>fx+fw-tagW) break;
           }
-          if (salas.length > maxPerLine) {
-            ctx.fillStyle = "rgba(255,255,255,0.7)";
-            ctx.font = "11px sans-serif";
-            ctx.fillText(`+${salas.length - maxPerLine}`, xPos - 22, yOffset + 32);
-          }
-        } else {
-          ctx.fillStyle = "rgba(255,255,255,0.6)";
-          ctx.font = "italic 12px sans-serif";
-          ctx.fillText("DISPONÍVEL", fx + fw/2 - 42, yOffset + 32);
+          if(salas.length>maxPerLine){ctx.fillStyle="rgba(255,255,255,0.7)";ctx.font="11px sans-serif";ctx.fillText(`+${salas.length-maxPerLine}`,x-22,y+32);}
+        }else{
+          ctx.fillStyle="rgba(255,255,255,0.6)";ctx.font="italic 12px sans-serif";ctx.fillText("DISPONÍVEL",fx+fw/2-42,y+32);
         }
-
-        yOffset += EXPORT_CFG.floorHeight;
-        if (yOffset > padding + headH + floorsBlockH) break;
+        y+=EXPORT_CFG.floorHeight; if(y>padding+headH+floorsBlockH) break;
       }
 
-      // Endereço
-      const addr = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
-      ctx.fillStyle = "#1f2d3a"; roundedRect(ctx, bx + 6, yOffset, bw - 12, 44, 8); ctx.fill();
-      ctx.strokeStyle = "#f1c40f"; ctx.lineWidth = 2; roundedRect(ctx, bx + 6, yOffset, bw - 12, 44, 8); ctx.stroke();
-      ctx.fillStyle = "#ffd966"; ctx.font = EXPORT_CFG.addrFont;
-      const addrText = addr.length > 80 ? addr.substring(0, 80) + "…" : addr;
-      ctx.fillText(addrText, bx + 24, yOffset + 28);
+      const addr=document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
+      ctx.fillStyle="#1f2d3a";roundedRect(ctx,bx+6,y,bw-12,44,8);ctx.fill();
+      ctx.strokeStyle="#f1c40f";ctx.lineWidth=2;roundedRect(ctx,bx+6,y,bw-12,44,8);ctx.stroke();
+      ctx.fillStyle="#ffd966";ctx.font=EXPORT_CFG.addrFont;ctx.fillText(addr.length>80?addr.substring(0,80)+"…":addr,bx+24,y+28);
 
-      // Hall
-      yOffset += 58;
-      ctx.fillStyle = "#1e2a36"; roundedRect(ctx, bx + 6, yOffset, bw - 12, 70, 10); ctx.fill();
-      ctx.strokeStyle = "#203040"; ctx.stroke();
-      function door(x) {
-        ctx.fillStyle = "rgba(255,255,255,0.25)";
-        roundedRect(ctx, x, yOffset + 14, 120, 42, 8); ctx.fill();
-        ctx.strokeStyle = "#ffd966"; ctx.stroke();
-        ctx.fillStyle = "#ffd966"; ctx.font = "bold 12px sans-serif";
-        ctx.fillText("HALL", x + 42, yOffset + 41);
-      }
-      const center = bx + bw/2;
-      door(center - 136); door(center + 16);
+      y+=58;
+      ctx.fillStyle="#1e2a36";roundedRect(ctx,bx+6,y,bw-12,70,10);ctx.fill();ctx.strokeStyle="#203040";ctx.stroke();
+      const center=bx+bw/2;
+      const drawDoor=(dx)=>{ctx.fillStyle="rgba(255,255,255,0.25)";roundedRect(ctx,dx,y+14,120,42,8);ctx.fill();ctx.strokeStyle="#ffd966";ctx.stroke();ctx.fillStyle="#ffd966";ctx.font="bold 12px sans-serif";ctx.fillText("HALL",dx+42,y+41);};
+      drawDoor(center-136); drawDoor(center+16);
 
-      yOffset += 88;
+      y+=88;
+      const stats=updateStats(); const auditor=document.getElementById("inputResp")?.value || '---'; const dataStr=new Date().toLocaleString('pt-BR');
+      const relH=reportHeight;
+      ctx.fillStyle="rgba(0,0,0,0.90)";roundedRect(ctx,bx+6,y,bw-12,relH,10);ctx.fill();
+      ctx.fillStyle="#e2e8f0";ctx.font=EXPORT_CFG.hdrInfoFont;ctx.fillText(`📅 ${dataStr}   |   👤 ${auditor}`,bx+20,y+18);
+      ctx.font=EXPORT_CFG.hdrInfo2Font;ctx.fillText(`📊 Total: ${Object.keys(rooms).length}   |   ✅ ${stats.valid}   🟠 ${stats.occ}   🔒 ${stats.lock}   ❌ ${stats.prob}`,bx+20,y+36);
 
-      // Relatório
-      const stats = updateStats();
-      const auditor = document.getElementById("inputResp")?.value || '---';
-      const dataStr = new Date().toLocaleString('pt-BR');
-
-      const relHeight = reportHeight;
-      ctx.fillStyle = "rgba(0,0,0,0.90)";
-      roundedRect(ctx, bx + 6, yOffset, bw - 12, relHeight, 10); ctx.fill();
-
-      ctx.fillStyle = "#e2e8f0";
-      ctx.font = EXPORT_CFG.hdrInfoFont;
-      ctx.fillText(`📅 ${dataStr}   |   👤 ${auditor}`, bx + 20, yOffset + 18);
-      ctx.font = EXPORT_CFG.hdrInfo2Font;
-      ctx.fillText(`📊 Total: ${Object.keys(rooms).length}   |   ✅ ${stats.valid}   🟠 ${stats.occ}   🔒 ${stats.lock}   ❌ ${stats.prob}`, bx + 20, yOffset + 36);
-
-      if (resumoIA && resumoIA !== '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
-        ctx.fillStyle = "#ffd966";
-        ctx.font = EXPORT_CFG.reportTitleFont;
-        ctx.fillText("📋 RELATÓRIO DE VISTORIA", bx + 20, yOffset + 56);
-
-        ctx.fillStyle = "#e2e8f0";
-        ctx.font = EXPORT_CFG.reportBodyFont;
-
-        const lines = resumoIA.split('\n');
-        const maxLines = Math.floor((relHeight - 70) / EXPORT_CFG.reportBodyLineH);
-        let textY = yOffset + 74;
-        for (let i = 0; i < Math.min(lines.length, maxLines); i++) {
-          let line = lines[i];
-          if (line.includes('━━')) line = '────────────────────────────────────────────────────────';
-          ctx.fillText(line.substring(0, 120), bx + 20, textY);
-          textY += EXPORT_CFG.reportBodyLineH;
+      if(resumoIA && resumoIA!=='🤖 Clique em "GERAR RELATÓRIO" para análise automática.'){
+        ctx.fillStyle="#ffd966";ctx.font=EXPORT_CFG.reportTitleFont;ctx.fillText("📋 RELATÓRIO DE VISTORIA",bx+20,y+56);
+        ctx.fillStyle="#e2e8f0";ctx.font=EXPORT_CFG.reportBodyFont;
+        const lines=resumoIA.split('\n'); const maxL=Math.floor((relH-70)/EXPORT_CFG.reportBodyLineH);
+        let ty=y+74;
+        for(let i=0;i<Math.min(lines.length,maxL);i++){
+          let line=lines[i]; if(line.includes('━━')) line='────────────────────────────────────────────────────────';
+          ctx.fillText(line.substring(0,120),bx+20,ty); ty+=EXPORT_CFG.reportBodyLineH;
         }
-      } else {
-        ctx.fillStyle = "#9aa4b2";
-        ctx.font = "italic 11px monospace";
-        ctx.fillText("Nenhum relatório gerado. Clique em 'GERAR RELATÓRIO' primeiro.", bx + 20, yOffset + 58);
+      }else{
+        ctx.fillStyle="#9aa4b2";ctx.font="italic 11px monospace";ctx.fillText("Nenhum relatório gerado. Clique em 'GERAR RELATÓRIO' primeiro.",bx+20,y+58);
       }
 
-      const dataURL = canvas.toDataURL("image/png");
-      showDownloadModal(dataURL);
-
-      btn.textContent = originalText;
-      btn.disabled = false;
-    } catch (e) {
+      const dataURL = canvas.toDataURL("image/png"); showDownloadModal(dataURL);
+      btn.textContent=orig; btn.disabled=false;
+    }catch(e){
       console.error(e);
       alert("Falha ao exportar. Toque e segure para salvar a imagem.");
-      btn.textContent = originalText;
-      btn.disabled = false;
+      btn.textContent=orig; btn.disabled=false;
     }
-  }, 120);
+  },120);
 }
 
-/* ========= Utilidades finais ========= */
-function showDownloadModal(imageDataURL) {
-  const existing = document.querySelector('.download-modal');
-  if (existing) existing.remove();
-  const modal = document.createElement('div');
-  modal.className = 'download-modal';
-  modal.innerHTML = `
-    <img src="${imageDataURL}" alt="Prédio Vivo" />
-    <p>📱 <strong>Toque e segure</strong> na imagem<br>para salvar no celular</p>
-    <button onclick="this.parentElement.remove()">✕ FECHAR</button>
-  `;
-  document.body.appendChild(modal);
-  modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+/* ===== Utilidades finais ===== */
+function showDownloadModal(dataURL){
+  const old=document.querySelector('.download-modal'); if(old) old.remove();
+  const m=document.createElement('div'); m.className='download-modal';
+  m.innerHTML=`<img src="${dataURL}" alt="Prédio Vivo"/><p>📱 <strong>Toque e segure</strong> na imagem<br/>para salvar no celular</p><button onclick="this.parentElement.remove()">✕ FECHAR</button>`;
+  document.body.appendChild(m); m.addEventListener('click',(e)=>{if(e.target===m)m.remove();});
 }
 
-function applyStatus() {
-  const floor = document.getElementById("selFloor")?.value;
-  const room = document.getElementById("selRoom")?.value;
-  const status = document.getElementById("selStatus")?.value;
-  if (!floor || !room) return;
-  const key = `${floor}-${room}`;
-  if (status === 'none') delete rooms[key];
-  else rooms[key] = status;
+function applyStatus(){
+  const floor=document.getElementById("selFloor")?.value;
+  const room=document.getElementById("selRoom")?.value;
+  const status=document.getElementById("selStatus")?.value;
+  if(!floor||!room) return;
+  const key=`${floor}-${room}`;
+  if(status==='none') delete rooms[key]; else rooms[key]=status;
   renderBuilding(); updateStats(); updateFooter();
 }
-
-function quickApply() {
-  const input = document.getElementById("quickInput")?.value.toLowerCase().trim();
-  if (!input) return;
-  const parts = input.split('-');
-  if (parts.length < 3) { alert("Formato: Andar-Sala-status"); return; }
-  const floor = parseInt(parts[0]), room = parseInt(parts[1]), sc = parts[2][0];
-  if (isNaN(floor) || isNaN(room) || floor<1 || floor>32 || room<1 || room>MAX_SALA) {
-    alert(`Andar 1-32, Sala 1-${MAX_SALA}`); return;
+function quickApply(){
+  const input=document.getElementById("quickInput")?.value.toLowerCase().trim(); if(!input) return;
+  const parts=input.split('-'); if(parts.length<3){alert("Formato: Andar-Sala-status");return;}
+  const floor=parseInt(parts[0]), room=parseInt(parts[1]), sc=parts[2][0];
+  if(isNaN(floor)||isNaN(room)||floor<1||floor>32||room<1||room>MAX_SALA){alert(`Andar 1-32, Sala 1-${MAX_SALA}`);return;}
+  let status='none'; if(sc==='v')status='valid'; else if(sc==='o')status='occ'; else if(sc==='t')status='lock'; else if(sc==='p')status='prob';
+  const key=`${floor}-${room}`; if(status==='none') delete rooms[key]; else rooms[key]=status;
+  renderBuilding(); updateStats(); updateFooter(); document.getElementById("quickInput").value="";
+}
+function clearAll(){
+  if(confirm("Apagar todas as salas, limpar responsável, endereço e observações?")){
+    rooms={}; document.getElementById("inputResp").value=""; document.getElementById("inputAddr").value=""; document.getElementById("obsText").value="";
+    resumoIA=""; renderBuilding(); updateStats(); updateFooter();
   }
-  let status;
-  switch(sc) { case 'v': status='valid'; break; case 'o': status='occ'; break; case 't': status='lock'; break; case 'p': status='prob'; break; default: status='none'; }
-  const key = `${floor}-${room}`;
-  if (status === 'none') delete rooms[key]; else rooms[key] = status;
-  renderBuilding(); updateStats(); updateFooter();
-  document.getElementById("quickInput").value = "";
 }
+function clearResumo(){resumoIA=""; updateFooter();}
 
-function clearAll() {
-  if(confirm("Apagar todas as salas, limpar responsável, endereço e observações?")) {
-    rooms = {};
-    document.getElementById("inputResp").value = "";
-    document.getElementById("inputAddr").value = "";
-    document.getElementById("obsText").value = "";
-    resumoIA = "";
+/* ===== Init ===== */
+function init(){
+  try{
+    // carrega persistência
+    rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
+
+    const floorSel=document.getElementById("selFloor");
+    const roomSel=document.getElementById("selRoom");
+    if(floorSel){floorSel.innerHTML=''; for(let f=32; f>=1; f--) floorSel.appendChild(new Option(`Andar ${f}`,f));}
+    if(roomSel){roomSel.innerHTML=''; for(let r=1; r<=MAX_SALA; r++) roomSel.appendChild(new Option(`Sala ${r.toString().padStart(2,'0')}`,r));}
+
+    const savedResp=localStorage.getItem(STORAGE_KEY+"_resp");
+    const savedObs =localStorage.getItem(STORAGE_KEY+"_obs");
+    const savedAddr=localStorage.getItem(STORAGE_KEY+"_addr");
+    const savedTpl =localStorage.getItem(STORAGE_KEY+"_tpl");
+    if(savedResp) document.getElementById("inputResp").value=savedResp;
+    if(savedObs)  document.getElementById("obsText").value=savedObs;
+    document.getElementById("inputAddr").value=savedAddr||DEFAULT_ADDR;
+    if(savedTpl)  document.getElementById("selTemplate").value=savedTpl;
+
     renderBuilding(); updateStats(); updateFooter();
+
+    document.getElementById("btnApply")?.addEventListener("click",applyStatus);
+    document.getElementById("btnAI")?.addEventListener("click",generateAIRelatorio);
+    document.getElementById("btnPNG")?.addEventListener("click",exportToPNG);
+    document.getElementById("btnQuick")?.addEventListener("click",quickApply);
+    document.getElementById("btnClearSalas")?.addEventListener("click",clearAll);
+    document.getElementById("btnClearResumo")?.addEventListener("click",clearResumo);
+    document.getElementById("inputResp")?.addEventListener("input",updateFooter);
+    document.getElementById("obsText")?.addEventListener("input",updateFooter);
+    document.getElementById("inputAddr")?.addEventListener("input",updateFooter);
+    document.getElementById("selTemplate")?.addEventListener("change",updateFooter);
+    document.getElementById("quickInput")?.addEventListener("keypress",(e)=>{if(e.key==="Enter") quickApply();});
+  }catch(e){
+    console.error(e); window.onerror(String(e));
   }
-}
-function clearResumo() { resumoIA = ""; updateFooter(); }
-
-/* ========= Init ========= */
-function init() {
-  const floorSel = document.getElementById("selFloor");
-  const roomSel = document.getElementById("selRoom");
-  if (floorSel) { floorSel.innerHTML = ''; for (let f=32; f>=1; f--) floorSel.appendChild(new Option(`Andar ${f}`, f)); }
-  if (roomSel) { roomSel.innerHTML = ''; for (let r=1; r<=MAX_SALA; r++) roomSel.appendChild(new Option(`Sala ${r.toString().padStart(2,'0')}`, r)); }
-
-  const savedResp = localStorage.getItem(STORAGE_KEY + "_resp");
-  const savedObs  = localStorage.getItem(STORAGE_KEY + "_obs");
-  const savedAddr = localStorage.getItem(STORAGE_KEY + "_addr");
-  const savedTpl  = localStorage.getItem(STORAGE_KEY + "_tpl");
-
-  if (savedResp) document.getElementById("inputResp").value = savedResp;
-  if (savedObs)  document.getElementById("obsText").value = savedObs;
-  document.getElementById("inputAddr").value = savedAddr || DEFAULT_ADDR;
-  if (savedTpl)  document.getElementById("selTemplate").value = savedTpl;
-
-  renderBuilding(); updateStats(); updateFooter();
-
-  document.getElementById("btnApply")?.addEventListener("click", applyStatus);
-  document.getElementById("btnAI")?.addEventListener("click", generateAIRelatorio);
-  document.getElementById("btnPNG")?.addEventListener("click", exportToPNG);
-  document.getElementById("btnQuick")?.addEventListener("click", quickApply);
-  document.getElementById("btnClearSalas")?.addEventListener("click", clearAll);
-  document.getElementById("btnClearResumo")?.addEventListener("click", clearResumo);
-  document.getElementById("inputResp")?.addEventListener("input", updateFooter);
-  document.getElementById("obsText")?.addEventListener("input", updateFooter);
-  document.getElementById("inputAddr")?.addEventListener("input", updateFooter);
-  document.getElementById("selTemplate")?.addEventListener("change", updateFooter);
-  document.getElementById("quickInput")?.addEventListener("keypress", (e) => { if(e.key === "Enter") quickApply(); });
 }
 init();
 </script>
