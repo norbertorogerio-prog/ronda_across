@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Vivo Infra • Dashboard Urban Pro</title>
+<title>Vivo Infra • Dashboard Urban Final</title>
 <style>
  :root{
   --vivo:#6A1B9A; --vivo-dark:#4A0072;
@@ -23,14 +23,14 @@
  .stat-box { text-align: center; padding: 8px; border-radius: 8px; color: #fff; font-size: 10px; font-weight: 800; }
 
  label{ font-size: 11px; color:#666; margin-bottom:4px; display:block; font-weight: 800; text-transform: uppercase; }
- select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px; font:inherit; margin-bottom: 10px; }
+ select, input, textarea, button { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px; font:inherit; margin-bottom: 8px; }
  
  .btn-apply { background: var(--vivo); color:#fff; font-weight:800; border:none; cursor:pointer; font-size: 14px; text-transform: uppercase; }
  .btn-png { background: #1A1A1A; color: #fff; font-size: 15px; border: none; margin-top: 5px; }
- .btn-ai { background: #0277BD; color: #fff !important; font-size: 12px; margin-bottom: 10px; }
+ .btn-ai { background: #0277BD; color: #fff !important; font-size: 12px; margin-bottom: 10px; border:none; cursor:pointer; }
 
  .viewer-card { display: flex; justify-content: center; background: #E2E8F0; padding: 30px 0; width: 100%; touch-action: pan-y; overflow-x: hidden; border-radius: 20px; }
- .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1200px; }
+ .building-container { position: relative; display: flex; width: 420px; flex-shrink: 0; height: 1180px; }
  
  .floors-labels-col { display: flex; flex-direction: column; padding-top: 106px; width: 70px; flex-shrink: 0; }
  .f-lbl { height: 22px; font-size: 11px; font-weight: 800; color: #4A5568; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; }
@@ -43,8 +43,8 @@
 
  /* ÁREA DE INFORMAÇÕES DENTRO DO HALL */
  #hallInfoArea {
-    position: absolute; top: 935px; left: -10px; width: 340px;
-    padding: 10px; color: #fff; font-size: 10px; line-height: 1.3;
+    position: absolute; top: 1000px; left: -10px; width: 340px;
+    padding: 10px; color: #fff; font-size: 10px; line-height: 1.4;
     pointer-events: none; z-index: 10; text-align: center;
  }
 </style>
@@ -88,14 +88,14 @@
       <button id="btnQuick" style="width:50px; background:#444; color:#fff; margin-left:5px; border-radius:10px">OK</button>
     </div>
 
-    <button id="btnApply" class="btn-apply">Aplicar no Mapa</button>
-    <button id="btnAI" class="btn-ai" style="margin-top:10px">🤖 Gerar Resumo Executivo</button>
+    <button id="btnApply" class="btn-apply">Atualizar Checklist</button>
+    <button id="btnAI" class="btn-ai" style="margin-top:10px">🤖 Gerar Relatório Executivo</button>
     <button id="btnPNG" class="btn-png">📸 Exportar PNG (4K)</button>
     
     <div class="clean-bar">
         <button class="btn-clear-sub" id="btnClearSalas">Limpar Salas</button>
         <button class="btn-clear-sub" id="btnClearResumo">Limpar Texto</button>
-        <button id="btnClearTudo" style="background:none; color:red; font-size:10px; grid-column: span 2; margin-top:5px">RESET TOTAL</button>
+        <button id="btnClearTudo" style="background:none; color:red; font-size:10px; grid-column: span 2; margin-top:5px; border:none; cursor:pointer">RESET TOTAL</button>
     </div>
   </div>
 
@@ -103,7 +103,7 @@
     <div class="building-container">
       <div class="floors-labels-col" id="floorsCol"></div>
       <div class="facade-wrapper">
-        <svg id="facade-svg" viewBox="0 0 320 1150" xmlns="http://www.w3.org/2000/svg">
+        <svg id="facade-svg" viewBox="0 0 320 1180" xmlns="http://www.w3.org/2000/svg">
           <rect x="140" y="10" width="40" height="40" fill="#94A3B8" />
           <rect x="158" y="0" width="4" height="30" fill="#4A5568" />
           <rect x="60" y="50" width="200" height="40" rx="5" fill="#CBD5E1" />
@@ -114,13 +114,17 @@
           
           <g id="winGroup" transform="translate(22,110)" fill="#E2E8F0" stroke="#CBD5E1"></g>
           
-          <rect x="-10" y="930" width="340" height="180" rx="10" fill="#1E293B" />
+          <rect x="-10" y="930" width="340" height="230" rx="12" fill="#1E293B" />
           
-          <rect x="110" y="940" width="45" height="70" fill="#334155" stroke="#94A3B8" />
-          <rect x="165" y="940" width="45" height="70" fill="#334155" stroke="#94A3B8" />
+          <rect x="100" y="940" width="55" height="75" fill="#334155" stroke="#475569" stroke-width="1"/>
+          <rect x="165" y="940" width="55" height="75" fill="#334155" stroke="#475569" stroke-width="1"/>
+          <line x1="110" y1="950" x2="140" y2="1000" stroke="white" stroke-width="0.5" opacity="0.3"/>
+          <line x1="175" y1="950" x2="205" y2="1000" stroke="white" stroke-width="0.5" opacity="0.3"/>
           
-          <circle cx="20" cy="945" r="12" fill="#166534" />
-          <circle cx="300" cy="945" r="12" fill="#166534" />
+          <circle cx="30" cy="955" r="15" fill="#166534" />
+          <circle cx="20" cy="965" r="12" fill="#14532D" />
+          <circle cx="290" cy="955" r="15" fill="#166534" />
+          <circle cx="300" cy="965" r="12" fill="#14532D" />
         </svg>
 
         <div id="hallInfoArea"></div>
@@ -133,7 +137,7 @@
 
 <script>
 const $ = s => document.querySelector(s);
-const STORAGE_KEY = "vivo_pro_vFinal_Fix";
+const STORAGE_KEY = "vivo_pro_vUltimate_2024";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY+"_ai") || "";
 
@@ -177,17 +181,17 @@ function render() {
 
   const dataStr = new Date().toLocaleDateString('pt-BR');
   const resp = $("#inputResp").value || "---";
-  const obs = $("#obsText").value || "";
+  const obs = $("#obsText").value || "Sem observações.";
   
-  // Organização do texto dentro do Hall
+  // Renderização do texto no Hall (Ajustada para os 1180px de altura)
   $("#hallInfoArea").innerHTML = `
-    <div style="margin-top:80px">
-        <strong style="color:#A5B4FC">${dataStr} | Resp: ${resp}</strong><br>
-        <div style="margin:4px 0; border-top:1px solid #334155; padding-top:4px; font-weight:bold">
-            OBS: ${obs}
+    <div style="margin-top:20px">
+        <strong style="color:#A5B4FC">${dataStr} | Responsável: ${resp}</strong>
+        <div style="margin:6px 0; border-top:1px solid #334155; padding-top:6px; font-weight:bold">
+            OBSERVAÇÕES: ${obs}
         </div>
-        <div style="font-style:italic; color:#CBD5E1; font-size:9px">
-            ${resumoIA ? resumoIA.replace(/<\/?[^>]+(>|$)/g, "") : ""}
+        <div style="font-style:italic; color:#CBD5E1; margin-top:5px; padding:0 10px">
+            ${resumoIA || ""}
         </div>
     </div>
   `;
@@ -200,10 +204,11 @@ function render() {
 
 function getHex(s) { return s==='valid'?'#1B5E20': s==='occ'?'#E65100': s==='lock'?'#424242':'#B71C1C'; }
 
+// FUNÇÃO GERAR RELATÓRIO CORRIGIDA
 $("#btnAI").onclick = () => {
     const s = { valid: 0, occ: 0, lock: 0, prob: 0 };
     Object.values(rooms).forEach(v => s[v]++);
-    resumoIA = `Relatório: ${s.valid} OK, ${s.occ} em uso, ${s.lock} trancadas e ${s.prob} problemas.`;
+    resumoIA = `RELATÓRIO: Foram verificadas salas com ${s.valid} OK, ${s.occ} Ocupadas e ${s.lock} Trancadas. Registramos ${s.prob} Problemas críticos.`;
     render();
 };
 
@@ -229,18 +234,14 @@ $("#btnClearTudo").onclick = () => { if(confirm("Reset total?")) { rooms={}; res
 $("#btnPNG").onclick = async () => {
     const btn = $("#btnPNG"); btn.textContent = "GERANDO...";
     const SCALE = 4; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
-    canvas.width = 460 * SCALE; canvas.height = 1150 * SCALE; ctx.scale(SCALE, SCALE);
+    canvas.width = 460 * SCALE; canvas.height = 1180 * SCALE; ctx.scale(SCALE, SCALE);
     
-    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1150);
+    ctx.fillStyle = "#F1F5F9"; ctx.fillRect(0,0,460,1180);
     
-    // Topo
+    // Topo e Prédio
     ctx.fillStyle = "#94A3B8"; ctx.fillRect(140+70, 10, 40, 40);
-    ctx.fillStyle = "#4A5568"; ctx.fillRect(158+70, 0, 4, 30);
     ctx.fillStyle = "#CBD5E1"; ctx.roundRect(60+70, 50, 200, 40, 5); ctx.fill();
-
-    // Prédio
     ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(70, 80, 320, 850, 5); ctx.fill();
-    ctx.strokeStyle = "#94A3B8"; ctx.stroke();
     ctx.fillStyle = "#6A1B9A"; ctx.fillRect(70, 80, 320, 30);
     ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
     ctx.fillText("VIVO - INFRAESTRUTURA", 230, 100);
@@ -263,22 +264,21 @@ $("#btnPNG").onclick = async () => {
     });
 
     // HALL PNG
-    ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 930, 340, 180, 10); ctx.fill();
-    ctx.fillStyle = "#334155"; ctx.fillRect(170, 940, 45, 70); ctx.fillRect(225, 940, 45, 70);
-    ctx.fillStyle = "#166534"; ctx.beginPath(); ctx.arc(80, 945, 12, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(360, 945, 12, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#1E293B"; ctx.beginPath(); ctx.roundRect(60, 930, 340, 230, 12); ctx.fill();
+    ctx.fillStyle = "#334155"; ctx.fillRect(160, 940, 55, 75); ctx.fillRect(225, 940, 55, 75);
+    ctx.fillStyle = "#166534"; ctx.beginPath(); ctx.arc(90, 955, 15, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(370, 955, 15, 0, Math.PI*2); ctx.fill();
 
     // Texto no Hall PNG
     ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.font = "bold 11px sans-serif";
     const dataStr = new Date().toLocaleDateString('pt-BR');
-    ctx.fillText(`${dataStr} | Resp: ${$("#inputResp").value || '---'}`, 230, 1025);
-    ctx.font = "10px sans-serif"; ctx.fillText(`OBS: ${$("#obsText").value || ""}`, 230, 1045);
+    ctx.fillText(`${dataStr} | Responsável: ${$("#inputResp").value || '---'}`, 230, 1035);
+    ctx.font = "10px sans-serif"; ctx.fillText(`OBSERVAÇÕES: ${$("#obsText").value || ""}`, 230, 1055);
     ctx.fillStyle = "#CBD5E1"; ctx.font = "italic 9px sans-serif";
-    const aiTxt = resumoIA ? resumoIA.replace(/<\/?[^>]+(>|$)/g, "") : "";
-    ctx.fillText(aiTxt, 230, 1065);
+    ctx.fillText(resumoIA || "", 230, 1075);
 
     canvas.toBlob(async (blob) => {
-        const file = new File([blob], "mapa_vivo_urban.png", { type: "image/png" });
+        const file = new File([blob], "mapa_vivo_final.png", { type: "image/png" });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
             await navigator.share({ files: [file], title: "Mapa" });
         } else {
