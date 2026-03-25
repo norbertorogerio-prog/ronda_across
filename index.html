@@ -38,7 +38,6 @@
     gap: 16px;
  }
 
- /* Layout responsivo */
  @media (min-width: 1024px) {
     .app {
         display: grid;
@@ -56,7 +55,6 @@
     overflow-x: hidden;
  }
 
- /* Stats grid responsivo */
  .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -79,7 +77,6 @@
  .stat-box:active { transform: scale(0.96); }
  .stat-number { font-size: 22px; font-weight: 900; display: block; margin-bottom: 2px; }
 
- /* Formulários responsivos */
  label {
     font-size: 11px;
     font-weight: 800;
@@ -163,7 +160,6 @@
     margin: 0 auto;
  }
 
- /* Prédio Realista */
  .real-building {
     position: relative;
     background: linear-gradient(180deg, #1a2a3a 0%, #0f1a24 100%);
@@ -173,10 +169,10 @@
     border: 1px solid rgba(255,215,0,0.3);
  }
 
- /* Cobertura com Outdoor */
+ /* Cobertura sem antenas - apenas outdoor */
  .cobertura {
     position: relative;
-    padding: 12px 8px;
+    padding: 16px 8px;
     background: linear-gradient(135deg, #2c3e50, #1a2632);
     border-radius: 16px 16px 0 0;
     display: flex;
@@ -190,79 +186,36 @@
 
  .outdoor-vivo {
     background: linear-gradient(135deg, #660099, #4A0072);
-    padding: 6px 16px;
-    border-radius: 30px;
+    padding: 8px 24px;
+    border-radius: 40px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     border: 1px solid rgba(255,215,0,0.5);
  }
 
  .outdoor-vivo span {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 900;
     color: white;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
  }
 
  .outdoor-vivo small {
-    font-size: 9px;
+    font-size: 10px;
     color: var(--gold);
     font-weight: bold;
- }
-
- .antenas-area {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
- }
-
- .antena-moderna {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
- }
-
- .antena-base {
-    width: 28px;
-    height: 28px;
-    background: linear-gradient(135deg, #bdc3c7, #95a5a6);
-    border-radius: 50% 50% 30% 30%;
-    position: relative;
-    animation: pulseAntena 2s infinite;
- }
-
- .antena-base::before {
-    content: "📡";
-    position: absolute;
-    top: -20px;
-    left: 2px;
-    font-size: 22px;
- }
-
- .antena-moderna span {
-    font-size: 8px;
-    color: var(--gold);
-    font-weight: bold;
- }
-
- @keyframes pulseAntena {
-    0%, 100% { opacity: 0.7; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
  }
 
  .cobertura-text {
     color: #ffd966;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
  }
 
- /* Container dos andares - scroll suave */
  .floors-container {
     max-height: 55vh;
     overflow-y: auto;
@@ -282,10 +235,9 @@
     border-radius: 2px;
  }
 
- /* Linha de cada andar */
  .floor-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     margin-bottom: 6px;
     padding: 4px 8px;
@@ -303,15 +255,15 @@
     padding-right: 6px;
     flex-shrink: 0;
     text-shadow: 0 1px 1px black;
+    padding-top: 4px;
  }
 
- /* Vidraça */
  .glass-facade {
     flex: 1;
     background: linear-gradient(145deg, rgba(100,150,200,0.3), rgba(50,80,120,0.5));
     backdrop-filter: blur(2px);
     border-radius: 10px;
-    padding: 6px 8px;
+    padding: 8px;
     min-height: 52px;
     display: flex;
     flex-wrap: wrap;
@@ -339,16 +291,15 @@
     100% { left: 100%; }
  }
 
- /* Tags das salas */
  .room-tag {
     background: rgba(0,0,0,0.75);
     backdrop-filter: blur(4px);
     border-radius: 16px;
-    padding: 4px 8px;
+    padding: 5px 10px;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-size: 10px;
+    gap: 5px;
+    font-size: 11px;
     font-weight: bold;
     border: 1px solid rgba(255,255,255,0.3);
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
@@ -373,86 +324,80 @@
  .room-number-tag {
     font-weight: 800;
     color: white;
-    font-size: 10px;
- }
-
- .room-status-tag {
     font-size: 11px;
  }
 
- /* Hall com 2 portas */
+ .room-status-tag {
+    font-size: 12px;
+ }
+
+ /* Hall simplificado - sem texto "acesso corporativo" */
  .hall-entrada {
     background: linear-gradient(135deg, #2c3e50, #1a2632);
     border-top: 2px solid var(--gold);
-    padding: 16px 12px;
+    padding: 20px 12px;
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: 40px;
     position: relative;
-    min-height: 100px;
+    min-height: 90px;
     align-items: center;
     flex-wrap: wrap;
  }
 
  .glass-door-full {
-    width: 85px;
-    min-height: 85px;
+    width: 100px;
+    min-height: 100px;
     background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.15));
     backdrop-filter: blur(8px);
-    border-radius: 10px;
+    border-radius: 12px;
     border: 2px solid rgba(255,215,0,0.6);
-    box-shadow: 0 0 12px rgba(255,215,0,0.3);
+    box-shadow: 0 0 15px rgba(255,215,0,0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 6px;
     position: relative;
-    padding: 12px 8px;
+    padding: 15px 8px;
  }
 
  .door-handle {
     width: 6px;
-    height: 25px;
+    height: 30px;
     background: var(--gold);
     border-radius: 3px;
     position: absolute;
-    right: 8px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
  }
 
  .glass-door-full span {
     color: var(--gold);
-    font-size: 9px;
+    font-size: 10px;
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
     background: rgba(0,0,0,0.5);
-    padding: 3px 6px;
-    border-radius: 12px;
+    padding: 4px 8px;
+    border-radius: 15px;
  }
 
+ /* Remove o texto inferior do hall */
  .hall-text {
-    text-align: center;
-    color: var(--gold);
-    font-size: 9px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin-top: 4px;
-    padding-bottom: 8px;
-    text-shadow: 0 1px 1px black;
+    display: none;
  }
 
  .footer-note {
     background: rgba(0,0,0,0.85);
     backdrop-filter: blur(10px);
     margin-top: 12px;
-    padding: 10px;
+    padding: 12px;
     border-radius: 10px;
     border-left: 3px solid var(--gold);
-    font-size: 10px;
-    line-height: 1.4;
+    font-size: 11px;
+    line-height: 1.5;
     color: #e2e8f0;
     white-space: pre-wrap;
     word-break: break-word;
@@ -482,7 +427,6 @@
     margin-top: 8px; 
  }
 
- /* Modal de download */
  .download-modal {
     position: fixed;
     top: 0;
@@ -522,132 +466,31 @@
     font-size: 14px;
  }
 
- /* Ajustes específicos para mobile */
  @media (max-width: 640px) {
-    body { 
-        padding: 8px; 
-    }
-    
-    .card { 
-        padding: 12px; 
-        border-radius: 16px;
-    }
-    
-    .stats-grid {
-        gap: 6px;
-        margin-bottom: 16px;
-    }
-    
-    .stat-box {
-        padding: 8px 2px;
-        font-size: 10px;
-    }
-    
-    .stat-number {
-        font-size: 18px;
-    }
-    
-    .floor-number {
-        width: 45px;
-        font-size: 10px;
-    }
-    
-    .glass-facade {
-        padding: 5px 6px;
-        min-height: 48px;
-    }
-    
-    .room-tag {
-        padding: 3px 6px;
-        font-size: 9px;
-    }
-    
-    .room-number-tag {
-        font-size: 9px;
-    }
-    
-    .glass-door-full {
-        width: 70px;
-        min-height: 75px;
-        padding: 8px 4px;
-    }
-    
-    .glass-door-full span {
-        font-size: 8px;
-    }
-    
-    .door-handle {
-        right: 5px;
-        width: 4px;
-        height: 20px;
-    }
-    
-    .hall-entrada {
-        gap: 20px;
-        padding: 12px 8px;
-    }
-    
-    .outdoor-vivo span {
-        font-size: 14px;
-    }
-    
-    .outdoor-vivo {
-        padding: 4px 12px;
-    }
-    
-    .antena-base {
-        width: 24px;
-        height: 24px;
-    }
-    
-    .antena-base::before {
-        font-size: 18px;
-        top: -16px;
-        left: 0px;
-    }
-    
-    .cobertura {
-        padding: 10px 6px;
-        gap: 6px;
-    }
-    
-    .floors-container {
-        max-height: 50vh;
-    }
+    body { padding: 8px; }
+    .card { padding: 12px; border-radius: 16px; }
+    .stats-grid { gap: 6px; margin-bottom: 16px; }
+    .stat-box { padding: 8px 2px; font-size: 10px; }
+    .stat-number { font-size: 18px; }
+    .floor-number { width: 45px; font-size: 10px; }
+    .glass-facade { padding: 6px; }
+    .room-tag { padding: 4px 8px; font-size: 10px; }
+    .room-number-tag { font-size: 10px; }
+    .glass-door-full { width: 80px; min-height: 85px; padding: 12px 6px; }
+    .glass-door-full span { font-size: 9px; }
+    .outdoor-vivo span { font-size: 16px; }
+    .outdoor-vivo { padding: 5px 16px; }
+    .cobertura { padding: 12px 6px; }
+    .floors-container { max-height: 50vh; }
  }
 
- /* Ajustes para telas muito pequenas */
  @media (max-width: 480px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-    
-    .floor-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-    
-    .floor-number {
-        width: auto;
-        text-align: left;
-        padding-left: 8px;
-    }
-    
-    .glass-facade {
-        width: 100%;
-    }
-    
-    .hall-entrada {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .glass-door-full {
-        width: 80%;
-        max-width: 200px;
-    }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .floor-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .floor-number { width: auto; text-align: left; padding-left: 8px; }
+    .glass-facade { width: 100%; }
+    .hall-entrada { flex-direction: column; gap: 15px; }
+    .glass-door-full { width: 85%; max-width: 200px; }
  }
 </style>
 </head>
@@ -708,32 +551,19 @@
                         <span>📱 VIVO 5G+</span>
                         <small>INFRAESTRUTURA</small>
                     </div>
-                    <div class="antenas-area">
-                        <div class="antena-moderna">
-                            <div class="antena-base"></div>
-                            <span>5G ULTRA</span>
-                        </div>
-                        <div class="antena-moderna">
-                            <div class="antena-base"></div>
-                            <span>FIBRA</span>
-                        </div>
-                    </div>
                     <div class="cobertura-text">TELECOM • CONECTIVIDADE TOTAL</div>
                 </div>
                 <div class="floors-container" id="floorsContainer"></div>
                 <div class="hall-entrada">
                     <div class="glass-door-full" style="position: relative;">
-                        <span>🚪 ACESSO</span>
-                        <span style="font-size: 8px;">VIVO CORPORATIVO</span>
+                        <span>🚪 ENTRADA</span>
                         <div class="door-handle"></div>
                     </div>
                     <div class="glass-door-full" style="position: relative;">
-                        <span>🚪 ACESSO</span>
-                        <span style="font-size: 8px;">ÁREA TÉCNICA</span>
+                        <span>🚪 ENTRADA</span>
                         <div class="door-handle"></div>
                     </div>
                 </div>
-                <div class="hall-text">VIVO INFRAESTRUTURA • ENTRADA PRINCIPAL</div>
             </div>
             <div class="footer-note" id="footerNoteDisplay"></div>
         </div>
@@ -741,7 +571,7 @@
 </div>
 
 <script>
-const STORAGE_KEY = "vivo_predio_v21";
+const STORAGE_KEY = "vivo_predio_v22";
 let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
 const TOTAL_FLOORS = 32;
@@ -752,12 +582,7 @@ function getStatusIcon(status) {
     return icons[status] || '';
 }
 
-// Função para ajustar tamanho das salas por andar
-function getRoomSizeModifier(floor) {
-    return Math.max(0.7, 1 - (floor / TOTAL_FLOORS) * 0.3);
-}
-
-// Renderização do prédio
+// Renderização do prédio - MOSTRA TODAS AS SALAS SEM LIMITE
 function renderBuilding() {
     const container = document.getElementById("floorsContainer");
     if (!container) return;
@@ -777,7 +602,6 @@ function renderBuilding() {
     let html = '';
     for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
         const salas = floorsMap.get(floor);
-        const sizeModifier = getRoomSizeModifier(floor);
         
         html += `
             <div class="floor-row">
@@ -788,23 +612,17 @@ function renderBuilding() {
         if (salas.length === 0) {
             html += `<div style="color:rgba(255,255,255,0.5); font-size:10px; padding:5px; font-style:italic;">—— DISPONÍVEL ——</div>`;
         } else {
-            const maxRoomsToShow = Math.max(3, Math.floor(8 * sizeModifier));
-            const salasToShow = salas.slice(0, maxRoomsToShow);
-            
-            salasToShow.forEach(sala => {
+            // MOSTRA TODAS AS SALAS SEM NENHUM LIMITE
+            salas.forEach(sala => {
                 const statusClass = sala.status;
                 const icon = getStatusIcon(sala.status);
                 html += `
-                    <div class="room-tag ${statusClass}" data-room="${floor}-${sala.room}" style="transform: scale(${sizeModifier}); transform-origin: left center;">
+                    <div class="room-tag ${statusClass}" data-room="${floor}-${sala.room}">
                         <span class="room-number-tag">SALA ${sala.room}</span>
                         <span class="room-status-tag">${icon}</span>
                     </div>
                 `;
             });
-            
-            if (salas.length > maxRoomsToShow) {
-                html += `<div style="color:rgba(255,255,255,0.6); font-size:9px;">+${salas.length - maxRoomsToShow}</div>`;
-            }
         }
         
         html += `</div></div>`;
@@ -861,8 +679,29 @@ function generateAIRelatorio() {
     const stats = updateStats();
     const total = Object.keys(rooms).length;
     const andaresProb = new Set();
-    Object.entries(rooms).forEach(([k, s]) => { if (s === 'prob') andaresProb.add(k.split('-')[0]); });
-    resumoIA = `🏢 RELATÓRIO EXECUTIVO\n━━━━━━━━━━━━━━━━━━━━━━\n📊 TOTAL: ${total}\n✅ VALIDADAS: ${stats.valid}\n🟠 OCUPADAS: ${stats.occ}\n🔒 TRANCADAS: ${stats.lock}\n❌ PROBLEMAS: ${stats.prob}\n\n${andaresProb.size > 0 ? `⚠️ Andares com falhas: ${Array.from(andaresProb).sort((a,b)=>b-a).join(', ')}º` : '✅ SEM FALHAS CRÍTICAS'}`;
+    const obs = document.getElementById("obsText")?.value || 'Sem observações.';
+    const auditor = document.getElementById("inputResp")?.value || 'Não informado';
+    
+    Object.entries(rooms).forEach(([k, s]) => { 
+        if (s === 'prob') andaresProb.add(k.split('-')[0]); 
+    });
+    
+    resumoIA = `🏢 RELATÓRIO EXECUTIVO
+━━━━━━━━━━━━━━━━━━━━━━
+📅 Data: ${new Date().toLocaleString('pt-BR')}
+👤 Responsável: ${auditor}
+━━━━━━━━━━━━━━━━━━━━━━
+📊 TOTAL AUDITADAS: ${total}
+✅ VALIDADAS: ${stats.valid}
+🟠 OCUPADAS: ${stats.occ}
+🔒 TRANCADAS: ${stats.lock}
+❌ PROBLEMAS: ${stats.prob}
+━━━━━━━━━━━━━━━━━━━━━━
+📝 OBSERVAÇÕES:
+${obs}
+━━━━━━━━━━━━━━━━━━━━━━
+${andaresProb.size > 0 ? `⚠️ Andares com falhas: ${Array.from(andaresProb).sort((a,b)=>b-a).join(', ')}º` : '✅ SEM FALHAS CRÍTICAS'}`;
+    
     updateFooter();
     const btn = document.getElementById("btnAI");
     const orig = btn.textContent;
@@ -870,6 +709,7 @@ function generateAIRelatorio() {
     setTimeout(() => { btn.textContent = orig; }, 1500);
 }
 
+// Exportação com todas as informações
 function exportToPNG() {
     const btn = document.getElementById("btnPNG");
     const originalText = btn.textContent;
@@ -881,27 +721,33 @@ function exportToPNG() {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
             
+            // Calcula altura baseada na quantidade de andares com salas
+            const activeFloors = Object.keys(rooms).length > 0 ? TOTAL_FLOORS : 10;
+            const canvasHeight = 300 + (activeFloors * 52);
+            
             const scale = 1.8;
             canvas.width = 600 * scale;
-            canvas.height = 1900 * scale;
+            canvas.height = Math.min(2200, canvasHeight) * scale;
             ctx.scale(scale, scale);
             
+            // Fundo
             ctx.fillStyle = "#0a2f3a";
-            ctx.fillRect(0, 0, 600, 1900);
+            ctx.fillRect(0, 0, 600, Math.min(2200, canvasHeight));
             
+            // Prédio
             ctx.fillStyle = "#0f1a24";
-            ctx.fillRect(30, 30, 540, 1750);
+            ctx.fillRect(30, 30, 540, Math.min(2200, canvasHeight) - 60);
             
             // Cobertura
             ctx.fillStyle = "#2c3e50";
-            ctx.fillRect(30, 30, 540, 70);
+            ctx.fillRect(30, 30, 540, 65);
             ctx.fillStyle = "#4A0072";
             ctx.fillRect(200, 42, 200, 28);
             ctx.fillStyle = "white";
             ctx.font = "bold 12px sans-serif";
             ctx.fillText("VIVO 5G+", 250, 62);
             
-            let yOffset = 110;
+            let yOffset = 100;
             const floorHeight = 48;
             
             const floorsMap = new Map();
@@ -911,6 +757,7 @@ function exportToPNG() {
                 if (floorsMap.has(floor)) floorsMap.get(floor).push({ room, status });
             });
             
+            // Renderiza todos os andares
             for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
                 const salas = floorsMap.get(floor);
                 salas.sort((a, b) => a.room - b.room);
@@ -928,21 +775,26 @@ function exportToPNG() {
                 ctx.strokeStyle = "rgba(255,215,0,0.4)";
                 ctx.strokeRect(38, yOffset, 524, floorHeight - 2);
                 
+                // Mostra TODAS as salas no export também
                 if (salas.length > 0) {
-                    let xPos = 50;
-                    const maxShow = Math.min(salas.length, 5);
-                    for (let i = 0; i < maxShow; i++) {
+                    let xPos = 45;
+                    for (let i = 0; i < salas.length; i++) {
                         const sala = salas[i];
                         ctx.fillStyle = "rgba(0,0,0,0.7)";
-                        ctx.fillRect(xPos, yOffset + 6, 80, 32);
+                        ctx.fillRect(xPos, yOffset + 6, 75, 32);
                         ctx.fillStyle = "white";
                         ctx.font = "bold 8px sans-serif";
-                        ctx.fillText(`SALA ${sala.room}`, xPos + 5, yOffset + 25);
+                        ctx.fillText(`SALA ${sala.room}`, xPos + 4, yOffset + 25);
                         
                         let icon = sala.status === 'valid' ? "✅" : sala.status === 'occ' ? "🟠" : sala.status === 'lock' ? "🔒" : "❌";
-                        ctx.fillText(icon, xPos + 68, yOffset + 25);
-                        xPos += 88;
-                        if (xPos > 540) break;
+                        ctx.fillText(icon, xPos + 62, yOffset + 25);
+                        xPos += 82;
+                        if (xPos > 540) {
+                            ctx.fillStyle = "rgba(255,255,255,0.6)";
+                            ctx.font = "italic 7px sans-serif";
+                            ctx.fillText(`+${salas.length - i - 1}`, xPos - 70, yOffset + 32);
+                            break;
+                        }
                     }
                 } else {
                     ctx.fillStyle = "rgba(255,255,255,0.4)";
@@ -951,18 +803,60 @@ function exportToPNG() {
                 }
                 
                 yOffset += floorHeight;
-                if (yOffset > 1720) break;
+                if (yOffset > Math.min(2200, canvasHeight) - 100) break;
             }
             
             // Hall
             ctx.fillStyle = "#1e2a36";
-            ctx.fillRect(30, yOffset, 540, 85);
+            ctx.fillRect(30, yOffset, 540, 70);
             ctx.fillStyle = "rgba(255,255,255,0.3)";
-            ctx.fillRect(210, yOffset + 10, 85, 65);
-            ctx.fillRect(320, yOffset + 10, 85, 65);
+            ctx.fillRect(210, yOffset + 12, 80, 48);
+            ctx.fillRect(320, yOffset + 12, 80, 48);
             ctx.strokeStyle = "#ffd966";
-            ctx.strokeRect(210, yOffset + 10, 85, 65);
-            ctx.strokeRect(320, yOffset + 10, 85, 65);
+            ctx.strokeRect(210, yOffset + 12, 80, 48);
+            ctx.strokeRect(320, yOffset + 12, 80, 48);
+            
+            yOffset += 80;
+            
+            // Rodapé com relatório completo
+            ctx.fillStyle = "rgba(0,0,0,0.85)";
+            ctx.fillRect(30, yOffset, 540, 140);
+            ctx.fillStyle = "#e2e8f0";
+            ctx.font = "9px monospace";
+            
+            const dataStr = new Date().toLocaleString('pt-BR');
+            const auditor = document.getElementById("inputResp")?.value || '---';
+            const obs = document.getElementById("obsText")?.value || 'Sem observações.';
+            const stats = updateStats();
+            const total = Object.keys(rooms).length;
+            
+            ctx.fillText(`📅 ${dataStr}`, 45, yOffset + 15);
+            ctx.fillText(`👤 Responsável: ${auditor}`, 45, yOffset + 28);
+            ctx.fillText(`📊 Total: ${total} | ✅ ${stats.valid} | 🟠 ${stats.occ} | 🔒 ${stats.lock} | ❌ ${stats.prob}`, 45, yOffset + 45);
+            
+            // Observações
+            ctx.fillStyle = "#ffd966";
+            ctx.fillText(`📝 OBS:`, 45, yOffset + 62);
+            ctx.fillStyle = "#e2e8f0";
+            const obsLines = obs.split('\n');
+            let obsY = yOffset + 75;
+            for (let i = 0; i < Math.min(obsLines.length, 2); i++) {
+                ctx.fillText(obsLines[i].substring(0, 65), 45, obsY);
+                obsY += 14;
+            }
+            
+            // Relatório IA
+            if (resumoIA) {
+                ctx.fillStyle = "#ffd966";
+                ctx.fillText(`📋 RELATÓRIO:`, 45, obsY + 5);
+                ctx.fillStyle = "#e2e8f0";
+                const reportLines = resumoIA.split('\n');
+                let reportY = obsY + 18;
+                for (let i = 0; i < Math.min(reportLines.length, 3); i++) {
+                    ctx.fillText(reportLines[i].substring(0, 65), 45, reportY);
+                    reportY += 13;
+                }
+            }
             
             const dataURL = canvas.toDataURL("image/png");
             showDownloadModal(dataURL);
@@ -970,6 +864,7 @@ function exportToPNG() {
             btn.textContent = originalText;
             btn.disabled = false;
         } catch (error) {
+            console.error(error);
             alert("Toque e segure na tela para salvar a imagem");
             btn.textContent = originalText;
             btn.disabled = false;
