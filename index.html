@@ -383,3 +383,640 @@
   <!-- CONTROLES -->
   <div class="card">
     <div class="stats-grid">
+      <div class="stat-box" style="background:#27ae60"><span class="stat-number" id="stValid">0</span><span>VALIDADAS</span></div>
+      <div class="stat-box" style="background:#f39c12"><span class="stat-number" id="stOcc">0</span><span>OCUPADAS</span></div>
+      <div class="stat-box" style="background:#7f8c8d"><span class="stat-number" id="stLock">0</span><span>TRANCADAS</span></div>
+      <div class="stat-box" style="background:#e74c3c"><span class="stat-number" id="stProb">0</span><span>PROBLEMAS</span></div>
+    </div>
+
+    <label>👤 RESPONSÁVEL</label>
+    <input type="text" id="inputResp" placeholder="Nome completo">
+
+    <label>🏢 ENDEREÇO/PRÉDIO</label>
+    <input type="text" id="inputAddr" placeholder="Eco Berrini — informe o endereço (ex.: Av. ...)" />
+
+    <label>🏗️ MODELO DO PRÉDIO (export)</label>
+    <select id="selTemplate">
+      <option value="glass">Glass (padrão)</option>
+      <option value="classic">Clássico</option>
+      <option value="grid">Grade</option>
+      <option value="blue">Azul</option>
+    </select>
+
+    <label>📍 LOCALIZAÇÃO</label>
+    <div style="display:flex; gap:8px; flex-wrap: wrap;">
+      <select id="selFloor" style="flex:1; min-width: 100px;"></select>
+      <select id="selRoom" style="flex:1; min-width: 100px;"></select>
+    </div>
+
+    <label>📌 STATUS</label>
+    <select id="selStatus">
+      <option value="valid">✅ Validada</option>
+      <option value="occ">🟠 Ocupada</option>
+      <option value="lock">🔒 Trancada</option>
+      <option value="prob">❌ Problema</option>
+      <option value="none">🗑️ Remover</option>
+    </select>
+
+    <label>📝 OBSERVAÇÕES</label>
+    <textarea id="obsText" rows="2" placeholder="Descreva as observações da vistoria..."></textarea>
+
+    <label>⚡ ATALHO</label>
+    <div style="display:flex; gap:8px;">
+      <input id="quickInput" type="text" placeholder="32-05-v">
+      <button id="btnQuick" style="width:72px;background:#444;color:#fff;border-radius:12px;border:none;">OK</button>
+    </div>
+    <small style="font-size:9px; color:#666; margin-top:-6px;">Formato: Andar-Sala-status (v/o/t/p) | Sala 1-50</small>
+
+    <button id="btnApply" class="btn-apply">✓ APLICAR</button>
+    <button id="btnAI" class="btn-ai">🤖 GERAR RELATÓRIO</button>
+    <button id="btnPNG" class="btn-png">📸 EXPORTAR PRÉDIO</button>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+      <button id="btnClearSalas" class="btn-clear">🗑️ LIMPAR TUDO</button>
+      <button id="btnClearResumo" class="btn-clear">📋 LIMPAR RELATÓRIO</button>
+    </div>
+  </div>
+
+  <!-- VISOR -->
+  <div class="card viewer-card">
+    <div class="building-container">
+      <div class="real-building">
+        <div class="cobertura">
+          <div class="outdoor-vivo">
+            <span>📱 VIVO 5G+</span>
+            <small>INFRAESTRUTURA</small>
+          </div>
+          <div class="cobertura-text">TELECOM • CONECTIVIDADE TOTAL</div>
+        </div>
+
+        <div class="floors-container" id="floorsContainer"></div>
+
+        <!-- Placa de Endereço -->
+        <div class="marquee-address"><span id="addrText">Eco Berrini — informe o endereço</span></div>
+
+        <!-- Hall -->
+        <div class="hall-entrada">
+          <div class="glass-door-full" style="position: relative;">
+            <span>🚪 HALL A</span>
+            <div class="door-handle"></div>
+          </div>
+          <div class="glass-door-full" style="position: relative;">
+            <span>🚪 HALL B</span>
+            <div class="door-handle"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note" id="footerNoteDisplay"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ========= Persistência ========= */
+const STORAGE_KEY = "vivo_predio_v28";
+let rooms = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+let resumoIA = localStorage.getItem(STORAGE_KEY + "_ai") || "";
+const TOTAL_FLOORS = 32;
+const MAX_SALA = 50;
+const DEFAULT_ADDR = "Eco Berrini — informe o endereço";
+
+/* ========= Utilidades ========= */
+function getStatusIcon(status) {
+  const icons = { valid: '✅', occ: '🟠', lock: '🔒', prob: '❌' };
+  return icons[status] || '';
+}
+function getStatusText(status) {
+  const texts = { valid: 'Validada', occ: 'Ocupada', lock: 'Trancada', prob: 'Problema' };
+  return texts[status] || '';
+}
+
+/* ========= Render da prévia do prédio (DOM) ========= */
+function renderBuilding() {
+  const container = document.getElementById("floorsContainer");
+  if (!container) return;
+
+  const floorsMap = new Map();
+  for (let f = 1; f <= TOTAL_FLOORS; f++) floorsMap.set(f, []);
+
+  Object.entries(rooms).forEach(([key, status]) => {
+    const [floor, room] = key.split('-').map(Number);
+    if (floorsMap.has(floor)) floorsMap.get(floor).push({ room, status });
+  });
+
+  for (let floor of floorsMap.keys()) floorsMap.get(floor).sort((a, b) => a.room - b.room);
+
+  let html = '';
+  for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
+    const salas = floorsMap.get(floor);
+    html += `
+      <div class="floor-row">
+        <div class="floor-number">${floor}º ANDAR</div>
+        <div class="glass-facade" style="justify-content: ${salas.length > 0 ? 'flex-start' : 'center'}">
+    `;
+    if (salas.length === 0) {
+      html += `<div style="color:rgba(255,255,255,0.5); font-size:10px; padding:5px; font-style:italic;">—— DISPONÍVEL ——</div>`;
+    } else {
+      salas.forEach(sala => {
+        const icon = getStatusIcon(sala.status);
+        html += `
+          <div class="room-tag ${sala.status}" data-room="${floor}-${sala.room}" title="SALA ${sala.room} - ${getStatusText(sala.status)}">
+            <span class="room-number-tag">SALA ${sala.room}</span>
+            <span class="room-status-tag">${icon}</span>
+          </div>
+        `;
+      });
+    }
+    html += `</div></div>`;
+  }
+
+  container.innerHTML = html;
+  attachRoomEvents();
+}
+function attachRoomEvents() {
+  document.querySelectorAll('.room-tag').forEach(tag => {
+    tag.removeEventListener('click', handleRoomClick);
+    tag.addEventListener('click', handleRoomClick);
+  });
+}
+function handleRoomClick(e) {
+  const tag = e.currentTarget;
+  const roomKey = tag.dataset.room;
+  if (!roomKey) return;
+  const [floor, room] = roomKey.split('-');
+  document.getElementById("selFloor").value = floor;
+  document.getElementById("selRoom").value = room;
+  tag.style.transform = 'scale(0.96)';
+  setTimeout(() => { tag.style.transform = ''; }, 150);
+}
+
+/* ========= Stats + rodapé ========= */
+function updateStats() {
+  const stats = { valid: 0, occ: 0, lock: 0, prob: 0 };
+  Object.values(rooms).forEach(s => { if (stats[s] !== undefined) stats[s]++; });
+  document.getElementById("stValid").textContent = stats.valid;
+  document.getElementById("stOcc").textContent = stats.occ;
+  document.getElementById("stLock").textContent = stats.lock;
+  document.getElementById("stProb").textContent = stats.prob;
+  return stats;
+}
+
+function updateFooter() {
+  const auditor = document.getElementById("inputResp")?.value || 'Não informado';
+  const addr = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
+  const model = document.getElementById("selTemplate")?.value || "glass";
+
+  // Exibe relatório ou instrução
+  document.getElementById("footerNoteDisplay").innerHTML = resumoIA || '🤖 Clique em "GERAR RELATÓRIO" para análise automática.';
+  // Atualiza placa
+  const addrTextEl = document.getElementById("addrText");
+  if (addrTextEl) addrTextEl.textContent = addr;
+
+  // Persistência
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
+  localStorage.setItem(STORAGE_KEY + "_resp", auditor);
+  localStorage.setItem(STORAGE_KEY + "_obs", document.getElementById("obsText")?.value || '');
+  localStorage.setItem(STORAGE_KEY + "_addr", addr);
+  localStorage.setItem(STORAGE_KEY + "_tpl", model);
+  localStorage.setItem(STORAGE_KEY + "_ai", resumoIA);
+}
+
+/* ========= RELATÓRIO IA narrativo ========= */
+function generateAIRelatorio() {
+  const stats = updateStats();
+  const total = Object.keys(rooms).length;
+  const agora = new Date();
+  const periodo = agora.getHours() < 12 ? 'manhã' : (agora.getHours() < 18 ? 'tarde' : 'noite');
+  const dataHora = agora.toLocaleString('pt-BR');
+
+  const auditor = document.getElementById("inputResp")?.value || 'Não informado';
+  const obs = (document.getElementById("obsText")?.value || '').trim();
+  const addrFull = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
+
+  // Agrupamento por andar
+  const byFloor = {};
+  Object.entries(rooms).forEach(([key, status]) => {
+    const [floorStr, roomStr] = key.split('-');
+    const floor = Number(floorStr), room = Number(roomStr);
+    if (!byFloor[floor]) byFloor[floor] = { total: 0, valid: 0, occ: 0, lock: 0, prob: 0, roomsProb: [] };
+    byFloor[floor].total++;
+    byFloor[floor][status]++;
+    if (status === 'prob') byFloor[floor].roomsProb.push(room);
+  });
+
+  const andaresComProblema = Object.keys(byFloor).map(n => Number(n)).filter(f => byFloor[f].prob > 0)
+    .sort((a,b) => byFloor[b].prob - byFloor[a].prob);
+
+  const pct = (n) => total ? Math.round((n * 100) / total) : 0;
+
+  const destaques = [];
+  if (total === 0) {
+    destaques.push("Nenhuma sala foi auditada nesta rodada.");
+  } else {
+    if (stats.valid >= Math.max(6, Math.round(total * 0.8))) destaques.push("Alto nível de conformidade (salas validadas ≥ 80%).");
+    if (stats.lock > Math.round(total * 0.2)) destaques.push("Muitas salas trancadas; pode haver restrição de acesso ao período.");
+    if (stats.occ > Math.round(total * 0.3))  destaques.push("Alta ocupação; considerar vistoria em outro horário.");
+    if (stats.prob === 0)                     destaques.push("Nenhum problema identificado nas salas verificadas.");
+    if (stats.prob > 0 && andaresComProblema.length > 0) {
+      const top = andaresComProblema.slice(0,3).map(f => `${f}º (${byFloor[f].prob})`).join(', ');
+      destaques.push(`Incidência concentrada em andares: ${top}.`);
+    }
+  }
+
+  const recomend = [];
+  if (stats.prob > 0) {
+    const foco = andaresComProblema.slice(0,3).map(f => `${f}º`).join(', ');
+    recomend.push(`Abrir chamados e priorizar correções nos andares ${foco || 'com problemas'}.`);
+  }
+  if (stats.lock > 0) recomend.push("Solicitar liberação de acesso às salas trancadas para nova vistoria.");
+  if (stats.occ > 0)  recomend.push("Agendar rechecagem em janela de baixa ocupação.");
+  if (total > 0 && stats.valid / total < 0.7) recomend.push("Executar nova rodada de validação para elevar a conformidade.");
+  if (recomend.length === 0) recomend.push("Sem ações críticas no momento.");
+
+  let problemasPorAndar = '';
+  if (andaresComProblema.length > 0) {
+    problemasPorAndar = andaresComProblema.map(f => {
+      const salas = byFloor[f].roomsProb.sort((a,b) => a-b).map(n => n.toString().padStart(2,'0')).join(', ');
+      return `${f}º: ${salas}`;
+    }).join('\n');
+  }
+
+  const addrParts = addrFull.split('—');
+  const nomePredio = (addrParts[0] || 'Eco Berrini').trim();
+  const linhaEndereco = (addrParts[1] || '').trim();
+
+  let relatorio = `📋 RELATÓRIO DE VISTORIA — ${nomePredio}\n`;
+  if (linhaEndereco) relatorio += `📍 ${linhaEndereco}\n`;
+  relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  relatorio += `📅 ${dataHora} (${periodo})\n`;
+  relatorio += `👤 Auditor: ${auditor}\n`;
+  relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+
+  if (total === 0) {
+    relatorio += `⚠️ Nenhuma sala vistoriada até o momento.\n`;
+  } else {
+    relatorio += `🧭 Na ${periodo}, o auditor verificou ${total} sala(s) no prédio.\n`;
+    relatorio += `📊 Resultados globais:\n`;
+    relatorio += `   ✅ Validadas: ${stats.valid} (${pct(stats.valid)}%)\n`;
+    relatorio += `   🟠 Ocupadas: ${stats.occ} (${pct(stats.occ)}%)\n`;
+    relatorio += `   🔒 Trancadas: ${stats.lock} (${pct(stats.lock)}%)\n`;
+    relatorio += `   ❌ Problemas: ${stats.prob} (${pct(stats.prob)}%)\n`;
+
+    if (andaresComProblema.length > 0) {
+      relatorio += `\n⚠️ Salas com problema por andar:\n${problemasPorAndar}\n`;
+    } else {
+      relatorio += `\n✅ Sem registros de problema nesta rodada.\n`;
+    }
+
+    relatorio += `\n✨ Destaques:\n`;
+    destaques.forEach(d => relatorio += `• ${d}\n`);
+
+    relatorio += `\n🛠️ Recomendações:\n`;
+    recomend.forEach(r => relatorio += `• ${r}\n`);
+  }
+
+  if (obs) {
+    relatorio += `\n📝 Observações do auditor:\n${obs}\n`;
+  }
+
+  relatorio += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  if (total === 0)         relatorio += `⚠️ Nenhuma sala auditada`;
+  else if (stats.prob === 0) relatorio += `✅ Vistoria concluída - sem pendências críticas`;
+  else                       relatorio += `🔧 Manutenção necessária - programar correções`;
+
+  resumoIA = relatorio;
+  updateFooter();
+
+  const btn = document.getElementById("btnAI");
+  const orig = btn.textContent;
+  btn.textContent = "✓ RELATÓRIO OK!";
+  setTimeout(() => { btn.textContent = orig; }, 1500);
+}
+
+/* ========= EXPORT EM ALTA LEGIBILIDADE + MODELOS (shapes) ========= */
+const EXPORT_CFG = {
+  width: 1100,
+  maxHeight: 4000,
+  scale: 2.0,
+  padding: 30,
+  bodyBg: "#0a2f3a",
+  buildingBg: "#0f1a24",
+  lineColor: "rgba(255,215,0,0.45)",
+  titleFont: "bold 16px sans-serif",
+  subtitleFont: "bold 12px sans-serif",
+  floorNumberFont: "bold 12px sans-serif",
+  tagRoomFont: "bold 12px sans-serif",
+  tagIconFont: "16px sans-serif",
+  addrFont: "bold 14px sans-serif",
+  hdrInfoFont: "12px monospace",
+  hdrInfo2Font: "12px monospace",
+  reportTitleFont: "bold 13px monospace",
+  reportBodyFont: "11px monospace",
+  reportBodyLineH: 16,
+  floorHeight: 54,
+  tagMinWidth: 62,
+  tagMaxWidth: 95
+};
+
+function roundedRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function drawShine(ctx,x,y,w,h){const g=ctx.createLinearGradient(x,y,x+w,y);g.addColorStop(0,"rgba(255,255,255,0.08)");g.addColorStop(0.5,"rgba(255,255,255,0.18)");g.addColorStop(1,"rgba(255,255,255,0.08)");ctx.fillStyle=g;ctx.fillRect(x,y,w,h);}
+
+function drawFacadeBand(ctx, model, x, y, w, h) {
+  if (model === "glass") {
+    const g = ctx.createLinearGradient(x, y, x+w, y+h);
+    g.addColorStop(0, "rgba(110,160,210,0.28)");
+    g.addColorStop(1, "rgba(60,90,130,0.4)");
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = EXPORT_CFG.lineColor; ctx.strokeRect(x, y, w, h);
+  } else if (model === "classic") {
+    ctx.fillStyle = "#243444";
+    roundedRect(ctx, x, y, w, h, 8); ctx.fill();
+    ctx.strokeStyle = EXPORT_CFG.lineColor; ctx.stroke();
+    ctx.fillStyle = "rgba(250, 210, 100, 0.08)";
+    ctx.fillRect(x, y, 8, h); ctx.fillRect(x+w-8, y, 8, h);
+  } else if (model === "grid") {
+    ctx.fillStyle = "#223445"; ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = EXPORT_CFG.lineColor; ctx.strokeRect(x, y, w, h);
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    for (let gx = x+50; gx < x+w; gx += 50) { ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx, y+h); ctx.stroke(); }
+  } else { // blue
+    const g = ctx.createLinearGradient(x, y, x, y+h);
+    g.addColorStop(0, "rgba(30,70,110,0.55)");
+    g.addColorStop(1, "rgba(20,55,90,0.55)");
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = "rgba(90,160,220,0.35)"; ctx.strokeRect(x, y, w, h);
+    ctx.fillStyle = "rgba(90,160,220,0.15)";
+    for (let cx = x+25; cx < x+w; cx += 80) ctx.fillRect(cx, y, 14, h);
+  }
+}
+
+function drawTag(ctx, x, y, w, h, room, status) {
+  ctx.fillStyle = "rgba(0,0,0,0.74)";
+  roundedRect(ctx, x, y, w, h, 10); ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.22)"; ctx.stroke();
+  const color = status==='valid'?'#27ae60':status==='occ'?'#f39c12':status==='lock'?'#7f8c8d':'#e74c3c';
+  ctx.fillStyle = color; ctx.fillRect(x-2, y, 4, h);
+  ctx.fillStyle = "#fff";
+  ctx.font = EXPORT_CFG.tagRoomFont;
+  ctx.fillText(String(room), x + 8, y + h - 10);
+  ctx.font = EXPORT_CFG.tagIconFont;
+  const icon = status==='valid'?'✅':status==='occ'?'🟠':status==='lock'?'🔒':'❌';
+  ctx.fillText(icon, x + w - 20, y + h - 12);
+}
+
+function exportToPNG() {
+  const btn = document.getElementById("btnPNG");
+  const originalText = btn.textContent;
+  btn.textContent = "🏢 GERANDO...";
+  btn.disabled = true;
+
+  if (resumoIA === "" || resumoIA === '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
+    generateAIRelatorio();
+  }
+
+  setTimeout(() => {
+    try {
+      const model = (document.getElementById("selTemplate")?.value || "glass");
+      const { width, maxHeight, scale, padding, bodyBg, buildingBg } = EXPORT_CFG;
+
+      const floorsMap = new Map();
+      for (let f = 1; f <= TOTAL_FLOORS; f++) floorsMap.set(f, []);
+      Object.entries(rooms).forEach(([key, status]) => {
+        const [floor, room] = key.split('-').map(Number);
+        floorsMap.get(floor).push({ room, status });
+      });
+      for (const f of floorsMap.keys()) floorsMap.get(f).sort((a,b)=>a.room-b.room);
+
+      const activeFloors = TOTAL_FLOORS;
+      const relLines = (resumoIA ? resumoIA.split('\n').length : 6);
+      const reportHeight = Math.min(60 + relLines * EXPORT_CFG.reportBodyLineH, 380);
+
+      const headH = 80;
+      const floorsBlockH = activeFloors * EXPORT_CFG.floorHeight;
+      const addrH = 50;
+      const hallH = 80;
+      const contentH = headH + floorsBlockH + addrH + hallH + reportHeight + padding*2;
+
+      const canvas = document.createElement("canvas");
+      canvas.width  = Math.round(width * scale);
+      canvas.height = Math.min(Math.round(contentH * scale), Math.round(maxHeight * scale));
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+
+      // Fundo e corpo
+      ctx.fillStyle = bodyBg; ctx.fillRect(0, 0, width, Math.min(contentH, maxHeight));
+      const bx = padding, by = padding, bw = width - padding*2, bh = Math.min(contentH, maxHeight) - padding*2;
+      ctx.fillStyle = buildingBg; roundedRect(ctx, bx, by, bw, bh, 12); ctx.fill();
+
+      // Outdoor
+      ctx.fillStyle = "#2c3e50"; roundedRect(ctx, bx, by, bw, 64, 12); ctx.fill();
+      ctx.fillStyle = "#4A0072"; roundedRect(ctx, bx + bw/2 - 180, by + 12, 360, 34, 18); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.font = EXPORT_CFG.titleFont; ctx.fillText("VIVO 5G+", bx + bw/2 - 58, by + 36);
+      ctx.fillStyle = "#ffd966"; ctx.font = EXPORT_CFG.subtitleFont; ctx.fillText("INFRAESTRUTURA", bx + bw/2 - 86, by + 56);
+
+      // Andares
+      let yOffset = by + headH;
+      const fx = bx + 10, fw = bw - 20;
+      for (let floor = TOTAL_FLOORS; floor >= 1; floor--) {
+        const salas = floorsMap.get(floor);
+
+        ctx.fillStyle = "#ffd966";
+        ctx.font = EXPORT_CFG.floorNumberFont;
+        ctx.fillText(`${floor}º`, bx - 4, yOffset + 28);
+
+        drawFacadeBand(ctx, model, fx, yOffset, fw, EXPORT_CFG.floorHeight - 6);
+        drawShine(ctx, fx, yOffset, fw, EXPORT_CFG.floorHeight - 6);
+
+        if (salas.length > 0) {
+          const maxPerLine = 14;
+          let xPos = fx + 8;
+          const tagW = Math.max(EXPORT_CFG.tagMinWidth, Math.min(EXPORT_CFG.tagMaxWidth, (fw - 30) / Math.min(maxPerLine, salas.length)));
+          const tagH = 34;
+          for (let i = 0; i < Math.min(salas.length, maxPerLine); i++) {
+            const s = salas[i];
+            drawTag(ctx, xPos, yOffset + 8, tagW, tagH, s.room, s.status);
+            xPos += tagW + 6;
+            if (xPos > fx + fw - tagW) break;
+          }
+          if (salas.length > maxPerLine) {
+            ctx.fillStyle = "rgba(255,255,255,0.7)";
+            ctx.font = "11px sans-serif";
+            ctx.fillText(`+${salas.length - maxPerLine}`, xPos - 22, yOffset + 32);
+          }
+        } else {
+          ctx.fillStyle = "rgba(255,255,255,0.6)";
+          ctx.font = "italic 12px sans-serif";
+          ctx.fillText("DISPONÍVEL", fx + fw/2 - 42, yOffset + 32);
+        }
+
+        yOffset += EXPORT_CFG.floorHeight;
+        if (yOffset > padding + headH + floorsBlockH) break;
+      }
+
+      // Endereço
+      const addr = document.getElementById("inputAddr")?.value || DEFAULT_ADDR;
+      ctx.fillStyle = "#1f2d3a"; roundedRect(ctx, bx + 6, yOffset, bw - 12, 44, 8); ctx.fill();
+      ctx.strokeStyle = "#f1c40f"; ctx.lineWidth = 2; roundedRect(ctx, bx + 6, yOffset, bw - 12, 44, 8); ctx.stroke();
+      ctx.fillStyle = "#ffd966"; ctx.font = EXPORT_CFG.addrFont;
+      const addrText = addr.length > 80 ? addr.substring(0, 80) + "…" : addr;
+      ctx.fillText(addrText, bx + 24, yOffset + 28);
+
+      // Hall
+      yOffset += 58;
+      ctx.fillStyle = "#1e2a36"; roundedRect(ctx, bx + 6, yOffset, bw - 12, 70, 10); ctx.fill();
+      ctx.strokeStyle = "#203040"; ctx.stroke();
+      function door(x) {
+        ctx.fillStyle = "rgba(255,255,255,0.25)";
+        roundedRect(ctx, x, yOffset + 14, 120, 42, 8); ctx.fill();
+        ctx.strokeStyle = "#ffd966"; ctx.stroke();
+        ctx.fillStyle = "#ffd966"; ctx.font = "bold 12px sans-serif";
+        ctx.fillText("HALL", x + 42, yOffset + 41);
+      }
+      const center = bx + bw/2;
+      door(center - 136); door(center + 16);
+
+      yOffset += 88;
+
+      // Relatório
+      const stats = updateStats();
+      const auditor = document.getElementById("inputResp")?.value || '---';
+      const dataStr = new Date().toLocaleString('pt-BR');
+
+      const relHeight = reportHeight;
+      ctx.fillStyle = "rgba(0,0,0,0.90)";
+      roundedRect(ctx, bx + 6, yOffset, bw - 12, relHeight, 10); ctx.fill();
+
+      ctx.fillStyle = "#e2e8f0";
+      ctx.font = EXPORT_CFG.hdrInfoFont;
+      ctx.fillText(`📅 ${dataStr}   |   👤 ${auditor}`, bx + 20, yOffset + 18);
+      ctx.font = EXPORT_CFG.hdrInfo2Font;
+      ctx.fillText(`📊 Total: ${Object.keys(rooms).length}   |   ✅ ${stats.valid}   🟠 ${stats.occ}   🔒 ${stats.lock}   ❌ ${stats.prob}`, bx + 20, yOffset + 36);
+
+      if (resumoIA && resumoIA !== '🤖 Clique em "GERAR RELATÓRIO" para análise automática.') {
+        ctx.fillStyle = "#ffd966";
+        ctx.font = EXPORT_CFG.reportTitleFont;
+        ctx.fillText("📋 RELATÓRIO DE VISTORIA", bx + 20, yOffset + 56);
+
+        ctx.fillStyle = "#e2e8f0";
+        ctx.font = EXPORT_CFG.reportBodyFont;
+
+        const lines = resumoIA.split('\n');
+        const maxLines = Math.floor((relHeight - 70) / EXPORT_CFG.reportBodyLineH);
+        let textY = yOffset + 74;
+        for (let i = 0; i < Math.min(lines.length, maxLines); i++) {
+          let line = lines[i];
+          if (line.includes('━━')) line = '────────────────────────────────────────────────────────';
+          ctx.fillText(line.substring(0, 120), bx + 20, textY);
+          textY += EXPORT_CFG.reportBodyLineH;
+        }
+      } else {
+        ctx.fillStyle = "#9aa4b2";
+        ctx.font = "italic 11px monospace";
+        ctx.fillText("Nenhum relatório gerado. Clique em 'GERAR RELATÓRIO' primeiro.", bx + 20, yOffset + 58);
+      }
+
+      const dataURL = canvas.toDataURL("image/png");
+      showDownloadModal(dataURL);
+
+      btn.textContent = originalText;
+      btn.disabled = false;
+    } catch (e) {
+      console.error(e);
+      alert("Falha ao exportar. Toque e segure para salvar a imagem.");
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  }, 120);
+}
+
+/* ========= Utilidades finais ========= */
+function showDownloadModal(imageDataURL) {
+  const existing = document.querySelector('.download-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.className = 'download-modal';
+  modal.innerHTML = `
+    <img src="${imageDataURL}" alt="Prédio Vivo" />
+    <p>📱 <strong>Toque e segure</strong> na imagem<br>para salvar no celular</p>
+    <button onclick="this.parentElement.remove()">✕ FECHAR</button>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+}
+
+function applyStatus() {
+  const floor = document.getElementById("selFloor")?.value;
+  const room = document.getElementById("selRoom")?.value;
+  const status = document.getElementById("selStatus")?.value;
+  if (!floor || !room) return;
+  const key = `${floor}-${room}`;
+  if (status === 'none') delete rooms[key];
+  else rooms[key] = status;
+  renderBuilding(); updateStats(); updateFooter();
+}
+
+function quickApply() {
+  const input = document.getElementById("quickInput")?.value.toLowerCase().trim();
+  if (!input) return;
+  const parts = input.split('-');
+  if (parts.length < 3) { alert("Formato: Andar-Sala-status"); return; }
+  const floor = parseInt(parts[0]), room = parseInt(parts[1]), sc = parts[2][0];
+  if (isNaN(floor) || isNaN(room) || floor<1 || floor>32 || room<1 || room>MAX_SALA) {
+    alert(`Andar 1-32, Sala 1-${MAX_SALA}`); return;
+  }
+  let status;
+  switch(sc) { case 'v': status='valid'; break; case 'o': status='occ'; break; case 't': status='lock'; break; case 'p': status='prob'; break; default: status='none'; }
+  const key = `${floor}-${room}`;
+  if (status === 'none') delete rooms[key]; else rooms[key] = status;
+  renderBuilding(); updateStats(); updateFooter();
+  document.getElementById("quickInput").value = "";
+}
+
+function clearAll() {
+  if(confirm("Apagar todas as salas, limpar responsável, endereço e observações?")) {
+    rooms = {};
+    document.getElementById("inputResp").value = "";
+    document.getElementById("inputAddr").value = "";
+    document.getElementById("obsText").value = "";
+    resumoIA = "";
+    renderBuilding(); updateStats(); updateFooter();
+  }
+}
+function clearResumo() { resumoIA = ""; updateFooter(); }
+
+/* ========= Init ========= */
+function init() {
+  const floorSel = document.getElementById("selFloor");
+  const roomSel = document.getElementById("selRoom");
+  if (floorSel) { floorSel.innerHTML = ''; for (let f=32; f>=1; f--) floorSel.appendChild(new Option(`Andar ${f}`, f)); }
+  if (roomSel) { roomSel.innerHTML = ''; for (let r=1; r<=MAX_SALA; r++) roomSel.appendChild(new Option(`Sala ${r.toString().padStart(2,'0')}`, r)); }
+
+  const savedResp = localStorage.getItem(STORAGE_KEY + "_resp");
+  const savedObs  = localStorage.getItem(STORAGE_KEY + "_obs");
+  const savedAddr = localStorage.getItem(STORAGE_KEY + "_addr");
+  const savedTpl  = localStorage.getItem(STORAGE_KEY + "_tpl");
+
+  if (savedResp) document.getElementById("inputResp").value = savedResp;
+  if (savedObs)  document.getElementById("obsText").value = savedObs;
+  document.getElementById("inputAddr").value = savedAddr || DEFAULT_ADDR;
+  if (savedTpl)  document.getElementById("selTemplate").value = savedTpl;
+
+  renderBuilding(); updateStats(); updateFooter();
+
+  document.getElementById("btnApply")?.addEventListener("click", applyStatus);
+  document.getElementById("btnAI")?.addEventListener("click", generateAIRelatorio);
+  document.getElementById("btnPNG")?.addEventListener("click", exportToPNG);
+  document.getElementById("btnQuick")?.addEventListener("click", quickApply);
+  document.getElementById("btnClearSalas")?.addEventListener("click", clearAll);
+  document.getElementById("btnClearResumo")?.addEventListener("click", clearResumo);
+  document.getElementById("inputResp")?.addEventListener("input", updateFooter);
+  document.getElementById("obsText")?.addEventListener("input", updateFooter);
+  document.getElementById("inputAddr")?.addEventListener("input", updateFooter);
+  document.getElementById("selTemplate")?.addEventListener("change", updateFooter);
+  document.getElementById("quickInput")?.addEventListener("keypress", (e) => { if(e.key === "Enter") quickApply(); });
+}
+init();
+</script>
+</body>
+</html>
