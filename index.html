@@ -6,6 +6,9 @@
 
 <title>Relatório de Vistoria</title>
 
+<!-- html2canvas para capturar PNG -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
   :root{
     --bg:#0b3d2e; --card:rgba(255,255,255,.08); --border:rgba(255,255,255,.18);
@@ -115,7 +118,7 @@
     font-size:12px;
   }
 
-  /* ÍCONES - CORRIGIDO: NÃO QUEBRA MAIS */
+  /* ÍCONES */
   .icon-strip{
     display:flex;
     flex-wrap:wrap;
@@ -141,7 +144,6 @@
     flex-shrink:0;
   }
   
-  /* Mobile: ícones um pouco menores */
   @media(max-width:640px){
     .icon{
       width:38px;
@@ -215,6 +217,11 @@
     cursor:pointer;
     text-transform:uppercase;
     font-size:12px;
+    transition:all 0.1s ease;
+  }
+  
+  .btn:active{
+    transform:translateY(1px);
   }
   
   .row{
@@ -225,6 +232,42 @@
   
   .row button{
     flex:1;
+  }
+
+  /* BOTÕES DE AÇÃO DO RELATÓRIO */
+  .report-actions{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  
+  .btn-action{
+    border:1px solid var(--border);
+    background:#ffffff;
+    color:#111;
+    font-weight:800;
+    font-size:11px;
+    padding:4px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:all 0.1s ease;
+    white-space:nowrap;
+  }
+  
+  .btn-action:active{
+    transform:translateY(1px);
+  }
+  
+  .btn-teams{
+    background:linear-gradient(135deg,#6264A7,#464775);
+    color:#fff;
+    border:none;
+  }
+  
+  .btn-png{
+    background:linear-gradient(135deg,#2D9CDB,#1E6F9F);
+    color:#fff;
+    border:none;
   }
 
   /* VIEWER */
@@ -321,22 +364,6 @@
     font-weight:800;
   }
   
-  .report-actions{
-    display:inline-flex;
-    gap:6px;
-  }
-  
-  .btn-action{
-    border:1px solid var(--border);
-    background:#ffffff;
-    color:#111;
-    font-weight:800;
-    font-size:11px;
-    padding:4px 10px;
-    border-radius:6px;
-    cursor:pointer;
-  }
-  
   .report-content{
     white-space:pre-wrap;
     font-family:monospace;
@@ -382,6 +409,13 @@
   .report-content::-webkit-scrollbar-thumb{
     background:var(--gold);
     border-radius:4px;
+  }
+  
+  /* Área para captura PNG */
+  #reportCaptureArea{
+    background:rgba(0,0,0,0.85);
+    border-radius:8px;
+    padding:0;
   }
 </style>
 </head>
@@ -445,13 +479,17 @@
           <div class="report-actions">
             <button id="btnCopy" class="btn-action">📋 Copiar</button>
             <button id="btnDownload" class="btn-action">💾 Baixar</button>
+            <button id="btnTeams" class="btn-action btn-teams">📤 Enviar Teams</button>
+            <button id="btnPNG" class="btn-action btn-png">📸 Salvar PNG</button>
           </div>
         </div>
-        <div id="relatorio" class="report-content">
+        <div id="reportCaptureArea">
+          <div id="relatorio" class="report-content">
 ═══════════════════════════════
    RELATÓRIO DE VISTORIA
 ═══════════════════════════════
 Aguardando registros...
+          </div>
         </div>
       </div>
     </div>
@@ -459,7 +497,7 @@ Aguardando registros...
 </div>
 
 <script>
-  const STORAGE_KEY = "vistoria_fixed_v4";
+  const STORAGE_KEY = "vistoria_fixed_v5";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom  = 1;
@@ -700,6 +738,86 @@ ${blocoObs}───────────────────────
     showToast("⬇️ Download iniciado!");
   }
 
+  // FUNÇÃO PARA ENVIAR PARA TEAMS (formata para mensagem)
+  function sendToTeams() {
+    const text = getReportText();
+    if (!text.trim() || text.includes("Aguardando registros")) { 
+      showToast("Nada para enviar"); 
+      return; 
+    }
+    
+    // Formata para Teams com markdown simples
+    const predio = predioSel.value || "Vistoria";
+    const data = new Date().toLocaleString("pt-BR");
+    const auditor = auditorInp.value || "Não informado";
+    const totalSalas = entries.length;
+    
+    let teamsMessage = `**📋 RELATÓRIO DE VISTORIA - ${predio}**\n\n`;
+    teamsMessage += `**📍 Local:** ${enderecoInp.value || "Não informado"}\n`;
+    teamsMessage += `**📅 Data:** ${data}\n`;
+    teamsMessage += `**👤 Auditor:** ${auditor}\n\n`;
+    teamsMessage += `**📊 Resumo:**\n`;
+    teamsMessage += `Total de salas: **${totalSalas}**\n\n`;
+    
+    const stats = { valid:0, lock:0, prob:0, other:0 };
+    entries.forEach(e => stats[e.status]++);
+    
+    teamsMessage += `✅ Validada: ${stats.valid}\n`;
+    teamsMessage += `🔒 Trancada: ${stats.lock}\n`;
+    teamsMessage += `❌ Problemas: ${stats.prob}\n`;
+    teamsMessage += `◻️ Outros: ${stats.other}\n\n`;
+    
+    if(obsInp.value.trim()){
+      teamsMessage += `**📝 Observações:**\n${obsInp.value.trim()}\n\n`;
+    }
+    
+    teamsMessage += `---\n🔧 Relatório gerado automaticamente`;
+    
+    // Copia para área de transferência com formato amigável para Teams
+    navigator.clipboard?.writeText(teamsMessage).then(
+      () => showToast("✓ Formatado para Teams! Cole na conversa."),
+      () => {
+        fallbackCopy(teamsMessage);
+        showToast("✓ Copiado! Cole no Teams.");
+      }
+    );
+  }
+  
+  // FUNÇÃO PARA SALVAR COMO PNG
+  async function saveAsPNG() {
+    const reportElement = document.getElementById("reportCaptureArea");
+    const originalText = reportElement.innerHTML;
+    
+    if (getReportText().includes("Aguardando registros")) {
+      showToast("Nada para salvar como imagem");
+      return;
+    }
+    
+    showToast("📸 Gerando imagem...");
+    
+    try {
+      // Pequeno ajuste para garantir que o fundo seja capturado corretamente
+      const canvas = await html2canvas(reportElement, {
+        scale: 2, // Alta qualidade
+        backgroundColor: '#0b3d2e',
+        logging: false,
+        useCORS: false
+      });
+      
+      const link = document.createElement('a');
+      const predio = predioSel.value || "vistoria";
+      const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      link.download = `vistoria_${predio}_${data}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      showToast("✅ Imagem salva!");
+    } catch (error) {
+      console.error("Erro ao gerar PNG:", error);
+      showToast("❌ Erro ao gerar imagem");
+    }
+  }
+
   function showToast(msg) {
     let t = document.querySelector(".toast");
     if (!t) {
@@ -709,11 +827,13 @@ ${blocoObs}───────────────────────
     }
     t.textContent = msg;
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 1500);
+    setTimeout(() => t.classList.remove("show"), 2000);
   }
 
   document.getElementById("btnCopy").addEventListener("click", copyReportToClipboard);
   document.getElementById("btnDownload").addEventListener("click", downloadReportTxt);
+  document.getElementById("btnTeams").addEventListener("click", sendToTeams);
+  document.getElementById("btnPNG").addEventListener("click", saveAsPNG);
 
   function persist(){ 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); 
