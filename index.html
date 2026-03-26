@@ -26,7 +26,6 @@
     padding:12px;
   }
   
-  /* LAYOUT FIXO - SEM SAMBAR */
   .app{
     max-width:1400px;
     margin:0 auto;
@@ -44,12 +43,8 @@
       gap:20px;
       align-items:flex-start;
     }
-  }
-
-  /* LARGURAS FIXAS EM DESKTOP */
-  @media(min-width:980px){
     .app > :first-child{
-      width:340px;
+      width:360px;
       flex-shrink:0;
     }
     .app > :last-child{
@@ -80,7 +75,6 @@
     font-weight:700;
   }
 
-  /* FORMULÁRIO */
   label{
     display:block;
     margin:10px 0 4px 0;
@@ -121,49 +115,63 @@
     font-size:12px;
   }
 
-  /* ÍCONES COM LARGURA FIXA */
+  /* ÍCONES - CORRIGIDO: NÃO QUEBRA MAIS */
   .icon-strip{
-    display:grid;
-    gap:5px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
     margin-top:6px;
   }
   
-  .floors-strip{
-    grid-template-columns:repeat(8, 1fr);
-  }
-  
-  .rooms-strip{
-    grid-template-columns:repeat(10, 1fr);
-  }
-  
   .icon{
-    width:100%;
-    aspect-ratio:1;
+    width:44px;
+    height:44px;
+    min-width:44px;
     border-radius:6px;
     border:1px solid var(--border);
     background:rgba(255,255,255,.08);
     color:var(--text);
-    font-size:11px;
+    font-size:12px;
     font-weight:600;
-    display:flex;
+    display:inline-flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
     transition:all 0.1s ease;
+    flex-shrink:0;
+  }
+  
+  /* Mobile: ícones um pouco menores */
+  @media(max-width:640px){
+    .icon{
+      width:38px;
+      height:38px;
+      min-width:38px;
+      font-size:11px;
+    }
+  }
+  
+  @media(max-width:480px){
+    .icon{
+      width:34px;
+      height:34px;
+      min-width:34px;
+      font-size:10px;
+    }
   }
   
   .icon.is-selected{
     border-color:var(--gold);
-    background:rgba(255,217,102,0.2);
-    box-shadow:0 0 0 1px rgba(255,217,102,.4);
+    background:rgba(255,217,102,0.25);
+    box-shadow:0 0 0 1px rgba(255,217,102,.5);
   }
 
   /* STATUS STRIP */
   .status-strip{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
+    display:flex;
     gap:6px;
     margin:10px 0 4px;
+    flex-wrap:wrap;
   }
   
   .status{
@@ -171,7 +179,7 @@
     align-items:center;
     justify-content:center;
     gap:5px;
-    padding:6px 4px;
+    padding:6px 10px;
     border-radius:20px;
     color:#111;
     background:#fff;
@@ -180,6 +188,8 @@
     font-size:11px;
     font-weight:700;
     transition:all 0.1s ease;
+    flex:1;
+    min-width:70px;
   }
   
   .dot{
@@ -208,18 +218,16 @@
   }
   
   .row{
-    display:grid;
+    display:flex;
     gap:8px;
     margin-top:12px;
   }
   
-  @media(min-width:480px){
-    .row-2{
-      grid-template-columns:1fr 1fr;
-    }
+  .row button{
+    flex:1;
   }
 
-  /* VIEWER - SEM SAMBAR */
+  /* VIEWER */
   .viewer{
     display:flex;
     flex-direction:column;
@@ -241,19 +249,20 @@
 
   /* GRADE DE ITENS */
   .created-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(100px, 1fr));
+    display:flex;
+    flex-wrap:wrap;
     gap:8px;
   }
   
   .room-card{
-    display:flex;
+    display:inline-flex;
     flex-direction:column;
     gap:5px;
     padding:8px;
     border-radius:8px;
     border:1px solid var(--border);
     background:rgba(255,255,255,.08);
+    min-width:100px;
   }
   
   .badge{
@@ -326,11 +335,6 @@
     padding:4px 10px;
     border-radius:6px;
     cursor:pointer;
-    transition:all 0.1s ease;
-  }
-  
-  .btn-action:active{
-    transform:translateY(1px);
   }
   
   .report-content{
@@ -345,7 +349,6 @@
     background:rgba(0,0,0,0.2);
   }
 
-  /* TOAST FIXO */
   .toast{
     position:fixed;
     right:16px;
@@ -360,7 +363,6 @@
     transform:translateY(8px);
     transition:opacity .15s ease, transform .15s ease;
     pointer-events:none;
-    font-weight:500;
   }
   
   .toast.show{
@@ -368,7 +370,6 @@
     transform:translateY(0);
   }
   
-  /* SCROLL */
   .report-content::-webkit-scrollbar{
     width:4px;
   }
@@ -382,26 +383,6 @@
     background:var(--gold);
     border-radius:4px;
   }
-  
-  /* MOBILE AJUSTES SEM SAMBAR */
-  @media(max-width:640px){
-    .floors-strip{
-      grid-template-columns:repeat(8, minmax(32px, 1fr));
-    }
-    .rooms-strip{
-      grid-template-columns:repeat(10, minmax(32px, 1fr));
-    }
-    .icon{
-      font-size:10px;
-    }
-    .status{
-      font-size:10px;
-      padding:5px 2px;
-    }
-    .status-strip{
-      gap:4px;
-    }
-  }
 </style>
 </head>
 <body>
@@ -411,7 +392,7 @@
     <h2>📋 Entrada de dados</h2>
 
     <label>👤 Auditor</label>
-    <input id="auditor" class="form-field" placeholder="Nome completo" value=""/>
+    <input id="auditor" class="form-field" placeholder="Nome completo"/>
 
     <label>🏢 Prédio</label>
     <select id="predio" class="form-field">
@@ -423,24 +404,24 @@
     <label>📍 Endereço</label>
     <input id="endereco" class="form-field" placeholder="Endereço automático"/>
 
-    <label>🏬 Andar</label>
-    <div id="floorsStrip" class="icon-strip floors-strip"></div>
+    <label>🏬 Andar (01-32)</label>
+    <div id="floorsStrip" class="icon-strip"></div>
 
-    <label>🚪 Sala</label>
-    <div id="roomsStrip" class="icon-strip rooms-strip"></div>
+    <label>🚪 Sala (01-50)</label>
+    <div id="roomsStrip" class="icon-strip"></div>
 
     <label>📌 Status</label>
     <div class="status-strip">
-      <button class="status" data-status="valid"><span class="dot valid"></span>Valid</button>
-      <button class="status" data-status="lock"><span class="dot lock"></span>Lock</button>
-      <button class="status" data-status="prob"><span class="dot prob"></span>Prob</button>
+      <button class="status" data-status="valid"><span class="dot valid"></span>Validada</button>
+      <button class="status" data-status="lock"><span class="dot lock"></span>Trancada</button>
+      <button class="status" data-status="prob"><span class="dot prob"></span>Problemas</button>
       <button class="status" data-status="other"><span class="dot other"></span>Outros</button>
     </div>
 
     <label>📝 Observações</label>
     <textarea id="obs" class="form-field" placeholder="Observações gerais da vistoria..."></textarea>
 
-    <div class="row row-2">
+    <div class="row">
       <button id="btnAdd" class="btn">➕ Adicionar</button>
       <button id="btnClear" class="btn">🗑️ Limpar</button>
     </div>
@@ -453,7 +434,7 @@
     <div class="section">
       <h3 id="sectionTitle">📦 Salas registradas (0)</h3>
       <div id="createdGrid" class="created-grid">
-        <p class="small" style="text-align:center; grid-column:1/-1">Nenhuma sala registrada</p>
+        <p class="small" style="text-align:center; width:100%">Nenhuma sala registrada</p>
       </div>
     </div>
 
@@ -478,7 +459,7 @@ Aguardando registros...
 </div>
 
 <script>
-  const STORAGE_KEY = "vistoria_fixed_v3";
+  const STORAGE_KEY = "vistoria_fixed_v4";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom  = 1;
@@ -573,7 +554,7 @@ Aguardando registros...
     sectionTitle.innerHTML = `📦 Salas registradas (${entries.length})`;
     
     if(sorted.length === 0){
-      createdGrid.innerHTML = '<p class="small" style="text-align:center; grid-column:1/-1">Nenhuma sala registrada</p>';
+      createdGrid.innerHTML = '<p class="small" style="text-align:center; width:100%">Nenhuma sala registrada</p>';
       return;
     }
     
@@ -622,7 +603,6 @@ Aguardando registros...
       info += `✅ Validada: ${stats.valid}  |  🔒 Trancada: ${stats.lock}\n`;
       info += `❌ Problemas: ${stats.prob}  |  ◻️ Outros: ${stats.other}\n\n`;
       
-      // Agrupar por andar
       const byFloor = {};
       entries.forEach(e => {
         if(!byFloor[e.f]) byFloor[e.f] = [];
