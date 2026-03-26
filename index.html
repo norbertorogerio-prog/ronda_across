@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
 
-<title>Relatório de Vistoria | Vivo + Fotos</title>
+<title>Relatório de Vistoria | Vivo + Fotos Integradas</title>
 
 <!-- html2canvas para capturar PNG -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -363,7 +363,7 @@
     margin-top:12px;
   }
 
-  /* GRADE DE ITENS COM FOTOS */
+  /* GRADE DE ITENS */
   .created-grid{
     display:flex;
     flex-wrap:wrap;
@@ -423,74 +423,11 @@
   .pill.prob{background: var(--red);}
   .pill.other{background: var(--purple-status);}
 
-  /* MODAL DE FOTOS */
-  .photos-modal{
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.95);
-    z-index: 20000;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(8px);
-  }
-  
-  .photos-modal.show{
-    display: flex;
-  }
-  
-  .photos-modal-content{
-    background: rgba(26, 26, 46, 0.95);
-    border: 1px solid rgba(102, 0, 204, 0.4);
-    border-radius: 24px;
-    padding: 20px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-  
-  .photos-modal-title{
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    text-align: center;
-  }
-  
-  .photos-modal-gallery{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
-  
-  .photos-modal-img{
-    width: 120px;
-    height: 120px;
-    border-radius: 12px;
-    object-fit: cover;
-    border: 2px solid var(--vivo-purple);
-    cursor: pointer;
-  }
-  
-  .close-modal-btn{
-    width: 100%;
-    padding: 10px;
-    background: rgba(102, 0, 204, 0.2);
-    border: 1px solid rgba(102, 0, 204, 0.3);
-    border-radius: 12px;
-    color: white;
-    cursor: pointer;
-  }
-
+  /* RELATÓRIO COM FOTOS */
   .report-box{
     border-radius:16px;
     background: rgba(0,0,0,0.3);
-    overflow:hidden;
+    overflow: hidden;
     border: 1px solid rgba(102, 0, 204, 0.3);
   }
   
@@ -505,13 +442,49 @@
   }
   
   .report-content{
-    white-space:pre-wrap;
     font-family: 'Inter', monospace;
     font-size:11px;
     line-height:1.6;
     padding:16px;
     max-height:450px;
     overflow-y:auto;
+  }
+  
+  /* Seção de fotos no relatório */
+  .report-photo-section{
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 2px solid rgba(102, 0, 204, 0.5);
+  }
+  
+  .report-room-photos{
+    margin: 12px 0;
+    padding: 10px;
+    background: rgba(102, 0, 204, 0.1);
+    border-radius: 12px;
+  }
+  
+  .report-room-title{
+    font-weight: 700;
+    color: var(--vivo-purple-light);
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  
+  .report-photo-thumbnails{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .report-thumb{
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--vivo-purple);
+    cursor: pointer;
   }
 
   .toast{
@@ -591,6 +564,31 @@
   .share-btn.email{background: linear-gradient(135deg, #EA4335 0%, #C5221F 100%); color:#fff;}
   .share-btn.download{background: var(--gradient-primary); color:#fff;}
   .close-modal{background: rgba(102, 0, 204, 0.2); border: 1px solid rgba(102, 0, 204, 0.3); border-radius:14px; padding:10px; margin-top:12px; color:white; cursor:pointer; width:100%;}
+  
+  /* Modal de fotos ampliadas */
+  .fullscreen-modal{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 20000;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .fullscreen-modal.show{
+    display: flex;
+  }
+  
+  .fullscreen-modal img{
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 12px;
+  }
 </style>
 </head>
 <body>
@@ -682,15 +680,6 @@ Aguardando registros...
   </div>
 </div>
 
-<!-- Modal de Visualização de Fotos -->
-<div id="photosModal" class="photos-modal">
-  <div class="photos-modal-content">
-    <div class="photos-modal-title">📸 Fotos da Sala</div>
-    <div id="photosModalGallery" class="photos-modal-gallery"></div>
-    <button class="close-modal-btn" onclick="closePhotosModal()">Fechar</button>
-  </div>
-</div>
-
 <!-- Modal de Compartilhamento -->
 <div id="shareModal" class="share-modal">
   <div class="share-card">
@@ -705,8 +694,13 @@ Aguardando registros...
   </div>
 </div>
 
+<!-- Modal para fotos em tela cheia -->
+<div id="fullscreenModal" class="fullscreen-modal" onclick="closeFullscreen()">
+  <img id="fullscreenImage" src="">
+</div>
+
 <script>
-  const STORAGE_KEY = "vistoria_photos_v1";
+  const STORAGE_KEY = "vistoria_photos_v2";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom = 1;
@@ -717,7 +711,6 @@ Aguardando registros...
   const statusClass = s => s==="valid"?"valid":s==="lock"?"lock":s==="prob"?"prob":"other";
   const statusEmoji = s => s==="valid"?"✅":s==="lock"?"🔒":s==="prob"?"❌":"◻️";
 
-  // Helper para salvar fotos
   function getRoomKey(f, r) { return `A${pad2(f)}-S${pad2(r)}`; }
   
   function getRoomPhotos(f, r) {
@@ -739,6 +732,7 @@ Aguardando registros...
       renderCurrentPhotos();
     }
     renderCreated();
+    renderReportWithPhotos();
   }
   
   function deletePhotoFromRoom(f, r, index) {
@@ -749,6 +743,7 @@ Aguardando registros...
       renderCurrentPhotos();
     }
     renderCreated();
+    renderReportWithPhotos();
     showToast("📸 Foto removida");
   }
 
@@ -769,31 +764,120 @@ Aguardando registros...
       const div = document.createElement("div");
       div.className = "photo-item";
       div.innerHTML = `
-        <img src="${photo}" alt="Foto">
-        <div class="photo-delete" onclick="deletePhotoFromRoom(${selectedFloor}, ${selectedRoom}, ${idx})">✕</div>
+        <img src="${photo}" alt="Foto" onclick="showFullscreenImage('${photo}')">
+        <div class="photo-delete" onclick="event.stopPropagation(); deletePhotoFromRoom(${selectedFloor}, ${selectedRoom}, ${idx})">✕</div>
       `;
-      div.querySelector("img").addEventListener("click", () => {
-        showFullPhoto(photo);
-      });
       gallery.appendChild(div);
     });
   }
   
-  function showFullPhoto(photoSrc) {
-    const modal = document.getElementById("photosModal");
-    const gallery = document.getElementById("photosModalGallery");
-    gallery.innerHTML = `<img src="${photoSrc}" style="max-width:100%; border-radius:12px;">`;
+  function showFullscreenImage(src) {
+    const modal = document.getElementById("fullscreenModal");
+    const img = document.getElementById("fullscreenImage");
+    img.src = src;
     modal.classList.add("show");
   }
   
-  function closePhotosModal() {
-    document.getElementById("photosModal").classList.remove("show");
+  function closeFullscreen() {
+    document.getElementById("fullscreenModal").classList.remove("show");
+  }
+
+  // RENDERIZA RELATÓRIO COM FOTOS
+  function renderReportWithPhotos() {
+    const predio = predioSel.value || "Não selecionado";
+    const endereco = enderecoInp.value || "Não informado";
+    const auditor = auditorInp.value || "Não informado";
+    const obsGeral = (obsInp.value || "").trim();
+    const dataStr = new Date().toLocaleString("pt-BR");
+    const stats = { valid:0, lock:0, prob:0, other:0 };
+    entries.forEach(e => stats[e.status]++);
+    const total = entries.length;
+    
+    let info = "";
+    if(total === 0){
+      info = "Nenhuma sala vistoriada.";
+    } else {
+      info = `TOTAL: ${total} sala(s) | ✅${stats.valid} 🔒${stats.lock} ❌${stats.prob} ◻️${stats.other}\n\n`;
+      const byFloor = {};
+      entries.forEach(e => {
+        if(!byFloor[e.f]) byFloor[e.f] = [];
+        byFloor[e.f].push({r: e.r, status: e.status});
+      });
+      const floors = Object.keys(byFloor).map(Number).sort((a,b)=>a-b);
+      info += "DETALHAMENTO:\n";
+      floors.forEach(f => {
+        const rooms = byFloor[f];
+        const validados = rooms.filter(r => r.status === "valid").length;
+        const trancados = rooms.filter(r => r.status === "lock").length;
+        const problemas = rooms.filter(r => r.status === "prob").length;
+        const outros = rooms.filter(r => r.status === "other").length;
+        info += `  A${pad2(f)}: ✅${validados} 🔒${trancados} ❌${problemas} ◻️${outros}\n`;
+      });
+    }
+    
+    // Contar fotos e preparar visualização
+    let totalFotos = 0;
+    const roomsWithPhotos = [];
+    entries.forEach(item => {
+      const photos = getRoomPhotos(item.f, item.r);
+      if(photos.length > 0) {
+        totalFotos += photos.length;
+        roomsWithPhotos.push({
+          room: `A${pad2(item.f)}-S${pad2(item.r)}`,
+          status: statusName(item.status),
+          statusEmoji: statusEmoji(item.status),
+          photos: photos,
+          photoCount: photos.length
+        });
+      }
+    });
+    
+    const fotosInfo = totalFotos > 0 ? `\n📸 Total de fotos registradas: ${totalFotos}\n` : "";
+    
+    // Construir HTML com fotos
+    let photosHtml = "";
+    if(roomsWithPhotos.length > 0) {
+      photosHtml = `<div class="report-photo-section">
+        <div style="font-weight:700; margin-bottom:12px;">📸 REGISTRO FOTOGRÁFICO</div>`;
+      
+      roomsWithPhotos.forEach(room => {
+        photosHtml += `<div class="report-room-photos">
+          <div class="report-room-title">${room.statusEmoji} ${room.room} - ${room.status} (${room.photoCount} foto${room.photoCount > 1 ? 's' : ''})</div>
+          <div class="report-photo-thumbnails">`;
+        
+        room.photos.forEach((photo, idx) => {
+          photosHtml += `<img src="${photo}" class="report-thumb" onclick="showFullscreenImage('${photo}')" style="cursor:pointer;">`;
+        });
+        
+        photosHtml += `</div></div>`;
+      });
+      photosHtml += `</div>`;
+    }
+    
+    const blocoObs = obsGeral ? `\n📝 OBSERVAÇÕES:\n${obsGeral}\n` : "";
+    
+    const textHtml = `
+<div style="font-family: monospace; white-space: pre-wrap;">
+═══════════════════════════════
+   RELATÓRIO DE VISTORIA
+═══════════════════════════════
+🏢 ${predio}
+📍 ${endereco}
+📅 ${dataStr}
+👤 Auditor: ${auditor}
+───────────────────────────────
+📊 ESTATÍSTICAS
+${info}${fotosInfo}${blocoObs}───────────────────────────────
+🔧 Sistema Vivo Vistoria Técnica
+</div>
+${photosHtml}`;
+    
+    document.getElementById("relatorio").innerHTML = textHtml;
   }
 
   const floorsStrip = document.getElementById("floorsStrip");
   const roomsStrip = document.getElementById("roomsStrip");
   const createdGrid = document.getElementById("createdGrid");
-  const relatorioEl = document.getElementById("relatorio");
   const predioSel = document.getElementById("predio");
   const enderecoInp = document.getElementById("endereco");
   const auditorInp = document.getElementById("auditor");
@@ -857,7 +941,7 @@ Aguardando registros...
       else{ entries.push({f: selectedFloor, r: selectedRoom, status}); }
       persist();
       renderCreated();
-      renderReport();
+      renderReportWithPhotos();
       showToast(`A${pad2(selectedFloor)}-S${pad2(selectedRoom)}: ${statusName(status)}`);
     });
   });
@@ -869,7 +953,7 @@ Aguardando registros...
       showToast(`Sala A${pad2(selectedFloor)}-S${pad2(selectedRoom)} adicionada`);
       persist();
       renderCreated();
-      renderReport();
+      renderReportWithPhotos();
     } else {
       showToast(`Sala já existe`);
     }
@@ -921,64 +1005,98 @@ Aguardando registros...
     });
   }
 
-  function renderReport(){
-    const predio = predioSel.value || "Não selecionado";
-    const endereco = enderecoInp.value || "Não informado";
-    const auditor = auditorInp.value || "Não informado";
-    const obsGeral = (obsInp.value || "").trim();
-    const dataStr = new Date().toLocaleString("pt-BR");
-    const stats = { valid:0, lock:0, prob:0, other:0 };
-    entries.forEach(e => stats[e.status]++);
-    const total = entries.length;
-    
-    let info = "";
-    if(total === 0){
-      info = "Nenhuma sala vistoriada.";
-    } else {
-      info = `TOTAL: ${total} sala(s) | ✅${stats.valid} 🔒${stats.lock} ❌${stats.prob} ◻️${stats.other}\n\n`;
-      const byFloor = {};
-      entries.forEach(e => {
-        if(!byFloor[e.f]) byFloor[e.f] = [];
-        byFloor[e.f].push({r: e.r, status: e.status});
-      });
-      const floors = Object.keys(byFloor).map(Number).sort((a,b)=>a-b);
-      info += "DETALHAMENTO:\n";
-      floors.forEach(f => {
-        const rooms = byFloor[f];
-        const validados = rooms.filter(r => r.status === "valid").length;
-        const trancados = rooms.filter(r => r.status === "lock").length;
-        const problemas = rooms.filter(r => r.status === "prob").length;
-        const outros = rooms.filter(r => r.status === "other").length;
-        info += `  A${pad2(f)}: ✅${validados} 🔒${trancados} ❌${problemas} ◻️${outros}\n`;
-      });
+  async function generateReportImage() {
+    const reportElement = document.getElementById("reportCaptureArea");
+    if (!reportElement.innerHTML || reportElement.innerHTML.includes("Aguardando registros")) { 
+      showToast("Nada para gerar"); 
+      return null; 
     }
-    
-    // Contar fotos
-    let totalFotos = 0;
-    entries.forEach(item => {
-      totalFotos += getRoomPhotos(item.f, item.r).length;
-    });
-    const fotosInfo = totalFotos > 0 ? `\n📸 Total de fotos: ${totalFotos}\n` : "";
-    
-    const blocoObs = obsGeral ? `\n📝 OBSERVAÇÕES:\n${obsGeral}\n` : "";
-    
-    const text = 
-`═══════════════════════════════
-   RELATÓRIO DE VISTORIA
-═══════════════════════════════
-🏢 ${predio}
-📍 ${endereco}
-📅 ${dataStr}
-👤 Auditor: ${auditor}
-───────────────────────────────
-📊 ESTATÍSTICAS
-${info}${fotosInfo}${blocoObs}───────────────────────────────
-🔧 Sistema Vivo Vistoria Técnica`;
-
-    relatorioEl.textContent = text;
+    showToast("📸 Gerando imagem com fotos...");
+    try {
+      const canvas = await html2canvas(reportElement, { 
+        scale: 2, 
+        backgroundColor: '#1A1A2E', 
+        logging: false,
+        useCORS: true,
+        allowTaint: false
+      });
+      return canvas.toDataURL('image/png');
+    } catch (error) { 
+      showToast("❌ Erro ao gerar imagem"); 
+      return null; 
+    }
+  }
+  
+  async function saveAsPNG() {
+    const imageData = await generateReportImage();
+    if (!imageData) return;
+    const link = document.createElement('a');
+    link.download = `vistoria_${predioSel.value || "vistoria"}.png`;
+    link.href = imageData;
+    link.click();
+    showToast("✅ Imagem salva com fotos!");
+  }
+  
+  async function openShareModal() {
+    const imageData = await generateReportImage();
+    if (!imageData) return;
+    currentImageData = imageData;
+    shareModal.classList.add("show");
+  }
+  
+  function shareToWhatsApp() {
+    if (!currentImageData) return;
+    const text = `✨ RELATÓRIO DE VISTORIA ✨\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}\n📊 Total de salas: ${entries.length}\n📸 Fotos inclusas no relatório`;
+    if (navigator.share) {
+      fetch(currentImageData).then(res => res.blob()).then(blob => {
+        navigator.share({ title: 'Relatório', text: text, files: [new File([blob], "relatorio.png", { type: "image/png" })] });
+      });
+    } else {
+      window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
+    }
+    shareModal.classList.remove("show");
+  }
+  
+  function shareToTeams() {
+    if (!currentImageData) return;
+    const message = `✨ **Relatório de Vistoria - ${predioSel.value || "Vistoria"}** ✨\n\n📅 ${new Date().toLocaleString("pt-BR")}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📊 Total de salas: ${entries.length}\n📸 Fotos inclusas na imagem anexada`;
+    navigator.clipboard.writeText(message);
+    showToast("✅ Mensagem copiada! Cole no Teams");
+    const link = document.createElement('a');
+    link.download = `vistoria.png`;
+    link.href = currentImageData;
+    link.click();
+    shareModal.classList.remove("show");
+  }
+  
+  function shareToEmail() {
+    if (!currentImageData) return;
+    const subject = `Relatório de Vistoria - ${predioSel.value || "Vistoria"}`;
+    const body = `Relatório gerado em ${new Date().toLocaleString("pt-BR")}\nAuditor: ${auditorInp.value || "Não informado"}\nTotal de salas: ${entries.length}\n\nFotos inclusas no arquivo anexado.`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.download = `vistoria.png`;
+      link.href = currentImageData;
+      link.click();
+    }, 500);
+    shareModal.classList.remove("show");
+  }
+  
+  function shareSaveImage() {
+    if (!currentImageData) return;
+    const link = document.createElement('a');
+    link.download = `vistoria_${predioSel.value || "vistoria"}.png`;
+    link.href = currentImageData;
+    link.click();
+    shareModal.classList.remove("show");
+    showToast("✅ Imagem salva!");
   }
 
-  function getReportText() { return document.getElementById("relatorio")?.textContent || ""; }
+  function getReportText() {
+    const el = document.getElementById("relatorio");
+    return el ? el.innerText : "";
+  }
   
   function copyReportToClipboard() {
     const text = getReportText();
@@ -1010,82 +1128,6 @@ ${info}${fotosInfo}${blocoObs}────────────────�
     showToast("⬇️ Download iniciado!");
   }
 
-  async function generateReportImage() {
-    const reportElement = document.getElementById("reportCaptureArea");
-    if (getReportText().includes("Aguardando registros")) { showToast("Nada para gerar"); return null; }
-    showToast("📸 Gerando imagem...");
-    try {
-      const canvas = await html2canvas(reportElement, { scale: 2, backgroundColor: '#1A1A2E', logging: false });
-      return canvas.toDataURL('image/png');
-    } catch (error) { showToast("❌ Erro"); return null; }
-  }
-  
-  async function saveAsPNG() {
-    const imageData = await generateReportImage();
-    if (!imageData) return;
-    const link = document.createElement('a');
-    link.download = `vistoria_${predioSel.value || "vistoria"}.png`;
-    link.href = imageData;
-    link.click();
-    showToast("✅ Imagem salva!");
-  }
-  
-  async function openShareModal() {
-    const imageData = await generateReportImage();
-    if (!imageData) return;
-    currentImageData = imageData;
-    shareModal.classList.add("show");
-  }
-  
-  function shareToWhatsApp() {
-    if (!currentImageData) return;
-    const text = `✨ RELATÓRIO DE VISTORIA ✨\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}\n📊 Total de salas: ${entries.length}`;
-    if (navigator.share) {
-      fetch(currentImageData).then(res => res.blob()).then(blob => {
-        navigator.share({ title: 'Relatório', text: text, files: [new File([blob], "relatorio.png", { type: "image/png" })] });
-      });
-    } else {
-      window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
-    }
-    shareModal.classList.remove("show");
-  }
-  
-  function shareToTeams() {
-    if (!currentImageData) return;
-    const message = `✨ **Relatório de Vistoria - ${predioSel.value || "Vistoria"}** ✨\n\n📅 ${new Date().toLocaleString("pt-BR")}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📊 Total de salas: ${entries.length}\n\n📸 Imagem anexada`;
-    navigator.clipboard.writeText(message);
-    showToast("✅ Mensagem copiada! Cole no Teams");
-    const link = document.createElement('a');
-    link.download = `vistoria.png`;
-    link.href = currentImageData;
-    link.click();
-    shareModal.classList.remove("show");
-  }
-  
-  function shareToEmail() {
-    if (!currentImageData) return;
-    const subject = `Relatório de Vistoria - ${predioSel.value || "Vistoria"}`;
-    const body = `Relatório gerado em ${new Date().toLocaleString("pt-BR")}\nAuditor: ${auditorInp.value || "Não informado"}\nTotal de salas: ${entries.length}`;
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setTimeout(() => {
-      const link = document.createElement('a');
-      link.download = `vistoria.png`;
-      link.href = currentImageData;
-      link.click();
-    }, 500);
-    shareModal.classList.remove("show");
-  }
-  
-  function shareSaveImage() {
-    if (!currentImageData) return;
-    const link = document.createElement('a');
-    link.download = `vistoria_${predioSel.value || "vistoria"}.png`;
-    link.href = currentImageData;
-    link.click();
-    shareModal.classList.remove("show");
-    showToast("✅ Imagem salva!");
-  }
-
   function showToast(msg) {
     let t = document.querySelector(".toast");
     if (!t) { t = document.createElement("div"); t.className = "toast"; document.body.appendChild(t); }
@@ -1104,8 +1146,10 @@ ${info}${fotosInfo}${blocoObs}────────────────�
   document.getElementById("shareSave").addEventListener("click", shareSaveImage);
   document.getElementById("closeModal").addEventListener("click", () => shareModal.classList.remove("show"));
   shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.classList.remove("show"); });
+  
   window.deletePhotoFromRoom = deletePhotoFromRoom;
-  window.closePhotosModal = closePhotosModal;
+  window.showFullscreenImage = showFullscreenImage;
+  window.closeFullscreen = closeFullscreen;
 
   function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
 
@@ -1122,7 +1166,7 @@ ${info}${fotosInfo}${blocoObs}────────────────�
     obsInp.value = "";
     persist();
     renderCreated();
-    renderReport();
+    renderReportWithPhotos();
     renderCurrentPhotos();
     showToast("✓ Todos os dados removidos");
   });
@@ -1132,12 +1176,12 @@ ${info}${fotosInfo}${blocoObs}────────────────�
     if(v === "Eco Berrini") enderecoInp.value = "Av. Eng. Luís Carlos Berrini, 1376 - SP";
     else if(v === "Chucri Zaidan") enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460 - SP";
     else enderecoInp.value = "";
-    renderReport();
+    renderReportWithPhotos();
   });
 
-  auditorInp.addEventListener("input", renderReport);
-  enderecoInp.addEventListener("input", renderReport);
-  obsInp.addEventListener("input", renderReport);
+  auditorInp.addEventListener("input", renderReportWithPhotos);
+  enderecoInp.addEventListener("input", renderReportWithPhotos);
+  obsInp.addEventListener("input", renderReportWithPhotos);
 
   (function init(){
     selectedFloor = 1;
@@ -1145,7 +1189,7 @@ ${info}${fotosInfo}${blocoObs}────────────────�
     buildFloorIcons();
     buildRoomIcons();
     renderCreated();
-    renderReport();
+    renderReportWithPhotos();
     renderCurrentPhotos();
   })();
 </script>
