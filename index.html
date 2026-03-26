@@ -4,9 +4,9 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
 
-<title>Relatório de Vistoria | Vivo 4K</title>
+<title>Relatório de Vistoria | Vivo</title>
 
-<!-- html2canvas para capturar PNG em alta resolução -->
+<!-- html2canvas para capturar PNG -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
@@ -348,12 +348,6 @@
     background: linear-gradient(135deg, #4C0099 0%, #6600CC 100%);
     border: none;
   }
-  
-  .btn-4k{
-    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-    border: none;
-    font-weight: 800;
-  }
 
   .section{
     background: rgba(26, 26, 46, 0.6);
@@ -429,7 +423,7 @@
   .pill.prob{background: var(--red);}
   .pill.other{background: var(--purple-status);}
 
-  /* RELATÓRIO COM FOTOS - VERSÃO 4K */
+  /* RELATÓRIO COM FOTOS */
   .report-box{
     border-radius:16px;
     background: rgba(0,0,0,0.3);
@@ -447,6 +441,15 @@
     border-bottom: 1px solid rgba(102, 0, 204, 0.3);
   }
   
+  .report-title span{
+    font-size:14px;
+    font-weight:700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
   .report-content{
     font-family: 'Inter', monospace;
     font-size:12px;
@@ -456,7 +459,7 @@
     overflow-y:auto;
   }
   
-  /* Seção de fotos no relatório - Alta qualidade */
+  /* Seção de fotos no relatório */
   .report-photo-section{
     margin-top: 24px;
     padding-top: 20px;
@@ -577,7 +580,7 @@
   .share-btn.download{background: var(--gradient-primary); color:#fff;}
   .close-modal{background: rgba(102, 0, 204, 0.2); border: 1px solid rgba(102, 0, 204, 0.3); border-radius:14px; padding:10px; margin-top:12px; color:white; cursor:pointer; width:100%;}
   
-  /* Modal de fotos ampliadas 4K */
+  /* Modal de fotos ampliadas */
   .fullscreen-modal{
     display: none;
     position: fixed;
@@ -601,19 +604,6 @@
     max-height: 95%;
     border-radius: 16px;
     box-shadow: 0 0 50px rgba(102,0,204,0.5);
-  }
-  
-  /* Indicador de qualidade */
-  .quality-badge{
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    background: rgba(0,0,0,0.5);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-family: monospace;
-    z-index: 999;
   }
 </style>
 </head>
@@ -685,19 +675,16 @@
     <div class="section">
       <div class="report-box">
         <div class="report-title">
-          <span>📋 Relatório de Vistoria 4K</span>
+          <span>📋 Relatório de Vistoria</span>
           <div class="report-actions">
-            <button id="btnCopy" class="btn-action">📋 Copiar</button>
-            <button id="btnDownload" class="btn-action">💾 Baixar TXT</button>
             <button id="btnShare" class="btn-action btn-share">📱 Compartilhar</button>
-            <button id="btnPNG" class="btn-action btn-png">📸 PNG HD</button>
-            <button id="btn4K" class="btn-action btn-4k">🎬 4K Ultra HD</button>
+            <button id="btnPNG" class="btn-action btn-png">📸 Salvar PNG</button>
           </div>
         </div>
         <div id="reportCaptureArea">
           <div id="relatorio" class="report-content">
 ═══════════════════════════════
-   RELATÓRIO DE VISTORIA 4K
+   RELATÓRIO DE VISTORIA
 ═══════════════════════════════
 Aguardando registros...
           </div>
@@ -707,12 +694,10 @@ Aguardando registros...
   </div>
 </div>
 
-<div class="quality-badge" id="qualityBadge">📸 Qualidade: Standard</div>
-
 <!-- Modal de Compartilhamento -->
 <div id="shareModal" class="share-modal">
   <div class="share-card">
-    <h4>✨ Compartilhar Relatório 4K</h4>
+    <h4>✨ Compartilhar Relatório</h4>
     <div class="share-buttons">
       <button id="shareWhatsApp" class="share-btn whatsapp">💬 WhatsApp</button>
       <button id="shareTeams" class="share-btn teams">💼 Microsoft Teams</button>
@@ -729,7 +714,7 @@ Aguardando registros...
 </div>
 
 <script>
-  const STORAGE_KEY = "vistoria_photos_4k_v1";
+  const STORAGE_KEY = "vistoria_photos_final";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom = 1;
@@ -840,7 +825,7 @@ Aguardando registros...
         const trancados = rooms.filter(r => r.status === "lock").length;
         const problemas = rooms.filter(r => r.status === "prob").length;
         const outros = rooms.filter(r => r.status === "other").length;
-        info += `  A${pad2(f)}: ✅${validados} 🔒${trancados} ❌${problemas} ◻️${outros}\n`;
+        info += `  Andar ${pad2(f)}: ✅${validados} 🔒${trancados} ❌${problemas} ◻️${outros}\n`;
       });
     }
     
@@ -863,7 +848,7 @@ Aguardando registros...
     
     const fotosInfo = totalFotos > 0 ? `\n📸 Total de fotos registradas: ${totalFotos}\n` : "";
     
-    // Construir HTML com fotos em alta qualidade
+    // Construir HTML com fotos
     let photosHtml = "";
     if(roomsWithPhotos.length > 0) {
       photosHtml = `<div class="report-photo-section">
@@ -888,7 +873,7 @@ Aguardando registros...
     const textHtml = `
 <div style="font-family: 'Inter', monospace; white-space: pre-wrap; font-size: 12px;">
 ═══════════════════════════════
-   RELATÓRIO DE VISTORIA 4K
+   RELATÓRIO DE VISTORIA
 ═══════════════════════════════
 🏢 ${predio}
 📍 ${endereco}
@@ -897,62 +882,21 @@ Aguardando registros...
 ───────────────────────────────
 📊 ESTATÍSTICAS
 ${info}${fotosInfo}${blocoObs}───────────────────────────────
-🔧 Sistema Vivo Vistoria Técnica 4K
-📸 Fotos em alta resolução inclusas
 </div>
 ${photosHtml}`;
     
     document.getElementById("relatorio").innerHTML = textHtml;
   }
 
-  // Função para gerar imagem em 4K
-  async function generate4KImage() {
+  // Função para gerar imagem
+  async function generateImage() {
     const reportElement = document.getElementById("reportCaptureArea");
     if (!reportElement.innerHTML || reportElement.innerHTML.includes("Aguardando registros")) { 
       showToast("Nada para gerar"); 
       return null; 
     }
     
-    // Aumenta temporariamente a escala para 4K
-    const originalWidth = reportElement.offsetWidth;
-    const targetWidth = 3840; // 4K width
-    const scale = targetWidth / originalWidth;
-    
-    showToast("🎬 Gerando imagem em 4K Ultra HD... Isso pode levar alguns segundos");
-    document.getElementById("qualityBadge").textContent = "🎬 Gerando 4K...";
-    
-    try {
-      const canvas = await html2canvas(reportElement, { 
-        scale: scale,
-        backgroundColor: '#1A1A2E', 
-        logging: false,
-        useCORS: true,
-        allowTaint: false,
-        windowWidth: reportElement.scrollWidth,
-        windowHeight: reportElement.scrollHeight
-      });
-      
-      document.getElementById("qualityBadge").textContent = "📸 Qualidade: 4K Ultra HD";
-      showToast("✅ Imagem 4K gerada com sucesso!");
-      return canvas.toDataURL('image/png');
-    } catch (error) { 
-      console.error("Erro 4K:", error);
-      showToast("❌ Erro ao gerar imagem 4K"); 
-      document.getElementById("qualityBadge").textContent = "📸 Qualidade: Standard";
-      return null; 
-    }
-  }
-  
-  // Função para gerar imagem HD (padrão)
-  async function generateHDImage() {
-    const reportElement = document.getElementById("reportCaptureArea");
-    if (!reportElement.innerHTML || reportElement.innerHTML.includes("Aguardando registros")) { 
-      showToast("Nada para gerar"); 
-      return null; 
-    }
-    
-    showToast("📸 Gerando imagem HD...");
-    document.getElementById("qualityBadge").textContent = "📸 Gerando HD...";
+    showToast("📸 Gerando imagem...");
     
     try {
       const canvas = await html2canvas(reportElement, { 
@@ -963,7 +907,6 @@ ${photosHtml}`;
         allowTaint: false
       });
       
-      document.getElementById("qualityBadge").textContent = "📸 Qualidade: HD (2x)";
       return canvas.toDataURL('image/png');
     } catch (error) { 
       showToast("❌ Erro ao gerar imagem"); 
@@ -972,31 +915,19 @@ ${photosHtml}`;
   }
   
   async function saveAsPNG() {
-    const imageData = await generateHDImage();
+    const imageData = await generateImage();
     if (!imageData) return;
     const link = document.createElement('a');
     const predio = predioSel.value || "vistoria";
     const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-    link.download = `vistoria_${predio}_HD_${data}.png`;
+    link.download = `vistoria_${predio}_${data}.png`;
     link.href = imageData;
     link.click();
-    showToast("✅ Imagem HD salva!");
-  }
-  
-  async function saveAs4K() {
-    const imageData = await generate4KImage();
-    if (!imageData) return;
-    const link = document.createElement('a');
-    const predio = predioSel.value || "vistoria";
-    const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-    link.download = `vistoria_${predio}_4K_${data}.png`;
-    link.href = imageData;
-    link.click();
-    showToast("✅ Imagem 4K Ultra HD salva! (3840px de largura)");
+    showToast("✅ Imagem salva!");
   }
   
   async function openShareModal() {
-    const imageData = await generateHDImage();
+    const imageData = await generateImage();
     if (!imageData) return;
     currentImageData = imageData;
     shareModal.classList.add("show");
@@ -1004,10 +935,10 @@ ${photosHtml}`;
   
   function shareToWhatsApp() {
     if (!currentImageData) return;
-    const text = `✨ RELATÓRIO DE VISTORIA 4K ✨\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}\n📊 Total de salas: ${entries.length}\n📸 Fotos em alta resolução inclusas`;
+    const text = `✨ RELATÓRIO DE VISTORIA ✨\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}\n📊 Total de salas: ${entries.length}\n📸 Fotos inclusas no relatório`;
     if (navigator.share) {
       fetch(currentImageData).then(res => res.blob()).then(blob => {
-        navigator.share({ title: 'Relatório 4K', text: text, files: [new File([blob], "relatorio_4k.png", { type: "image/png" })] });
+        navigator.share({ title: 'Relatório', text: text, files: [new File([blob], "relatorio.png", { type: "image/png" })] });
       });
     } else {
       window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
@@ -1017,11 +948,11 @@ ${photosHtml}`;
   
   function shareToTeams() {
     if (!currentImageData) return;
-    const message = `✨ **Relatório de Vistoria 4K - ${predioSel.value || "Vistoria"}** ✨\n\n📅 ${new Date().toLocaleString("pt-BR")}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📊 Total de salas: ${entries.length}\n📸 Fotos em 4K Ultra HD inclusas na imagem anexada`;
+    const message = `✨ **Relatório de Vistoria - ${predioSel.value || "Vistoria"}** ✨\n\n📅 ${new Date().toLocaleString("pt-BR")}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📊 Total de salas: ${entries.length}\n📸 Fotos inclusas na imagem anexada`;
     navigator.clipboard.writeText(message);
     showToast("✅ Mensagem copiada! Cole no Teams");
     const link = document.createElement('a');
-    link.download = `vistoria_4K.png`;
+    link.download = `vistoria.png`;
     link.href = currentImageData;
     link.click();
     shareModal.classList.remove("show");
@@ -1029,12 +960,12 @@ ${photosHtml}`;
   
   function shareToEmail() {
     if (!currentImageData) return;
-    const subject = `Relatório de Vistoria 4K - ${predioSel.value || "Vistoria"}`;
-    const body = `Relatório em 4K Ultra HD gerado em ${new Date().toLocaleString("pt-BR")}\nAuditor: ${auditorInp.value || "Não informado"}\nTotal de salas: ${entries.length}\n\nFotos em alta resolução inclusas no arquivo anexado.`;
+    const subject = `Relatório de Vistoria - ${predioSel.value || "Vistoria"}`;
+    const body = `Relatório gerado em ${new Date().toLocaleString("pt-BR")}\nAuditor: ${auditorInp.value || "Não informado"}\nTotal de salas: ${entries.length}\n\nFotos inclusas no arquivo anexado.`;
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setTimeout(() => {
       const link = document.createElement('a');
-      link.download = `vistoria_4K.png`;
+      link.download = `vistoria.png`;
       link.href = currentImageData;
       link.click();
     }, 500);
@@ -1044,46 +975,11 @@ ${photosHtml}`;
   function shareSaveImage() {
     if (!currentImageData) return;
     const link = document.createElement('a');
-    link.download = `vistoria_${predioSel.value || "vistoria"}_4K.png`;
+    link.download = `vistoria_${predioSel.value || "vistoria"}.png`;
     link.href = currentImageData;
     link.click();
     shareModal.classList.remove("show");
-    showToast("✅ Imagem 4K salva!");
-  }
-
-  function getReportText() {
-    const el = document.getElementById("relatorio");
-    return el ? el.innerText : "";
-  }
-  
-  function copyReportToClipboard() {
-    const text = getReportText();
-    if (!text.trim() || text.includes("Aguardando registros")) { showToast("Nada para copiar"); return; }
-    navigator.clipboard?.writeText(text).then(() => showToast("✓ Copiado!"), () => fallbackCopy(text));
-  }
-  
-  function fallbackCopy(text) {
-    try {
-      const ta = document.createElement("textarea");
-      ta.value = text; document.body.appendChild(ta);
-      ta.select(); document.execCommand("copy");
-      ta.remove();
-      showToast("✓ Copiado!");
-    } catch { showToast("Erro ao copiar"); }
-  }
-  
-  function downloadReportTxt() {
-    const text = getReportText();
-    if (!text.trim() || text.includes("Aguardando registros")) { showToast("Nada para baixar"); return; }
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    const predio = (document.getElementById("predio")?.value || "vistoria").replace(/\s+/g, '_');
-    a.href = url;
-    a.download = `vistoria_${predio}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast("⬇️ Download iniciado!");
+    showToast("✅ Imagem salva!");
   }
 
   function showToast(msg) {
@@ -1091,7 +987,7 @@ ${photosHtml}`;
     if (!t) { t = document.createElement("div"); t.className = "toast"; document.body.appendChild(t); }
     t.textContent = msg;
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 3000);
+    setTimeout(() => t.classList.remove("show"), 2000);
   }
 
   const floorsStrip = document.getElementById("floorsStrip");
@@ -1224,11 +1120,8 @@ ${photosHtml}`;
     });
   }
 
-  document.getElementById("btnCopy").addEventListener("click", copyReportToClipboard);
-  document.getElementById("btnDownload").addEventListener("click", downloadReportTxt);
-  document.getElementById("btnShare").addEventListener("click", openShareModal);
   document.getElementById("btnPNG").addEventListener("click", saveAsPNG);
-  document.getElementById("btn4K").addEventListener("click", saveAs4K);
+  document.getElementById("btnShare").addEventListener("click", openShareModal);
   document.getElementById("shareWhatsApp").addEventListener("click", shareToWhatsApp);
   document.getElementById("shareTeams").addEventListener("click", shareToTeams);
   document.getElementById("shareEmail").addEventListener("click", shareToEmail);
@@ -1258,7 +1151,6 @@ ${photosHtml}`;
     renderReportWithPhotos();
     renderCurrentPhotos();
     showToast("✓ Todos os dados removidos");
-    document.getElementById("qualityBadge").textContent = "📸 Qualidade: Standard";
   });
 
   predioSel.addEventListener("change", ()=>{
