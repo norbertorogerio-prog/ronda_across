@@ -4,14 +4,13 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
 
-<title>Relatório de Vistoria | Vivo</title>
+<title>Relatório de Vistoria | Vivo + Fotos</title>
 
 <!-- html2canvas para capturar PNG -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
   :root{
-    /* Paleta Vivo - Moderna */
     --vivo-purple: #6600CC;
     --vivo-purple-dark: #4C0099;
     --vivo-purple-light: #8833FF;
@@ -22,19 +21,14 @@
     --vivo-gray-light: #6A6A7A;
     --vivo-white: #FFFFFF;
     --vivo-offwhite: #F5F5F7;
-    
-    /* Status colors - mantendo mas ajustadas */
     --green: #00C853;
     --yellow: #FFD600;
     --red: #FF3B3B;
     --purple-status: #AA00FF;
-    
-    /* Efeitos */
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
     --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
     --gradient-primary: linear-gradient(135deg, #6600CC 0%, #4C0099 100%);
-    --gradient-shine: linear-gradient(135deg, rgba(102,0,204,0.1) 0%, rgba(102,0,204,0.05) 100%);
   }
   *{
     box-sizing:border-box;
@@ -45,12 +39,11 @@
   body{
     background: linear-gradient(135deg, #1A1A2E 0%, #0F0F1A 100%);
     color: var(--vivo-white);
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     min-height:100vh;
     padding:20px;
   }
   
-  /* Import Inter font */
   @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
   
   .app{
@@ -87,19 +80,12 @@
     border-radius:20px;
     padding:20px;
     box-shadow: var(--shadow-md);
-    transition: all 0.3s ease;
-  }
-  
-  .card:hover{
-    border-color: rgba(102, 0, 204, 0.6);
-    box-shadow: var(--shadow-lg);
   }
 
   h2{
     margin:0 0 16px 0;
     font-weight:700;
     font-size:18px;
-    letter-spacing:-0.3px;
     background: var(--gradient-primary);
     -webkit-background-clip: text;
     background-clip: text;
@@ -112,7 +98,6 @@
     font-size:14px;
     color: var(--vivo-gray-light);
     font-weight:600;
-    letter-spacing:0.3px;
     text-transform: uppercase;
   }
 
@@ -122,7 +107,6 @@
     font-size:11px;
     font-weight:600;
     text-transform:uppercase;
-    letter-spacing:0.5px;
     color: var(--vivo-gray-light);
   }
   
@@ -134,7 +118,6 @@
     color: var(--vivo-white);
     padding:10px 14px;
     font-size:13px;
-    line-height:1.4;
     outline:none;
     transition: all 0.2s ease;
     font-family: 'Inter', sans-serif;
@@ -146,28 +129,12 @@
     box-shadow: 0 0 0 3px var(--vivo-purple-glow);
   }
   
-  .form-field::placeholder{
-    color: var(--vivo-gray);
-  }
-  
-  select.form-field{
-    cursor: pointer;
-    -webkit-appearance:none;
-    -moz-appearance:none;
-    appearance:none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236600CC' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 12px;
-  }
-  
   textarea.form-field{
     min-height:60px;
     resize:vertical;
-    font-size:12px;
   }
 
-  /* ÍCONES MODERNOS */
+  /* ÍCONES */
   .icon-strip{
     display:flex;
     flex-wrap:wrap;
@@ -189,42 +156,21 @@
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    flex-shrink:0;
+    transition: all 0.2s ease;
   }
   
   .icon:hover{
     background: rgba(102, 0, 204, 0.3);
     transform: translateY(-2px);
-    border-color: var(--vivo-purple);
-  }
-  
-  @media(max-width:640px){
-    .icon{
-      width:38px;
-      height:38px;
-      min-width:38px;
-      font-size:11px;
-    }
-  }
-  
-  @media(max-width:480px){
-    .icon{
-      width:34px;
-      height:34px;
-      min-width:34px;
-      font-size:10px;
-    }
   }
   
   .icon.is-selected{
     background: var(--gradient-primary);
     border-color: var(--vivo-purple-light);
     box-shadow: 0 0 0 3px var(--vivo-purple-glow);
-    transform: scale(1.02);
   }
 
-  /* STATUS STRIP MODERNO */
+  /* STATUS */
   .status-strip{
     display:flex;
     gap:8px;
@@ -247,33 +193,24 @@
     font-weight:600;
     transition: all 0.2s ease;
     flex:1;
-    min-width:80px;
-    backdrop-filter: blur(4px);
   }
   
   .status:hover{
     background: rgba(102, 0, 204, 0.3);
     transform: translateY(-1px);
-    border-color: var(--vivo-purple);
-  }
-  
-  .status:active{
-    transform: translateY(0);
   }
   
   .dot{
     width:10px;
     height:10px;
     border-radius:50%;
-    flex-shrink:0;
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
   }
-  .dot.valid{background: var(--green); box-shadow: 0 0 8px rgba(0,200,83,0.5);}
-  .dot.lock{background: var(--yellow); box-shadow: 0 0 8px rgba(255,214,0,0.5);}
-  .dot.prob{background: var(--red); box-shadow: 0 0 8px rgba(255,59,59,0.5);}
-  .dot.other{background: var(--purple-status); box-shadow: 0 0 8px rgba(170,0,255,0.5);}
+  .dot.valid{background: var(--green);}
+  .dot.lock{background: var(--yellow);}
+  .dot.prob{background: var(--red);}
+  .dot.other{background: var(--purple-status);}
 
-  /* BOTÕES MODERNOS */
+  /* BOTÕES */
   .btn{
     width:100%;
     border: none;
@@ -283,35 +220,13 @@
     font-weight:700;
     padding:10px;
     cursor:pointer;
-    text-transform:uppercase;
     font-size:12px;
     transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .btn::before{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-  }
-  
-  .btn:hover::before{
-    left: 100%;
   }
   
   .btn:hover{
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 0, 204, 0.4);
-  }
-  
-  .btn:active{
-    transform: translateY(0);
   }
   
   .row{
@@ -324,7 +239,83 @@
     flex:1;
   }
 
-  /* BOTÕES DE AÇÃO DO RELATÓRIO */
+  /* ÁREA DE FOTOS */
+  .photo-section{
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(102, 0, 204, 0.3);
+  }
+  
+  .photo-label{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  
+  .photo-upload-btn{
+    background: rgba(102, 0, 204, 0.2);
+    border: 1.5px dashed rgba(102, 0, 204, 0.5);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+  }
+  
+  .photo-upload-btn:hover{
+    background: rgba(102, 0, 204, 0.3);
+    border-color: var(--vivo-purple);
+  }
+  
+  .photo-gallery{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .photo-item{
+    position: relative;
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid rgba(102, 0, 204, 0.3);
+    background: rgba(0,0,0,0.3);
+  }
+  
+  .photo-item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .photo-delete{
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--red);
+    transition: all 0.2s ease;
+  }
+  
+  .photo-delete:hover{
+    background: var(--red);
+    color: white;
+  }
+
+  /* BOTÕES DE AÇÃO */
   .report-actions{
     display:flex;
     gap:8px;
@@ -341,18 +332,11 @@
     border-radius:10px;
     cursor:pointer;
     transition: all 0.2s ease;
-    white-space:nowrap;
-    backdrop-filter: blur(4px);
   }
   
   .btn-action:hover{
     background: rgba(102, 0, 204, 0.3);
-    border-color: var(--vivo-purple);
     transform: translateY(-1px);
-  }
-  
-  .btn-action:active{
-    transform: translateY(0);
   }
   
   .btn-share{
@@ -365,34 +349,21 @@
     border: none;
   }
 
-  /* VIEWER */
-  .viewer{
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-  }
-  
   .section{
     background: rgba(26, 26, 46, 0.6);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(102, 0, 204, 0.2);
     border-radius:20px;
     padding:20px;
-    transition: all 0.3s ease;
-  }
-  
-  .section:hover{
-    border-color: rgba(102, 0, 204, 0.4);
   }
   
   .small{
     font-size:10px;
     color: var(--vivo-gray);
     margin-top:12px;
-    font-weight:400;
   }
 
-  /* GRADE DE ITENS */
+  /* GRADE DE ITENS COM FOTOS */
   .created-grid{
     display:flex;
     flex-wrap:wrap;
@@ -408,13 +379,22 @@
     border: 1px solid rgba(102, 0, 204, 0.2);
     background: rgba(102, 0, 204, 0.1);
     min-width:105px;
+    cursor: pointer;
     transition: all 0.2s ease;
   }
   
   .room-card:hover{
     border-color: var(--vivo-purple);
     transform: translateY(-2px);
-    background: rgba(102, 0, 204, 0.15);
+  }
+  
+  .room-card.has-photo{
+    border-color: var(--green);
+  }
+  
+  .photo-indicator{
+    font-size: 10px;
+    color: var(--green);
   }
   
   .badge{
@@ -423,11 +403,9 @@
     gap:6px;
     font-size:11px;
     font-weight:700;
-    color: var(--vivo-white);
     background: rgba(102, 0, 204, 0.3);
     border-radius:10px;
     padding:5px 10px;
-    width:fit-content;
   }
   
   .pill{
@@ -436,19 +414,79 @@
     gap:6px;
     font-size:10px;
     font-weight:600;
-    color: var(--vivo-white);
     border-radius:40px;
     padding:4px 10px;
-    width:fit-content;
-    backdrop-filter: blur(4px);
   }
   
-  .pill.valid{background: var(--green); box-shadow: 0 2px 8px rgba(0,200,83,0.3);}
-  .pill.lock{background: var(--yellow); color: #1A1A2E; box-shadow: 0 2px 8px rgba(255,214,0,0.3);}
-  .pill.prob{background: var(--red); box-shadow: 0 2px 8px rgba(255,59,59,0.3);}
-  .pill.other{background: var(--purple-status); box-shadow: 0 2px 8px rgba(170,0,255,0.3);}
+  .pill.valid{background: var(--green);}
+  .pill.lock{background: var(--yellow); color: #1A1A2E;}
+  .pill.prob{background: var(--red);}
+  .pill.other{background: var(--purple-status);}
 
-  /* RELATÓRIO */
+  /* MODAL DE FOTOS */
+  .photos-modal{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 20000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  
+  .photos-modal.show{
+    display: flex;
+  }
+  
+  .photos-modal-content{
+    background: rgba(26, 26, 46, 0.95);
+    border: 1px solid rgba(102, 0, 204, 0.4);
+    border-radius: 24px;
+    padding: 20px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .photos-modal-title{
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .photos-modal-gallery{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  
+  .photos-modal-img{
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--vivo-purple);
+    cursor: pointer;
+  }
+  
+  .close-modal-btn{
+    width: 100%;
+    padding: 10px;
+    background: rgba(102, 0, 204, 0.2);
+    border: 1px solid rgba(102, 0, 204, 0.3);
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+  }
+
   .report-box{
     border-radius:16px;
     background: rgba(0,0,0,0.3);
@@ -458,36 +496,22 @@
   
   .report-title{
     background: linear-gradient(135deg, rgba(102,0,204,0.2) 0%, rgba(76,0,153,0.2) 100%);
-    color: var(--vivo-white);
-    font-weight:700;
     padding:14px 16px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:12px;
     flex-wrap:wrap;
     border-bottom: 1px solid rgba(102, 0, 204, 0.3);
-  }
-  
-  .report-title span{
-    font-size:14px;
-    font-weight:700;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
   }
   
   .report-content{
     white-space:pre-wrap;
     font-family: 'Inter', monospace;
     font-size:11px;
-    color: var(--vivo-offwhite);
     line-height:1.6;
     padding:16px;
     max-height:450px;
     overflow-y:auto;
-    background: rgba(0,0,0,0.2);
   }
 
   .toast{
@@ -496,17 +520,14 @@
     bottom:20px;
     background: rgba(102, 0, 204, 0.95);
     backdrop-filter: blur(10px);
-    color: var(--vivo-white);
     padding:10px 18px;
     border-radius:40px;
     font-size:12px;
-    font-weight:500;
     z-index:9999;
     opacity:0;
     transform:translateY(10px);
     transition:opacity .2s ease, transform .2s ease;
     pointer-events:none;
-    box-shadow: var(--shadow-md);
   }
   
   .toast.show{
@@ -514,21 +535,6 @@
     transform:translateY(0);
   }
   
-  .report-content::-webkit-scrollbar{
-    width:6px;
-  }
-  
-  .report-content::-webkit-scrollbar-track{
-    background: rgba(102, 0, 204, 0.1);
-    border-radius:10px;
-  }
-  
-  .report-content::-webkit-scrollbar-thumb{
-    background: var(--vivo-purple);
-    border-radius:10px;
-  }
-  
-  /* Modal Moderno */
   .share-modal{
     display:none;
     position:fixed;
@@ -555,18 +561,12 @@
     padding:24px;
     max-width:340px;
     width:90%;
-    box-shadow: var(--shadow-lg);
   }
   
   .share-card h4{
     margin-bottom:20px;
     font-size:18px;
-    font-weight:700;
     text-align:center;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
   }
   
   .share-buttons{
@@ -583,52 +583,14 @@
     border: none;
     border-radius:16px;
     font-weight:700;
-    font-size:14px;
     cursor:pointer;
-    transition: all 0.2s ease;
-    width:100%;
   }
   
-  .share-btn:active{
-    transform:scale(0.98);
-  }
-  
-  .share-btn.whatsapp{
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-    color:#fff;
-  }
-  
-  .share-btn.teams{
-    background: linear-gradient(135deg, #6264A7 0%, #464775 100%);
-    color:#fff;
-  }
-  
-  .share-btn.email{
-    background: linear-gradient(135deg, #EA4335 0%, #C5221F 100%);
-    color:#fff;
-  }
-  
-  .share-btn.download{
-    background: var(--gradient-primary);
-    color:#fff;
-  }
-  
-  .close-modal{
-    margin-top:12px;
-    padding:10px;
-    background: rgba(102, 0, 204, 0.2);
-    border: 1px solid rgba(102, 0, 204, 0.3);
-    border-radius:14px;
-    color: var(--vivo-white);
-    cursor:pointer;
-    width:100%;
-    font-weight:600;
-    transition: all 0.2s ease;
-  }
-  
-  .close-modal:hover{
-    background: rgba(102, 0, 204, 0.3);
-  }
+  .share-btn.whatsapp{background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color:#fff;}
+  .share-btn.teams{background: linear-gradient(135deg, #6264A7 0%, #464775 100%); color:#fff;}
+  .share-btn.email{background: linear-gradient(135deg, #EA4335 0%, #C5221F 100%); color:#fff;}
+  .share-btn.download{background: var(--gradient-primary); color:#fff;}
+  .close-modal{background: rgba(102, 0, 204, 0.2); border: 1px solid rgba(102, 0, 204, 0.3); border-radius:14px; padding:10px; margin-top:12px; color:white; cursor:pointer; width:100%;}
 </style>
 </head>
 <body>
@@ -667,12 +629,24 @@
     <label>📝 Observações</label>
     <textarea id="obs" class="form-field" placeholder="Observações gerais da vistoria..."></textarea>
 
+    <!-- ÁREA DE FOTOS DA SALA SELECIONADA -->
+    <div class="photo-section">
+      <div class="photo-label">
+        📸 Fotos da Sala A<span id="currentFloor">01</span>-S<span id="currentRoom">01</span>
+      </div>
+      <div id="photoUploadBtn" class="photo-upload-btn">
+        📷 + Adicionar foto (câmera ou galeria)
+      </div>
+      <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" multiple>
+      <div id="photoGallery" class="photo-gallery"></div>
+    </div>
+
     <div class="row">
       <button id="btnAdd" class="btn">➕ Adicionar</button>
       <button id="btnClear" class="btn">🗑️ Limpar</button>
     </div>
 
-    <p class="small">💡 Selecione andar/sala → clique no status</p>
+    <p class="small">💡 Selecione andar/sala → clique no status ou adicione fotos</p>
   </div>
 
   <!-- DIREITA -->
@@ -708,6 +682,15 @@ Aguardando registros...
   </div>
 </div>
 
+<!-- Modal de Visualização de Fotos -->
+<div id="photosModal" class="photos-modal">
+  <div class="photos-modal-content">
+    <div class="photos-modal-title">📸 Fotos da Sala</div>
+    <div id="photosModalGallery" class="photos-modal-gallery"></div>
+    <button class="close-modal-btn" onclick="closePhotosModal()">Fechar</button>
+  </div>
+</div>
+
 <!-- Modal de Compartilhamento -->
 <div id="shareModal" class="share-modal">
   <div class="share-card">
@@ -723,26 +706,117 @@ Aguardando registros...
 </div>
 
 <script>
-  const STORAGE_KEY = "vistoria_vivo_v1";
+  const STORAGE_KEY = "vistoria_photos_v1";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
-  let selectedRoom  = 1;
+  let selectedRoom = 1;
   let currentImageData = null;
 
   const pad2 = n => String(n).padStart(2,"0");
-  const statusName  = s => s==="valid"?"Validada":s==="lock"?"Trancada":s==="prob"?"Problemas":"Outros";
+  const statusName = s => s==="valid"?"Validada":s==="lock"?"Trancada":s==="prob"?"Problemas":"Outros";
   const statusClass = s => s==="valid"?"valid":s==="lock"?"lock":s==="prob"?"prob":"other";
   const statusEmoji = s => s==="valid"?"✅":s==="lock"?"🔒":s==="prob"?"❌":"◻️";
 
-  const floorsStrip  = document.getElementById("floorsStrip");
-  const roomsStrip   = document.getElementById("roomsStrip");
-  const createdGrid  = document.getElementById("createdGrid");
-  const relatorioEl  = document.getElementById("relatorio");
-  const predioSel    = document.getElementById("predio");
-  const enderecoInp  = document.getElementById("endereco");
-  const auditorInp   = document.getElementById("auditor");
-  const obsInp       = document.getElementById("obs");
-  const shareModal   = document.getElementById("shareModal");
+  // Helper para salvar fotos
+  function getRoomKey(f, r) { return `A${pad2(f)}-S${pad2(r)}`; }
+  
+  function getRoomPhotos(f, r) {
+    const key = getRoomKey(f, r);
+    const photos = localStorage.getItem(`photos_${key}`);
+    return photos ? JSON.parse(photos) : [];
+  }
+  
+  function saveRoomPhotos(f, r, photos) {
+    const key = getRoomKey(f, r);
+    localStorage.setItem(`photos_${key}`, JSON.stringify(photos));
+  }
+  
+  function addPhotoToRoom(f, r, photoData) {
+    const photos = getRoomPhotos(f, r);
+    photos.push(photoData);
+    saveRoomPhotos(f, r, photos);
+    if (selectedFloor === f && selectedRoom === r) {
+      renderCurrentPhotos();
+    }
+    renderCreated();
+  }
+  
+  function deletePhotoFromRoom(f, r, index) {
+    const photos = getRoomPhotos(f, r);
+    photos.splice(index, 1);
+    saveRoomPhotos(f, r, photos);
+    if (selectedFloor === f && selectedRoom === r) {
+      renderCurrentPhotos();
+    }
+    renderCreated();
+    showToast("📸 Foto removida");
+  }
+
+  function renderCurrentPhotos() {
+    const gallery = document.getElementById("photoGallery");
+    const photos = getRoomPhotos(selectedFloor, selectedRoom);
+    
+    document.getElementById("currentFloor").textContent = pad2(selectedFloor);
+    document.getElementById("currentRoom").textContent = pad2(selectedRoom);
+    
+    if (photos.length === 0) {
+      gallery.innerHTML = '<p class="small" style="text-align:center; width:100%">Nenhuma foto adicionada</p>';
+      return;
+    }
+    
+    gallery.innerHTML = "";
+    photos.forEach((photo, idx) => {
+      const div = document.createElement("div");
+      div.className = "photo-item";
+      div.innerHTML = `
+        <img src="${photo}" alt="Foto">
+        <div class="photo-delete" onclick="deletePhotoFromRoom(${selectedFloor}, ${selectedRoom}, ${idx})">✕</div>
+      `;
+      div.querySelector("img").addEventListener("click", () => {
+        showFullPhoto(photo);
+      });
+      gallery.appendChild(div);
+    });
+  }
+  
+  function showFullPhoto(photoSrc) {
+    const modal = document.getElementById("photosModal");
+    const gallery = document.getElementById("photosModalGallery");
+    gallery.innerHTML = `<img src="${photoSrc}" style="max-width:100%; border-radius:12px;">`;
+    modal.classList.add("show");
+  }
+  
+  function closePhotosModal() {
+    document.getElementById("photosModal").classList.remove("show");
+  }
+
+  const floorsStrip = document.getElementById("floorsStrip");
+  const roomsStrip = document.getElementById("roomsStrip");
+  const createdGrid = document.getElementById("createdGrid");
+  const relatorioEl = document.getElementById("relatorio");
+  const predioSel = document.getElementById("predio");
+  const enderecoInp = document.getElementById("endereco");
+  const auditorInp = document.getElementById("auditor");
+  const obsInp = document.getElementById("obs");
+  const shareModal = document.getElementById("shareModal");
+  const photoInput = document.getElementById("photoInput");
+  const photoUploadBtn = document.getElementById("photoUploadBtn");
+
+  photoUploadBtn.addEventListener("click", () => {
+    photoInput.click();
+  });
+  
+  photoInput.addEventListener("change", (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        addPhotoToRoom(selectedFloor, selectedRoom, event.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+    photoInput.value = "";
+  });
 
   function buildFloorIcons(){
     floorsStrip.innerHTML = "";
@@ -750,12 +824,11 @@ Aguardando registros...
       const el = document.createElement("div");
       el.className = "icon" + (f === selectedFloor ? " is-selected" : "");
       el.textContent = pad2(f);
-      el.title = `Andar ${pad2(f)}`;
-      el.addEventListener("click", (e)=>{
-        e.stopPropagation();
+      el.addEventListener("click", () => {
         selectedFloor = f;
         buildFloorIcons();
         buildRoomIcons();
+        renderCurrentPhotos();
       });
       floorsStrip.appendChild(el);
     }
@@ -767,11 +840,10 @@ Aguardando registros...
       const el = document.createElement("div");
       el.className = "icon" + (r === selectedRoom ? " is-selected" : "");
       el.textContent = pad2(r);
-      el.title = `Sala ${pad2(r)}`;
-      el.addEventListener("click", (e)=>{
-        e.stopPropagation();
+      el.addEventListener("click", () => {
         selectedRoom = r;
         buildRoomIcons();
+        renderCurrentPhotos();
       });
       roomsStrip.appendChild(el);
     }
@@ -780,36 +852,26 @@ Aguardando registros...
   document.querySelectorAll(".status").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const status = btn.dataset.status;
-      const f = selectedFloor;
-      const r = selectedRoom;
-      const idx = entries.findIndex(e => e.f === f && e.r === r);
-      
-      if(idx >= 0){ 
-        entries[idx].status = status; 
-      } else { 
-        entries.push({f, r, status}); 
-      }
-      
+      const idx = entries.findIndex(e => e.f === selectedFloor && e.r === selectedRoom);
+      if(idx >= 0){ entries[idx].status = status; } 
+      else{ entries.push({f: selectedFloor, r: selectedRoom, status}); }
       persist();
       renderCreated();
       renderReport();
-      showToast(`A${pad2(f)}-S${pad2(r)}: ${statusName(status)}`);
+      showToast(`A${pad2(selectedFloor)}-S${pad2(selectedRoom)}: ${statusName(status)}`);
     });
   });
 
   document.getElementById("btnAdd").addEventListener("click", ()=>{
-    const f = selectedFloor;
-    const r = selectedRoom;
-    const idx = entries.findIndex(e => e.f === f && e.r === r);
-    
+    const idx = entries.findIndex(e => e.f === selectedFloor && e.r === selectedRoom);
     if(idx < 0){ 
-      entries.push({f, r, status:"other"}); 
-      showToast(`Sala A${pad2(f)}-S${pad2(r)} adicionada`);
+      entries.push({f: selectedFloor, r: selectedRoom, status:"other"}); 
+      showToast(`Sala A${pad2(selectedFloor)}-S${pad2(selectedRoom)} adicionada`);
       persist();
       renderCreated();
       renderReport();
     } else {
-      showToast(`Sala já existe, use os status`);
+      showToast(`Sala já existe`);
     }
   });
 
@@ -825,12 +887,22 @@ Aguardando registros...
     
     createdGrid.innerHTML = "";
     sorted.forEach(item => {
+      const photos = getRoomPhotos(item.f, item.r);
+      const hasPhotos = photos.length > 0;
+      
       const card = document.createElement("div");
-      card.className = "room-card";
+      card.className = `room-card ${hasPhotos ? 'has-photo' : ''}`;
+      card.onclick = () => {
+        selectedFloor = item.f;
+        selectedRoom = item.r;
+        buildFloorIcons();
+        buildRoomIcons();
+        renderCurrentPhotos();
+      };
       
       const badge = document.createElement("div");
       badge.className = "badge";
-      badge.textContent = `A${pad2(item.f)} • S${pad2(item.r)}`;
+      badge.innerHTML = `A${pad2(item.f)} • S${pad2(item.r)}${hasPhotos ? ' 📸' : ''}`;
       card.appendChild(badge);
       
       const tag = document.createElement("div");
@@ -838,42 +910,37 @@ Aguardando registros...
       tag.textContent = `${statusEmoji(item.status)} ${statusName(item.status)}`;
       card.appendChild(tag);
       
+      if(hasPhotos){
+        const photoInfo = document.createElement("div");
+        photoInfo.className = "photo-indicator";
+        photoInfo.textContent = `📸 ${photos.length} foto(s)`;
+        card.appendChild(photoInfo);
+      }
+      
       createdGrid.appendChild(card);
     });
   }
 
   function renderReport(){
-    const predio   = predioSel.value || "Não selecionado";
+    const predio = predioSel.value || "Não selecionado";
     const endereco = enderecoInp.value || "Não informado";
-    const auditor  = auditorInp.value || "Não informado";
+    const auditor = auditorInp.value || "Não informado";
     const obsGeral = (obsInp.value || "").trim();
-    const dataStr  = new Date().toLocaleString("pt-BR", { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-
+    const dataStr = new Date().toLocaleString("pt-BR");
     const stats = { valid:0, lock:0, prob:0, other:0 };
     entries.forEach(e => stats[e.status]++);
-    
     const total = entries.length;
     
     let info = "";
     if(total === 0){
-      info = "Nenhuma sala vistoriada até o momento.";
+      info = "Nenhuma sala vistoriada.";
     } else {
-      info = `TOTAL: ${total} sala(s)\n`;
-      info += `✅ Validada: ${stats.valid}  |  🔒 Trancada: ${stats.lock}\n`;
-      info += `❌ Problemas: ${stats.prob}  |  ◻️ Outros: ${stats.other}\n\n`;
-      
+      info = `TOTAL: ${total} sala(s) | ✅${stats.valid} 🔒${stats.lock} ❌${stats.prob} ◻️${stats.other}\n\n`;
       const byFloor = {};
       entries.forEach(e => {
         if(!byFloor[e.f]) byFloor[e.f] = [];
         byFloor[e.f].push({r: e.r, status: e.status});
       });
-      
       const floors = Object.keys(byFloor).map(Number).sort((a,b)=>a-b);
       info += "DETALHAMENTO:\n";
       floors.forEach(f => {
@@ -882,16 +949,16 @@ Aguardando registros...
         const trancados = rooms.filter(r => r.status === "lock").length;
         const problemas = rooms.filter(r => r.status === "prob").length;
         const outros = rooms.filter(r => r.status === "other").length;
-        
-        info += `  Andar ${pad2(f)}: `;
-        const parts = [];
-        if(validados > 0) parts.push(`✅${validados}`);
-        if(trancados > 0) parts.push(`🔒${trancados}`);
-        if(problemas > 0) parts.push(`❌${problemas}`);
-        if(outros > 0) parts.push(`◻️${outros}`);
-        info += parts.join(" ") + "\n";
+        info += `  A${pad2(f)}: ✅${validados} 🔒${trancados} ❌${problemas} ◻️${outros}\n`;
       });
     }
+    
+    // Contar fotos
+    let totalFotos = 0;
+    entries.forEach(item => {
+      totalFotos += getRoomPhotos(item.f, item.r).length;
+    });
+    const fotosInfo = totalFotos > 0 ? `\n📸 Total de fotos: ${totalFotos}\n` : "";
     
     const blocoObs = obsGeral ? `\n📝 OBSERVAÇÕES:\n${obsGeral}\n` : "";
     
@@ -902,220 +969,126 @@ Aguardando registros...
 🏢 ${predio}
 📍 ${endereco}
 📅 ${dataStr}
-👤 Auditor(a): ${auditor}
+👤 Auditor: ${auditor}
 ───────────────────────────────
 📊 ESTATÍSTICAS
-${info}
-${blocoObs}───────────────────────────────
-🔧 Gerado em ${new Date().toLocaleDateString()}`;
+${info}${fotosInfo}${blocoObs}───────────────────────────────
+🔧 Sistema Vivo Vistoria Técnica`;
 
     relatorioEl.textContent = text;
   }
 
-  function getReportText() {
-    return document.getElementById("relatorio")?.textContent || "";
-  }
+  function getReportText() { return document.getElementById("relatorio")?.textContent || ""; }
   
   function copyReportToClipboard() {
     const text = getReportText();
-    if (!text.trim() || text.includes("Aguardando registros")) { 
-      showToast("Nada para copiar"); 
-      return; 
-    }
-    
-    navigator.clipboard?.writeText(text).then(
-      () => showToast("✓ Relatório copiado!"),
-      () => fallbackCopy(text)
-    );
+    if (!text.trim() || text.includes("Aguardando registros")) { showToast("Nada para copiar"); return; }
+    navigator.clipboard?.writeText(text).then(() => showToast("✓ Copiado!"), () => fallbackCopy(text));
   }
   
   function fallbackCopy(text) {
     try {
       const ta = document.createElement("textarea");
-      ta.value = text; 
-      document.body.appendChild(ta);
-      ta.select(); 
-      document.execCommand("copy");
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy");
       ta.remove();
       showToast("✓ Copiado!");
-    } catch {
-      showToast("Erro ao copiar");
-    }
+    } catch { showToast("Erro ao copiar"); }
   }
   
   function downloadReportTxt() {
     const text = getReportText();
-    if (!text.trim() || text.includes("Aguardando registros")) { 
-      showToast("Nada para baixar"); 
-      return; 
-    }
-    
+    if (!text.trim() || text.includes("Aguardando registros")) { showToast("Nada para baixar"); return; }
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     const predio = (document.getElementById("predio")?.value || "vistoria").replace(/\s+/g, '_');
-    const dt = new Date();
-    const stamp = `${dt.getFullYear()}${(dt.getMonth()+1).toString().padStart(2,'0')}${dt.getDate().toString().padStart(2,'0')}`;
     a.href = url;
-    a.download = `vistoria_${predio}_${stamp}.txt`;
-    document.body.appendChild(a);
+    a.download = `vistoria_${predio}.txt`;
     a.click();
-    a.remove();
     URL.revokeObjectURL(url);
     showToast("⬇️ Download iniciado!");
   }
 
   async function generateReportImage() {
     const reportElement = document.getElementById("reportCaptureArea");
-    
-    if (getReportText().includes("Aguardando registros")) {
-      showToast("Nada para compartilhar");
-      return null;
-    }
-    
+    if (getReportText().includes("Aguardando registros")) { showToast("Nada para gerar"); return null; }
     showToast("📸 Gerando imagem...");
-    
     try {
-      const canvas = await html2canvas(reportElement, {
-        scale: 2,
-        backgroundColor: '#1A1A2E',
-        logging: false,
-        useCORS: false
-      });
-      
+      const canvas = await html2canvas(reportElement, { scale: 2, backgroundColor: '#1A1A2E', logging: false });
       return canvas.toDataURL('image/png');
-    } catch (error) {
-      console.error("Erro ao gerar imagem:", error);
-      showToast("❌ Erro ao gerar imagem");
-      return null;
-    }
+    } catch (error) { showToast("❌ Erro"); return null; }
   }
   
   async function saveAsPNG() {
     const imageData = await generateReportImage();
     if (!imageData) return;
-    
     const link = document.createElement('a');
-    const predio = predioSel.value || "vistoria";
-    const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-    link.download = `vistoria_${predio}_${data}.png`;
+    link.download = `vistoria_${predioSel.value || "vistoria"}.png`;
     link.href = imageData;
     link.click();
-    
     showToast("✅ Imagem salva!");
   }
   
   async function openShareModal() {
     const imageData = await generateReportImage();
     if (!imageData) return;
-    
     currentImageData = imageData;
     shareModal.classList.add("show");
   }
   
   function shareToWhatsApp() {
     if (!currentImageData) return;
-    
-    fetch(currentImageData)
-      .then(res => res.blob())
-      .then(blob => {
-        const file = new File([blob], "relatorio_vistoria.png", { type: "image/png" });
-        const text = `✨ *RELATÓRIO DE VISTORIA* ✨\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}\n📊 Total de salas: ${entries.length}`;
-        
-        if (navigator.share) {
-          navigator.share({
-            title: 'Relatório de Vistoria',
-            text: text,
-            files: [file]
-          }).catch(() => {
-            window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n\n📸 Imagem gerada automaticamente")}`);
-          });
-        } else {
-          window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
-        }
-        
-        shareModal.classList.remove("show");
-        showToast("📱 Compartilhando...");
+    const text = `✨ RELATÓRIO DE VISTORIA ✨\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}\n📊 Total de salas: ${entries.length}`;
+    if (navigator.share) {
+      fetch(currentImageData).then(res => res.blob()).then(blob => {
+        navigator.share({ title: 'Relatório', text: text, files: [new File([blob], "relatorio.png", { type: "image/png" })] });
       });
+    } else {
+      window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
+    }
+    shareModal.classList.remove("show");
   }
   
   function shareToTeams() {
     if (!currentImageData) return;
-    
-    const predio = predioSel.value || "Vistoria";
-    const auditor = auditorInp.value || "Não informado";
-    const total = entries.length;
-    const data = new Date().toLocaleString("pt-BR");
-    
-    const message = `✨ **Relatório de Vistoria - ${predio}** ✨\n\n📅 **Data:** ${data}\n👤 **Auditor:** ${auditor}\n📊 **Total de salas:** ${total}\n\n📸 *Imagem anexada com os detalhes completos*`;
-    
-    if (navigator.share) {
-      fetch(currentImageData)
-        .then(res => res.blob())
-        .then(blob => {
-          const file = new File([blob], "relatorio_vistoria.png", { type: "image/png" });
-          navigator.share({
-            title: 'Relatório de Vistoria',
-            text: message,
-            files: [file]
-          });
-        });
-    } else {
-      navigator.clipboard.writeText(message);
-      showToast("✅ Mensagem copiada! Cole no Teams e anexe a imagem");
-      
-      const link = document.createElement('a');
-      link.download = `vistoria_${predio}.png`;
-      link.href = currentImageData;
-      link.click();
-    }
-    
+    const message = `✨ **Relatório de Vistoria - ${predioSel.value || "Vistoria"}** ✨\n\n📅 ${new Date().toLocaleString("pt-BR")}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📊 Total de salas: ${entries.length}\n\n📸 Imagem anexada`;
+    navigator.clipboard.writeText(message);
+    showToast("✅ Mensagem copiada! Cole no Teams");
+    const link = document.createElement('a');
+    link.download = `vistoria.png`;
+    link.href = currentImageData;
+    link.click();
     shareModal.classList.remove("show");
   }
   
   function shareToEmail() {
     if (!currentImageData) return;
-    
-    const predio = predioSel.value || "Vistoria";
-    const auditor = auditorInp.value || "Não informado";
-    const data = new Date().toLocaleString("pt-BR");
-    const subject = `Relatório de Vistoria - ${predio}`;
-    const body = `✨ RELATÓRIO DE VISTORIA ✨\n\nPrédio: ${predio}\nAuditor: ${auditor}\nData: ${data}\nTotal de salas: ${entries.length}\n\n📸 Imagem anexada com os detalhes completos`;
-    
+    const subject = `Relatório de Vistoria - ${predioSel.value || "Vistoria"}`;
+    const body = `Relatório gerado em ${new Date().toLocaleString("pt-BR")}\nAuditor: ${auditorInp.value || "Não informado"}\nTotal de salas: ${entries.length}`;
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
     setTimeout(() => {
       const link = document.createElement('a');
-      link.download = `vistoria_${predio}.png`;
+      link.download = `vistoria.png`;
       link.href = currentImageData;
       link.click();
     }, 500);
-    
     shareModal.classList.remove("show");
-    showToast("📧 Email aberto! Anexe a imagem baixada");
   }
   
   function shareSaveImage() {
     if (!currentImageData) return;
-    
     const link = document.createElement('a');
-    const predio = predioSel.value || "vistoria";
-    const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-    link.download = `vistoria_${predio}_${data}.png`;
+    link.download = `vistoria_${predioSel.value || "vistoria"}.png`;
     link.href = currentImageData;
     link.click();
-    
     shareModal.classList.remove("show");
     showToast("✅ Imagem salva!");
   }
 
   function showToast(msg) {
     let t = document.querySelector(".toast");
-    if (!t) {
-      t = document.createElement("div");
-      t.className = "toast";
-      document.body.appendChild(t);
-    }
+    if (!t) { t = document.createElement("div"); t.className = "toast"; document.body.appendChild(t); }
     t.textContent = msg;
     t.classList.add("show");
     setTimeout(() => t.classList.remove("show"), 2000);
@@ -1125,25 +1098,24 @@ ${blocoObs}───────────────────────
   document.getElementById("btnDownload").addEventListener("click", downloadReportTxt);
   document.getElementById("btnShare").addEventListener("click", openShareModal);
   document.getElementById("btnPNG").addEventListener("click", saveAsPNG);
-  
   document.getElementById("shareWhatsApp").addEventListener("click", shareToWhatsApp);
   document.getElementById("shareTeams").addEventListener("click", shareToTeams);
   document.getElementById("shareEmail").addEventListener("click", shareToEmail);
   document.getElementById("shareSave").addEventListener("click", shareSaveImage);
-  document.getElementById("closeModal").addEventListener("click", () => {
-    shareModal.classList.remove("show");
-  });
-  shareModal.addEventListener("click", (e) => {
-    if (e.target === shareModal) shareModal.classList.remove("show");
-  });
+  document.getElementById("closeModal").addEventListener("click", () => shareModal.classList.remove("show"));
+  shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.classList.remove("show"); });
+  window.deletePhotoFromRoom = deletePhotoFromRoom;
+  window.closePhotosModal = closePhotosModal;
 
-  function persist(){ 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); 
-  }
+  function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
 
   document.getElementById("btnClear").addEventListener("click", ()=>{
-    if(!confirm("⚠️ Limpar TODOS os registros?")) return;
+    if(!confirm("⚠️ Limpar TODOS os registros e fotos?")) return;
     entries = [];
+    for(let i=0; i<localStorage.length; i++){
+      const key = localStorage.key(i);
+      if(key && key.startsWith("photos_")) localStorage.removeItem(key);
+    }
     auditorInp.value = "";
     predioSel.value = "";
     enderecoInp.value = "";
@@ -1151,18 +1123,15 @@ ${blocoObs}───────────────────────
     persist();
     renderCreated();
     renderReport();
+    renderCurrentPhotos();
     showToast("✓ Todos os dados removidos");
   });
 
   predioSel.addEventListener("change", ()=>{
     const v = predioSel.value;
-    if(v === "Eco Berrini"){
-      enderecoInp.value = "Av. Eng. Luís Carlos Berrini, 1376 - SP";
-    } else if(v === "Chucri Zaidan"){
-      enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460 - SP";
-    } else {
-      enderecoInp.value = "";
-    }
+    if(v === "Eco Berrini") enderecoInp.value = "Av. Eng. Luís Carlos Berrini, 1376 - SP";
+    else if(v === "Chucri Zaidan") enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460 - SP";
+    else enderecoInp.value = "";
     renderReport();
   });
 
@@ -1172,11 +1141,12 @@ ${blocoObs}───────────────────────
 
   (function init(){
     selectedFloor = 1;
-    selectedRoom  = 1;
+    selectedRoom = 1;
     buildFloorIcons();
     buildRoomIcons();
     renderCreated();
     renderReport();
+    renderCurrentPhotos();
   })();
 </script>
 </body>
