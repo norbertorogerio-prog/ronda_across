@@ -2,266 +2,1178 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Vistoria Corporativa • PRO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
 
+<title>Relatório de Vistoria | Vivo</title>
+
+<!-- html2canvas para capturar PNG -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
-:root{
-  --primary:#6600CC;
-  --bg:#0F0F1A;
-  --card:#1A1A2E;
-  --text:#fff;
-  --muted:#999;
-  --green:#00C853;
-  --red:#FF3B3B;
-  --yellow:#FFD600;
-}
+  :root{
+    --vivo-purple: #6600CC;
+    --vivo-purple-dark: #4C0099;
+    --vivo-purple-light: #8833FF;
+    --vivo-purple-glow: rgba(102, 0, 204, 0.2);
+    --vivo-black: #1A1A2E;
+    --vivo-gray-dark: #2D2D3A;
+    --vivo-gray: #4A4A5A;
+    --vivo-gray-light: #6A6A7A;
+    --vivo-white: #FFFFFF;
+    --vivo-offwhite: #F5F5F7;
+    --green: #00C853;
+    --yellow: #FFD600;
+    --red: #FF3B3B;
+    --purple-status: #AA00FF;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+    --gradient-primary: linear-gradient(135deg, #6600CC 0%, #4C0099 100%);
+  }
+  *{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+  }
+  
+  body{
+    background: linear-gradient(135deg, #1A1A2E 0%, #0F0F1A 100%);
+    color: var(--vivo-white);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    min-height:100vh;
+    padding:20px;
+  }
+  
+  @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
+  
+  .app{
+    max-width:1400px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  
+  @media(min-width:980px){
+    body{
+      padding:24px;
+    }
+    .app{
+      flex-direction:row;
+      gap:24px;
+      align-items:flex-start;
+    }
+    .app > :first-child{
+      width:380px;
+      flex-shrink:0;
+    }
+    .app > :last-child{
+      flex:1;
+      min-width:0;
+    }
+  }
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter, sans-serif;
-}
+  .card{
+    background: rgba(26, 26, 46, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102, 0, 204, 0.3);
+    border-radius:20px;
+    padding:20px;
+    box-shadow: var(--shadow-md);
+  }
 
-.app{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-  display:flex;
-  gap:20px;
-}
+  h2{
+    margin:0 0 16px 0;
+    font-weight:700;
+    font-size:18px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+  
+  h3{
+    margin:0 0 12px 0;
+    font-size:14px;
+    color: var(--vivo-gray-light);
+    font-weight:600;
+    text-transform: uppercase;
+  }
 
-.card{
-  background:var(--card);
-  border-radius:16px;
-  padding:20px;
-  flex:1;
-}
+  label{
+    display:block;
+    margin:12px 0 6px 0;
+    font-size:11px;
+    font-weight:600;
+    text-transform:uppercase;
+    color: var(--vivo-gray-light);
+  }
+  
+  .form-field{
+    width:100%;
+    border: 1.5px solid rgba(102, 0, 204, 0.2);
+    border-radius:12px;
+    background: rgba(255,255,255,0.05);
+    color: var(--vivo-white);
+    padding:10px 14px;
+    font-size:13px;
+    outline:none;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .form-field:focus{
+    border-color: var(--vivo-purple);
+    background: rgba(102, 0, 204, 0.1);
+    box-shadow: 0 0 0 3px var(--vivo-purple-glow);
+  }
+  
+  textarea.form-field{
+    min-height:60px;
+    resize:vertical;
+  }
 
-h2{
-  margin-bottom:10px;
-}
+  /* ÍCONES */
+  .icon-strip{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+  }
+  
+  .icon{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    border-radius:12px;
+    border: 1.5px solid rgba(102, 0, 204, 0.3);
+    background: rgba(102, 0, 204, 0.1);
+    color: var(--vivo-white);
+    font-size:12px;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .icon:hover{
+    background: rgba(102, 0, 204, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .icon.is-selected{
+    background: var(--gradient-primary);
+    border-color: var(--vivo-purple-light);
+    box-shadow: 0 0 0 3px var(--vivo-purple-glow);
+  }
 
-input, select, textarea{
-  width:100%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:10px;
-  border:1px solid #333;
-  background:#111;
-  color:#fff;
-}
+  /* STATUS */
+  .status-strip{
+    display:flex;
+    gap:8px;
+    margin:12px 0 6px;
+    flex-wrap:wrap;
+  }
+  
+  .status{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:40px;
+    color: var(--vivo-white);
+    background: rgba(102, 0, 204, 0.15);
+    border: 1.5px solid rgba(102, 0, 204, 0.3);
+    cursor:pointer;
+    font-size:12px;
+    font-weight:600;
+    transition: all 0.2s ease;
+    flex:1;
+  }
+  
+  .status:hover{
+    background: rgba(102, 0, 204, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  .dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+  }
+  .dot.valid{background: var(--green);}
+  .dot.lock{background: var(--yellow);}
+  .dot.prob{background: var(--red);}
+  .dot.other{background: var(--purple-status);}
 
-.row{
-  display:flex;
-  gap:10px;
-}
+  /* BOTÕES */
+  .btn{
+    width:100%;
+    border: none;
+    border-radius:12px;
+    background: var(--gradient-primary);
+    color: var(--vivo-white);
+    font-weight:700;
+    padding:10px;
+    cursor:pointer;
+    font-size:12px;
+    transition: all 0.2s ease;
+  }
+  
+  .btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 0, 204, 0.4);
+  }
+  
+  .row{
+    display:flex;
+    gap:10px;
+    margin-top:16px;
+  }
+  
+  .row button{
+    flex:1;
+  }
 
-.btn{
-  flex:1;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-}
+  /* ÁREA DE FOTOS */
+  .photo-section{
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(102, 0, 204, 0.3);
+  }
+  
+  .photo-label{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  
+  .photo-upload-btn{
+    background: rgba(102, 0, 204, 0.2);
+    border: 1.5px dashed rgba(102, 0, 204, 0.5);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+  }
+  
+  .photo-upload-btn:hover{
+    background: rgba(102, 0, 204, 0.3);
+    border-color: var(--vivo-purple);
+  }
+  
+  .photo-gallery{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .photo-item{
+    position: relative;
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid rgba(102, 0, 204, 0.3);
+    background: rgba(0,0,0,0.3);
+  }
+  
+  .photo-item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .photo-delete{
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--red);
+    transition: all 0.2s ease;
+  }
+  
+  .photo-delete:hover{
+    background: var(--red);
+    color: white;
+  }
 
-.btn-primary{background:var(--primary);}
-.btn-danger{background:var(--red);}
-.btn-secondary{background:#333;}
+  /* BOTÕES DE AÇÃO */
+  .report-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  
+  .btn-action{
+    border: 1.5px solid rgba(102, 0, 204, 0.3);
+    background: rgba(102, 0, 204, 0.15);
+    color: var(--vivo-white);
+    font-weight:600;
+    font-size:11px;
+    padding:6px 12px;
+    border-radius:10px;
+    cursor:pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-action:hover{
+    background: rgba(102, 0, 204, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  .btn-share{
+    background: linear-gradient(135deg, #6600CC 0%, #8833FF 100%);
+    border: none;
+  }
+  
+  .btn-png{
+    background: linear-gradient(135deg, #4C0099 0%, #6600CC 100%);
+    border: none;
+  }
 
-.status{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
+  .section{
+    background: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102, 0, 204, 0.2);
+    border-radius:20px;
+    padding:20px;
+  }
+  
+  .small{
+    font-size:10px;
+    color: var(--vivo-gray);
+    margin-top:12px;
+  }
 
-.status button{
-  flex:1;
-  padding:8px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-}
+  /* GRADE DE ITENS */
+  .created-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  
+  .room-card{
+    display:inline-flex;
+    flex-direction:column;
+    gap:6px;
+    padding:10px;
+    border-radius:14px;
+    border: 1px solid rgba(102, 0, 204, 0.2);
+    background: rgba(102, 0, 204, 0.1);
+    min-width:105px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .room-card:hover{
+    border-color: var(--vivo-purple);
+    transform: translateY(-2px);
+  }
+  
+  .room-card.has-photo{
+    border-color: var(--green);
+  }
+  
+  .photo-indicator{
+    font-size: 10px;
+    color: var(--green);
+  }
+  
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:11px;
+    font-weight:700;
+    background: rgba(102, 0, 204, 0.3);
+    border-radius:10px;
+    padding:5px 10px;
+  }
+  
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:10px;
+    font-weight:600;
+    border-radius:40px;
+    padding:4px 10px;
+  }
+  
+  .pill.valid{background: var(--green);}
+  .pill.lock{background: var(--yellow); color: #1A1A2E;}
+  .pill.prob{background: var(--red);}
+  .pill.other{background: var(--purple-status);}
 
-.progress{
-  background:#222;
-  border-radius:10px;
-  overflow:hidden;
-  margin-top:10px;
-}
+  /* RELATÓRIO COM FOTOS */
+  .report-box{
+    border-radius:16px;
+    background: rgba(0,0,0,0.3);
+    overflow: hidden;
+    border: 1px solid rgba(102, 0, 204, 0.3);
+  }
+  
+  .report-title{
+    background: linear-gradient(135deg, rgba(102,0,204,0.2) 0%, rgba(76,0,153,0.2) 100%);
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    border-bottom: 1px solid rgba(102, 0, 204, 0.3);
+  }
+  
+  .report-title span{
+    font-size:14px;
+    font-weight:700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .report-content{
+    font-family: 'Inter', monospace;
+    font-size:12px;
+    line-height:1.6;
+    padding:20px;
+    max-height:500px;
+    overflow-y:auto;
+  }
+  
+  /* Seção de fotos no relatório */
+  .report-photo-section{
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(102, 0, 204, 0.5);
+  }
+  
+  .report-room-photos{
+    margin: 16px 0;
+    padding: 16px;
+    background: rgba(102, 0, 204, 0.1);
+    border-radius: 16px;
+  }
+  
+  .report-room-title{
+    font-weight: 700;
+    color: var(--vivo-purple-light);
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  
+  .report-photo-thumbnails{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  
+  .report-thumb{
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--vivo-purple);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .report-thumb:hover{
+    transform: scale(1.05);
+  }
 
-.progress-bar{
-  height:10px;
-  background:var(--primary);
-  width:0%;
-}
-
-.grid{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:10px;
-}
-
-.room{
-  padding:10px;
-  border-radius:10px;
-  background:#222;
-  cursor:pointer;
-}
-
-.filter{
-  margin-top:10px;
-}
-
+  .toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background: rgba(102, 0, 204, 0.95);
+    backdrop-filter: blur(10px);
+    padding:12px 20px;
+    border-radius:40px;
+    font-size:13px;
+    font-weight:500;
+    z-index:9999;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  
+  .toast.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+  
+  .share-modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    z-index:10000;
+    align-items:center;
+    justify-content:center;
+  }
+  
+  .share-modal.show{
+    display:flex;
+  }
+  
+  .share-card{
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(102, 0, 204, 0.4);
+    border-radius:24px;
+    padding:24px;
+    max-width:340px;
+    width:90%;
+  }
+  
+  .share-card h4{
+    margin-bottom:20px;
+    font-size:18px;
+    text-align:center;
+  }
+  
+  .share-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  
+  .share-btn{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 16px;
+    border: none;
+    border-radius:16px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  
+  .share-btn.whatsapp{background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color:#fff;}
+  .share-btn.teams{background: linear-gradient(135deg, #6264A7 0%, #464775 100%); color:#fff;}
+  .share-btn.email{background: linear-gradient(135deg, #EA4335 0%, #C5221F 100%); color:#fff;}
+  .share-btn.download{background: var(--gradient-primary); color:#fff;}
+  .close-modal{background: rgba(102, 0, 204, 0.2); border: 1px solid rgba(102, 0, 204, 0.3); border-radius:14px; padding:10px; margin-top:12px; color:white; cursor:pointer; width:100%;}
+  
+  /* Modal de fotos ampliadas */
+  .fullscreen-modal{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 20000;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .fullscreen-modal.show{
+    display: flex;
+  }
+  
+  .fullscreen-modal img{
+    max-width: 95%;
+    max-height: 95%;
+    border-radius: 16px;
+    box-shadow: 0 0 50px rgba(102,0,204,0.5);
+  }
 </style>
 </head>
-
 <body>
-
 <div class="app">
+  <!-- ESQUERDA -->
+  <div class="card">
+    <h2>✨ Entrada de dados</h2>
 
-<!-- ESQUERDA -->
-<div class="card">
+    <label>👤 Auditor</label>
+    <input id="auditor" class="form-field" placeholder="Nome completo"/>
 
-<h2>📋 Nova Vistoria</h2>
+    <label>🏢 Prédio</label>
+    <select id="predio" class="form-field">
+      <option value="">Selecione o prédio</option>
+      <option value="Eco Berrini">Eco Berrini</option>
+      <option value="Chucri Zaidan">Chucri Zaidan</option>
+    </select>
 
-<input id="auditor" placeholder="Auditor"/>
-<select id="predio">
-<option>Eco Berrini</option>
-<option>Chucri Zaidan</option>
-</select>
+    <label>📍 Endereço</label>
+    <input id="endereco" class="form-field" placeholder="Endereço automático"/>
 
-<input id="andar" placeholder="Andar (ex: 12)"/>
-<input id="sala" placeholder="Sala (ex: 34)"/>
+    <label>🏬 Andar (01-32)</label>
+    <div id="floorsStrip" class="icon-strip"></div>
 
-<div class="status">
-<button onclick="setStatus('valid')">✅ OK</button>
-<button onclick="setStatus('prob')">❌ Problema</button>
-<button onclick="setStatus('lock')">🔒 Trancada</button>
+    <label>🚪 Sala (01-50)</label>
+    <div id="roomsStrip" class="icon-strip"></div>
+
+    <label>📌 Status</label>
+    <div class="status-strip">
+      <button class="status" data-status="valid"><span class="dot valid"></span>Validada</button>
+      <button class="status" data-status="lock"><span class="dot lock"></span>Trancada</button>
+      <button class="status" data-status="prob"><span class="dot prob"></span>Problemas</button>
+      <button class="status" data-status="other"><span class="dot other"></span>Outros</button>
+    </div>
+
+    <label>📝 Observações</label>
+    <textarea id="obs" class="form-field" placeholder="Observações gerais da vistoria..."></textarea>
+
+    <!-- ÁREA DE FOTOS DA SALA SELECIONADA -->
+    <div class="photo-section">
+      <div class="photo-label">
+        📸 Fotos da Sala A<span id="currentFloor">01</span>-S<span id="currentRoom">01</span>
+      </div>
+      <div id="photoUploadBtn" class="photo-upload-btn">
+        📷 + Adicionar foto (câmera ou galeria)
+      </div>
+      <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" multiple>
+      <div id="photoGallery" class="photo-gallery"></div>
+    </div>
+
+    <div class="row">
+      <button id="btnAdd" class="btn">➕ Adicionar</button>
+      <button id="btnClear" class="btn">🗑️ Limpar</button>
+    </div>
+
+    <p class="small">💡 Selecione andar/sala → clique no status ou adicione fotos</p>
+  </div>
+
+  <!-- DIREITA -->
+  <div class="viewer">
+    <div class="section">
+      <h3>📦 Salas registradas</h3>
+      <div id="createdGrid" class="created-grid">
+        <p class="small" style="text-align:center; width:100%">Nenhuma sala registrada</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="report-box">
+        <div class="report-title">
+          <span>📋 Relatório de Vistoria</span>
+          <div class="report-actions">
+            <button id="btnShare" class="btn-action btn-share">📱 Compartilhar</button>
+            <button id="btnPNG" class="btn-action btn-png">📸 Salvar PNG</button>
+          </div>
+        </div>
+        <div id="reportCaptureArea">
+          <div id="relatorio" class="report-content">
+═══════════════════════════════
+   RELATÓRIO DE VISTORIA
+═══════════════════════════════
+Aguardando registros...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<textarea id="obs" placeholder="Observações"></textarea>
-
-<div class="row">
-<button class="btn btn-primary" onclick="add()">Salvar</button>
-<button class="btn btn-danger" onclick="clearAll()">Limpar</button>
+<!-- Modal de Compartilhamento -->
+<div id="shareModal" class="share-modal">
+  <div class="share-card">
+    <h4>✨ Compartilhar Relatório</h4>
+    <div class="share-buttons">
+      <button id="shareWhatsApp" class="share-btn whatsapp">💬 WhatsApp</button>
+      <button id="shareTeams" class="share-btn teams">💼 Microsoft Teams</button>
+      <button id="shareEmail" class="share-btn email">📧 E-mail</button>
+      <button id="shareSave" class="share-btn download">📸 Salvar imagem</button>
+    </div>
+    <button id="closeModal" class="close-modal">Fechar</button>
+  </div>
 </div>
 
-<div class="progress">
-<div id="progressBar" class="progress-bar"></div>
-</div>
-
-<p id="progressText"></p>
-
-</div>
-
-<!-- DIREITA -->
-<div class="card">
-
-<h2>📦 Salas</h2>
-
-<select id="filter" class="filter" onchange="render()">
-<option value="all">Todas</option>
-<option value="prob">Problemas</option>
-<option value="valid">OK</option>
-</select>
-
-<div id="grid" class="grid"></div>
-
-<hr>
-
-<h2>📊 Relatório</h2>
-
-<div id="report"></div>
-
-<button class="btn btn-secondary" onclick="exportPNG()">📸 Exportar</button>
-
-</div>
-
+<!-- Modal para fotos em tela cheia -->
+<div id="fullscreenModal" class="fullscreen-modal" onclick="closeFullscreen()">
+  <img id="fullscreenImage" src="">
 </div>
 
 <script>
+  const STORAGE_KEY = "vistoria_photos_final";
+  let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  let selectedFloor = 1;
+  let selectedRoom = 1;
+  let currentImageData = null;
 
-let data = JSON.parse(localStorage.getItem("vistoria_pro")||"[]");
-let currentStatus = "valid";
+  const pad2 = n => String(n).padStart(2,"0");
+  const statusName = s => s==="valid"?"Validada":s==="lock"?"Trancada":s==="prob"?"Problemas":"Outros";
+  const statusClass = s => s==="valid"?"valid":s==="lock"?"lock":s==="prob"?"prob":"other";
+  const statusEmoji = s => s==="valid"?"✅":s==="lock"?"🔒":s==="prob"?"❌":"◻️";
 
-function setStatus(s){
-  currentStatus = s;
-}
-
-function add(){
-  const andar = document.getElementById("andar").value;
-  const sala = document.getElementById("sala").value;
-
-  if(!andar || !sala) return alert("Preencha");
-
-  data.push({andar,sala,status:currentStatus});
-  save();
-}
-
-function save(){
-  localStorage.setItem("vistoria_pro", JSON.stringify(data));
-  render();
-}
-
-function clearAll(){
-  if(confirm("Limpar tudo?")){
-    data=[];
-    save();
+  function getRoomKey(f, r) { return `A${pad2(f)}-S${pad2(r)}`; }
+  
+  function getRoomPhotos(f, r) {
+    const key = getRoomKey(f, r);
+    const photos = localStorage.getItem(`photos_${key}`);
+    return photos ? JSON.parse(photos) : [];
   }
-}
-
-function render(){
-
-  const grid = document.getElementById("grid");
-  const filter = document.getElementById("filter").value;
-
-  grid.innerHTML="";
-
-  let filtered = data;
-
-  if(filter !== "all"){
-    filtered = data.filter(d=>d.status===filter);
+  
+  function saveRoomPhotos(f, r, photos) {
+    const key = getRoomKey(f, r);
+    localStorage.setItem(`photos_${key}`, JSON.stringify(photos));
+  }
+  
+  function addPhotoToRoom(f, r, photoData) {
+    const photos = getRoomPhotos(f, r);
+    photos.push(photoData);
+    saveRoomPhotos(f, r, photos);
+    if (selectedFloor === f && selectedRoom === r) {
+      renderCurrentPhotos();
+    }
+    renderCreated();
+    renderReportWithPhotos();
+  }
+  
+  function deletePhotoFromRoom(f, r, index) {
+    const photos = getRoomPhotos(f, r);
+    photos.splice(index, 1);
+    saveRoomPhotos(f, r, photos);
+    if (selectedFloor === f && selectedRoom === r) {
+      renderCurrentPhotos();
+    }
+    renderCreated();
+    renderReportWithPhotos();
+    showToast("📸 Foto removida");
   }
 
-  filtered.forEach(d=>{
-    const div = document.createElement("div");
-    div.className="room";
-    div.innerText = `${d.andar}-${d.sala} (${d.status})`;
-    grid.appendChild(div);
+  function renderCurrentPhotos() {
+    const gallery = document.getElementById("photoGallery");
+    const photos = getRoomPhotos(selectedFloor, selectedRoom);
+    
+    document.getElementById("currentFloor").textContent = pad2(selectedFloor);
+    document.getElementById("currentRoom").textContent = pad2(selectedRoom);
+    
+    if (photos.length === 0) {
+      gallery.innerHTML = '<p class="small" style="text-align:center; width:100%">Nenhuma foto adicionada</p>';
+      return;
+    }
+    
+    gallery.innerHTML = "";
+    photos.forEach((photo, idx) => {
+      const div = document.createElement("div");
+      div.className = "photo-item";
+      div.innerHTML = `
+        <img src="${photo}" alt="Foto" onclick="showFullscreenImage('${photo}')">
+        <div class="photo-delete" onclick="event.stopPropagation(); deletePhotoFromRoom(${selectedFloor}, ${selectedRoom}, ${idx})">✕</div>
+      `;
+      gallery.appendChild(div);
+    });
+  }
+  
+  function showFullscreenImage(src) {
+    const modal = document.getElementById("fullscreenModal");
+    const img = document.getElementById("fullscreenImage");
+    img.src = src;
+    modal.classList.add("show");
+  }
+  
+  function closeFullscreen() {
+    document.getElementById("fullscreenModal").classList.remove("show");
+  }
+
+  // RENDERIZA RELATÓRIO COM FOTOS
+  function renderReportWithPhotos() {
+    const predio = predioSel.value || "Não selecionado";
+    const endereco = enderecoInp.value || "Não informado";
+    const auditor = auditorInp.value || "Não informado";
+    const obsGeral = (obsInp.value || "").trim();
+    const dataStr = new Date().toLocaleString("pt-BR");
+    const stats = { valid:0, lock:0, prob:0, other:0 };
+    entries.forEach(e => stats[e.status]++);
+    const total = entries.length;
+    
+    let info = "";
+    if(total === 0){
+      info = "Nenhuma sala vistoriada.";
+    } else {
+      info = `TOTAL: ${total} sala(s) | ✅${stats.valid} 🔒${stats.lock} ❌${stats.prob} ◻️${stats.other}\n\n`;
+      const byFloor = {};
+      entries.forEach(e => {
+        if(!byFloor[e.f]) byFloor[e.f] = [];
+        byFloor[e.f].push({r: e.r, status: e.status});
+      });
+      const floors = Object.keys(byFloor).map(Number).sort((a,b)=>a-b);
+      info += "DETALHAMENTO:\n";
+      floors.forEach(f => {
+        const rooms = byFloor[f];
+        const validados = rooms.filter(r => r.status === "valid").length;
+        const trancados = rooms.filter(r => r.status === "lock").length;
+        const problemas = rooms.filter(r => r.status === "prob").length;
+        const outros = rooms.filter(r => r.status === "other").length;
+        info += `  Andar ${pad2(f)}: ✅${validados} 🔒${trancados} ❌${problemas} ◻️${outros}\n`;
+      });
+    }
+    
+    // Contar fotos e preparar visualização
+    let totalFotos = 0;
+    const roomsWithPhotos = [];
+    entries.forEach(item => {
+      const photos = getRoomPhotos(item.f, item.r);
+      if(photos.length > 0) {
+        totalFotos += photos.length;
+        roomsWithPhotos.push({
+          room: `A${pad2(item.f)}-S${pad2(item.r)}`,
+          status: statusName(item.status),
+          statusEmoji: statusEmoji(item.status),
+          photos: photos,
+          photoCount: photos.length
+        });
+      }
+    });
+    
+    const fotosInfo = totalFotos > 0 ? `\n📸 Total de fotos registradas: ${totalFotos}\n` : "";
+    
+    // Construir HTML com fotos
+    let photosHtml = "";
+    if(roomsWithPhotos.length > 0) {
+      photosHtml = `<div class="report-photo-section">
+        <div style="font-weight:700; font-size:14px; margin-bottom:16px;">📸 REGISTRO FOTOGRÁFICO (${totalFotos} fotos)</div>`;
+      
+      roomsWithPhotos.forEach(room => {
+        photosHtml += `<div class="report-room-photos">
+          <div class="report-room-title">${room.statusEmoji} ${room.room} - ${room.status} (${room.photoCount} foto${room.photoCount > 1 ? 's' : ''})</div>
+          <div class="report-photo-thumbnails">`;
+        
+        room.photos.forEach((photo, idx) => {
+          photosHtml += `<img src="${photo}" class="report-thumb" onclick="showFullscreenImage('${photo}')" style="cursor:pointer;" loading="lazy">`;
+        });
+        
+        photosHtml += `</div></div>`;
+      });
+      photosHtml += `</div>`;
+    }
+    
+    const blocoObs = obsGeral ? `\n📝 OBSERVAÇÕES:\n${obsGeral}\n` : "";
+    
+    const textHtml = `
+<div style="font-family: 'Inter', monospace; white-space: pre-wrap; font-size: 12px;">
+═══════════════════════════════
+   RELATÓRIO DE VISTORIA
+═══════════════════════════════
+🏢 ${predio}
+📍 ${endereco}
+📅 ${dataStr}
+👤 Auditor: ${auditor}
+───────────────────────────────
+📊 ESTATÍSTICAS
+${info}${fotosInfo}${blocoObs}───────────────────────────────
+</div>
+${photosHtml}`;
+    
+    document.getElementById("relatorio").innerHTML = textHtml;
+  }
+
+  // Função para gerar imagem
+  async function generateImage() {
+    const reportElement = document.getElementById("reportCaptureArea");
+    if (!reportElement.innerHTML || reportElement.innerHTML.includes("Aguardando registros")) { 
+      showToast("Nada para gerar"); 
+      return null; 
+    }
+    
+    showToast("📸 Gerando imagem...");
+    
+    try {
+      const canvas = await html2canvas(reportElement, { 
+        scale: 2, 
+        backgroundColor: '#1A1A2E', 
+        logging: false,
+        useCORS: true,
+        allowTaint: false
+      });
+      
+      return canvas.toDataURL('image/png');
+    } catch (error) { 
+      showToast("❌ Erro ao gerar imagem"); 
+      return null; 
+    }
+  }
+  
+  async function saveAsPNG() {
+    const imageData = await generateImage();
+    if (!imageData) return;
+    const link = document.createElement('a');
+    const predio = predioSel.value || "vistoria";
+    const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    link.download = `vistoria_${predio}_${data}.png`;
+    link.href = imageData;
+    link.click();
+    showToast("✅ Imagem salva!");
+  }
+  
+  async function openShareModal() {
+    const imageData = await generateImage();
+    if (!imageData) return;
+    currentImageData = imageData;
+    shareModal.classList.add("show");
+  }
+  
+  function shareToWhatsApp() {
+    if (!currentImageData) return;
+    const text = `✨ RELATÓRIO DE VISTORIA ✨\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}\n📊 Total de salas: ${entries.length}\n📸 Fotos inclusas no relatório`;
+    if (navigator.share) {
+      fetch(currentImageData).then(res => res.blob()).then(blob => {
+        navigator.share({ title: 'Relatório', text: text, files: [new File([blob], "relatorio.png", { type: "image/png" })] });
+      });
+    } else {
+      window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
+    }
+    shareModal.classList.remove("show");
+  }
+  
+  function shareToTeams() {
+    if (!currentImageData) return;
+    const message = `✨ **Relatório de Vistoria - ${predioSel.value || "Vistoria"}** ✨\n\n📅 ${new Date().toLocaleString("pt-BR")}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📊 Total de salas: ${entries.length}\n📸 Fotos inclusas na imagem anexada`;
+    navigator.clipboard.writeText(message);
+    showToast("✅ Mensagem copiada! Cole no Teams");
+    const link = document.createElement('a');
+    link.download = `vistoria.png`;
+    link.href = currentImageData;
+    link.click();
+    shareModal.classList.remove("show");
+  }
+  
+  function shareToEmail() {
+    if (!currentImageData) return;
+    const subject = `Relatório de Vistoria - ${predioSel.value || "Vistoria"}`;
+    const body = `Relatório gerado em ${new Date().toLocaleString("pt-BR")}\nAuditor: ${auditorInp.value || "Não informado"}\nTotal de salas: ${entries.length}\n\nFotos inclusas no arquivo anexado.`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.download = `vistoria.png`;
+      link.href = currentImageData;
+      link.click();
+    }, 500);
+    shareModal.classList.remove("show");
+  }
+  
+  function shareSaveImage() {
+    if (!currentImageData) return;
+    const link = document.createElement('a');
+    link.download = `vistoria_${predioSel.value || "vistoria"}.png`;
+    link.href = currentImageData;
+    link.click();
+    shareModal.classList.remove("show");
+    showToast("✅ Imagem salva!");
+  }
+
+  function showToast(msg) {
+    let t = document.querySelector(".toast");
+    if (!t) { t = document.createElement("div"); t.className = "toast"; document.body.appendChild(t); }
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2000);
+  }
+
+  const floorsStrip = document.getElementById("floorsStrip");
+  const roomsStrip = document.getElementById("roomsStrip");
+  const createdGrid = document.getElementById("createdGrid");
+  const predioSel = document.getElementById("predio");
+  const enderecoInp = document.getElementById("endereco");
+  const auditorInp = document.getElementById("auditor");
+  const obsInp = document.getElementById("obs");
+  const shareModal = document.getElementById("shareModal");
+  const photoInput = document.getElementById("photoInput");
+  const photoUploadBtn = document.getElementById("photoUploadBtn");
+
+  photoUploadBtn.addEventListener("click", () => {
+    photoInput.click();
+  });
+  
+  photoInput.addEventListener("change", (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        addPhotoToRoom(selectedFloor, selectedRoom, event.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+    photoInput.value = "";
   });
 
-  // relatório
-  const total = data.length;
-  const prob = data.filter(d=>d.status==="prob").length;
+  function buildFloorIcons(){
+    floorsStrip.innerHTML = "";
+    for(let f=1; f<=32; f++){
+      const el = document.createElement("div");
+      el.className = "icon" + (f === selectedFloor ? " is-selected" : "");
+      el.textContent = pad2(f);
+      el.addEventListener("click", () => {
+        selectedFloor = f;
+        buildFloorIcons();
+        buildRoomIcons();
+        renderCurrentPhotos();
+      });
+      floorsStrip.appendChild(el);
+    }
+  }
+  
+  function buildRoomIcons(){
+    roomsStrip.innerHTML = "";
+    for(let r=1; r<=50; r++){
+      const el = document.createElement("div");
+      el.className = "icon" + (r === selectedRoom ? " is-selected" : "");
+      el.textContent = pad2(r);
+      el.addEventListener("click", () => {
+        selectedRoom = r;
+        buildRoomIcons();
+        renderCurrentPhotos();
+      });
+      roomsStrip.appendChild(el);
+    }
+  }
 
-  document.getElementById("report").innerHTML =
-  `Total: ${total} <br> Problemas: ${prob}`;
+  document.querySelectorAll(".status").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const status = btn.dataset.status;
+      const idx = entries.findIndex(e => e.f === selectedFloor && e.r === selectedRoom);
+      if(idx >= 0){ entries[idx].status = status; } 
+      else{ entries.push({f: selectedFloor, r: selectedRoom, status}); }
+      persist();
+      renderCreated();
+      renderReportWithPhotos();
+      showToast(`A${pad2(selectedFloor)}-S${pad2(selectedRoom)}: ${statusName(status)}`);
+    });
+  });
 
-  // progresso
-  const percent = total ? ((total-prob)/total)*100 : 0;
-  document.getElementById("progressBar").style.width = percent+"%";
-  document.getElementById("progressText").innerText =
-  percent.toFixed(0)+"% OK";
+  document.getElementById("btnAdd").addEventListener("click", ()=>{
+    const idx = entries.findIndex(e => e.f === selectedFloor && e.r === selectedRoom);
+    if(idx < 0){ 
+      entries.push({f: selectedFloor, r: selectedRoom, status:"other"}); 
+      showToast(`Sala A${pad2(selectedFloor)}-S${pad2(selectedRoom)} adicionada`);
+      persist();
+      renderCreated();
+      renderReportWithPhotos();
+    } else {
+      showToast(`Sala já existe`);
+    }
+  });
 
-}
+  function renderCreated(){
+    const sorted = [...entries].sort((a,b)=> a.f - b.f || a.r - b.r);
+    const sectionTitle = document.querySelector('.section h3');
+    sectionTitle.innerHTML = `📦 Salas registradas (${entries.length})`;
+    
+    if(sorted.length === 0){
+      createdGrid.innerHTML = '<p class="small" style="text-align:center; width:100%">Nenhuma sala registrada</p>';
+      return;
+    }
+    
+    createdGrid.innerHTML = "";
+    sorted.forEach(item => {
+      const photos = getRoomPhotos(item.f, item.r);
+      const hasPhotos = photos.length > 0;
+      
+      const card = document.createElement("div");
+      card.className = `room-card ${hasPhotos ? 'has-photo' : ''}`;
+      card.onclick = () => {
+        selectedFloor = item.f;
+        selectedRoom = item.r;
+        buildFloorIcons();
+        buildRoomIcons();
+        renderCurrentPhotos();
+      };
+      
+      const badge = document.createElement("div");
+      badge.className = "badge";
+      badge.innerHTML = `A${pad2(item.f)} • S${pad2(item.r)}${hasPhotos ? ' 📸' : ''}`;
+      card.appendChild(badge);
+      
+      const tag = document.createElement("div");
+      tag.className = `pill ${statusClass(item.status)}`;
+      tag.textContent = `${statusEmoji(item.status)} ${statusName(item.status)}`;
+      card.appendChild(tag);
+      
+      if(hasPhotos){
+        const photoInfo = document.createElement("div");
+        photoInfo.className = "photo-indicator";
+        photoInfo.textContent = `📸 ${photos.length} foto(s)`;
+        card.appendChild(photoInfo);
+      }
+      
+      createdGrid.appendChild(card);
+    });
+  }
 
-async function exportPNG(){
-  const canvas = await html2canvas(document.body);
-  const link = document.createElement("a");
-  link.download = "vistoria.png";
-  link.href = canvas.toDataURL();
-  link.click();
-}
+  document.getElementById("btnPNG").addEventListener("click", saveAsPNG);
+  document.getElementById("btnShare").addEventListener("click", openShareModal);
+  document.getElementById("shareWhatsApp").addEventListener("click", shareToWhatsApp);
+  document.getElementById("shareTeams").addEventListener("click", shareToTeams);
+  document.getElementById("shareEmail").addEventListener("click", shareToEmail);
+  document.getElementById("shareSave").addEventListener("click", shareSaveImage);
+  document.getElementById("closeModal").addEventListener("click", () => shareModal.classList.remove("show"));
+  shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.classList.remove("show"); });
+  
+  window.deletePhotoFromRoom = deletePhotoFromRoom;
+  window.showFullscreenImage = showFullscreenImage;
+  window.closeFullscreen = closeFullscreen;
 
-render();
+  function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
 
+  document.getElementById("btnClear").addEventListener("click", ()=>{
+    if(!confirm("⚠️ Limpar TODOS os registros e fotos?")) return;
+    entries = [];
+    for(let i=0; i<localStorage.length; i++){
+      const key = localStorage.key(i);
+      if(key && key.startsWith("photos_")) localStorage.removeItem(key);
+    }
+    auditorInp.value = "";
+    predioSel.value = "";
+    enderecoInp.value = "";
+    obsInp.value = "";
+    persist();
+    renderCreated();
+    renderReportWithPhotos();
+    renderCurrentPhotos();
+    showToast("✓ Todos os dados removidos");
+  });
+
+  predioSel.addEventListener("change", ()=>{
+    const v = predioSel.value;
+    if(v === "Eco Berrini") enderecoInp.value = "Av. Eng. Luís Carlos Berrini, 1376 - SP";
+    else if(v === "Chucri Zaidan") enderecoInp.value = "Av. Dr. Chucri Zaidan, 2460 - SP";
+    else enderecoInp.value = "";
+    renderReportWithPhotos();
+  });
+
+  auditorInp.addEventListener("input", renderReportWithPhotos);
+  enderecoInp.addEventListener("input", renderReportWithPhotos);
+  obsInp.addEventListener("input", renderReportWithPhotos);
+
+  (function init(){
+    selectedFloor = 1;
+    selectedRoom = 1;
+    buildFloorIcons();
+    buildRoomIcons();
+    renderCreated();
+    renderReportWithPhotos();
+    renderCurrentPhotos();
+  })();
 </script>
-
 </body>
 </html>
