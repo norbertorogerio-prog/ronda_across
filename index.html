@@ -83,7 +83,7 @@
   }
 
   h2{
-    margin:0 0 16px 0;
+    margin:0 0 20px 0;
     font-weight:700;
     font-size:18px;
     background: var(--gradient-primary);
@@ -134,47 +134,11 @@
     resize:vertical;
   }
 
-  /* ÍCONES */
-  .icon-strip{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    margin-top:8px;
-  }
-  
-  .icon{
-    width:44px;
-    height:44px;
-    min-width:44px;
-    border-radius:12px;
-    border: 1.5px solid rgba(102, 0, 204, 0.3);
-    background: rgba(102, 0, 204, 0.1);
-    color: var(--vivo-white);
-    font-size:12px;
-    font-weight:600;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .icon:hover{
-    background: rgba(102, 0, 204, 0.3);
-    transform: translateY(-2px);
-  }
-  
-  .icon.is-selected{
-    background: var(--gradient-primary);
-    border-color: var(--vivo-purple-light);
-    box-shadow: 0 0 0 3px var(--vivo-purple-glow);
-  }
-
   /* STATUS */
   .status-strip{
     display:flex;
-    gap:8px;
-    margin:12px 0 6px;
+    gap:10px;
+    margin:16px 0 20px;
     flex-wrap:wrap;
   }
   
@@ -183,21 +147,26 @@
     align-items:center;
     justify-content:center;
     gap:8px;
-    padding:8px 12px;
+    padding:10px 16px;
     border-radius:40px;
     color: var(--vivo-white);
     background: rgba(102, 0, 204, 0.15);
     border: 1.5px solid rgba(102, 0, 204, 0.3);
     cursor:pointer;
-    font-size:12px;
+    font-size:13px;
     font-weight:600;
     transition: all 0.2s ease;
     flex:1;
+    min-width:90px;
   }
   
   .status:hover{
     background: rgba(102, 0, 204, 0.3);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+  }
+  
+  .status:active{
+    transform: translateY(0);
   }
   
   .dot{
@@ -205,10 +174,90 @@
     height:10px;
     border-radius:50%;
   }
-  .dot.valid{background: var(--green);}
-  .dot.lock{background: var(--yellow);}
-  .dot.prob{background: var(--red);}
-  .dot.other{background: var(--purple-status);}
+  .dot.valid{background: var(--green); box-shadow: 0 0 8px rgba(0,200,83,0.5);}
+  .dot.lock{background: var(--yellow); box-shadow: 0 0 8px rgba(255,214,0,0.5);}
+  .dot.prob{background: var(--red); box-shadow: 0 0 8px rgba(255,59,59,0.5);}
+  .dot.other{background: var(--purple-status); box-shadow: 0 0 8px rgba(170,0,255,0.5);}
+
+  /* ÁREA DE FOTOS */
+  .photo-section{
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(102, 0, 204, 0.3);
+  }
+  
+  .photo-label{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .photo-upload-btn{
+    background: rgba(102, 0, 204, 0.2);
+    border: 1.5px dashed rgba(102, 0, 204, 0.5);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  
+  .photo-upload-btn:hover{
+    background: rgba(102, 0, 204, 0.3);
+    border-color: var(--vivo-purple);
+  }
+  
+  .photo-gallery{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  
+  .photo-item{
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(102, 0, 204, 0.3);
+    background: rgba(0,0,0,0.3);
+  }
+  
+  .photo-item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
+  .photo-delete{
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--red);
+    transition: all 0.2s ease;
+  }
+  
+  .photo-delete:hover{
+    background: var(--red);
+    color: white;
+    transform: scale(1.1);
+  }
 
   /* BOTÕES */
   .btn{
@@ -239,86 +288,10 @@
     flex:1;
   }
 
-  /* ÁREA DE FOTOS */
-  .photo-section{
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(102, 0, 204, 0.3);
-  }
-  
-  .photo-label{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    margin-bottom: 8px;
-  }
-  
-  .photo-upload-btn{
-    background: rgba(102, 0, 204, 0.2);
-    border: 1.5px dashed rgba(102, 0, 204, 0.5);
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 12px;
-  }
-  
-  .photo-upload-btn:hover{
-    background: rgba(102, 0, 204, 0.3);
-    border-color: var(--vivo-purple);
-  }
-  
-  .photo-gallery{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  
-  .photo-item{
-    position: relative;
-    width: 70px;
-    height: 70px;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 2px solid rgba(102, 0, 204, 0.3);
-    background: rgba(0,0,0,0.3);
-  }
-  
-  .photo-item img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .photo-delete{
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    background: rgba(0,0,0,0.7);
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 10px;
-    color: var(--red);
-    transition: all 0.2s ease;
-  }
-  
-  .photo-delete:hover{
-    background: var(--red);
-    color: white;
-  }
-
   /* BOTÕES DE AÇÃO */
   .report-actions{
     display:flex;
-    gap:8px;
+    gap:10px;
     flex-wrap:wrap;
   }
   
@@ -327,8 +300,8 @@
     background: rgba(102, 0, 204, 0.15);
     color: var(--vivo-white);
     font-weight:600;
-    font-size:11px;
-    padding:6px 12px;
+    font-size:12px;
+    padding:8px 16px;
     border-radius:10px;
     cursor:pointer;
     transition: all 0.2s ease;
@@ -358,9 +331,10 @@
   }
   
   .small{
-    font-size:10px;
+    font-size:11px;
     color: var(--vivo-gray);
     margin-top:12px;
+    text-align: center;
   }
 
   /* GRADE DE ITENS */
@@ -368,6 +342,9 @@
     display:flex;
     flex-wrap:wrap;
     gap:10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 4px;
   }
   
   .room-card{
@@ -378,8 +355,7 @@
     border-radius:14px;
     border: 1px solid rgba(102, 0, 204, 0.2);
     background: rgba(102, 0, 204, 0.1);
-    min-width:105px;
-    cursor: pointer;
+    min-width:110px;
     transition: all 0.2s ease;
   }
   
@@ -401,7 +377,7 @@
     display:inline-flex;
     align-items:center;
     gap:6px;
-    font-size:11px;
+    font-size:12px;
     font-weight:700;
     background: rgba(102, 0, 204, 0.3);
     border-radius:10px;
@@ -412,7 +388,7 @@
     display:inline-flex;
     align-items:center;
     gap:6px;
-    font-size:10px;
+    font-size:11px;
     font-weight:600;
     border-radius:40px;
     padding:4px 10px;
@@ -423,7 +399,7 @@
   .pill.prob{background: var(--red);}
   .pill.other{background: var(--purple-status);}
 
-  /* RELATÓRIO COM FOTOS */
+  /* RELATÓRIO */
   .report-box{
     border-radius:16px;
     background: rgba(0,0,0,0.3);
@@ -455,7 +431,7 @@
     font-size:12px;
     line-height:1.6;
     padding:20px;
-    max-height:500px;
+    max-height:450px;
     overflow-y:auto;
   }
   
@@ -605,13 +581,24 @@
     border-radius: 16px;
     box-shadow: 0 0 50px rgba(102,0,204,0.5);
   }
+  
+  /* Inputs de número */
+  .number-input-group{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .number-input-group input{
+    flex: 1;
+  }
 </style>
 </head>
 <body>
 <div class="app">
   <!-- ESQUERDA -->
   <div class="card">
-    <h2>✨ Entrada de dados</h2>
+    <h2>✨ Vistoria Técnica</h2>
 
     <label>👤 Auditor</label>
     <input id="auditor" class="form-field" placeholder="Nome completo"/>
@@ -626,11 +613,16 @@
     <label>📍 Endereço</label>
     <input id="endereco" class="form-field" placeholder="Endereço automático"/>
 
-    <label>🏬 Andar (01-32)</label>
-    <div id="floorsStrip" class="icon-strip"></div>
-
-    <label>🚪 Sala (01-50)</label>
-    <div id="roomsStrip" class="icon-strip"></div>
+    <div class="number-input-group">
+      <div style="flex:1">
+        <label>🏬 Andar</label>
+        <input type="number" id="floorInput" class="form-field" min="1" max="32" value="1" placeholder="1-32"/>
+      </div>
+      <div style="flex:1">
+        <label>🚪 Sala</label>
+        <input type="number" id="roomInput" class="form-field" min="1" max="50" value="1" placeholder="1-50"/>
+      </div>
+    </div>
 
     <label>📌 Status</label>
     <div class="status-strip">
@@ -640,13 +632,10 @@
       <button class="status" data-status="other"><span class="dot other"></span>Outros</button>
     </div>
 
-    <label>📝 Observações</label>
-    <textarea id="obs" class="form-field" placeholder="Observações gerais da vistoria..."></textarea>
-
     <!-- ÁREA DE FOTOS DA SALA SELECIONADA -->
     <div class="photo-section">
       <div class="photo-label">
-        📸 Fotos da Sala A<span id="currentFloor">01</span>-S<span id="currentRoom">01</span>
+        📸 Fotos da Sala <span id="currentDisplayFloor">01</span>-<span id="currentDisplayRoom">01</span>
       </div>
       <div id="photoUploadBtn" class="photo-upload-btn">
         📷 + Adicionar foto (câmera ou galeria)
@@ -656,17 +645,16 @@
     </div>
 
     <div class="row">
-      <button id="btnAdd" class="btn">➕ Adicionar</button>
-      <button id="btnClear" class="btn">🗑️ Limpar</button>
+      <button id="btnClear" class="btn">🗑️ Limpar Tudo</button>
     </div>
 
-    <p class="small">💡 Selecione andar/sala → clique no status ou adicione fotos</p>
+    <p class="small">💡 Digite o andar e sala → clique no status para registrar</p>
   </div>
 
   <!-- DIREITA -->
   <div class="viewer">
     <div class="section">
-      <h3>📦 Salas registradas</h3>
+      <h3>📦 Salas vistoriadas</h3>
       <div id="createdGrid" class="created-grid">
         <p class="small" style="text-align:center; width:100%">Nenhuma sala registrada</p>
       </div>
@@ -714,16 +702,42 @@ Aguardando registros...
 </div>
 
 <script>
-  const STORAGE_KEY = "vistoria_photos_final";
+  const STORAGE_KEY = "vistoria_simple_v1";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  let selectedFloor = 1;
-  let selectedRoom = 1;
+  let currentFloor = 1;
+  let currentRoom = 1;
   let currentImageData = null;
 
   const pad2 = n => String(n).padStart(2,"0");
   const statusName = s => s==="valid"?"Validada":s==="lock"?"Trancada":s==="prob"?"Problemas":"Outros";
   const statusClass = s => s==="valid"?"valid":s==="lock"?"lock":s==="prob"?"prob":"other";
   const statusEmoji = s => s==="valid"?"✅":s==="lock"?"🔒":s==="prob"?"❌":"◻️";
+
+  const floorInput = document.getElementById("floorInput");
+  const roomInput = document.getElementById("roomInput");
+  const currentDisplayFloor = document.getElementById("currentDisplayFloor");
+  const currentDisplayRoom = document.getElementById("currentDisplayRoom");
+
+  // Atualiza display da sala atual
+  function updateCurrentDisplay() {
+    currentFloor = parseInt(floorInput.value) || 1;
+    currentRoom = parseInt(roomInput.value) || 1;
+    currentFloor = Math.min(32, Math.max(1, currentFloor));
+    currentRoom = Math.min(50, Math.max(1, currentRoom));
+    floorInput.value = currentFloor;
+    roomInput.value = currentRoom;
+    currentDisplayFloor.textContent = pad2(currentFloor);
+    currentDisplayRoom.textContent = pad2(currentRoom);
+  }
+
+  floorInput.addEventListener("input", () => {
+    updateCurrentDisplay();
+    renderCurrentPhotos();
+  });
+  roomInput.addEventListener("input", () => {
+    updateCurrentDisplay();
+    renderCurrentPhotos();
+  });
 
   function getRoomKey(f, r) { return `A${pad2(f)}-S${pad2(r)}`; }
   
@@ -742,7 +756,7 @@ Aguardando registros...
     const photos = getRoomPhotos(f, r);
     photos.push(photoData);
     saveRoomPhotos(f, r, photos);
-    if (selectedFloor === f && selectedRoom === r) {
+    if (currentFloor === f && currentRoom === r) {
       renderCurrentPhotos();
     }
     renderCreated();
@@ -753,7 +767,7 @@ Aguardando registros...
     const photos = getRoomPhotos(f, r);
     photos.splice(index, 1);
     saveRoomPhotos(f, r, photos);
-    if (selectedFloor === f && selectedRoom === r) {
+    if (currentFloor === f && currentRoom === r) {
       renderCurrentPhotos();
     }
     renderCreated();
@@ -763,10 +777,7 @@ Aguardando registros...
 
   function renderCurrentPhotos() {
     const gallery = document.getElementById("photoGallery");
-    const photos = getRoomPhotos(selectedFloor, selectedRoom);
-    
-    document.getElementById("currentFloor").textContent = pad2(selectedFloor);
-    document.getElementById("currentRoom").textContent = pad2(selectedRoom);
+    const photos = getRoomPhotos(currentFloor, currentRoom);
     
     if (photos.length === 0) {
       gallery.innerHTML = '<p class="small" style="text-align:center; width:100%">Nenhuma foto adicionada</p>';
@@ -779,7 +790,7 @@ Aguardando registros...
       div.className = "photo-item";
       div.innerHTML = `
         <img src="${photo}" alt="Foto" onclick="showFullscreenImage('${photo}')">
-        <div class="photo-delete" onclick="event.stopPropagation(); deletePhotoFromRoom(${selectedFloor}, ${selectedRoom}, ${idx})">✕</div>
+        <div class="photo-delete" onclick="event.stopPropagation(); deletePhotoFromRoom(${currentFloor}, ${currentRoom}, ${idx})">✕</div>
       `;
       gallery.appendChild(div);
     });
@@ -794,6 +805,70 @@ Aguardando registros...
   
   function closeFullscreen() {
     document.getElementById("fullscreenModal").classList.remove("show");
+  }
+
+  // Registrar sala ao clicar no status
+  document.querySelectorAll(".status").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const status = btn.dataset.status;
+      const f = currentFloor;
+      const r = currentRoom;
+      const idx = entries.findIndex(e => e.f === f && e.r === r);
+      if(idx >= 0){ 
+        entries[idx].status = status; 
+      } else { 
+        entries.push({f, r, status}); 
+      }
+      persist();
+      renderCreated();
+      renderReportWithPhotos();
+      showToast(`✅ A${pad2(f)}-S${pad2(r)}: ${statusName(status)}`);
+    });
+  });
+
+  function renderCreated(){
+    const sorted = [...entries].sort((a,b)=> a.f - b.f || a.r - b.r);
+    const sectionTitle = document.querySelector('.section h3');
+    sectionTitle.innerHTML = `📦 Salas vistoriadas (${entries.length})`;
+    
+    if(sorted.length === 0){
+      createdGrid.innerHTML = '<p class="small" style="text-align:center; width:100%">Nenhuma sala registrada</p>';
+      return;
+    }
+    
+    createdGrid.innerHTML = "";
+    sorted.forEach(item => {
+      const photos = getRoomPhotos(item.f, item.r);
+      const hasPhotos = photos.length > 0;
+      
+      const card = document.createElement("div");
+      card.className = `room-card ${hasPhotos ? 'has-photo' : ''}`;
+      card.onclick = () => {
+        floorInput.value = item.f;
+        roomInput.value = item.r;
+        updateCurrentDisplay();
+        renderCurrentPhotos();
+      };
+      
+      const badge = document.createElement("div");
+      badge.className = "badge";
+      badge.innerHTML = `A${pad2(item.f)} • S${pad2(item.r)}${hasPhotos ? ' 📸' : ''}`;
+      card.appendChild(badge);
+      
+      const tag = document.createElement("div");
+      tag.className = `pill ${statusClass(item.status)}`;
+      tag.textContent = `${statusEmoji(item.status)} ${statusName(item.status)}`;
+      card.appendChild(tag);
+      
+      if(hasPhotos){
+        const photoInfo = document.createElement("div");
+        photoInfo.className = "photo-indicator";
+        photoInfo.textContent = `📸 ${photos.length} foto(s)`;
+        card.appendChild(photoInfo);
+      }
+      
+      createdGrid.appendChild(card);
+    });
   }
 
   // RENDERIZA RELATÓRIO COM FOTOS
@@ -990,8 +1065,6 @@ ${photosHtml}`;
     setTimeout(() => t.classList.remove("show"), 2000);
   }
 
-  const floorsStrip = document.getElementById("floorsStrip");
-  const roomsStrip = document.getElementById("roomsStrip");
   const createdGrid = document.getElementById("createdGrid");
   const predioSel = document.getElementById("predio");
   const enderecoInp = document.getElementById("endereco");
@@ -1010,115 +1083,12 @@ ${photosHtml}`;
     files.forEach(file => {
       const reader = new FileReader();
       reader.onload = (event) => {
-        addPhotoToRoom(selectedFloor, selectedRoom, event.target.result);
+        addPhotoToRoom(currentFloor, currentRoom, event.target.result);
       };
       reader.readAsDataURL(file);
     });
     photoInput.value = "";
   });
-
-  function buildFloorIcons(){
-    floorsStrip.innerHTML = "";
-    for(let f=1; f<=32; f++){
-      const el = document.createElement("div");
-      el.className = "icon" + (f === selectedFloor ? " is-selected" : "");
-      el.textContent = pad2(f);
-      el.addEventListener("click", () => {
-        selectedFloor = f;
-        buildFloorIcons();
-        buildRoomIcons();
-        renderCurrentPhotos();
-      });
-      floorsStrip.appendChild(el);
-    }
-  }
-  
-  function buildRoomIcons(){
-    roomsStrip.innerHTML = "";
-    for(let r=1; r<=50; r++){
-      const el = document.createElement("div");
-      el.className = "icon" + (r === selectedRoom ? " is-selected" : "");
-      el.textContent = pad2(r);
-      el.addEventListener("click", () => {
-        selectedRoom = r;
-        buildRoomIcons();
-        renderCurrentPhotos();
-      });
-      roomsStrip.appendChild(el);
-    }
-  }
-
-  document.querySelectorAll(".status").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const status = btn.dataset.status;
-      const idx = entries.findIndex(e => e.f === selectedFloor && e.r === selectedRoom);
-      if(idx >= 0){ entries[idx].status = status; } 
-      else{ entries.push({f: selectedFloor, r: selectedRoom, status}); }
-      persist();
-      renderCreated();
-      renderReportWithPhotos();
-      showToast(`A${pad2(selectedFloor)}-S${pad2(selectedRoom)}: ${statusName(status)}`);
-    });
-  });
-
-  document.getElementById("btnAdd").addEventListener("click", ()=>{
-    const idx = entries.findIndex(e => e.f === selectedFloor && e.r === selectedRoom);
-    if(idx < 0){ 
-      entries.push({f: selectedFloor, r: selectedRoom, status:"other"}); 
-      showToast(`Sala A${pad2(selectedFloor)}-S${pad2(selectedRoom)} adicionada`);
-      persist();
-      renderCreated();
-      renderReportWithPhotos();
-    } else {
-      showToast(`Sala já existe`);
-    }
-  });
-
-  function renderCreated(){
-    const sorted = [...entries].sort((a,b)=> a.f - b.f || a.r - b.r);
-    const sectionTitle = document.querySelector('.section h3');
-    sectionTitle.innerHTML = `📦 Salas registradas (${entries.length})`;
-    
-    if(sorted.length === 0){
-      createdGrid.innerHTML = '<p class="small" style="text-align:center; width:100%">Nenhuma sala registrada</p>';
-      return;
-    }
-    
-    createdGrid.innerHTML = "";
-    sorted.forEach(item => {
-      const photos = getRoomPhotos(item.f, item.r);
-      const hasPhotos = photos.length > 0;
-      
-      const card = document.createElement("div");
-      card.className = `room-card ${hasPhotos ? 'has-photo' : ''}`;
-      card.onclick = () => {
-        selectedFloor = item.f;
-        selectedRoom = item.r;
-        buildFloorIcons();
-        buildRoomIcons();
-        renderCurrentPhotos();
-      };
-      
-      const badge = document.createElement("div");
-      badge.className = "badge";
-      badge.innerHTML = `A${pad2(item.f)} • S${pad2(item.r)}${hasPhotos ? ' 📸' : ''}`;
-      card.appendChild(badge);
-      
-      const tag = document.createElement("div");
-      tag.className = `pill ${statusClass(item.status)}`;
-      tag.textContent = `${statusEmoji(item.status)} ${statusName(item.status)}`;
-      card.appendChild(tag);
-      
-      if(hasPhotos){
-        const photoInfo = document.createElement("div");
-        photoInfo.className = "photo-indicator";
-        photoInfo.textContent = `📸 ${photos.length} foto(s)`;
-        card.appendChild(photoInfo);
-      }
-      
-      createdGrid.appendChild(card);
-    });
-  }
 
   document.getElementById("btnPNG").addEventListener("click", saveAsPNG);
   document.getElementById("btnShare").addEventListener("click", openShareModal);
@@ -1166,10 +1136,7 @@ ${photosHtml}`;
   obsInp.addEventListener("input", renderReportWithPhotos);
 
   (function init(){
-    selectedFloor = 1;
-    selectedRoom = 1;
-    buildFloorIcons();
-    buildRoomIcons();
+    updateCurrentDisplay();
     renderCreated();
     renderReportWithPhotos();
     renderCurrentPhotos();
