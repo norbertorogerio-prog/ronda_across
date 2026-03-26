@@ -4,16 +4,37 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
 
-<title>Relatório de Vistoria</title>
+<title>Relatório de Vistoria | Vivo</title>
 
 <!-- html2canvas para capturar PNG -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
   :root{
-    --bg:#0b3d2e; --card:rgba(255,255,255,.08); --border:rgba(255,255,255,.18);
-    --text:#fff; --muted:#cbd5e1; --gold:#ffd966;
-    --green:#27ae60; --yellow:#f1c40f; --red:#e74c3c; --purple:#6A1B9A;
+    /* Paleta Vivo - Moderna */
+    --vivo-purple: #6600CC;
+    --vivo-purple-dark: #4C0099;
+    --vivo-purple-light: #8833FF;
+    --vivo-purple-glow: rgba(102, 0, 204, 0.2);
+    --vivo-black: #1A1A2E;
+    --vivo-gray-dark: #2D2D3A;
+    --vivo-gray: #4A4A5A;
+    --vivo-gray-light: #6A6A7A;
+    --vivo-white: #FFFFFF;
+    --vivo-offwhite: #F5F5F7;
+    
+    /* Status colors - mantendo mas ajustadas */
+    --green: #00C853;
+    --yellow: #FFD600;
+    --red: #FF3B3B;
+    --purple-status: #AA00FF;
+    
+    /* Efeitos */
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+    --gradient-primary: linear-gradient(135deg, #6600CC 0%, #4C0099 100%);
+    --gradient-shine: linear-gradient(135deg, rgba(102,0,204,0.1) 0%, rgba(102,0,204,0.05) 100%);
   }
   *{
     box-sizing:border-box;
@@ -22,32 +43,35 @@
   }
   
   body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #1A1A2E 0%, #0F0F1A 100%);
+    color: var(--vivo-white);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     min-height:100vh;
-    padding:12px;
+    padding:20px;
   }
+  
+  /* Import Inter font */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
   
   .app{
     max-width:1400px;
     margin:0 auto;
     display:flex;
     flex-direction:column;
-    gap:16px;
+    gap:20px;
   }
   
   @media(min-width:980px){
     body{
-      padding:16px;
+      padding:24px;
     }
     .app{
       flex-direction:row;
-      gap:20px;
+      gap:24px;
       align-items:flex-start;
     }
     .app > :first-child{
-      width:360px;
+      width:380px;
       flex-shrink:0;
     }
     .app > :last-child{
@@ -57,91 +81,122 @@
   }
 
   .card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:14px;
-    backdrop-filter:blur(4px);
+    background: rgba(26, 26, 46, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102, 0, 204, 0.3);
+    border-radius:20px;
+    padding:20px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover{
+    border-color: rgba(102, 0, 204, 0.6);
+    box-shadow: var(--shadow-lg);
   }
 
   h2{
-    margin:0 0 12px 0;
-    font-weight:800;
-    font-size:15px;
-    letter-spacing:.4px;
+    margin:0 0 16px 0;
+    font-weight:700;
+    font-size:18px;
+    letter-spacing:-0.3px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
   }
   
   h3{
-    margin:0 0 10px 0;
-    font-size:13px;
-    color:var(--muted);
-    font-weight:700;
+    margin:0 0 12px 0;
+    font-size:14px;
+    color: var(--vivo-gray-light);
+    font-weight:600;
+    letter-spacing:0.3px;
+    text-transform: uppercase;
   }
 
   label{
     display:block;
-    margin:10px 0 4px 0;
+    margin:12px 0 6px 0;
     font-size:11px;
-    font-weight:800;
+    font-weight:600;
     text-transform:uppercase;
-    letter-spacing:.4px;
-    color:#e2e8f0;
+    letter-spacing:0.5px;
+    color: var(--vivo-gray-light);
   }
   
   .form-field{
     width:100%;
-    border:1px solid var(--border);
-    border-radius:8px;
-    background:#fff;
-    color:#111;
-    padding:6px 10px;
+    border: 1.5px solid rgba(102, 0, 204, 0.2);
+    border-radius:12px;
+    background: rgba(255,255,255,0.05);
+    color: var(--vivo-white);
+    padding:10px 14px;
     font-size:13px;
-    line-height:1.3;
+    line-height:1.4;
     outline:none;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .form-field:focus{
+    border-color: var(--vivo-purple);
+    background: rgba(102, 0, 204, 0.1);
+    box-shadow: 0 0 0 3px var(--vivo-purple-glow);
+  }
+  
+  .form-field::placeholder{
+    color: var(--vivo-gray);
   }
   
   select.form-field{
+    cursor: pointer;
     -webkit-appearance:none;
     -moz-appearance:none;
     appearance:none;
-    background-image:
-      linear-gradient(45deg, transparent 50%, #6A1B9A 50%),
-      linear-gradient(135deg, #6A1B9A 50%, transparent 50%);
-    background-position:calc(100% - 12px) 50%, calc(100% - 6px) 50%;
-    background-size:5px 5px,5px 5px;
-    background-repeat:no-repeat;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236600CC' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
   }
   
   textarea.form-field{
-    min-height:55px;
+    min-height:60px;
     resize:vertical;
     font-size:12px;
   }
 
-  /* ÍCONES */
+  /* ÍCONES MODERNOS */
   .icon-strip{
     display:flex;
     flex-wrap:wrap;
-    gap:4px;
-    margin-top:6px;
+    gap:6px;
+    margin-top:8px;
   }
   
   .icon{
     width:44px;
     height:44px;
     min-width:44px;
-    border-radius:6px;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.08);
-    color:var(--text);
+    border-radius:12px;
+    border: 1.5px solid rgba(102, 0, 204, 0.3);
+    background: rgba(102, 0, 204, 0.1);
+    color: var(--vivo-white);
     font-size:12px;
     font-weight:600;
     display:inline-flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    transition:all 0.1s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink:0;
+  }
+  
+  .icon:hover{
+    background: rgba(102, 0, 204, 0.3);
+    transform: translateY(-2px);
+    border-color: var(--vivo-purple);
   }
   
   @media(max-width:640px){
@@ -163,16 +218,17 @@
   }
   
   .icon.is-selected{
-    border-color:var(--gold);
-    background:rgba(255,217,102,0.25);
-    box-shadow:0 0 0 1px rgba(255,217,102,.5);
+    background: var(--gradient-primary);
+    border-color: var(--vivo-purple-light);
+    box-shadow: 0 0 0 3px var(--vivo-purple-glow);
+    transform: scale(1.02);
   }
 
-  /* STATUS STRIP */
+  /* STATUS STRIP MODERNO */
   .status-strip{
     display:flex;
-    gap:6px;
-    margin:10px 0 4px;
+    gap:8px;
+    margin:12px 0 6px;
     flex-wrap:wrap;
   }
   
@@ -180,54 +236,88 @@
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:5px;
-    padding:6px 10px;
-    border-radius:20px;
-    color:#111;
-    background:#fff;
-    border:1px solid var(--border);
+    gap:8px;
+    padding:8px 12px;
+    border-radius:40px;
+    color: var(--vivo-white);
+    background: rgba(102, 0, 204, 0.15);
+    border: 1.5px solid rgba(102, 0, 204, 0.3);
     cursor:pointer;
-    font-size:11px;
-    font-weight:700;
-    transition:all 0.1s ease;
+    font-size:12px;
+    font-weight:600;
+    transition: all 0.2s ease;
     flex:1;
-    min-width:70px;
+    min-width:80px;
+    backdrop-filter: blur(4px);
+  }
+  
+  .status:hover{
+    background: rgba(102, 0, 204, 0.3);
+    transform: translateY(-1px);
+    border-color: var(--vivo-purple);
+  }
+  
+  .status:active{
+    transform: translateY(0);
   }
   
   .dot{
-    width:9px;
-    height:9px;
+    width:10px;
+    height:10px;
     border-radius:50%;
     flex-shrink:0;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
   }
-  .dot.valid{background:var(--green)}
-  .dot.lock{background:var(--yellow)}
-  .dot.prob{background:var(--red)}
-  .dot.other{background:var(--purple)}
+  .dot.valid{background: var(--green); box-shadow: 0 0 8px rgba(0,200,83,0.5);}
+  .dot.lock{background: var(--yellow); box-shadow: 0 0 8px rgba(255,214,0,0.5);}
+  .dot.prob{background: var(--red); box-shadow: 0 0 8px rgba(255,59,59,0.5);}
+  .dot.other{background: var(--purple-status); box-shadow: 0 0 8px rgba(170,0,255,0.5);}
 
-  /* BOTÕES */
+  /* BOTÕES MODERNOS */
   .btn{
     width:100%;
-    border:none;
-    border-radius:8px;
-    background:linear-gradient(135deg,#6A1B9A,#4A0072);
-    color:#fff;
-    font-weight:800;
-    padding:8px;
+    border: none;
+    border-radius:12px;
+    background: var(--gradient-primary);
+    color: var(--vivo-white);
+    font-weight:700;
+    padding:10px;
     cursor:pointer;
     text-transform:uppercase;
     font-size:12px;
-    transition:all 0.1s ease;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .btn:hover::before{
+    left: 100%;
+  }
+  
+  .btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 0, 204, 0.4);
   }
   
   .btn:active{
-    transform:translateY(1px);
+    transform: translateY(0);
   }
   
   .row{
     display:flex;
-    gap:8px;
-    margin-top:12px;
+    gap:10px;
+    margin-top:16px;
   }
   
   .row button{
@@ -237,159 +327,186 @@
   /* BOTÕES DE AÇÃO DO RELATÓRIO */
   .report-actions{
     display:flex;
-    gap:6px;
+    gap:8px;
     flex-wrap:wrap;
   }
   
   .btn-action{
-    border:1px solid var(--border);
-    background:#ffffff;
-    color:#111;
-    font-weight:800;
+    border: 1.5px solid rgba(102, 0, 204, 0.3);
+    background: rgba(102, 0, 204, 0.15);
+    color: var(--vivo-white);
+    font-weight:600;
     font-size:11px;
-    padding:4px 10px;
-    border-radius:6px;
+    padding:6px 12px;
+    border-radius:10px;
     cursor:pointer;
-    transition:all 0.1s ease;
+    transition: all 0.2s ease;
     white-space:nowrap;
+    backdrop-filter: blur(4px);
+  }
+  
+  .btn-action:hover{
+    background: rgba(102, 0, 204, 0.3);
+    border-color: var(--vivo-purple);
+    transform: translateY(-1px);
   }
   
   .btn-action:active{
-    transform:translateY(1px);
+    transform: translateY(0);
   }
   
   .btn-share{
-    background:linear-gradient(135deg,#25D366,#128C7E);
-    color:#fff;
-    border:none;
+    background: linear-gradient(135deg, #6600CC 0%, #8833FF 100%);
+    border: none;
   }
   
   .btn-png{
-    background:linear-gradient(135deg,#2D9CDB,#1E6F9F);
-    color:#fff;
-    border:none;
+    background: linear-gradient(135deg, #4C0099 0%, #6600CC 100%);
+    border: none;
   }
 
   /* VIEWER */
   .viewer{
     display:flex;
     flex-direction:column;
-    gap:16px;
+    gap:20px;
   }
   
   .section{
-    background:rgba(255,255,255,.06);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:14px;
+    background: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102, 0, 204, 0.2);
+    border-radius:20px;
+    padding:20px;
+    transition: all 0.3s ease;
+  }
+  
+  .section:hover{
+    border-color: rgba(102, 0, 204, 0.4);
   }
   
   .small{
     font-size:10px;
-    color:var(--muted);
-    margin-top:8px;
+    color: var(--vivo-gray);
+    margin-top:12px;
+    font-weight:400;
   }
 
   /* GRADE DE ITENS */
   .created-grid{
     display:flex;
     flex-wrap:wrap;
-    gap:8px;
+    gap:10px;
   }
   
   .room-card{
     display:inline-flex;
     flex-direction:column;
-    gap:5px;
-    padding:8px;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.08);
-    min-width:100px;
+    gap:6px;
+    padding:10px;
+    border-radius:14px;
+    border: 1px solid rgba(102, 0, 204, 0.2);
+    background: rgba(102, 0, 204, 0.1);
+    min-width:105px;
+    transition: all 0.2s ease;
+  }
+  
+  .room-card:hover{
+    border-color: var(--vivo-purple);
+    transform: translateY(-2px);
+    background: rgba(102, 0, 204, 0.15);
   }
   
   .badge{
     display:inline-flex;
     align-items:center;
-    gap:5px;
+    gap:6px;
     font-size:11px;
-    font-weight:800;
-    color:#111;
-    background:#fff;
-    border-radius:6px;
-    padding:4px 8px;
+    font-weight:700;
+    color: var(--vivo-white);
+    background: rgba(102, 0, 204, 0.3);
+    border-radius:10px;
+    padding:5px 10px;
     width:fit-content;
   }
   
   .pill{
     display:inline-flex;
     align-items:center;
-    gap:5px;
+    gap:6px;
     font-size:10px;
     font-weight:600;
-    color:#fff;
-    border-radius:20px;
-    padding:3px 8px;
+    color: var(--vivo-white);
+    border-radius:40px;
+    padding:4px 10px;
     width:fit-content;
+    backdrop-filter: blur(4px);
   }
   
-  .pill.valid{background:var(--green)}
-  .pill.lock{background:var(--yellow);color:#111}
-  .pill.prob{background:var(--red)}
-  .pill.other{background:var(--purple)}
+  .pill.valid{background: var(--green); box-shadow: 0 2px 8px rgba(0,200,83,0.3);}
+  .pill.lock{background: var(--yellow); color: #1A1A2E; box-shadow: 0 2px 8px rgba(255,214,0,0.3);}
+  .pill.prob{background: var(--red); box-shadow: 0 2px 8px rgba(255,59,59,0.3);}
+  .pill.other{background: var(--purple-status); box-shadow: 0 2px 8px rgba(170,0,255,0.3);}
 
   /* RELATÓRIO */
   .report-box{
-    border:2px solid var(--gold);
-    border-radius:12px;
-    background:rgba(0,0,0,.45);
+    border-radius:16px;
+    background: rgba(0,0,0,0.3);
     overflow:hidden;
+    border: 1px solid rgba(102, 0, 204, 0.3);
   }
   
   .report-title{
-    background:linear-gradient(135deg,#2c3e50,#1a2632);
-    color:var(--gold);
-    font-weight:900;
-    padding:10px 12px;
+    background: linear-gradient(135deg, rgba(102,0,204,0.2) 0%, rgba(76,0,153,0.2) 100%);
+    color: var(--vivo-white);
+    font-weight:700;
+    padding:14px 16px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:10px;
+    gap:12px;
     flex-wrap:wrap;
-    border-bottom:1px solid rgba(255,215,0,.3);
+    border-bottom: 1px solid rgba(102, 0, 204, 0.3);
   }
   
   .report-title span{
-    font-size:13px;
-    font-weight:800;
+    font-size:14px;
+    font-weight:700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   
   .report-content{
     white-space:pre-wrap;
-    font-family:monospace;
+    font-family: 'Inter', monospace;
     font-size:11px;
-    color:#eaf2f8;
-    line-height:1.5;
-    padding:12px;
+    color: var(--vivo-offwhite);
+    line-height:1.6;
+    padding:16px;
     max-height:450px;
     overflow-y:auto;
-    background:rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
   }
 
   .toast{
     position:fixed;
-    right:16px;
-    bottom:16px;
-    background:rgba(0,0,0,0.9);
-    color:#fff;
-    padding:8px 14px;
-    border-radius:8px;
+    right:20px;
+    bottom:20px;
+    background: rgba(102, 0, 204, 0.95);
+    backdrop-filter: blur(10px);
+    color: var(--vivo-white);
+    padding:10px 18px;
+    border-radius:40px;
     font-size:12px;
+    font-weight:500;
     z-index:9999;
     opacity:0;
-    transform:translateY(8px);
-    transition:opacity .15s ease, transform .15s ease;
+    transform:translateY(10px);
+    transition:opacity .2s ease, transform .2s ease;
     pointer-events:none;
+    box-shadow: var(--shadow-md);
   }
   
   .toast.show{
@@ -398,20 +515,20 @@
   }
   
   .report-content::-webkit-scrollbar{
-    width:4px;
+    width:6px;
   }
   
   .report-content::-webkit-scrollbar-track{
-    background:rgba(255,255,255,0.1);
-    border-radius:4px;
+    background: rgba(102, 0, 204, 0.1);
+    border-radius:10px;
   }
   
   .report-content::-webkit-scrollbar-thumb{
-    background:var(--gold);
-    border-radius:4px;
+    background: var(--vivo-purple);
+    border-radius:10px;
   }
   
-  /* Modal de compartilhamento */
+  /* Modal Moderno */
   .share-modal{
     display:none;
     position:fixed;
@@ -419,11 +536,11 @@
     left:0;
     right:0;
     bottom:0;
-    background:rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
     z-index:10000;
     align-items:center;
     justify-content:center;
-    backdrop-filter:blur(4px);
   }
   
   .share-modal.show{
@@ -431,38 +548,44 @@
   }
   
   .share-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:20px;
-    max-width:320px;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(102, 0, 204, 0.4);
+    border-radius:24px;
+    padding:24px;
+    max-width:340px;
     width:90%;
-    backdrop-filter:blur(8px);
+    box-shadow: var(--shadow-lg);
   }
   
   .share-card h4{
-    margin-bottom:16px;
-    font-size:16px;
+    margin-bottom:20px;
+    font-size:18px;
+    font-weight:700;
     text-align:center;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   
   .share-buttons{
     display:flex;
     flex-direction:column;
-    gap:10px;
+    gap:12px;
   }
   
   .share-btn{
     display:flex;
     align-items:center;
     gap:12px;
-    padding:12px;
-    border:none;
-    border-radius:12px;
+    padding:12px 16px;
+    border: none;
+    border-radius:16px;
     font-weight:700;
     font-size:14px;
     cursor:pointer;
-    transition:all 0.1s ease;
+    transition: all 0.2s ease;
     width:100%;
   }
   
@@ -471,34 +594,40 @@
   }
   
   .share-btn.whatsapp{
-    background:#25D366;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
     color:#fff;
   }
   
   .share-btn.teams{
-    background:#6264A7;
+    background: linear-gradient(135deg, #6264A7 0%, #464775 100%);
     color:#fff;
   }
   
   .share-btn.email{
-    background:#EA4335;
+    background: linear-gradient(135deg, #EA4335 0%, #C5221F 100%);
     color:#fff;
   }
   
   .share-btn.download{
-    background:#2D9CDB;
+    background: var(--gradient-primary);
     color:#fff;
   }
   
   .close-modal{
     margin-top:12px;
     padding:10px;
-    background:rgba(255,255,255,0.2);
-    border:1px solid var(--border);
-    border-radius:10px;
-    color:#fff;
+    background: rgba(102, 0, 204, 0.2);
+    border: 1px solid rgba(102, 0, 204, 0.3);
+    border-radius:14px;
+    color: var(--vivo-white);
     cursor:pointer;
     width:100%;
+    font-weight:600;
+    transition: all 0.2s ease;
+  }
+  
+  .close-modal:hover{
+    background: rgba(102, 0, 204, 0.3);
   }
 </style>
 </head>
@@ -506,7 +635,7 @@
 <div class="app">
   <!-- ESQUERDA -->
   <div class="card">
-    <h2>📋 Entrada de dados</h2>
+    <h2>✨ Entrada de dados</h2>
 
     <label>👤 Auditor</label>
     <input id="auditor" class="form-field" placeholder="Nome completo"/>
@@ -549,7 +678,7 @@
   <!-- DIREITA -->
   <div class="viewer">
     <div class="section">
-      <h3 id="sectionTitle">📦 Salas registradas (0)</h3>
+      <h3>📦 Salas registradas</h3>
       <div id="createdGrid" class="created-grid">
         <p class="small" style="text-align:center; width:100%">Nenhuma sala registrada</p>
       </div>
@@ -582,7 +711,7 @@ Aguardando registros...
 <!-- Modal de Compartilhamento -->
 <div id="shareModal" class="share-modal">
   <div class="share-card">
-    <h4>📤 Compartilhar Relatório</h4>
+    <h4>✨ Compartilhar Relatório</h4>
     <div class="share-buttons">
       <button id="shareWhatsApp" class="share-btn whatsapp">💬 WhatsApp</button>
       <button id="shareTeams" class="share-btn teams">💼 Microsoft Teams</button>
@@ -594,7 +723,7 @@ Aguardando registros...
 </div>
 
 <script>
-  const STORAGE_KEY = "vistoria_fixed_v6";
+  const STORAGE_KEY = "vistoria_vivo_v1";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom  = 1;
@@ -613,7 +742,6 @@ Aguardando registros...
   const enderecoInp  = document.getElementById("endereco");
   const auditorInp   = document.getElementById("auditor");
   const obsInp       = document.getElementById("obs");
-  const sectionTitle = document.getElementById("sectionTitle");
   const shareModal   = document.getElementById("shareModal");
 
   function buildFloorIcons(){
@@ -649,7 +777,6 @@ Aguardando registros...
     }
   }
 
-  // Status click
   document.querySelectorAll(".status").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const status = btn.dataset.status;
@@ -688,6 +815,7 @@ Aguardando registros...
 
   function renderCreated(){
     const sorted = [...entries].sort((a,b)=> a.f - b.f || a.r - b.r);
+    const sectionTitle = document.querySelector('.section h3');
     sectionTitle.innerHTML = `📦 Salas registradas (${entries.length})`;
     
     if(sorted.length === 0){
@@ -837,7 +965,6 @@ ${blocoObs}───────────────────────
     showToast("⬇️ Download iniciado!");
   }
 
-  // Gerar imagem do relatório
   async function generateReportImage() {
     const reportElement = document.getElementById("reportCaptureArea");
     
@@ -851,7 +978,7 @@ ${blocoObs}───────────────────────
     try {
       const canvas = await html2canvas(reportElement, {
         scale: 2,
-        backgroundColor: '#0b3d2e',
+        backgroundColor: '#1A1A2E',
         logging: false,
         useCORS: false
       });
@@ -864,7 +991,6 @@ ${blocoObs}───────────────────────
     }
   }
   
-  // Salvar como PNG
   async function saveAsPNG() {
     const imageData = await generateReportImage();
     if (!imageData) return;
@@ -879,7 +1005,6 @@ ${blocoObs}───────────────────────
     showToast("✅ Imagem salva!");
   }
   
-  // Abrir modal de compartilhamento
   async function openShareModal() {
     const imageData = await generateReportImage();
     if (!imageData) return;
@@ -888,29 +1013,24 @@ ${blocoObs}───────────────────────
     shareModal.classList.add("show");
   }
   
-  // Compartilhar no WhatsApp
   function shareToWhatsApp() {
     if (!currentImageData) return;
     
-    // Converte base64 para blob
     fetch(currentImageData)
       .then(res => res.blob())
       .then(blob => {
         const file = new File([blob], "relatorio_vistoria.png", { type: "image/png" });
-        const text = `📋 *RELATÓRIO DE VISTORIA*\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}`;
+        const text = `✨ *RELATÓRIO DE VISTORIA* ✨\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}\n📊 Total de salas: ${entries.length}`;
         
-        // Tenta usar Web Share API (WhatsApp, Teams, etc no mobile)
         if (navigator.share) {
           navigator.share({
             title: 'Relatório de Vistoria',
             text: text,
             files: [file]
           }).catch(() => {
-            // Fallback: link do WhatsApp
-            window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n\n*Imagem anexada no arquivo*")}`);
+            window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n\n📸 Imagem gerada automaticamente")}`);
           });
         } else {
-          // Desktop: abre WhatsApp Web
           window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
         }
         
@@ -919,7 +1039,6 @@ ${blocoObs}───────────────────────
       });
   }
   
-  // Compartilhar no Teams
   function shareToTeams() {
     if (!currentImageData) return;
     
@@ -928,7 +1047,7 @@ ${blocoObs}───────────────────────
     const total = entries.length;
     const data = new Date().toLocaleString("pt-BR");
     
-    const message = `**📋 Relatório de Vistoria - ${predio}**\n\n📅 **Data:** ${data}\n👤 **Auditor:** ${auditor}\n📊 **Total de salas:** ${total}\n\n📸 *Imagem anexada com os detalhes completos*`;
+    const message = `✨ **Relatório de Vistoria - ${predio}** ✨\n\n📅 **Data:** ${data}\n👤 **Auditor:** ${auditor}\n📊 **Total de salas:** ${total}\n\n📸 *Imagem anexada com os detalhes completos*`;
     
     if (navigator.share) {
       fetch(currentImageData)
@@ -942,11 +1061,9 @@ ${blocoObs}───────────────────────
           });
         });
     } else {
-      // Fallback: copia mensagem e abre para download
       navigator.clipboard.writeText(message);
       showToast("✅ Mensagem copiada! Cole no Teams e anexe a imagem");
       
-      // Baixa a imagem para anexar
       const link = document.createElement('a');
       link.download = `vistoria_${predio}.png`;
       link.href = currentImageData;
@@ -956,7 +1073,6 @@ ${blocoObs}───────────────────────
     shareModal.classList.remove("show");
   }
   
-  // Compartilhar por Email
   function shareToEmail() {
     if (!currentImageData) return;
     
@@ -964,12 +1080,10 @@ ${blocoObs}───────────────────────
     const auditor = auditorInp.value || "Não informado";
     const data = new Date().toLocaleString("pt-BR");
     const subject = `Relatório de Vistoria - ${predio}`;
-    const body = `Relatório de Vistoria\n\nPrédio: ${predio}\nAuditor: ${auditor}\nData: ${data}\nTotal de salas: ${entries.length}\n\n*Imagem anexada com os detalhes completos*`;
+    const body = `✨ RELATÓRIO DE VISTORIA ✨\n\nPrédio: ${predio}\nAuditor: ${auditor}\nData: ${data}\nTotal de salas: ${entries.length}\n\n📸 Imagem anexada com os detalhes completos`;
     
-    // Abre cliente de email
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
-    // Baixa a imagem para anexar
     setTimeout(() => {
       const link = document.createElement('a');
       link.download = `vistoria_${predio}.png`;
@@ -981,7 +1095,6 @@ ${blocoObs}───────────────────────
     showToast("📧 Email aberto! Anexe a imagem baixada");
   }
   
-  // Salvar imagem (mesmo do botão)
   function shareSaveImage() {
     if (!currentImageData) return;
     
@@ -1013,7 +1126,6 @@ ${blocoObs}───────────────────────
   document.getElementById("btnShare").addEventListener("click", openShareModal);
   document.getElementById("btnPNG").addEventListener("click", saveAsPNG);
   
-  // Modal events
   document.getElementById("shareWhatsApp").addEventListener("click", shareToWhatsApp);
   document.getElementById("shareTeams").addEventListener("click", shareToTeams);
   document.getElementById("shareEmail").addEventListener("click", shareToEmail);
@@ -1058,7 +1170,6 @@ ${blocoObs}───────────────────────
   enderecoInp.addEventListener("input", renderReport);
   obsInp.addEventListener("input", renderReport);
 
-  // Inicialização
   (function init(){
     selectedFloor = 1;
     selectedRoom  = 1;
