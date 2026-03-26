@@ -258,8 +258,8 @@
     transform:translateY(1px);
   }
   
-  .btn-teams{
-    background:linear-gradient(135deg,#6264A7,#464775);
+  .btn-share{
+    background:linear-gradient(135deg,#25D366,#128C7E);
     color:#fff;
     border:none;
   }
@@ -411,11 +411,94 @@
     border-radius:4px;
   }
   
-  /* Área para captura PNG */
-  #reportCaptureArea{
-    background:rgba(0,0,0,0.85);
-    border-radius:8px;
-    padding:0;
+  /* Modal de compartilhamento */
+  .share-modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,0.8);
+    z-index:10000;
+    align-items:center;
+    justify-content:center;
+    backdrop-filter:blur(4px);
+  }
+  
+  .share-modal.show{
+    display:flex;
+  }
+  
+  .share-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:20px;
+    max-width:320px;
+    width:90%;
+    backdrop-filter:blur(8px);
+  }
+  
+  .share-card h4{
+    margin-bottom:16px;
+    font-size:16px;
+    text-align:center;
+  }
+  
+  .share-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  
+  .share-btn{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    transition:all 0.1s ease;
+    width:100%;
+  }
+  
+  .share-btn:active{
+    transform:scale(0.98);
+  }
+  
+  .share-btn.whatsapp{
+    background:#25D366;
+    color:#fff;
+  }
+  
+  .share-btn.teams{
+    background:#6264A7;
+    color:#fff;
+  }
+  
+  .share-btn.email{
+    background:#EA4335;
+    color:#fff;
+  }
+  
+  .share-btn.download{
+    background:#2D9CDB;
+    color:#fff;
+  }
+  
+  .close-modal{
+    margin-top:12px;
+    padding:10px;
+    background:rgba(255,255,255,0.2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    color:#fff;
+    cursor:pointer;
+    width:100%;
   }
 </style>
 </head>
@@ -479,7 +562,7 @@
           <div class="report-actions">
             <button id="btnCopy" class="btn-action">📋 Copiar</button>
             <button id="btnDownload" class="btn-action">💾 Baixar</button>
-            <button id="btnTeams" class="btn-action btn-teams">📤 Enviar Teams</button>
+            <button id="btnShare" class="btn-action btn-share">📱 Compartilhar</button>
             <button id="btnPNG" class="btn-action btn-png">📸 Salvar PNG</button>
           </div>
         </div>
@@ -496,11 +579,26 @@ Aguardando registros...
   </div>
 </div>
 
+<!-- Modal de Compartilhamento -->
+<div id="shareModal" class="share-modal">
+  <div class="share-card">
+    <h4>📤 Compartilhar Relatório</h4>
+    <div class="share-buttons">
+      <button id="shareWhatsApp" class="share-btn whatsapp">💬 WhatsApp</button>
+      <button id="shareTeams" class="share-btn teams">💼 Microsoft Teams</button>
+      <button id="shareEmail" class="share-btn email">📧 E-mail</button>
+      <button id="shareSave" class="share-btn download">📸 Salvar imagem</button>
+    </div>
+    <button id="closeModal" class="close-modal">Fechar</button>
+  </div>
+</div>
+
 <script>
-  const STORAGE_KEY = "vistoria_fixed_v5";
+  const STORAGE_KEY = "vistoria_fixed_v6";
   let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   let selectedFloor = 1;
   let selectedRoom  = 1;
+  let currentImageData = null;
 
   const pad2 = n => String(n).padStart(2,"0");
   const statusName  = s => s==="valid"?"Validada":s==="lock"?"Trancada":s==="prob"?"Problemas":"Outros";
@@ -516,6 +614,7 @@ Aguardando registros...
   const auditorInp   = document.getElementById("auditor");
   const obsInp       = document.getElementById("obs");
   const sectionTitle = document.getElementById("sectionTitle");
+  const shareModal   = document.getElementById("shareModal");
 
   function buildFloorIcons(){
     floorsStrip.innerHTML = "";
@@ -738,84 +837,163 @@ ${blocoObs}───────────────────────
     showToast("⬇️ Download iniciado!");
   }
 
-  // FUNÇÃO PARA ENVIAR PARA TEAMS (formata para mensagem)
-  function sendToTeams() {
-    const text = getReportText();
-    if (!text.trim() || text.includes("Aguardando registros")) { 
-      showToast("Nada para enviar"); 
-      return; 
-    }
-    
-    // Formata para Teams com markdown simples
-    const predio = predioSel.value || "Vistoria";
-    const data = new Date().toLocaleString("pt-BR");
-    const auditor = auditorInp.value || "Não informado";
-    const totalSalas = entries.length;
-    
-    let teamsMessage = `**📋 RELATÓRIO DE VISTORIA - ${predio}**\n\n`;
-    teamsMessage += `**📍 Local:** ${enderecoInp.value || "Não informado"}\n`;
-    teamsMessage += `**📅 Data:** ${data}\n`;
-    teamsMessage += `**👤 Auditor:** ${auditor}\n\n`;
-    teamsMessage += `**📊 Resumo:**\n`;
-    teamsMessage += `Total de salas: **${totalSalas}**\n\n`;
-    
-    const stats = { valid:0, lock:0, prob:0, other:0 };
-    entries.forEach(e => stats[e.status]++);
-    
-    teamsMessage += `✅ Validada: ${stats.valid}\n`;
-    teamsMessage += `🔒 Trancada: ${stats.lock}\n`;
-    teamsMessage += `❌ Problemas: ${stats.prob}\n`;
-    teamsMessage += `◻️ Outros: ${stats.other}\n\n`;
-    
-    if(obsInp.value.trim()){
-      teamsMessage += `**📝 Observações:**\n${obsInp.value.trim()}\n\n`;
-    }
-    
-    teamsMessage += `---\n🔧 Relatório gerado automaticamente`;
-    
-    // Copia para área de transferência com formato amigável para Teams
-    navigator.clipboard?.writeText(teamsMessage).then(
-      () => showToast("✓ Formatado para Teams! Cole na conversa."),
-      () => {
-        fallbackCopy(teamsMessage);
-        showToast("✓ Copiado! Cole no Teams.");
-      }
-    );
-  }
-  
-  // FUNÇÃO PARA SALVAR COMO PNG
-  async function saveAsPNG() {
+  // Gerar imagem do relatório
+  async function generateReportImage() {
     const reportElement = document.getElementById("reportCaptureArea");
-    const originalText = reportElement.innerHTML;
     
     if (getReportText().includes("Aguardando registros")) {
-      showToast("Nada para salvar como imagem");
-      return;
+      showToast("Nada para compartilhar");
+      return null;
     }
     
     showToast("📸 Gerando imagem...");
     
     try {
-      // Pequeno ajuste para garantir que o fundo seja capturado corretamente
       const canvas = await html2canvas(reportElement, {
-        scale: 2, // Alta qualidade
+        scale: 2,
         backgroundColor: '#0b3d2e',
         logging: false,
         useCORS: false
       });
       
-      const link = document.createElement('a');
-      const predio = predioSel.value || "vistoria";
-      const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-      link.download = `vistoria_${predio}_${data}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      
-      showToast("✅ Imagem salva!");
+      return canvas.toDataURL('image/png');
     } catch (error) {
-      console.error("Erro ao gerar PNG:", error);
+      console.error("Erro ao gerar imagem:", error);
       showToast("❌ Erro ao gerar imagem");
+      return null;
     }
+  }
+  
+  // Salvar como PNG
+  async function saveAsPNG() {
+    const imageData = await generateReportImage();
+    if (!imageData) return;
+    
+    const link = document.createElement('a');
+    const predio = predioSel.value || "vistoria";
+    const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    link.download = `vistoria_${predio}_${data}.png`;
+    link.href = imageData;
+    link.click();
+    
+    showToast("✅ Imagem salva!");
+  }
+  
+  // Abrir modal de compartilhamento
+  async function openShareModal() {
+    const imageData = await generateReportImage();
+    if (!imageData) return;
+    
+    currentImageData = imageData;
+    shareModal.classList.add("show");
+  }
+  
+  // Compartilhar no WhatsApp
+  function shareToWhatsApp() {
+    if (!currentImageData) return;
+    
+    // Converte base64 para blob
+    fetch(currentImageData)
+      .then(res => res.blob())
+      .then(blob => {
+        const file = new File([blob], "relatorio_vistoria.png", { type: "image/png" });
+        const text = `📋 *RELATÓRIO DE VISTORIA*\n\n🏢 ${predioSel.value || "Prédio"}\n👤 Auditor: ${auditorInp.value || "Não informado"}\n📅 ${new Date().toLocaleString("pt-BR")}`;
+        
+        // Tenta usar Web Share API (WhatsApp, Teams, etc no mobile)
+        if (navigator.share) {
+          navigator.share({
+            title: 'Relatório de Vistoria',
+            text: text,
+            files: [file]
+          }).catch(() => {
+            // Fallback: link do WhatsApp
+            window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n\n*Imagem anexada no arquivo*")}`);
+          });
+        } else {
+          // Desktop: abre WhatsApp Web
+          window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
+        }
+        
+        shareModal.classList.remove("show");
+        showToast("📱 Compartilhando...");
+      });
+  }
+  
+  // Compartilhar no Teams
+  function shareToTeams() {
+    if (!currentImageData) return;
+    
+    const predio = predioSel.value || "Vistoria";
+    const auditor = auditorInp.value || "Não informado";
+    const total = entries.length;
+    const data = new Date().toLocaleString("pt-BR");
+    
+    const message = `**📋 Relatório de Vistoria - ${predio}**\n\n📅 **Data:** ${data}\n👤 **Auditor:** ${auditor}\n📊 **Total de salas:** ${total}\n\n📸 *Imagem anexada com os detalhes completos*`;
+    
+    if (navigator.share) {
+      fetch(currentImageData)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], "relatorio_vistoria.png", { type: "image/png" });
+          navigator.share({
+            title: 'Relatório de Vistoria',
+            text: message,
+            files: [file]
+          });
+        });
+    } else {
+      // Fallback: copia mensagem e abre para download
+      navigator.clipboard.writeText(message);
+      showToast("✅ Mensagem copiada! Cole no Teams e anexe a imagem");
+      
+      // Baixa a imagem para anexar
+      const link = document.createElement('a');
+      link.download = `vistoria_${predio}.png`;
+      link.href = currentImageData;
+      link.click();
+    }
+    
+    shareModal.classList.remove("show");
+  }
+  
+  // Compartilhar por Email
+  function shareToEmail() {
+    if (!currentImageData) return;
+    
+    const predio = predioSel.value || "Vistoria";
+    const auditor = auditorInp.value || "Não informado";
+    const data = new Date().toLocaleString("pt-BR");
+    const subject = `Relatório de Vistoria - ${predio}`;
+    const body = `Relatório de Vistoria\n\nPrédio: ${predio}\nAuditor: ${auditor}\nData: ${data}\nTotal de salas: ${entries.length}\n\n*Imagem anexada com os detalhes completos*`;
+    
+    // Abre cliente de email
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Baixa a imagem para anexar
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.download = `vistoria_${predio}.png`;
+      link.href = currentImageData;
+      link.click();
+    }, 500);
+    
+    shareModal.classList.remove("show");
+    showToast("📧 Email aberto! Anexe a imagem baixada");
+  }
+  
+  // Salvar imagem (mesmo do botão)
+  function shareSaveImage() {
+    if (!currentImageData) return;
+    
+    const link = document.createElement('a');
+    const predio = predioSel.value || "vistoria";
+    const data = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    link.download = `vistoria_${predio}_${data}.png`;
+    link.href = currentImageData;
+    link.click();
+    
+    shareModal.classList.remove("show");
+    showToast("✅ Imagem salva!");
   }
 
   function showToast(msg) {
@@ -832,8 +1010,20 @@ ${blocoObs}───────────────────────
 
   document.getElementById("btnCopy").addEventListener("click", copyReportToClipboard);
   document.getElementById("btnDownload").addEventListener("click", downloadReportTxt);
-  document.getElementById("btnTeams").addEventListener("click", sendToTeams);
+  document.getElementById("btnShare").addEventListener("click", openShareModal);
   document.getElementById("btnPNG").addEventListener("click", saveAsPNG);
+  
+  // Modal events
+  document.getElementById("shareWhatsApp").addEventListener("click", shareToWhatsApp);
+  document.getElementById("shareTeams").addEventListener("click", shareToTeams);
+  document.getElementById("shareEmail").addEventListener("click", shareToEmail);
+  document.getElementById("shareSave").addEventListener("click", shareSaveImage);
+  document.getElementById("closeModal").addEventListener("click", () => {
+    shareModal.classList.remove("show");
+  });
+  shareModal.addEventListener("click", (e) => {
+    if (e.target === shareModal) shareModal.classList.remove("show");
+  });
 
   function persist(){ 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); 
